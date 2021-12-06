@@ -1,0 +1,32 @@
+{
+  "name": "bpmnlint-plugin-camunda-compat",
+  "version": "0.1.0",
+  "description": "A bpmnlint plug-in for Camunda Cloud and Platform compatibility",
+  "main": "index.js",
+  "scripts": {
+    "all": "npm test",
+    "test": "mocha test/**/*.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/camunda/bpmnlint-plugin-camunda-compat"
+  },
+  "keywords": [
+    "bpmnlint",
+    "plugin"
+  ],
+  "author": {
+    "name": "Philipp Fromme",
+    "url": "https://github.com/philippfromme"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "bpmnlint": "^6.1.0",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "bpmnlint-utils": "^1.0.2",
+    "min-dash": "^3.8.0"
+  }
+}
