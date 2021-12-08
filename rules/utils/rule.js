@@ -226,11 +226,5 @@ module.exports.hasLoopCharacteristicsOfType = function(type) {
 }
 
 module.exports.isNotBpmn = function(node) {
-  const { $descriptor: descriptor } = node;
-
-  const { $pkg: package } = descriptor;
-
-  const { uri } = package;
-
-  return uri !== 'http://www.omg.org/spec/BPMN/20100524/MODEL';
+  return !is(node, 'bpmn:BaseElement');
 }
