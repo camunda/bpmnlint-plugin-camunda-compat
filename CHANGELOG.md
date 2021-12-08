@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to [bpmnlint-plugin-example](https://github.com/camunda/bpmnlint-plugin-camunda-compat) are documented here. We use [semantic versioning](http://semver.org/) for releases.
+All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camunda/bpmnlint-plugin-camunda-compat) are documented here. We use [semantic versioning](http://semver.org/) for releases.
 
 ## Unreleased
 
