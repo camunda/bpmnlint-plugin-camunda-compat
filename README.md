@@ -23,7 +23,7 @@ To validate a diagram it must be pinned to a particular execution platform via t
 
 ## Resources
 
-* [Documentation](https://github.com/camunda/bpmnlint-plugin-camunda-compat/tree/master/docs/rules)
+* [Documentation](https://github.com/camunda/bpmnlint-plugin-camunda-compat/tree/main/docs/rules)
 * [Issues](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues)
 
 
