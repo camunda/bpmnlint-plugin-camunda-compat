@@ -23,7 +23,9 @@ To validate a diagram it must be pinned to a particular execution platform via t
 
 ## Resources
 
-* [Documentation](https://github.com/camunda/bpmnlint-plugin-camunda-compat/tree/main/docs/rules)
+* BPMN coverage
+    * [Camunda Cloud](https://docs.camunda.io/docs/reference/bpmn-processes/bpmn-coverage/)
+    * [Camunda Platform](https://docs.camunda.org/manual/latest/reference/bpmn20/)
 * [Issues](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues)
 
 
