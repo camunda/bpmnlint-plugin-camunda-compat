@@ -1,3 +1,10 @@
+const BpmnModdle = require('bpmn-moddle');
+
+const modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
+      zeebeModdleSchema = require('zeebe-bpmn-moddle/resources/zeebe.json');
+
+const readFileSync = require('fs').readFileSync;
+
 module.exports.createCollaboration = function(version) {
   return function(bpmn = '', bpmndi = '') {
     return createDefinitions(`
@@ -40,3 +47,35 @@ module.exports.createProcess = function(version) {
     `, version);
   };
 };
+
+module.exports.readModdle = function(version) {
+  return function(filePath) {
+    const contents = readFileSync(filePath, 'utf8');
+  
+    return createModdle(contents, version);
+  };
+}
+
+async function createModdle(xml, version = '1.0.0') {
+  const moddle = new BpmnModdle({
+    modeler: modelerModdleSchema,
+    zeebe: zeebeModdleSchema
+  });
+
+  const {
+    rootElement: root,
+    warnings = []
+  } = await moddle.fromXML(xml, 'bpmn:Definitions', { lax: true });
+
+  root.set('modeler:executionPlatform', 'Camunda Cloud');
+  root.set('modeler:executionPlatformVersion', version);
+
+  return {
+    root,
+    moddle,
+    context: {
+      warnings
+    },
+    warnings
+  };
+}
