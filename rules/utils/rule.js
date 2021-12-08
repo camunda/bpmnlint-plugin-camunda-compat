@@ -11,76 +11,35 @@ const {
 
 const { toSemverMinor } = require('./engine-profile');
 
-module.exports.createRule = function(version, checks) {
+module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatformVersion, checks) {
   return () => {
     return {
       check: (node, reporter) => {
+        if (is(node, 'bpmn:Definitions')) {
+          executionPlatform = node.get('modeler:executionPlatform');
+          executionPlatformVersion = node.get('modeler:executionPlatformVersion');
 
-        // do not lint properties (yet)
-        if (!isAny(node, [ 'bpmn:FlowElement', 'bpmn:FlowElementsContainer' ])) {
-          return;
-        }
-
-        const engineProfile = getEngineProfile(node);
-
-        if (!engineProfile) {
-          return;
-        }
-
-        const {
-          executionPlatform,
-          executionPlatformVersion
-        } = engineProfile;
-
-        if (!executionPlatformVersion || toSemverMinor(executionPlatformVersion) !== version) {
+          if (!executionPlatform
+            || executionPlatform !== ruleExecutionPlatform
+            || !executionPlatformVersion
+            || toSemverMinor(executionPlatformVersion) !== ruleExecutionPlatformVersion) {
+            return false;
+          }
+        } else if (!isAny(node, [ 'bpmn:FlowElement', 'bpmn:FlowElementsContainer' ])) {
           return;
         }
 
         const result = checkNode(node, checks);
 
         if (result === false) {
-          reporter.report(node.get('id') || '', `Element of type <${ node.$type }> not supported by ${ executionPlatform } ${ toSemverMinor(executionPlatformVersion) }`);
+          reporter.report(node.get('id') || '', `Element of type <${ node.$type }> not supported by ${ ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
         }
 
         if (isString(result)) {
-          reporter.report(node.get('id') || '', `Element of type <${ result }> not supported by ${ executionPlatform } ${ toSemverMinor(executionPlatformVersion) }`);
+          reporter.report(node.get('id') || '', `Element of type <${ result }> not supported by ${ ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
         }
       }
     };
-  };
-}
-
-function getDefinitions(node) {
-  if (is(node, 'bpmn:Definitions')) {
-    return node;
-  }
-
-  const parent = node.$parent;
-
-  if (!parent) {
-    return null;
-  }
-
-  return getDefinitions(parent);
-}
-
-function getEngineProfile(node) {
-  const definitions = getDefinitions(node);
-
-  if (!definitions) {
-    return null;
-  }
-
-  const executionPlatform = definitions.get('modeler:executionPlatform'),
-        executionPlatformVersion = definitions.get('modeler:executionPlatformVersion');
-
-  if (!executionPlatform) {
-    return null;
-  }
-
-  return {
-    executionPlatform,
-    executionPlatformVersion
   };
 }
 
