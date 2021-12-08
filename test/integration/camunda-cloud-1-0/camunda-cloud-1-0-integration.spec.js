@@ -9,17 +9,13 @@ const camundaCloud10Rule = require('../../../rules/camunda-cloud-1-0');
 
 const valid = [
   'BpmnDiTest.xml',
-  'CamundaExtensionsCompatabilityTest.xml',
-  'CamundaExtensionsTest.xml',
   'CollaborationParserTest.bpmn',
   'ConditionalSequenceFlowTest.xml',
-  'DataObjectTest.bpmn',
   'DataStoreTest.bpmn',
   'DefinitionsTest.shouldImportEmptyDefinitions.bpmn',
   'DefinitionsTest.shouldNotAffectComments.bpmn',
   // 'DefinitionsTest.shouldNotAffectCommentsResult.bpmn',
   'DefinitionsTest.shouldNotImportWrongOrderedSequence.bpmn',
-  'EventDefinitionsTest.xml',
   'GenerateIdTest.bpmn',
   'ProcessTest.shouldImportProcess.bpmn',
   'ReferenceTest.shouldFindReferenceWithNamespace.bpmn',
@@ -38,6 +34,76 @@ const valid = [
 });
 
 const invalid = [
+  {
+    name: 'CamundaExtensionsCompatabilityTest.xml',
+    moddleElement: readModdle(path.join(__dirname, 'fixtures', 'CamundaExtensionsCompatabilityTest.xml')),
+    report: [
+      {
+        category: 'error',
+        id: 'sendTask',
+        message: 'Element of type <bpmn:SendTask> not supported by Camunda Cloud 1.0'
+      },
+      {
+        category: 'error',
+        id: 'scriptTask',
+        message: 'Element of type <bpmn:ScriptTask> not supported by Camunda Cloud 1.0'
+      },
+      {
+        category: 'error',
+        id: 'businessRuleTask',
+        message: 'Element of type <bpmn:BusinessRuleTask> not supported by Camunda Cloud 1.0'
+      },
+      {
+        category: 'error',
+        id: 'endEvent',
+        message: 'Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Camunda Cloud 1.0'
+      }
+    ]
+  },
+  {
+    name: 'CamundaExtensionsTest.xml',
+    moddleElement: readModdle(path.join(__dirname, 'fixtures', 'CamundaExtensionsTest.xml')),
+    report: [
+      {
+        category: "error",
+        id: "sendTask",
+        message: "Element of type <bpmn:SendTask> not supported by Camunda Cloud 1.0"
+      },
+      {
+        category: "error",
+        id: "scriptTask",
+        message: "Element of type <bpmn:ScriptTask> not supported by Camunda Cloud 1.0"
+      },
+      {
+        category: "error",
+        id: "businessRuleTask",
+        message: "Element of type <bpmn:BusinessRuleTask> not supported by Camunda Cloud 1.0"
+      },
+      {
+        category: "error",
+        id: "endEvent",
+        message: "Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Camunda Cloud 1.0"
+      }
+    ]
+  },
+  {
+    name: 'DataObjectTest.bpmn',
+    moddleElement: readModdle(path.join(__dirname, 'fixtures', 'DataObjectTest.bpmn')),
+    report: {
+      category: 'error',
+      id: '_3',
+      message: 'Element of type <bpmn:ScriptTask> not supported by Camunda Cloud 1.0'
+    }
+  },
+  {
+    name: 'EventDefinitionsTest.xml',
+    moddleElement: readModdle(path.join(__dirname, 'fixtures', 'EventDefinitionsTest.xml')),
+    report: {
+      category: 'error',
+      id: 'event',
+      message: 'Element of type <bpmn:IntermediateThrowEvent> not supported by Camunda Cloud 1.0'
+    }
+  },
   {
     name: 'GatewaysTest.xml',
     moddleElement: readModdle(path.join(__dirname, 'fixtures', 'GatewaysTest.xml')),

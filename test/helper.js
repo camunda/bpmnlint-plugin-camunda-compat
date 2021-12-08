@@ -56,7 +56,7 @@ module.exports.readModdle = function(version) {
   };
 }
 
-async function createModdle(xml, version = '1.0.0') {
+async function createModdle(xml, version) {
   const moddle = new BpmnModdle({
     modeler: modelerModdleSchema,
     zeebe: zeebeModdleSchema
@@ -67,8 +67,10 @@ async function createModdle(xml, version = '1.0.0') {
     warnings = []
   } = await moddle.fromXML(xml, 'bpmn:Definitions', { lax: true });
 
-  root.set('modeler:executionPlatform', 'Camunda Cloud');
-  root.set('modeler:executionPlatformVersion', version);
+  if (version) {
+    root.set('modeler:executionPlatform', 'Camunda Cloud');
+    root.set('modeler:executionPlatformVersion', version);
+  }
 
   return {
     root,
@@ -79,3 +81,5 @@ async function createModdle(xml, version = '1.0.0') {
     warnings
   };
 }
+
+module.exports.createModdle = createModdle;

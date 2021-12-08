@@ -1,10 +1,11 @@
-const { createModdle } = require('bpmnlint/lib/testers/helper');
-
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
 const camundaCloud10Rule = require('../rules/camunda-cloud-1-0');
 
-const { createDefinitions } = require('./helper');
+const {
+  createDefinitions,
+  createModdle
+} = require('./helper');
 
 const createCollaboration = require('./helper').createCollaboration('1.0.0'),
       createProcess = require('./helper').createProcess('1.0.0');
