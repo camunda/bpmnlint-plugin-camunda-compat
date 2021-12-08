@@ -6,7 +6,7 @@ All notable changes to [bpmnlint-plugin-example](https://github.com/camunda/bpmn
 
 ___Note:__ Yet to be released changes appear here._
 
-## 0.0.1
+## 0.1.1
 
 * `FEAT`: initial support for Camunda Cloud 1.0, 1.1, 1.2, and 1.3
 
