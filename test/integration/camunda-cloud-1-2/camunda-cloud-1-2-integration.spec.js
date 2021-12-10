@@ -6,7 +6,7 @@ const readModdle = require('../../helper').readModdle('1.2.0');
 
 const camundaCloud12Rule = require('../../../rules/camunda-cloud-1-2');
 
-
+// cf. https://github.com/camunda-cloud/zeebe/tree/1.2.5/bpmn-model/src/test/java/io/camunda/zeebe/model/bpmn
 const valid = [
   'BpmnDiTest.xml',
   'CamundaExtensionsCompatabilityTest.xml',
