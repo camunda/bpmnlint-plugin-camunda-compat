@@ -184,6 +184,28 @@ const valid = [
     `))
   },
   {
+    name: 'sub process',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:subProcess id="SubProcess_1" />
+    `))
+  },
+  {
+    name: 'sub process (multi-instance)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:subProcess id="SubProcess_1">
+        <bpmn:multiInstanceLoopCharacteristics />
+      </bpmn:subProcess>
+    `))
+  },
+  {
+    name: 'sub process (multi-instance sequential)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:subProcess id="SubProcess_1">
+        <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
+      </bpmn:subProcess>
+    `))
+  },
+  {
     name: 'timer boundary event',
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="ServiceTask_1" />

@@ -82,7 +82,10 @@ module.exports = [
   },
   {
     type: 'bpmn:SubProcess',
-    check: hasNoLoopCharacteristics
+    check: checkSome(
+      hasNoLoopCharacteristics,
+      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
+    )
   },
   {
     type: 'bpmn:UserTask',
