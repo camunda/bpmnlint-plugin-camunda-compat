@@ -2,15 +2,13 @@ const path = require('path');
 
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const readModdle = require('../../helper').readModdle('1.3.0');
+const readModdle = require('../../../helper').readModdle('1.1.0');
 
-const camundaCloud13Rule = require('../../../rules/camunda-cloud-1-3');
+const camundaCloud11Rule = require('../../../../rules/camunda-cloud-1-1');
 
-// cf. https://github.com/camunda-cloud/zeebe/tree/1.3.0-alpha2/bpmn-model/src/test/java/io/camunda/zeebe/model/bpmn
+// cf. https://github.com/camunda-cloud/zeebe/tree/1.1.6/bpmn-model/src/test/java/io/camunda/zeebe/model/bpmn
 const valid = [
   'BpmnDiTest.xml',
-  'CamundaExtensionsCompatabilityTest.xml',
-  'CamundaExtensionsTest.xml',
   'CollaborationParserTest.bpmn',
   'ConditionalSequenceFlowTest.xml',
   'DataObjectTest.bpmn',
@@ -38,12 +36,34 @@ const valid = [
 
 const invalid = [
   {
+    name: 'CamundaExtensionsCompatabilityTest.xml',
+    moddleElement: readModdle(path.join(__dirname, 'fixtures', 'CamundaExtensionsCompatabilityTest.xml')),
+    report: [
+      {
+        category: 'error',
+        id: 'endEvent',
+        message: 'Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Camunda Cloud 1.1'
+      }
+    ]
+  },
+  {
+    name: 'CamundaExtensionsTest.xml',
+    moddleElement: readModdle(path.join(__dirname, 'fixtures', 'CamundaExtensionsTest.xml')),
+    report: [
+      {
+        category: "error",
+        id: "endEvent",
+        message: "Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Camunda Cloud 1.1"
+      }
+    ]
+  },
+  {
     name: 'EventDefinitionsTest.xml',
     moddleElement: readModdle(path.join(__dirname, 'fixtures', 'EventDefinitionsTest.xml')),
     report: {
       category: 'error',
       id: 'event',
-      message: 'Element of type <bpmn:IntermediateThrowEvent (bpmn:CancelEventDefinition)> not supported by Camunda Cloud 1.3'
+      message: 'Element of type <bpmn:IntermediateThrowEvent (bpmn:CancelEventDefinition)> not supported by Camunda Cloud 1.1'
     }
   },
   {
@@ -53,12 +73,12 @@ const invalid = [
       {
         category: 'error',
         id: '',
-        message: 'Element of type <bpmn:InclusiveGateway> not supported by Camunda Cloud 1.3'
+        message: 'Element of type <bpmn:InclusiveGateway> not supported by Camunda Cloud 1.1'
       },
       {
         category: 'error',
         id: '',
-        message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 1.3'
+        message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 1.1'
       }
     ]
   },
@@ -68,12 +88,12 @@ const invalid = [
     report: {
       category: 'error',
       id: 'Process_0xhl9yb',
-      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 1.3'
+      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 1.1'
     }
   }
 ];
 
-RuleTester.verify('camunda-cloud-1-3-integration', camundaCloud13Rule, {
+RuleTester.verify('camunda-cloud-1-1-integration', camundaCloud11Rule, {
   valid,
   invalid
 });
