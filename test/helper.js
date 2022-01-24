@@ -5,21 +5,106 @@ const modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
 
 const readFileSync = require('fs').readFileSync;
 
-module.exports.createCollaboration = function(version) {
+module.exports.createPlaformCollaboration = function(executionPlatformVersion) {
   return function(bpmn = '', bpmndi = '') {
-    return createDefinitions(`
-      <bpmn:collaboration id="Collaboration_1">
-        <bpmn:participant id="Participant_1" processRef="Process_1">
-          ${ bpmn }
-        </bpmn:participant>
-      </bpmn:collaboration>
-      <bpmn:process id="Process_1"/>
-      ${ bpmndi }
-    `, version);
+    return createCollaboration({
+      bpmn,
+      bpmndi,
+      namespaces: `
+        xmlns:modeler="http://camunda.org/schema/modeler/1.0"
+        xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+      `,
+      executionPlatform: 'Camunda Platform',
+      executionPlatformVersion
+    })
   };
+}
+
+module.exports.createCloudCollaboration = function(executionPlatformVersion) {
+  return function(bpmn = '', bpmndi = '') {
+    return createCollaboration({
+      bpmn,
+      bpmndi,
+      namespaces: `
+        xmlns:modeler="http://camunda.org/schema/modeler/1.0"
+        xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+      `,
+      executionPlatform: 'Camunda Cloud',
+      executionPlatformVersion
+    })
+  };
+}
+
+module.exports.createPlaformProcess = function(executionPlatformVersion) {
+  return function(bpmn = '', bpmndi = '') {
+    return createProcess({
+      bpmn,
+      bpmndi,
+      namespaces: `
+        xmlns:modeler="http://camunda.org/schema/modeler/1.0"
+        xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+      `,
+      executionPlatform: 'Camunda Platform',
+      executionPlatformVersion
+    })
+  };
+}
+
+module.exports.createCloudProcess = function(executionPlatformVersion) {
+  return function(bpmn = '', bpmndi = '') {
+    return createProcess({
+      bpmn,
+      bpmndi,
+      namespaces: `
+        xmlns:modeler="http://camunda.org/schema/modeler/1.0"
+        xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+      `,
+      executionPlatform: 'Camunda Cloud',
+      executionPlatformVersion
+    })
+  };
+}
+
+function createCollaboration(options) {
+  const {
+    bpmn = '',
+    bpmndi = '',
+    ...rest
+  } = options;
+
+  return createDefinitions(`
+    <bpmn:collaboration id="Collaboration_1">
+      <bpmn:participant id="Participant_1" processRef="Process_1">
+        ${ bpmn }
+      </bpmn:participant>
+    </bpmn:collaboration>
+    <bpmn:process id="Process_1"/>
+    ${ bpmndi }
+  `, rest);
 };
 
-function createDefinitions(xml = '', version = '1.0.0') {
+function createProcess(options) {
+  const {
+    bpmn = '',
+    bpmndi = '',
+    ...rest
+  } = options;
+
+  return createDefinitions(`
+    <bpmn:process id="Process_1">
+      ${ bpmn }
+    </bpmn:process>
+    ${ bpmndi }
+  `, rest);
+};
+
+function createDefinitions(xml = '', options = {}) {
+  const {
+    namespaces = '',
+    executionPlatform = 'Camunda Platform',
+    executionPlatformVersion = '7.15'
+  } = options;
+
   return `
     <bpmn:definitions
       xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
@@ -27,26 +112,16 @@ function createDefinitions(xml = '', version = '1.0.0') {
       xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
       xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
       xmlns:modeler="http://camunda.org/schema/modeler/1.0"
+      ${ namespaces }
       id="Definitions_1"
-      modeler:executionPlatform="Camunda Cloud"
-      modeler:executionPlatformVersion="${ version }">
+      modeler:executionPlatform="${ executionPlatform }"
+      modeler:executionPlatformVersion="${ executionPlatformVersion }">
       ${ xml }
     </bpmn:definitions>
   `;
 }
 
 module.exports.createDefinitions = createDefinitions;
-
-module.exports.createProcess = function(version) {
-  return function(bpmn = '', bpmndi = '') {
-    return createDefinitions(`
-      <bpmn:process id="Process_1">
-        ${ bpmn }
-      </bpmn:process>
-      ${ bpmndi }
-    `, version);
-  };
-};
 
 module.exports.readModdle = function(version) {
   return function(filePath) {

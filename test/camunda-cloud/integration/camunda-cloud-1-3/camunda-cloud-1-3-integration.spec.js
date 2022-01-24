@@ -2,11 +2,11 @@ const path = require('path');
 
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const readModdle = require('../../helper').readModdle('1.2.0');
+const readModdle = require('../../../helper').readModdle('1.3.0');
 
-const camundaCloud12Rule = require('../../../rules/camunda-cloud-1-2');
+const camundaCloud13Rule = require('../../../../rules/camunda-cloud-1-3');
 
-// cf. https://github.com/camunda-cloud/zeebe/tree/1.2.5/bpmn-model/src/test/java/io/camunda/zeebe/model/bpmn
+// cf. https://github.com/camunda-cloud/zeebe/tree/1.3.0-alpha2/bpmn-model/src/test/java/io/camunda/zeebe/model/bpmn
 const valid = [
   'BpmnDiTest.xml',
   'CamundaExtensionsCompatabilityTest.xml',
@@ -43,7 +43,7 @@ const invalid = [
     report: {
       category: 'error',
       id: 'event',
-      message: 'Element of type <bpmn:IntermediateThrowEvent (bpmn:CancelEventDefinition)> not supported by Camunda Cloud 1.2'
+      message: 'Element of type <bpmn:IntermediateThrowEvent (bpmn:CancelEventDefinition)> not supported by Camunda Cloud 1.3'
     }
   },
   {
@@ -53,12 +53,12 @@ const invalid = [
       {
         category: 'error',
         id: '',
-        message: 'Element of type <bpmn:InclusiveGateway> not supported by Camunda Cloud 1.2'
+        message: 'Element of type <bpmn:InclusiveGateway> not supported by Camunda Cloud 1.3'
       },
       {
         category: 'error',
         id: '',
-        message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 1.2'
+        message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 1.3'
       }
     ]
   },
@@ -68,12 +68,12 @@ const invalid = [
     report: {
       category: 'error',
       id: 'Process_0xhl9yb',
-      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 1.2'
+      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 1.3'
     }
   }
 ];
 
-RuleTester.verify('camunda-cloud-1-2-integration', camundaCloud12Rule, {
+RuleTester.verify('camunda-cloud-1-3-integration', camundaCloud13Rule, {
   valid,
   invalid
 });

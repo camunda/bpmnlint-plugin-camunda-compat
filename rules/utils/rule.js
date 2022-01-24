@@ -41,7 +41,15 @@ module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatfor
       }
     };
   };
-}
+};
+
+module.exports.createNoopRule = function() {
+  return () => {
+    return {
+      check: () => false
+    };
+  };
+};
 
 /**
  * @param {ModdleElement} node

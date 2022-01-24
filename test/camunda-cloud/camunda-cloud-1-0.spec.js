@@ -1,19 +1,19 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const camundaCloud10Rule = require('../rules/camunda-cloud-1-0');
+const camundaCloud10Rule = require('../../rules/camunda-cloud-1-0');
 
 const {
   createDefinitions,
   createModdle
-} = require('./helper');
+} = require('../helper');
 
-const createCollaboration = require('./helper').createCollaboration('1.0.0'),
-      createProcess = require('./helper').createProcess('1.0.0');
+const createCloudCollaboration = require('../helper').createCloudCollaboration('1.0.0'),
+      createCloudProcess = require('../helper').createCloudProcess('1.0.0');
 
 const valid = [
   {
     name: 'artifacts',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:startEvent id="StartEvent_1" />
       <bpmn:textAnnotation id="TextAnnotation_1" />
       <bpmn:association id="Association_1" sourceRef="StartEvent_1" targetRef="TextAnnotation_1" />
@@ -21,26 +21,26 @@ const valid = [
   },
   {
     name: 'call activity',
-    moddleElement: createModdle(createProcess('<bpmn:callActivity id="CallActivity_1"/>'))
+    moddleElement: createModdle(createCloudProcess('<bpmn:callActivity id="CallActivity_1"/>'))
   },
   {
     name: 'collaboration',
-    moddleElement: createModdle(createCollaboration())
+    moddleElement: createModdle(createCloudCollaboration())
   },
   {
     name: 'data object',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:dataObjectReference id="DataObjectReference_1" dataObjectRef="DataObject_1" />
       <bpmn:dataObject id="DataObject_1" />
     `))
   },
   {
     name: 'data store reference',
-    moddleElement: createModdle(createProcess('<bpmn:dataStoreReference id="DataStoreReference_1" />'))
+    moddleElement: createModdle(createCloudProcess('<bpmn:dataStoreReference id="DataStoreReference_1" />'))
   },
   {
     name: 'DI',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
     </bpmn:startEvent>
@@ -67,7 +67,7 @@ const valid = [
   },
   {
     name: 'error boundary event',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
     <bpmn:serviceTask id="ServiceTask_1" />
     <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1" />
@@ -76,7 +76,7 @@ const valid = [
   },
   {
     name: 'error end event',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:endEvent id="EndEvent_1">
         <bpmn:errorEventDefinition id="ErrorEventDefinition_1" />
       </bpmn:endEvent>
@@ -84,7 +84,7 @@ const valid = [
   },
   {
     name: 'error start event',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1" />
     </bpmn:startEvent>
@@ -92,19 +92,19 @@ const valid = [
   },
   {
     name: 'event-based gateway',
-    moddleElement: createModdle(createProcess('<bpmn:eventBasedGateway id="EventBasedGateway_1"/>'))
+    moddleElement: createModdle(createCloudProcess('<bpmn:eventBasedGateway id="EventBasedGateway_1"/>'))
   },
   {
     name: 'exclusive gateway',
-    moddleElement: createModdle(createProcess('<bpmn:exclusiveGateway id="ExclusiveGateway_1"/>'))
+    moddleElement: createModdle(createCloudProcess('<bpmn:exclusiveGateway id="ExclusiveGateway_1"/>'))
   },
   {
     name: 'group',
-    moddleElement: createModdle(createProcess('<bpmn:group id="Group_1"/>'))
+    moddleElement: createModdle(createCloudProcess('<bpmn:group id="Group_1"/>'))
   },
   {
     name: 'message boundary event',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:serviceTask id="ServiceTask_1" />
       <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
         <bpmn:messageEventDefinition id="ErrorEventDefinition_1" />
@@ -113,7 +113,7 @@ const valid = [
   },
   {
     name: 'message flow',
-    moddleElement: createModdle(createCollaboration(`
+    moddleElement: createModdle(createCloudCollaboration(`
       <bpmn:participant id="Participant_1" />
       <bpmn:participant id="Participant_2" />
       <bpmn:messageFlow id="MessageFlow_1" sourceRef="Participant_1" targetRef="Participant_2" />
@@ -121,7 +121,7 @@ const valid = [
   },
   {
     name: 'message start event',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:messageEventDefinition id="ErrorEventDefinition_1" />
     </bpmn:startEvent>
@@ -129,15 +129,15 @@ const valid = [
   },
   {
     name: 'parallel gateway',
-    moddleElement: createModdle(createProcess('<bpmn:parallelGateway id="ParallelGateway_1"/>'))
+    moddleElement: createModdle(createCloudProcess('<bpmn:parallelGateway id="ParallelGateway_1"/>'))
   },
   {
     name: 'receive task',
-    moddleElement: createModdle(createProcess('<bpmn:receiveTask id="ReceiveTask_1" />'))
+    moddleElement: createModdle(createCloudProcess('<bpmn:receiveTask id="ReceiveTask_1" />'))
   },
   {
     name: 'receive task (multi-instance)',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:receiveTask id="ReceiveTask_1">
         <bpmn:multiInstanceLoopCharacteristics />
       </bpmn:receiveTask>
@@ -145,7 +145,7 @@ const valid = [
   },
   {
     name: 'receive task (multi-instance sequential)',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:receiveTask id="ReceiveTask_1">
         <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
       </bpmn:receiveTask>
@@ -153,7 +153,7 @@ const valid = [
   },
   {
     name: 'sequence flow',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:startEvent id="StartEvent_1">
         <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
       </bpmn:startEvent>
@@ -165,11 +165,11 @@ const valid = [
   },
   {
     name: 'service task',
-    moddleElement: createModdle(createProcess('<bpmn:serviceTask id="ServiceTask_1" />'))
+    moddleElement: createModdle(createCloudProcess('<bpmn:serviceTask id="ServiceTask_1" />'))
   },
   {
     name: 'service task (multi-instance)',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:serviceTask id="ServiceTask_1">
         <bpmn:multiInstanceLoopCharacteristics />
       </bpmn:serviceTask>
@@ -177,7 +177,7 @@ const valid = [
   },
   {
     name: 'service task (multi-instance sequential)',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:serviceTask id="ServiceTask_1">
         <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
       </bpmn:serviceTask>
@@ -185,13 +185,13 @@ const valid = [
   },
   {
     name: 'sub process',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:subProcess id="SubProcess_1" />
     `))
   },
   {
     name: 'sub process (multi-instance)',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:subProcess id="SubProcess_1">
         <bpmn:multiInstanceLoopCharacteristics />
       </bpmn:subProcess>
@@ -199,7 +199,7 @@ const valid = [
   },
   {
     name: 'sub process (multi-instance sequential)',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:subProcess id="SubProcess_1">
         <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
       </bpmn:subProcess>
@@ -207,7 +207,7 @@ const valid = [
   },
   {
     name: 'timer boundary event',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:serviceTask id="ServiceTask_1" />
       <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
         <bpmn:timerEventDefinition id="TimerEventDefinition_1" />
@@ -216,7 +216,7 @@ const valid = [
   },
   {
     name: 'timer start event',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:timerEventDefinition id="TimerEventDefinition_1" />
     </bpmn:startEvent>
@@ -224,11 +224,11 @@ const valid = [
   },
   {
     name: 'user task',
-    moddleElement: createModdle(createProcess('<bpmn:userTask id="UserTask_1" />'))
+    moddleElement: createModdle(createCloudProcess('<bpmn:userTask id="UserTask_1" />'))
   },
   {
     name: 'user task (multi-instance)',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:userTask id="UserTask_1">
         <bpmn:multiInstanceLoopCharacteristics />
       </bpmn:userTask>
@@ -236,7 +236,7 @@ const valid = [
   },
   {
     name: 'user task (multi-instance sequential)',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
       <bpmn:userTask id="UserTask_1">
         <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
       </bpmn:userTask>
@@ -249,7 +249,7 @@ module.exports.valid = valid;
 const invalid = [
   {
     name: 'business rule task',
-    moddleElement: createModdle(createProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
+    moddleElement: createModdle(createCloudProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
     report: {
       id: 'BusinessRuleTask_1',
       message: 'Element of type <bpmn:BusinessRuleTask> not supported by Camunda Cloud 1.0'
@@ -257,7 +257,7 @@ const invalid = [
   },
   {
     name: 'complex gateway',
-    moddleElement: createModdle(createProcess('<bpmn:complexGateway id="ComplexGateway_1" />')),
+    moddleElement: createModdle(createCloudProcess('<bpmn:complexGateway id="ComplexGateway_1" />')),
     report: {
       id: 'ComplexGateway_1',
       message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 1.0'
@@ -266,15 +266,22 @@ const invalid = [
   {
     name: 'lane',
     moddleElement: createModdle(createDefinitions(`
-      <bpmn:collaboration id="Collaboration_1">
-        <bpmn:participant id="Participant_1" processRef="Process_1" />
-      </bpmn:collaboration>
-      <bpmn:process id="Process_1">
-        <bpmn:laneSet id="LaneSet_1">
-          <bpmn:lane id="Lane_1" />
-        </bpmn:laneSet>
-      </bpmn:process>
-    `)),
+    <bpmn:collaboration id="Collaboration_1">
+      <bpmn:participant id="Participant_1" processRef="Process_1" />
+    </bpmn:collaboration>
+    <bpmn:process id="Process_1">
+      <bpmn:laneSet id="LaneSet_1">
+        <bpmn:lane id="Lane_1" />
+      </bpmn:laneSet>
+    </bpmn:process>
+  `, {
+      namespaces: `
+        xmlns:modeler="http://camunda.org/schema/modeler/1.0"
+        xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+      `,
+      executionPlatform: 'Camunda Platform',
+      executionPlatformVersion: '1.0.0'
+    })),
     report: {
       id: 'Process_1',
       message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 1.0'
@@ -282,7 +289,7 @@ const invalid = [
   },
   {
     name: 'manual task',
-    moddleElement: createModdle(createProcess('<bpmn:manualTask id="ManualTask_1" />')),
+    moddleElement: createModdle(createCloudProcess('<bpmn:manualTask id="ManualTask_1" />')),
     report: {
       id: 'ManualTask_1',
       message: 'Element of type <bpmn:ManualTask> not supported by Camunda Cloud 1.0'
@@ -290,7 +297,7 @@ const invalid = [
   },
   {
     name: 'script task',
-    moddleElement: createModdle(createProcess('<bpmn:scriptTask id="ScriptTask_1" />')),
+    moddleElement: createModdle(createCloudProcess('<bpmn:scriptTask id="ScriptTask_1" />')),
     report: {
       id: 'ScriptTask_1',
       message: 'Element of type <bpmn:ScriptTask> not supported by Camunda Cloud 1.0'
@@ -298,7 +305,7 @@ const invalid = [
   },
   {
     name: 'send task',
-    moddleElement: createModdle(createProcess('<bpmn:sendTask id="SendTask_1" />')),
+    moddleElement: createModdle(createCloudProcess('<bpmn:sendTask id="SendTask_1" />')),
     report: {
       id: 'SendTask_1',
       message: 'Element of type <bpmn:SendTask> not supported by Camunda Cloud 1.0'
@@ -306,7 +313,7 @@ const invalid = [
   },
   {
     name: 'signal start event',
-    moddleElement: createModdle(createProcess(`
+    moddleElement: createModdle(createCloudProcess(`
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
     </bpmn:startEvent>
