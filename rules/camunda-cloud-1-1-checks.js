@@ -1,11 +1,12 @@
 const camundaCloud10Checks = require('./camunda-cloud-1-0-checks');
 
+const { checkSome } = require('./utils/rule');
+
 const {
-  checkSome,
   hasLoopCharacteristicsOfType,
   hasNoEventDefinition,
   hasNoLoopCharacteristics
-} = require('./utils/rule');
+} = require('./utils/element');
 
 module.exports = [
   ...camundaCloud10Checks,

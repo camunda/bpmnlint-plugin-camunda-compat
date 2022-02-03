@@ -1,12 +1,13 @@
+const { checkSome } = require('./utils/rule');
+
 const {
-  checkSome,
   hasEventDefinitionOfType,
   hasLoopCharacteristicsOfType,
   hasNoEventDefinition,
   hasNoLanes,
   hasNoLoopCharacteristics,
   isNotBpmn
-} = require('./utils/rule');
+} = require('./utils/element');
 
 module.exports = [
   {

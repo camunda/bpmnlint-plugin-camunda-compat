@@ -1,6 +1,6 @@
 const camundaCloud11Checks = require('./camunda-cloud-1-1-checks');
 
-const { hasEventDefinitionOfType } = require('./utils/rule');
+const { hasEventDefinitionOfType } = require('./utils/element');
  
 module.exports = [
   ...camundaCloud11Checks,

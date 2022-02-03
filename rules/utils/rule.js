@@ -1,7 +1,7 @@
 const {
-  isArray,
-  isNil,
   isString,
+  every,
+  some,
 } = require('min-dash');
 
 const {
@@ -31,18 +31,27 @@ module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatfor
 
         const result = checkNode(node, checks);
 
+        const id = node.get('id') || '';
+
         if (result === false) {
-          reporter.report(node.get('id') || '', `Element of type <${ node.$type }> not supported by ${ ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
+          reporter.report(id, `Element of type <${ node.$type }> not supported by ${ ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
         }
 
         if (isString(result)) {
-          reporter.report(node.get('id') || '', `Element of type <${ result }> not supported by ${ ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
+          const message = addExecutionPlatform(result, ruleExecutionPlatform, toSemverMinor(ruleExecutionPlatformVersion));
+
+          reporter.report(id, message);
         }
       }
     };
   };
 };
 
+/**
+ * Create no-op rule that always returns false resulting in early return.
+ *
+ * @returns {Function}
+ */
 module.exports.createNoopRule = function() {
   return () => {
     return {
@@ -52,41 +61,49 @@ module.exports.createNoopRule = function() {
 };
 
 /**
+ * Run checks on a node. Return true if at least one of the checks returns
+ * true. Otherwise return the first string returned by a check. Otherwise return
+ * false.
+ *
  * @param {ModdleElement} node
  * @param {Array<Function>} checks
  *
- * @returns boolean|String
+ * @returns boolean|string
  */
 function checkNode(node, checks) {
-  return checks.reduce((previousResult, check) => {
-    if (previousResult === true) {
-      return previousResult;
-    }
+  const results = checks.map((check) => {
 
     // (1) check using type only
     if (isString(check)) {
-      return is(node, check) || previousResult;
+      return is(node, check);
     }
 
     const { type } = check;
 
     // (2) check using function only
     if (!type) {
-      return check.check(node) || previousResult;
+      return check.check(node);
     }
 
     // (3) check using type and function
     if (!is(node, type)) {
-      return previousResult;
+      return false;
     }
 
-    return check.check(node) || previousResult;
-  }, false);
+    return check.check(node);
+  });
+
+  return results.find((result) => result === true)
+    || results.find((result) => isString(result))
+    || false;
 }
 
+module.exports.checkNode = checkNode;
+
 /**
- * If every check returns true return true.
- * Otherwise return the first false or string returned by a check.
+ * Create function that runs checks on a node. Return true if all checks return
+ * true. Otherwise return the first string returned by a check. Otherwise return
+ * false.
  *
  * @param  {Array<Function>} checks
  *
@@ -94,21 +111,18 @@ function checkNode(node, checks) {
  */
 module.exports.checkEvery = function(...checks) {
   return function(node) {
-    return checks.reduce((previousResult, check) => {
-      if (!isNil(previousResult) && previousResult !== true) {
-        return previousResult;
-      }
+    const results = checks.map((check) => check(node));
 
-      const result = check(node);
-
-      return result;
-    }, null);
+    return every(results, result => result === true)
+      || results.find((result) => isString(result))
+      || false;
   };
 }
 
 /**
- * If some check returns true return true.
- * Otherwise return the first false or string returned by a check.
+ * Create function that runs checks on a node. Return true if at least one of
+ * the checks returns true. Otherwise return the first string returned by a
+ * check. Otherwise return false.
  *
  * @param  {Array<Function>} checks
  *
@@ -116,82 +130,16 @@ module.exports.checkEvery = function(...checks) {
  */
 module.exports.checkSome = function(...checks) {
   return function(node) {
-    return checks.reduce((previousResult, check) => {
-      if (previousResult === true) {
-        return previousResult;
-      }
+    const results = checks.map((check) => check(node));
 
-      const result = check(node);
-
-      if (isNil(previousResult) || result === true) {
-        return result;
-      }
-
-      return previousResult;
-    }, null);
+    return some(results, result => result === true)
+      || results.find((result) => isString(result))
+      || false;
   };
 }
 
-module.exports.hasEventDefinition = function(node) {
-  const eventDefinitions = node.get('eventDefinitions');
-
-  return eventDefinitions && eventDefinitions.length === 1;
-}
-
-module.exports.hasNoEventDefinition = function(node) {
-  const eventDefinitions = node.get('eventDefinitions');
-
-  return !eventDefinitions || !eventDefinitions.length || `${ node.$type} (${ eventDefinitions[ 0 ].$type })`;
-}
-
-module.exports.hasEventDefinitionOfType = function(types) {
-  return function(node) {
-    if (!isArray(types)) {
-      types = [ types ];
-    }
-
-    const eventDefinitions = node.get('eventDefinitions');
-
-    if (!eventDefinitions || eventDefinitions.length !== 1) {
-      return false;
-    }
-
-    const eventDefinition = eventDefinitions[ 0 ];
-
-    return isAny(eventDefinition, types) || `${ node.$type} (${ eventDefinition.$type })`;
-  };
-}
-
-module.exports.hasLoopCharacteristics = function(node) {
-  const loopCharacteristics = node.get('loopCharacteristics');
-
-  return !!loopCharacteristics;
-}
-
-module.exports.hasNoLoopCharacteristics = function(node) {
-  const loopCharacteristics = node.get('loopCharacteristics');
-
-  return !loopCharacteristics || `${ node.$type} (${ loopCharacteristics.$type })`;
-}
-
-module.exports.hasNoLanes = function(node) {
-  const laneSets = node.get('laneSets');
-
-  return !laneSets || !laneSets.length || `${ node.$type} (bpmn:LaneSet)`;
-}
-
-module.exports.hasLoopCharacteristicsOfType = function(type) {
-  return function(node) {
-    const loopCharacteristics = node.get('loopCharacteristics');
-
-    if (!loopCharacteristics) {
-      return false;
-    }
-
-    return is(loopCharacteristics, type) || `${ node.$type} (${ loopCharacteristics.$type })`;
-  };
-}
-
-module.exports.isNotBpmn = function(node) {
-  return !is(node, 'bpmn:BaseElement');
+function addExecutionPlatform(string, executionPlatform, executionPlatformVersion) {
+  return string
+    .replace('{{ executionPlatform }}', executionPlatform)
+    .replace('{{ executionPlatformVersion }}', executionPlatformVersion);
 }

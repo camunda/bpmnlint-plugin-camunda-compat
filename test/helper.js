@@ -1,6 +1,7 @@
 const BpmnModdle = require('bpmn-moddle');
 
-const modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
+const camundaModdleSchema = require('camunda-bpmn-moddle/resources/camunda.json'),
+      modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
       zeebeModdleSchema = require('zeebe-bpmn-moddle/resources/zeebe.json');
 
 const readFileSync = require('fs').readFileSync;
@@ -158,3 +159,15 @@ async function createModdle(xml, version) {
 }
 
 module.exports.createModdle = createModdle;
+
+function createElement(type, attrs) {
+  const moddle = new BpmnModdle({
+    modeler: modelerModdleSchema,
+    camunda: camundaModdleSchema,
+    zeebe: zeebeModdleSchema
+  });
+
+  return moddle.create(type, attrs);
+}
+
+module.exports.createElement = createElement;
