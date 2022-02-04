@@ -138,10 +138,16 @@ async function createModdle(xml, version) {
     zeebe: zeebeModdleSchema
   });
 
-  const {
-    rootElement: root,
-    warnings = []
-  } = await moddle.fromXML(xml, 'bpmn:Definitions', { lax: true });
+  let root, warnings;
+
+  try {
+    ({
+      rootElement: root,
+      warnings = []
+    } = await moddle.fromXML(xml, 'bpmn:Definitions', { lax: true }));
+  } catch (err) {
+    console.log(err);
+  }
 
   if (version) {
     root.set('modeler:executionPlatform', 'Camunda Cloud');
