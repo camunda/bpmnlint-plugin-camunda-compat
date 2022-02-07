@@ -99,7 +99,7 @@ describe('rule', function() {
       // when
       const ruleFactory = createNoopRule(),
             rule = ruleFactory();
-  
+
       // then
       expect(rule).to.exist;
     });
@@ -110,7 +110,7 @@ describe('rule', function() {
       // when
       const ruleFactory = createNoopRule(),
             rule = ruleFactory();
-  
+
       // then
       expect(rule.check()).to.be.false;
     });

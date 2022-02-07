@@ -15,6 +15,7 @@ const valid = [
   'DataStoreTest.bpmn',
   'DefinitionsTest.shouldImportEmptyDefinitions.bpmn',
   'DefinitionsTest.shouldNotAffectComments.bpmn',
+
   // 'DefinitionsTest.shouldNotAffectCommentsResult.bpmn',
   'DefinitionsTest.shouldNotImportWrongOrderedSequence.bpmn',
   'GenerateIdTest.bpmn',
@@ -51,9 +52,9 @@ const invalid = [
     moddleElement: readModdle(path.join(__dirname, 'fixtures', 'CamundaExtensionsTest.xml')),
     report: [
       {
-        category: "error",
-        id: "endEvent",
-        message: "Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Camunda Cloud 1.1"
+        category: 'error',
+        id: 'endEvent',
+        message: 'Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Camunda Cloud 1.1'
       }
     ]
   },

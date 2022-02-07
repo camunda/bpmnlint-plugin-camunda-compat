@@ -7,4 +7,4 @@
  */
 module.exports.toSemverMinor = function(string) {
   return string && string.split(/\./).slice(0, 2).join('.');
-}
+};

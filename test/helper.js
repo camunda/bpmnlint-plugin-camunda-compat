@@ -17,9 +17,9 @@ module.exports.createPlaformCollaboration = function(executionPlatformVersion) {
       `,
       executionPlatform: 'Camunda Platform',
       executionPlatformVersion
-    })
+    });
   };
-}
+};
 
 module.exports.createCloudCollaboration = function(executionPlatformVersion) {
   return function(bpmn = '', bpmndi = '') {
@@ -32,9 +32,9 @@ module.exports.createCloudCollaboration = function(executionPlatformVersion) {
       `,
       executionPlatform: 'Camunda Cloud',
       executionPlatformVersion
-    })
+    });
   };
-}
+};
 
 module.exports.createPlaformProcess = function(executionPlatformVersion) {
   return function(bpmn = '', bpmndi = '') {
@@ -47,9 +47,9 @@ module.exports.createPlaformProcess = function(executionPlatformVersion) {
       `,
       executionPlatform: 'Camunda Platform',
       executionPlatformVersion
-    })
+    });
   };
-}
+};
 
 module.exports.createCloudProcess = function(executionPlatformVersion) {
   return function(bpmn = '', bpmndi = '') {
@@ -62,9 +62,9 @@ module.exports.createCloudProcess = function(executionPlatformVersion) {
       `,
       executionPlatform: 'Camunda Cloud',
       executionPlatformVersion
-    })
+    });
   };
-}
+};
 
 function createCollaboration(options) {
   const {
@@ -82,7 +82,7 @@ function createCollaboration(options) {
     <bpmn:process id="Process_1"/>
     ${ bpmndi }
   `, rest);
-};
+}
 
 function createProcess(options) {
   const {
@@ -97,7 +97,7 @@ function createProcess(options) {
     </bpmn:process>
     ${ bpmndi }
   `, rest);
-};
+}
 
 function createDefinitions(xml = '', options = {}) {
   const {
@@ -127,10 +127,10 @@ module.exports.createDefinitions = createDefinitions;
 module.exports.readModdle = function(version) {
   return function(filePath) {
     const contents = readFileSync(filePath, 'utf8');
-  
+
     return createModdle(contents, version);
   };
-}
+};
 
 async function createModdle(xml, version) {
   const moddle = new BpmnModdle({

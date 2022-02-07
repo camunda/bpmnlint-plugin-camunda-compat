@@ -16,8 +16,8 @@ module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatfor
     return {
       check: (node, reporter) => {
         if (is(node, 'bpmn:Definitions')) {
-          executionPlatform = node.get('modeler:executionPlatform');
-          executionPlatformVersion = node.get('modeler:executionPlatformVersion');
+          const executionPlatform = node.get('modeler:executionPlatform');
+          const executionPlatformVersion = node.get('modeler:executionPlatformVersion');
 
           if (!executionPlatform
             || executionPlatform !== ruleExecutionPlatform
@@ -117,7 +117,7 @@ module.exports.checkEvery = function(...checks) {
       || results.find((result) => isString(result))
       || false;
   };
-}
+};
 
 /**
  * Create function that runs checks on a node. Return true if at least one of
@@ -136,7 +136,7 @@ module.exports.checkSome = function(...checks) {
       || results.find((result) => isString(result))
       || false;
   };
-}
+};
 
 function addExecutionPlatform(string, executionPlatform, executionPlatformVersion) {
   return string

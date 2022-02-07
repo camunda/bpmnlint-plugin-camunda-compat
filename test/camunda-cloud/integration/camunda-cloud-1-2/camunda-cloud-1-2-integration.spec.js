@@ -17,6 +17,7 @@ const valid = [
   'DataStoreTest.bpmn',
   'DefinitionsTest.shouldImportEmptyDefinitions.bpmn',
   'DefinitionsTest.shouldNotAffectComments.bpmn',
+
   // 'DefinitionsTest.shouldNotAffectCommentsResult.bpmn',
   'DefinitionsTest.shouldNotImportWrongOrderedSequence.bpmn',
   'GenerateIdTest.bpmn',
