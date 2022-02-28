@@ -31,6 +31,8 @@
     "eslint-plugin-bpmn-io": "^0.13.0",
     "mocha": "^5.2.0",
     "modeler-moddle": "^0.1.0",
+    "sinon": "^13.0.1",
+    "sinon-chai": "^3.7.0",
     "zeebe-bpmn-moddle": "^0.10.0"
   },
   "dependencies": {
