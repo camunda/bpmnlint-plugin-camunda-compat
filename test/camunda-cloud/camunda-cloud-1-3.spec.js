@@ -12,12 +12,67 @@ const createCloudProcess = require('../helper').createCloudProcess('1.3.0');
 const { valid: camundaCloud12Valid } = require('./camunda-cloud-1-2.spec');
 
 const valid = [
-  ...camundaCloud12Valid
+  ...camundaCloud12Valid,
+  {
+    name: 'business rule task (called decision)',
+    moddleElement: createModdle(createCloudProcess(`
+      <bpmn:businessRuleTask id="BusinessRuleTask_1">
+        <bpmn:extensionElements>
+          <zeebe:calledDecision decisionId="foo" resultVariable="bar"/>
+        </bpmn:extensionElements>
+      </bpmn:businessRuleTask>
+    `))
+  },
 ];
 
 module.exports.valid = valid;
 
 const invalid = [
+  {
+    name: 'business rule task (no task definition)',
+    moddleElement: createModdle(createCloudProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
+    report: {
+      id: 'BusinessRuleTask_1',
+      message: 'Element of type <bpmn:BusinessRuleTask> must have either <zeebe:CalledDecision> or <zeebe:TaskDefinition> extension element'
+    }
+  },
+  {
+    name: 'business rule task (no task definition type)',
+    moddleElement: createModdle(createCloudProcess(`
+      <bpmn:businessRuleTask id="BusinessRuleTask_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition />
+        </bpmn:extensionElements>
+      </bpmn:businessRuleTask>
+    `)),
+    report: [
+      {
+        id: 'BusinessRuleTask_1',
+        message: 'Element of type <zeebe:TaskDefinition> must have <zeebe:type> property',
+        path: [ 'extensionElements', 'values', 0, 'type' ]
+      },
+      {
+        id: 'BusinessRuleTask_1',
+        message: 'Element of type <zeebe:TaskDefinition> must have <zeebe:retries> property',
+        path: [ 'extensionElements', 'values', 0, 'retries' ]
+      }
+    ]
+  },
+  {
+    name: 'business rule task (task definition and called decision)',
+    moddleElement: createModdle(createCloudProcess(`
+      <bpmn:businessRuleTask id="BusinessRuleTask_1">
+        <bpmn:extensionElements>
+          <zeebe:calledDecision />
+          <zeebe:taskDefinition />
+        </bpmn:extensionElements>
+      </bpmn:businessRuleTask>
+    `)),
+    report: {
+      id: 'BusinessRuleTask_1',
+      message: 'Element of type <bpmn:BusinessRuleTask> must have either <zeebe:CalledDecision> or <zeebe:TaskDefinition> extension element'
+    }
+  },
   {
     name: 'complex gateway',
     moddleElement: createModdle(createCloudProcess('<bpmn:complexGateway id="ComplexGateway_1" />')),
@@ -42,7 +97,7 @@ const invalid = [
         xmlns:modeler="http://camunda.org/schema/modeler/1.0"
         xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
       `,
-      executionPlatform: 'Camunda Platform',
+      executionPlatform: 'Camunda Cloud',
       executionPlatformVersion: '1.3.0'
     })),
     report: {

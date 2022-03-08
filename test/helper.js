@@ -124,7 +124,7 @@ function createDefinitions(xml = '', options = {}) {
 
 module.exports.createDefinitions = createDefinitions;
 
-module.exports.readModdle = function(version) {
+module.exports.readModdle = function(version = '1.0.0') {
   return function(filePath) {
     const contents = readFileSync(filePath, 'utf8');
 

@@ -1,20 +1,21 @@
 const camundaCloud10Checks = require('./camunda-cloud-1-0-checks');
 
-const { checkSome } = require('./utils/rule');
+const { checkSome, checkEvery } = require('./utils/rule');
 
 const {
-  hasLoopCharacteristicsOfType,
-  hasNoEventDefinition,
-  hasNoLoopCharacteristics
+  hasLoopCharacteristicsOfTypeOrNone,
+  hasNoEventDefinition
 } = require('./utils/element');
+
+const { hasZeebeTaskDefinition } = require('./utils/cloud/element');
 
 module.exports = [
   ...camundaCloud10Checks,
   {
     type: 'bpmn:BusinessRuleTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
+    check: checkEvery(
+      hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics'),
+      hasZeebeTaskDefinition
     )
   },
   {
@@ -23,23 +24,14 @@ module.exports = [
   },
   {
     type: 'bpmn:ManualTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
-    )
+    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
   },
   {
     type: 'bpmn:ScriptTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
-    )
+    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
   },
   {
     type: 'bpmn:SendTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
-    )
+    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
   }
 ];

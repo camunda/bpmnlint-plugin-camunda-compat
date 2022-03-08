@@ -35,6 +35,14 @@ module.exports.valid = valid;
 
 const invalid = [
   {
+    name: 'business rule task',
+    moddleElement: createModdle(createCloudProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
+    report: {
+      id: 'BusinessRuleTask_1',
+      message: 'Element of type <bpmn:BusinessRuleTask> must have <zeebe:TaskDefinition> extension element'
+    }
+  },
+  {
     name: 'complex gateway',
     moddleElement: createModdle(createCloudProcess('<bpmn:complexGateway id="ComplexGateway_1" />')),
     report: {
@@ -58,7 +66,7 @@ const invalid = [
         xmlns:modeler="http://camunda.org/schema/modeler/1.0"
         xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
       `,
-      executionPlatform: 'Camunda Platform',
+      executionPlatform: 'Camunda Cloud',
       executionPlatformVersion: '1.2.0'
     })),
     report: {

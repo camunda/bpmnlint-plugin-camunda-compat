@@ -1,18 +1,20 @@
 const camundaCloud11Checks = require('./camunda-cloud-1-1-checks');
 
-const { hasEventDefinitionOfType } = require('./utils/element');
+const { replaceCheck } = require('./utils/rule');
+
+const { hasEventDefinitionOfTypeOrNone } = require('./utils/element');
 
 module.exports = [
-  ...camundaCloud11Checks,
-  {
-    type: 'bpmn:EndEvent',
-    check: hasEventDefinitionOfType([
+  ...replaceCheck(
+    camundaCloud11Checks,
+    'bpmn:IntermediateThrowEvent',
+    hasEventDefinitionOfTypeOrNone([
       'bpmn:MessageEventDefinition'
     ])
-  },
+  ),
   {
-    type: 'bpmn:IntermediateThrowEvent',
-    check: hasEventDefinitionOfType([
+    type: 'bpmn:EndEvent',
+    check: hasEventDefinitionOfTypeOrNone([
       'bpmn:MessageEventDefinition'
     ])
   }

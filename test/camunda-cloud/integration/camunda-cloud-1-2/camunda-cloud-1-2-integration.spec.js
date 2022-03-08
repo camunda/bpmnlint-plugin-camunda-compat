@@ -9,8 +9,6 @@ const camundaCloud12Rule = require('../../../../rules/camunda-cloud-1-2');
 // cf. https://github.com/camunda-cloud/zeebe/tree/1.2.5/bpmn-model/src/test/java/io/camunda/zeebe/model/bpmn
 const valid = [
   'BpmnDiTest.xml',
-  'CamundaExtensionsCompatabilityTest.xml',
-  'CamundaExtensionsTest.xml',
   'CollaborationParserTest.bpmn',
   'ConditionalSequenceFlowTest.xml',
   'DataObjectTest.bpmn',
@@ -38,6 +36,24 @@ const valid = [
 });
 
 const invalid = [
+  {
+    name: 'CamundaExtensionsCompatabilityTest.xml',
+    moddleElement: readModdle(path.join(__dirname, 'fixtures', 'CamundaExtensionsCompatabilityTest.xml')),
+    report: {
+      category: 'error',
+      id: 'businessRuleTask',
+      message: 'Element of type <bpmn:BusinessRuleTask> must have <zeebe:TaskDefinition> extension element'
+    }
+  },
+  {
+    name: 'CamundaExtensionsTest.xml',
+    moddleElement: readModdle(path.join(__dirname, 'fixtures', 'CamundaExtensionsTest.xml')),
+    report: {
+      category: 'error',
+      id: 'businessRuleTask',
+      message: 'Element of type <bpmn:BusinessRuleTask> must have <zeebe:TaskDefinition> extension element'
+    }
+  },
   {
     name: 'EventDefinitionsTest.xml',
     moddleElement: readModdle(path.join(__dirname, 'fixtures', 'EventDefinitionsTest.xml')),

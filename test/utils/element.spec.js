@@ -1,50 +1,16 @@
 const { expect } = require('chai');
 
 const {
-  hasEventDefinition,
   hasEventDefinitionOfType,
-  hasLoopCharacteristics,
-  hasLoopCharacteristicsOfType,
+  hasLoopCharacteristicsOfTypeOrNone,
   hasNoEventDefinition,
   hasNoLanes,
-  hasNoLoopCharacteristics
+  hasEventDefinitionOfTypeOrNone
 } = require('../../rules/utils/element');
 
 const { createElement } = require('../helper');
 
-describe('rule', function() {
-
-  describe('#hasEventDefinition', function() {
-
-    it('should return true', function() {
-
-      // given
-      const node = createElement('bpmn:StartEvent', {
-        eventDefinitions: [ createElement('bpmn:ErrorEventDefinition') ]
-      });
-
-      // when
-      const result = hasEventDefinition(node);
-
-      // then
-      expect(result).to.be.true;
-    });
-
-
-    it('should return false', function() {
-
-      // given
-      const node = createElement('bpmn:StartEvent');
-
-      // when
-      const result = hasEventDefinition(node);
-
-      // then
-      expect(result).to.be.false;
-    });
-
-  });
-
+describe('util - element', function() {
 
   describe('#hasEventDefinitionOfType', function() {
 
@@ -80,39 +46,53 @@ describe('rule', function() {
   });
 
 
-  describe('#hasLoopCharacteristics', function() {
+  describe('#hasEventDefinitionOfTypeOrNone', function() {
 
     it('should return true', function() {
 
       // given
-      const node = createElement('bpmn:ServiceTask', {
-        loopCharacteristics: [ createElement('bpmn:MultiInstanceLoopCharacteristics') ]
+      const node = createElement('bpmn:StartEvent', {
+        eventDefinitions: [ createElement('bpmn:ErrorEventDefinition') ]
       });
 
       // when
-      const result = hasLoopCharacteristics(node);
+      const result = hasEventDefinitionOfTypeOrNone('bpmn:ErrorEventDefinition')(node);
 
       // then
       expect(result).to.be.true;
     });
 
 
-    it('should return false', function() {
+    it('should return true', function() {
 
       // given
-      const node = createElement('bpmn:ServiceTask');
+      const node = createElement('bpmn:StartEvent');
 
       // when
-      const result = hasLoopCharacteristics(node);
+      const result = hasEventDefinitionOfTypeOrNone('bpmn:ErrorEventDefinition')(node);
 
       // then
-      expect(result).to.be.false;
+      expect(result).to.be.true;
+    });
+
+
+    it('should return string', function() {
+
+      // given
+      const node = createElement('bpmn:StartEvent', {
+        eventDefinitions: [ createElement('bpmn:ErrorEventDefinition') ]
+      });
+
+      // when
+      const result = hasEventDefinitionOfTypeOrNone('bpmn:SignalEventDefinition')(node);
+
+      // then
+      expect(result).to.equal('Element of type <bpmn:StartEvent (bpmn:ErrorEventDefinition)> not supported by {{ executionPlatform }} {{ executionPlatformVersion }}');
     });
 
   });
 
-
-  describe('#hasLoopCharacteristicsOfType', function() {
+  describe('#hasLoopCharacteristicsOfTypeOrNone', function() {
 
     it('should return true', function() {
 
@@ -122,7 +102,20 @@ describe('rule', function() {
       });
 
       // when
-      const result = hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')(node);
+      const result = hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')(node);
+
+      // then
+      expect(result).to.be.true;
+    });
+
+
+    it('should return true', function() {
+
+      // given
+      const node = createElement('bpmn:ServiceTask');
+
+      // when
+      const result = hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')(node);
 
       // then
       expect(result).to.be.true;
@@ -137,7 +130,7 @@ describe('rule', function() {
       });
 
       // when
-      const result = hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')(node);
+      const result = hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')(node);
 
       // then
       expect(result).to.equal('Element of type <bpmn:ServiceTask (bpmn:StandardLoopCharacteristics)> not supported by {{ executionPlatform }} {{ executionPlatformVersion }}');
@@ -212,38 +205,6 @@ describe('rule', function() {
 
       // then
       expect(result).to.equal('Element of type <bpmn:Participant (bpmn:LaneSet)> not supported by {{ executionPlatform }} {{ executionPlatformVersion }}');
-    });
-
-  });
-
-
-  describe('#hasNoLoopCharacteristics', function() {
-
-    it('should return true', function() {
-
-      // given
-      const node = createElement('bpmn:ServiceTask');
-
-      // when
-      const result = hasNoLoopCharacteristics(node);
-
-      // then
-      expect(result).to.be.true;
-    });
-
-
-    it('should return string', function() {
-
-      // given
-      const node = createElement('bpmn:ServiceTask', {
-        loopCharacteristics: createElement('bpmn:MultiInstanceLoopCharacteristics')
-      });
-
-      // when
-      const result = hasNoLoopCharacteristics(node);
-
-      // then
-      expect(result).to.equal('Element of type <bpmn:ServiceTask (bpmn:MultiInstanceLoopCharacteristics)> not supported by {{ executionPlatform }} {{ executionPlatformVersion }}');
     });
 
   });

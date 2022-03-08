@@ -1,11 +1,8 @@
-const { checkSome } = require('./utils/rule');
-
 const {
   hasEventDefinitionOfType,
-  hasLoopCharacteristicsOfType,
-  hasNoEventDefinition,
+  hasEventDefinitionOfTypeOrNone,
+  hasLoopCharacteristicsOfTypeOrNone,
   hasNoLanes,
-  hasNoLoopCharacteristics,
   isNotBpmn
 } = require('./utils/element');
 
@@ -38,12 +35,9 @@ module.exports = [
   },
   {
     type: 'bpmn:EndEvent',
-    check: checkSome(
-      hasNoEventDefinition,
-      hasEventDefinitionOfType([
-        'bpmn:ErrorEventDefinition'
-      ])
-    )
+    check: hasEventDefinitionOfTypeOrNone([
+      'bpmn:ErrorEventDefinition'
+    ])
   },
   {
     type: 'bpmn:IntermediateCatchEvent',
@@ -58,41 +52,26 @@ module.exports = [
   },
   {
     type: 'bpmn:ReceiveTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
-    )
+    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
   },
   {
     type: 'bpmn:ServiceTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
-    )
+    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
   },
   {
     type: 'bpmn:StartEvent',
-    check: checkSome(
-      hasNoEventDefinition,
-      hasEventDefinitionOfType([
-        'bpmn:ErrorEventDefinition',
-        'bpmn:MessageEventDefinition',
-        'bpmn:TimerEventDefinition'
-      ])
-    )
+    check: hasEventDefinitionOfTypeOrNone([
+      'bpmn:ErrorEventDefinition',
+      'bpmn:MessageEventDefinition',
+      'bpmn:TimerEventDefinition'
+    ])
   },
   {
     type: 'bpmn:SubProcess',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
-    )
+    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
   },
   {
     type: 'bpmn:UserTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
-    )
+    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
   }
 ];

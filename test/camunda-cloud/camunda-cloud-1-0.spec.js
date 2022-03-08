@@ -279,7 +279,7 @@ const invalid = [
         xmlns:modeler="http://camunda.org/schema/modeler/1.0"
         xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
       `,
-      executionPlatform: 'Camunda Platform',
+      executionPlatform: 'Camunda Cloud',
       executionPlatformVersion: '1.0.0'
     })),
     report: {

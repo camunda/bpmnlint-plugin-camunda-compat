@@ -1,16 +1,26 @@
-const { expect } = require('chai');
+const chai = require('chai'),
+      { expect } = chai;
+
+const { spy } = require('sinon');
+
+const sinonChai = require('sinon-chai');
+
+chai.should();
+
+chai.use(sinonChai);
 
 const {
   checkNode,
   createNoopRule,
   createRule,
   checkEvery,
-  checkSome
+  checkSome,
+  replaceCheck
 } = require('../../rules/utils/rule');
 
 const { createElement } = require('../helper');
 
-describe('rule', function() {
+describe('util - rule', function() {
 
   describe('#createRule', function() {
 
@@ -18,7 +28,7 @@ describe('rule', function() {
 
       // when
       const checks = [
-        { check: () => false }
+        createCheck(() => false)
       ];
 
       const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
@@ -29,64 +39,267 @@ describe('rule', function() {
     });
 
 
-    it('should run all checks', async function() {
+    describe('checks', function() {
 
-      // given
-      const checks = [
-        { check: () => false },
-        { check: () => 'foo {{ executionPlatform }} bar {{ executionPlatformVersion }} baz' },
-        { check: () => false }
-      ];
+      it('should run all checks', async function() {
 
-      const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
-            rule = ruleFactory();
+        // given
+        const check1Spy = spy(() => false);
+        const check2Spy = spy(() => 'foo {{ executionPlatform }} bar {{ executionPlatformVersion }} baz');
+        const check3Spy = spy(() => false);
 
-      const node = createElement('bpmn:Definitions', {
-        id: 'Definitions_1',
-        'modeler:executionPlatform': 'Camunda Cloud',
-        'modeler:executionPlatformVersion': '1.0.0'
+        const checks = [
+          createCheck(check1Spy),
+          createCheck(check2Spy),
+          createCheck(check3Spy)
+        ];
+
+        const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
+              rule = ruleFactory();
+
+        const node = createElement('bpmn:Definitions', {
+          id: 'Definitions_1',
+          'modeler:executionPlatform': 'Camunda Cloud',
+          'modeler:executionPlatformVersion': '1.0.0'
+        });
+
+        const reporter = new MockReporter();
+
+        // when
+        rule.check(node, reporter);
+
+        // then
+        expect(reporter.getReports()).to.eql([
+          {
+            id: 'Definitions_1',
+            message: 'foo Camunda Cloud bar 1.0 baz'
+          }
+        ]);
+
+        expect(check1Spy).to.have.been.calledOnce;
+        expect(check2Spy).to.have.been.calledOnce;
+        expect(check3Spy).to.have.been.calledOnce;
       });
 
-      const reporter = new MockReporter();
 
-      // when
-      rule.check(node, reporter);
+      it('should not run any checks (early return)', function() {
 
-      // then
-      expect(reporter.getReports()).to.eql([
-        {
+        // given
+        const check1Spy = spy(() => false);
+        const check2Spy = spy(() => 'foo {{ executionPlatform }} bar {{ executionPlatformVersion }} baz');
+        const check3Spy = spy(() => false);
+
+        const checks = [
+          createCheck(check1Spy),
+          createCheck(check2Spy),
+          createCheck(check3Spy)
+        ];
+
+        const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
+              rule = ruleFactory();
+
+        const node = createElement('bpmn:Definitions', {
           id: 'Definitions_1',
-          message: 'foo Camunda Cloud bar 1.0 baz'
-        }
-      ]);
+          'modeler:executionPlatform': 'Camunda Cloud',
+          'modeler:executionPlatformVersion': '1.1.0'
+        });
+
+        const reporter = new MockReporter();
+
+        // when
+        rule.check(node, reporter);
+
+        // then
+        expect(reporter.getReports()).to.be.empty;
+
+        expect(check1Spy).not.to.have.been.called;
+        expect(check2Spy).not.to.have.been.called;
+        expect(check3Spy).not.to.have.been.called;
+      });
+
     });
 
 
-    it('should not run all checks (early return)', function() {
+    describe('reports', function() {
 
-      // given
-      const checks = [
-        { check: () => false },
-        { check: () => 'foo' },
-        { check: () => false }
-      ];
+      let node,
+          reporter;
 
-      const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
-            rule = ruleFactory();
+      beforeEach(function() {
+        node = createElement('bpmn:Definitions', {
+          id: 'Definitions_1',
+          'modeler:executionPlatform': 'Camunda Cloud',
+          'modeler:executionPlatformVersion': '1.0.0'
+        });
 
-      const node = createElement('bpmn:Definitions', {
-        id: 'Definitions_1',
-        'modeler:executionPlatform': 'Camunda Cloud',
-        'modeler:executionPlatformVersion': '1.1.0'
+        reporter = new MockReporter();
       });
 
-      const reporter = new MockReporter();
 
-      // when
-      rule.check(node, reporter);
+      it('should report (results = false)', async function() {
 
-      // then
-      expect(reporter.getReports()).to.be.empty;
+        // given
+        const checks = [
+          createCheck(() => false)
+        ];
+
+        const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
+              rule = ruleFactory();
+
+        // when
+        rule.check(node, reporter);
+
+        // then
+        expect(reporter.getReports()).to.eql([
+          {
+            id: 'Definitions_1',
+            message: 'Element of type <bpmn:Definitions> not supported by Camunda Cloud 1.0'
+          }
+        ]);
+      });
+
+
+      it('should report (results = string)', async function() {
+
+        // given
+        const checks = [
+          createCheck(() => 'foo')
+        ];
+
+        const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
+              rule = ruleFactory();
+
+        // when
+        rule.check(node, reporter);
+
+        // then
+        expect(reporter.getReports()).to.eql([
+          {
+            id: 'Definitions_1',
+            message: 'foo'
+          }
+        ]);
+      });
+
+
+      it('should report (results = string[])', async function() {
+
+        // given
+        const checks = [
+          createCheck(() => [
+            'foo',
+            'bar'
+          ])
+        ];
+
+        const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
+              rule = ruleFactory();
+
+        // when
+        rule.check(node, reporter);
+
+        // then
+        expect(reporter.getReports()).to.eql([
+          {
+            id: 'Definitions_1',
+            message: 'foo'
+          },
+          {
+            id: 'Definitions_1',
+            message: 'bar'
+          }
+        ]);
+      });
+
+
+      it('should report (results = Object)', async function() {
+
+        // given
+        const checks = [
+          createCheck(() => {
+            return {
+              message: 'foo',
+              path: [ 'foo', 'bar', 'baz' ]
+            };
+          })
+        ];
+
+        const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
+              rule = ruleFactory();
+
+        // when
+        rule.check(node, reporter);
+
+        // then
+        expect(reporter.getReports()).to.eql([
+          {
+            id: 'Definitions_1',
+            message: 'foo',
+            path: [ 'foo', 'bar', 'baz' ]
+          }
+        ]);
+      });
+
+
+      it('should report (results = Object[])', async function() {
+
+        // given
+        const checks = [
+          createCheck(() => {
+            return [
+              {
+                message: 'foo',
+                path: [ 'foo', 'bar', 'baz' ]
+              },
+              {
+                message: 'bar'
+              }
+            ];
+          })
+        ];
+
+        const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
+              rule = ruleFactory();
+
+        // when
+        rule.check(node, reporter);
+
+        // then
+        expect(reporter.getReports()).to.eql([
+          {
+            id: 'Definitions_1',
+            message: 'foo',
+            path: [ 'foo', 'bar', 'baz' ]
+          },
+          {
+            id: 'Definitions_1',
+            message: 'bar'
+          }
+        ]);
+      });
+
+
+      it('should add execution platform and version', async function() {
+
+        // given
+        const checks = [
+          createCheck(() => 'foo {{ executionPlatform }} bar {{ executionPlatformVersion }} baz')
+        ];
+
+        const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
+              rule = ruleFactory();
+
+        // when
+        rule.check(node, reporter);
+
+        // then
+        expect(reporter.getReports()).to.eql([
+          {
+            id: 'Definitions_1',
+            message: 'foo Camunda Cloud bar 1.0 baz'
+          }
+        ]);
+      });
     });
 
   });
@@ -130,9 +343,9 @@ describe('rule', function() {
 
       // given
       const checks = [
-        { check: () => false },
+        createCheck(() => false),
         'bpmn:Definitions',
-        { check: () => false }
+        createCheck(() => false)
       ];
 
       // when
@@ -147,9 +360,9 @@ describe('rule', function() {
 
       // given
       const checks = [
-        { check: () => false },
-        { check: () => true },
-        { check: () => false }
+        createCheck(() => false),
+        createCheck(() => true),
+        createCheck(() => false)
       ];
 
       // when
@@ -164,9 +377,9 @@ describe('rule', function() {
 
       // given
       const checks = [
-        { check: () => false },
-        { type: 'bpmn:Definitions', check: () => true },
-        { check: () => false }
+        createCheck(() => false),
+        createCheck(() => true, 'bpmn:Definitions'),
+        createCheck(() => false)
       ];
 
       // when
@@ -181,9 +394,9 @@ describe('rule', function() {
 
       // given
       const checks = [
-        { check: () => false },
+        createCheck(() => false),
         'bpmn:Task',
-        { check: () => false }
+        createCheck(() => false)
       ];
 
       // when
@@ -198,9 +411,9 @@ describe('rule', function() {
 
       // given
       const checks = [
-        { check: () => false },
-        { check: () => false },
-        { check: () => false }
+        createCheck(() => false),
+        createCheck(() => false),
+        createCheck(() => false)
       ];
 
       // when
@@ -215,10 +428,10 @@ describe('rule', function() {
 
       // given
       const checks = [
-        { check: () => false },
-        { type: 'bpmn:Definitions', check: () => false },
-        { type: 'bpmn:Task', check: () => true },
-        { check: () => false }
+        createCheck(() => false),
+        createCheck(() => false, 'bpmn:Definitions'),
+        createCheck(() => true, 'bpmn:Task'),
+        createCheck(() => false)
       ];
 
       // when
@@ -229,38 +442,134 @@ describe('rule', function() {
     });
 
 
-    it('should return string (function)', function() {
+    it('should return string[] (function)', function() {
 
       // given
       const checks = [
-        { check: () => false },
-        { check: () => 'foo' },
-        { check: () => false }
+        createCheck(() => false),
+        createCheck(() => [ 'foo' ]),
+        createCheck(() => false)
       ];
 
       // when
       const result = checkNode(node, checks);
 
       // then
-      expect(result).to.equal('foo');
+      expect(result).to.eql([ 'foo' ]);
     });
 
 
-    it('should return string (type and function)', function() {
+    it('should return string[] (type and function)', function() {
 
       // given
       const checks = [
-        { check: () => false },
-        { type: 'bpmn:task', check: () => 'bar' },
-        { type: 'bpmn:Definitions', check: () => 'foo' },
-        { check: () => false }
+        createCheck(() => false),
+        createCheck(() => [ 'bar' ], 'bpmn:Task'),
+        createCheck(() => [ 'foo' ], 'bpmn:Definitions'),
+        createCheck(() => false)
       ];
 
       // when
       const result = checkNode(node, checks);
 
       // then
-      expect(result).to.equal('foo');
+      expect(result).to.eql([ 'foo' ]);
+    });
+
+
+    it('should return object[] (function)', function() {
+
+      // given
+      const checks = [
+        createCheck(() => false),
+        createCheck(() => ({ message: 'foo' })),
+        createCheck(() => false)
+      ];
+
+      // when
+      const result = checkNode(node, checks);
+
+      // then
+      expect(result).to.eql([
+        { message: 'foo' }
+      ]);
+    });
+
+
+    it('should return object[] (type and function)', function() {
+
+      // given
+      const checks = [
+        createCheck(() => false),
+        createCheck(() => ({ message: 'bar' }), 'bpmn:Task'),
+        createCheck(() => ({ message: 'foo' }), 'bpmn:Definitions'),
+        createCheck(() => false)
+      ];
+
+      // when
+      const result = checkNode(node, checks);
+
+      // then
+      expect(result).to.eql([
+        { message: 'foo' }
+      ]);
+    });
+
+
+    it('should return string[] (function)', function() {
+
+      // given
+      const checks = [
+        createCheck(() => false),
+        createCheck(() => 'foo'),
+        createCheck(() => false)
+      ];
+
+      // when
+      const result = checkNode(node, checks);
+
+      // then
+      expect(result).to.eql([ 'foo' ]);
+    });
+
+
+    it('should return string[] (type and function)', function() {
+
+      // given
+      const checks = [
+        createCheck(() => false),
+        createCheck(() => 'bar', 'bpmn:Task'),
+        createCheck(() => 'foo', 'bpmn:Definitions'),
+        createCheck(() => false)
+      ];
+
+      // when
+      const result = checkNode(node, checks);
+
+      // then
+      expect(result).to.eql([ 'foo' ]);
+    });
+
+
+    it('should return all', function() {
+
+      // given
+      const checks = [
+        createCheck(() => false),
+        createCheck(() => [ 'bar', 'baz' ], 'bpmn:Definitions'),
+        createCheck(() => 'foo', 'bpmn:Definitions'),
+        createCheck(() => false)
+      ];
+
+      // when
+      const result = checkNode(node, checks);
+
+      // then
+      expect(result).to.eql([
+        'bar',
+        'baz',
+        'foo'
+      ]);
     });
 
   });
@@ -306,7 +615,47 @@ describe('rule', function() {
     });
 
 
-    it('should return string', function() {
+    it('should return string[]', function() {
+
+      // given
+      const checks = checkEvery(
+        () => true,
+        () => false,
+        () => [ 'foo' ]
+      );
+
+      const node = createElement('bpmn:Definitions');
+
+      // when
+      const result = checks(node);
+
+      // then
+      expect(result).to.eql([ 'foo' ]);
+    });
+
+
+    it('should return object[]', function() {
+
+      // given
+      const checks = checkEvery(
+        () => true,
+        () => false,
+        () => ({ message: 'foo' })
+      );
+
+      const node = createElement('bpmn:Definitions');
+
+      // when
+      const result = checks(node);
+
+      // then
+      expect(result).to.eql([
+        { message: 'foo' }
+      ]);
+    });
+
+
+    it('should return string[]', function() {
 
       // given
       const checks = checkEvery(
@@ -321,7 +670,30 @@ describe('rule', function() {
       const result = checks(node);
 
       // then
-      expect(result).to.equal('foo');
+      expect(result).to.eql([ 'foo' ]);
+    });
+
+
+    it('should return all', function() {
+
+      // given
+      const checks = checkEvery(
+        () => true,
+        () => [ 'bar', 'baz' ],
+        () => 'foo'
+      );
+
+      const node = createElement('bpmn:Definitions');
+
+      // when
+      const result = checks(node);
+
+      // then
+      expect(result).to.eql([
+        'bar',
+        'baz',
+        'foo'
+      ]);
     });
 
   });
@@ -367,7 +739,47 @@ describe('rule', function() {
     });
 
 
-    it('should return string', function() {
+    it('should return string[]', function() {
+
+      // given
+      const checks = checkSome(
+        () => false,
+        () => false,
+        () => [ 'foo' ]
+      );
+
+      const node = createElement('bpmn:Definitions');
+
+      // when
+      const result = checks(node);
+
+      // then
+      expect(result).to.eql([ 'foo' ]);
+    });
+
+
+    it('should return object[]', function() {
+
+      // given
+      const checks = checkSome(
+        () => false,
+        () => false,
+        () => ({ message: 'foo' })
+      );
+
+      const node = createElement('bpmn:Definitions');
+
+      // when
+      const result = checks(node);
+
+      // then
+      expect(result).to.eql([
+        { message: 'foo' }
+      ]);
+    });
+
+
+    it('should return string[]', function() {
 
       // given
       const checks = checkSome(
@@ -382,7 +794,30 @@ describe('rule', function() {
       const result = checks(node);
 
       // then
-      expect(result).to.equal('foo');
+      expect(result).to.eql([ 'foo' ]);
+    });
+
+
+    it('should return all', function() {
+
+      // given
+      const checks = checkSome(
+        () => false,
+        () => [ 'bar', 'baz' ],
+        () => 'foo'
+      );
+
+      const node = createElement('bpmn:Definitions');
+
+      // when
+      const result = checks(node);
+
+      // then
+      expect(result).to.eql([
+        'bar',
+        'baz',
+        'foo'
+      ]);
     });
 
   });
@@ -390,47 +825,159 @@ describe('rule', function() {
 
   describe('#checkEvery and #checkSome combined', function() {
 
-    it('should compose #checkEvery and #checkSome', function() {
+    describe('#checkEvery and #checkSome', function() {
 
-      // given
-      const checks = checkEvery(
-        () => true,
-        checkSome(
-          () => false,
+      it('should compose #checkEvery and #checkSome', function() {
+
+        // given
+        const checks = checkEvery(
+          () => true,
+          checkSome(
+            () => false,
+            () => true
+          ),
           () => true
-        ),
-        () => true
-      );
+        );
 
-      const node = createElement('bpmn:Definitions');
+        const node = createElement('bpmn:Definitions');
 
-      // when
-      const result = checks(node);
+        // when
+        const result = checks(node);
 
-      // then
-      expect(result).to.be.true;
+        // then
+        expect(result).to.be.true;
+      });
+
+
+      it('should return all', function() {
+
+        // given
+        const checks = checkEvery(
+          () => 'foo',
+          checkSome(
+            checkEvery(
+              () => 'foobar',
+              () => 'barbaz'
+            ),
+            () => 'bar'
+          ),
+          () => 'baz'
+        );
+
+        const node = createElement('bpmn:Definitions');
+
+        // when
+        const result = checks(node);
+
+        // then
+        expect(result).to.eql([
+          'foo',
+          'foobar',
+          'barbaz',
+          'bar',
+          'baz'
+        ]);
+      });
+
     });
 
 
-    it('should compose #checkSome and #checkEvery', function() {
+    describe('#checkSome and #checkEvery', function() {
+
+      it('should compose #checkSome and #checkEvery', function() {
+
+        // given
+        const checks = checkSome(
+          () => false,
+          checkEvery(
+            () => true,
+            () => true
+          ),
+          () => false
+        );
+
+        const node = createElement('bpmn:Definitions');
+
+        // when
+        const result = checks(node);
+
+        // then
+        expect(result).to.be.true;
+      });
+
+
+      it('should return all', function() {
+
+        // given
+        const checks = checkSome(
+          () => 'foo',
+          checkEvery(
+            checkSome(
+              () => 'foobar',
+              () => 'barbaz'
+            ),
+            () => 'bar'
+          ),
+          () => 'baz'
+        );
+
+        const node = createElement('bpmn:Definitions');
+
+        // when
+        const result = checks(node);
+
+        // then
+        expect(result).to.eql([
+          'foo',
+          'foobar',
+          'barbaz',
+          'bar',
+          'baz'
+        ]);
+      });
+
+    });
+
+  });
+
+
+  describe('#replaceCheck', function() {
+
+    it('should replace check (string)', function() {
 
       // given
-      const checks = checkSome(
-        () => false,
-        checkEvery(
-          () => true,
-          () => true
-        ),
-        () => false
-      );
-
-      const node = createElement('bpmn:Definitions');
+      let checks = [
+        createCheck(() => 'foo', 'bpmn:StartEvent'),
+        'bpmn:Definitions',
+        createCheck(() => 'baz', 'bpmn:EndEvent')
+      ];
 
       // when
-      const result = checks(node);
+      checks = replaceCheck(checks, 'bpmn:Definitions', () => 'foobar');
 
       // then
-      expect(result).to.be.true;
+      const results = checks.map(check => check.check());
+
+      expect(results).to.eql([ 'foo', 'foobar', 'baz' ]);
+    });
+
+
+    it('should replace check (object)', function() {
+
+      // given
+      let checks = [
+        createCheck(() => 'foo', 'bpmn:StartEvent'),
+        createCheck(() => 'bar', 'bpmn:Definitions'),
+        createCheck(() => 'baz', 'bpmn:EndEvent')
+      ];
+
+      // when
+      checks = replaceCheck(checks, 'bpmn:Definitions', () => 'foobar');
+
+      // then
+      const results = checks.map(check => check.check());
+
+      expect(results).to.eql([ 'foo', 'foobar', 'baz' ]);
     });
 
   });
@@ -444,7 +991,26 @@ class MockReporter {
     return this.reports;
   }
 
-  report(id, message) {
-    this.reports.push({ id, message });
+  report(id, message, path) {
+    let report = {
+      id,
+      message
+    };
+
+    if (path) {
+      report = {
+        ...report,
+        path
+      };
+    }
+
+    this.reports.push(report);
   }
+}
+
+function createCheck(check = () => {}, type) {
+  return {
+    check,
+    type
+  };
 }

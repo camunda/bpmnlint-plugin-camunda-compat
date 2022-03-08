@@ -42,6 +42,11 @@ const invalid = [
     report: [
       {
         category: 'error',
+        id: 'businessRuleTask',
+        message: 'Element of type <bpmn:BusinessRuleTask> must have <zeebe:TaskDefinition> extension element'
+      },
+      {
+        category: 'error',
         id: 'endEvent',
         message: 'Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Camunda Cloud 1.1'
       }
@@ -51,6 +56,11 @@ const invalid = [
     name: 'CamundaExtensionsTest.xml',
     moddleElement: readModdle(path.join(__dirname, 'fixtures', 'CamundaExtensionsTest.xml')),
     report: [
+      {
+        category: 'error',
+        id: 'businessRuleTask',
+        message: 'Element of type <bpmn:BusinessRuleTask> must have <zeebe:TaskDefinition> extension element'
+      },
       {
         category: 'error',
         id: 'endEvent',
