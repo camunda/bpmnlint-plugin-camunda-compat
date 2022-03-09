@@ -26,6 +26,9 @@ const valid = [
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1">
         <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" retries="bar" />
+        </bpmn:extensionElements>
       </bpmn:intermediateThrowEvent>
     `))
   }
@@ -84,6 +87,18 @@ const invalid = [
     report: {
       id: 'StartEvent_1',
       message: 'Element of type <bpmn:StartEvent (bpmn:SignalEventDefinition)> not supported by Camunda Cloud 1.2'
+    }
+  },
+  {
+    name: 'message intermediate throw event',
+    moddleElement: createModdle(createCloudProcess(`
+      <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1">
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
+      </bpmn:intermediateThrowEvent>
+    `)),
+    report: {
+      id: 'IntermediateThrowEvent_1',
+      message: 'Element of type <bpmn:IntermediateThrowEvent (bpmn:MessageEventDefinition)> must have <zeebe:TaskDefinition> extension element'
     }
   }
 ];

@@ -1,4 +1,4 @@
-const { findExtensionElement } = require('../element');
+const { findExtensionElement, hasEventDefinitionOfType } = require('../element');
 
 const { getPath } = require('@philippfromme/moddle-helpers');
 
@@ -102,6 +102,19 @@ module.exports.hasZeebeCalledElement = function(node) {
   }
 
   return true;
+};
+
+module.exports.hasZeebeTaskDefinitionIfChild = function(type) {
+  return function(node) {
+
+    if (hasEventDefinitionOfType(type)(node)) {
+      if (module.exports.hasZeebeTaskDefinition(node) !== true) {
+        return getExtensionElementMessage(`${node.$type} (${type})`, 'zeebe:TaskDefinition');
+      }
+    }
+
+    return true;
+  };
 };
 
 function getExtensionElementMessage(type, extensionElement) {
