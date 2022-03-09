@@ -43,7 +43,13 @@ const valid = [
   },
   {
     name: 'send task',
-    moddleElement: createModdle(createCloudProcess('<bpmn:sendTask id="SendTask_1" />'))
+    moddleElement: createModdle(createCloudProcess(`
+      <bpmn:sendTask id="SendTask_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" retries="bar" />
+        </bpmn:extensionElements>
+      </bpmn:sendTask>
+  `))
   }
 ];
 
@@ -110,6 +116,13 @@ const invalid = [
       message: 'Element of type <bpmn:ScriptTask> must have <zeebe:TaskDefinition> extension element'
     }
   },
+  {
+    name: 'send task',
+    moddleElement: createModdle(createCloudProcess('<bpmn:sendTask id="SendTask_1" />')),
+    report: {
+      id: 'SendTask_1',
+      message: 'Element of type <bpmn:SendTask> must have <zeebe:TaskDefinition> extension element'
+    }
   }
 ];
 

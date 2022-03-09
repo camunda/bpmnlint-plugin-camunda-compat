@@ -1,6 +1,6 @@
 const camundaCloud10Checks = require('./camunda-cloud-1-0-checks');
 
-const { checkSome, checkEvery } = require('./utils/rule');
+const { checkEvery } = require('./utils/rule');
 
 const {
   hasLoopCharacteristicsOfTypeOrNone,
@@ -35,6 +35,9 @@ module.exports = [
   },
   {
     type: 'bpmn:SendTask',
-    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
-  }
+    check: checkEvery(
+      hasZeebeTaskDefinition,
+      hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
+    )
+  },
 ];
