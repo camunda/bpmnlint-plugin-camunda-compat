@@ -6,12 +6,15 @@ const {
   isNotBpmn
 } = require('./utils/element');
 
+const {
+  hasZeebeCalledElement
+} = require('./utils/cloud/element');
+
 module.exports = [
   {
     check: isNotBpmn
   },
   'bpmn:Association',
-  'bpmn:CallActivity',
   'bpmn:Collaboration',
   'bpmn:DataObject',
   'bpmn:DataObjectReference',
@@ -25,6 +28,10 @@ module.exports = [
   'bpmn:Participant',
   'bpmn:SequenceFlow',
   'bpmn:TextAnnotation',
+  {
+    type: 'bpmn:CallActivity',
+    check: hasZeebeCalledElement
+  },
   {
     type: 'bpmn:BoundaryEvent',
     check: hasEventDefinitionOfType([

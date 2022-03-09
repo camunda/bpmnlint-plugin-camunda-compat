@@ -93,3 +93,19 @@ module.exports.hasZeebeTaskDefinition = function(node) {
 
   return true;
 };
+
+module.exports.hasZeebeCalledElement = function(node) {
+  const calledElement = findExtensionElement(node, 'zeebe:CalledElement');
+
+  if (!calledElement) {
+    return getExtensionElementMessage(node.$type, 'zeebe:CalledElement');
+  }
+
+  return true;
+};
+
+function getExtensionElementMessage(type, extensionElement) {
+  return {
+    message: `Element of type <${ type }> must have <${ extensionElement }> extension element`
+  };
+}

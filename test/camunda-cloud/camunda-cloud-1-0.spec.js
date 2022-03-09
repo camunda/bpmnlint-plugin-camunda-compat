@@ -21,7 +21,13 @@ const valid = [
   },
   {
     name: 'call activity',
-    moddleElement: createModdle(createCloudProcess('<bpmn:callActivity id="CallActivity_1"/>'))
+    moddleElement: createModdle(createCloudProcess(`
+    <bpmn:callActivity id="CallActivity_1">
+      <bpmn:extensionElements>
+        <zeebe:calledElement />
+      </bpmn:extensionElements>
+    </bpmn:callActivity>
+    `))
   },
   {
     name: 'collaboration',
@@ -322,7 +328,15 @@ const invalid = [
       id: 'StartEvent_1',
       message: 'Element of type <bpmn:StartEvent (bpmn:SignalEventDefinition)> not supported by Camunda Cloud 1.0'
     }
-  }
+  },
+  {
+    name: 'call activity',
+    moddleElement: createModdle(createCloudProcess('<bpmn:callActivity id="CallActivity_1"/>')),
+    report: {
+      id: 'CallActivity_1',
+      message: 'Element of type <bpmn:CallActivity> must have <zeebe:CalledElement> extension element'
+    }
+  },
 ];
 
 RuleTester.verify('camunda-cloud-1-0', camundaCloud10Rule, {

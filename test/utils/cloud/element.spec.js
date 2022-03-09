@@ -2,7 +2,8 @@ const { expect } = require('chai');
 
 const {
   hasZeebeCalledDecisionOrTaskDefinition,
-  hasZeebeTaskDefinition
+  hasZeebeTaskDefinition,
+  hasZeebeCalledElement
 } = require('../../../rules/utils/cloud/element');
 
 const { createElement } = require('../../helper');
@@ -124,6 +125,44 @@ describe('util - cloud - element', function() {
       expect(result).to.eql('Element of type <bpmn:ServiceTask> must have <zeebe:TaskDefinition> extension element');
     });
 
+  });
+
+});
+
+
+describe('#hasZeebeCalledElement', function() {
+
+  it('should return true', function() {
+
+    // given
+    const calledElement = createElement('zeebe:CalledElement');
+
+    const extensionElements = createElement('bpmn:ExtensionElements', {
+      values: [ calledElement ]
+    });
+
+    const node = createElement('bpmn:CallActivity', {
+      extensionElements
+    });
+
+    // when
+    const result = hasZeebeCalledElement(node);
+
+    // then
+    expect(result).to.be.true;
+  });
+
+
+  it('should return string', function() {
+
+    // given
+    const node = createElement('bpmn:CallActivity');
+
+    // when
+    const { message } = hasZeebeCalledElement(node);
+
+    // then
+    expect(message).to.eql('Element of type <bpmn:CallActivity> must have <zeebe:CalledElement> extension element');
   });
 
 });
