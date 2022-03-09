@@ -7,8 +7,11 @@ const {
 } = require('./utils/element');
 
 const {
-  hasZeebeCalledElement
+  hasZeebeCalledElement,
+  hasZeebeTaskDefinition
 } = require('./utils/cloud/element');
+
+const { checkEvery } = require('./utils/rule');
 
 module.exports = [
   {
@@ -63,7 +66,10 @@ module.exports = [
   },
   {
     type: 'bpmn:ServiceTask',
-    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
+    check: checkEvery(
+      hasZeebeTaskDefinition,
+      hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
+    )
   },
   {
     type: 'bpmn:StartEvent',

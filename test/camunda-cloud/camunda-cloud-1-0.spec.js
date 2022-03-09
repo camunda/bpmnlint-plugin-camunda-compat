@@ -74,10 +74,14 @@ const valid = [
   {
     name: 'error boundary event',
     moddleElement: createModdle(createCloudProcess(`
-    <bpmn:serviceTask id="ServiceTask_1" />
-    <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
-      <bpmn:errorEventDefinition id="ErrorEventDefinition_1" />
-    </bpmn:boundaryEvent>
+      <bpmn:serviceTask id="ServiceTask_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" retries="bar" />
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+      <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1" />
+      </bpmn:boundaryEvent>
     `))
   },
   {
@@ -111,7 +115,11 @@ const valid = [
   {
     name: 'message boundary event',
     moddleElement: createModdle(createCloudProcess(`
-      <bpmn:serviceTask id="ServiceTask_1" />
+      <bpmn:serviceTask id="ServiceTask_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" retries="bar" />
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
       <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
         <bpmn:messageEventDefinition id="ErrorEventDefinition_1" />
       </bpmn:boundaryEvent>
@@ -171,13 +179,22 @@ const valid = [
   },
   {
     name: 'service task',
-    moddleElement: createModdle(createCloudProcess('<bpmn:serviceTask id="ServiceTask_1" />'))
+    moddleElement: createModdle(createCloudProcess(`
+      <bpmn:serviceTask id="ServiceTask_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" retries="bar" />
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
   },
   {
     name: 'service task (multi-instance)',
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:serviceTask id="ServiceTask_1">
         <bpmn:multiInstanceLoopCharacteristics />
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" retries="bar" />
+        </bpmn:extensionElements>
       </bpmn:serviceTask>
     `))
   },
@@ -186,6 +203,9 @@ const valid = [
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:serviceTask id="ServiceTask_1">
         <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" retries="bar" />
+        </bpmn:extensionElements>
       </bpmn:serviceTask>
     `))
   },
@@ -214,7 +234,11 @@ const valid = [
   {
     name: 'timer boundary event',
     moddleElement: createModdle(createCloudProcess(`
-      <bpmn:serviceTask id="ServiceTask_1" />
+      <bpmn:serviceTask id="ServiceTask_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" retries="bar" />
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
       <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
         <bpmn:timerEventDefinition id="TimerEventDefinition_1" />
       </bpmn:boundaryEvent>
@@ -335,6 +359,14 @@ const invalid = [
     report: {
       id: 'CallActivity_1',
       message: 'Element of type <bpmn:CallActivity> must have <zeebe:CalledElement> extension element'
+    }
+  },
+  {
+    name: 'service task',
+    moddleElement: createModdle(createCloudProcess('<bpmn:serviceTask id="ServiceTask_1" />')),
+    report: {
+      id: 'ServiceTask_1',
+      message: 'Element of type <bpmn:ServiceTask> must have <zeebe:TaskDefinition> extension element'
     }
   },
 ];
