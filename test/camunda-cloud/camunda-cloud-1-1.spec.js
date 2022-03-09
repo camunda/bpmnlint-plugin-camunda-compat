@@ -33,7 +33,13 @@ const valid = [
   },
   {
     name: 'script task',
-    moddleElement: createModdle(createCloudProcess('<bpmn:scriptTask id="ScriptTask_1" />'))
+    moddleElement: createModdle(createCloudProcess(`
+      <bpmn:scriptTask id="ScriptTask_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" retries="bar" />
+        </bpmn:extensionElements>
+      </bpmn:scriptTask>
+    `))
   },
   {
     name: 'send task',
@@ -95,6 +101,15 @@ const invalid = [
       id: 'StartEvent_1',
       message: 'Element of type <bpmn:StartEvent (bpmn:SignalEventDefinition)> not supported by Camunda Cloud 1.1'
     }
+  },
+  {
+    name: 'scrpipt task',
+    moddleElement: createModdle(createCloudProcess('<bpmn:scriptTask id="ScriptTask_1"/>')),
+    report: {
+      id: 'ScriptTask_1',
+      message: 'Element of type <bpmn:ScriptTask> must have <zeebe:TaskDefinition> extension element'
+    }
+  },
   }
 ];
 

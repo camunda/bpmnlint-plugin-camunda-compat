@@ -28,7 +28,10 @@ module.exports = [
   },
   {
     type: 'bpmn:ScriptTask',
-    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
+    check: checkEvery(
+      hasZeebeTaskDefinition,
+      hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
+    )
   },
   {
     type: 'bpmn:SendTask',
