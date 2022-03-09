@@ -97,8 +97,18 @@ describe('util - element', function() {
     it('should return true', function() {
 
       // given
+      const zeebeLoopCharacteristics = createElement('zeebe:LoopCharacteristics');
+
+      const extensionElements = createElement('bpmn:ExtensionElements', {
+        values: [ zeebeLoopCharacteristics ]
+      });
+
+      const loopCharacteristics = createElement('bpmn:MultiInstanceLoopCharacteristics', {
+        extensionElements
+      });
+
       const node = createElement('bpmn:ServiceTask', {
-        loopCharacteristics: createElement('bpmn:MultiInstanceLoopCharacteristics')
+        loopCharacteristics
       });
 
       // when

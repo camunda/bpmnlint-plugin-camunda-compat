@@ -153,7 +153,11 @@ const valid = [
     name: 'receive task (multi-instance)',
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:receiveTask id="ReceiveTask_1">
-        <bpmn:multiInstanceLoopCharacteristics />
+        <bpmn:multiInstanceLoopCharacteristics>
+          <bpmn:extensionElements>
+            <zeebe:loopCharacteristics/>
+          </bpmn:extensionElements>
+        </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:receiveTask>
     `))
   },
@@ -161,7 +165,11 @@ const valid = [
     name: 'receive task (multi-instance sequential)',
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:receiveTask id="ReceiveTask_1">
-        <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
+        <bpmn:multiInstanceLoopCharacteristics isSequential="true">
+          <bpmn:extensionElements>
+            <zeebe:loopCharacteristics/>
+          </bpmn:extensionElements>
+        </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:receiveTask>
     `))
   },
@@ -191,7 +199,11 @@ const valid = [
     name: 'service task (multi-instance)',
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:serviceTask id="ServiceTask_1">
-        <bpmn:multiInstanceLoopCharacteristics />
+        <bpmn:multiInstanceLoopCharacteristics >
+          <bpmn:extensionElements>
+            <zeebe:loopCharacteristics/>
+          </bpmn:extensionElements>
+        </bpmn:multiInstanceLoopCharacteristics>
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="foo" retries="bar" />
         </bpmn:extensionElements>
@@ -202,7 +214,11 @@ const valid = [
     name: 'service task (multi-instance sequential)',
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:serviceTask id="ServiceTask_1">
-        <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
+        <bpmn:multiInstanceLoopCharacteristics isSequential="true" >
+          <bpmn:extensionElements>
+            <zeebe:loopCharacteristics/>
+          </bpmn:extensionElements>
+        </bpmn:multiInstanceLoopCharacteristics>
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="foo" retries="bar" />
         </bpmn:extensionElements>
@@ -219,7 +235,11 @@ const valid = [
     name: 'sub process (multi-instance)',
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:subProcess id="SubProcess_1">
-        <bpmn:multiInstanceLoopCharacteristics />
+        <bpmn:multiInstanceLoopCharacteristics>
+          <bpmn:extensionElements>
+            <zeebe:loopCharacteristics/>
+          </bpmn:extensionElements>
+        </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:subProcess>
     `))
   },
@@ -227,7 +247,11 @@ const valid = [
     name: 'sub process (multi-instance sequential)',
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:subProcess id="SubProcess_1">
-        <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
+        <bpmn:multiInstanceLoopCharacteristics>
+          <bpmn:extensionElements>
+            <zeebe:loopCharacteristics/>
+          </bpmn:extensionElements>
+        </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:subProcess>
     `))
   },
@@ -260,7 +284,11 @@ const valid = [
     name: 'user task (multi-instance)',
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:userTask id="UserTask_1">
-        <bpmn:multiInstanceLoopCharacteristics />
+        <bpmn:multiInstanceLoopCharacteristics >
+          <bpmn:extensionElements>
+            <zeebe:loopCharacteristics/>
+          </bpmn:extensionElements>
+        </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:userTask>
     `))
   },
@@ -268,7 +296,11 @@ const valid = [
     name: 'user task (multi-instance sequential)',
     moddleElement: createModdle(createCloudProcess(`
       <bpmn:userTask id="UserTask_1">
-        <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
+        <bpmn:multiInstanceLoopCharacteristics isSequential="true" >
+          <bpmn:extensionElements>
+            <zeebe:loopCharacteristics/>
+          </bpmn:extensionElements>
+        </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:userTask>
     `))
   }
@@ -369,6 +401,18 @@ const invalid = [
       message: 'Element of type <bpmn:ServiceTask> must have <zeebe:TaskDefinition> extension element'
     }
   },
+  {
+    name: 'receive task (multi-instance)',
+    moddleElement: createModdle(createCloudProcess(`
+      <bpmn:receiveTask id="ReceiveTask_1">
+        <bpmn:multiInstanceLoopCharacteristics />
+      </bpmn:receiveTask>
+    `)),
+    report: {
+      id: 'ReceiveTask_1',
+      message: 'Element of type <bpmn:ReceiveTask> must have <zeebe:LoopCharacteristics> extension element'
+    }
+  }
 ];
 
 RuleTester.verify('camunda-cloud-1-0', camundaCloud10Rule, {

@@ -94,8 +94,15 @@ module.exports.hasLoopCharacteristicsOfTypeOrNone = function(type) {
       return true;
     }
 
-    return is(loopCharacteristics, type)
-      || getMessage(`${ node.$type } (${ loopCharacteristics.$type })`);
+    if (!is(loopCharacteristics, type)) {
+      return getMessage(`${ node.$type } (${ loopCharacteristics.$type })`);
+    }
+
+    if (type === 'bpmn:MultiInstanceLoopCharacteristics') {
+      return checkMultiInstanceLoopCharacteristics(loopCharacteristics, node);
+    }
+
+    return true;
   };
 };
 
@@ -129,4 +136,16 @@ module.exports.findExtensionElement = function(node, type) {
 
 function getMessage(type) {
   return `Element of type <${ type }> not supported by {{ executionPlatform }} {{ executionPlatformVersion }}`;
+}
+
+function checkMultiInstanceLoopCharacteristics(node, parentNode) {
+  const zeebeLoopCharacteristics = module.exports.findExtensionElement(node, 'zeebe:LoopCharacteristics');
+
+  if (!zeebeLoopCharacteristics) {
+    return {
+      message: `Element of type <${parentNode.$type}> must have <zeebe:LoopCharacteristics> extension element`
+    };
+  }
+
+  return true;
 }
