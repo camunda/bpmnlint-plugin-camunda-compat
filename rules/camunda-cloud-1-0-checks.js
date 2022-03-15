@@ -8,7 +8,9 @@ const {
 
 const {
   hasZeebeCalledElement,
-  hasZeebeTaskDefinition
+  hasZeebeTaskDefinition,
+  hasSubscriptionIfInSubProcess,
+  hasSubscriptionIfMessageCatchInSubProcess
 } = require('./utils/cloud/element');
 
 const { checkEvery } = require('./utils/rule');
@@ -51,10 +53,13 @@ module.exports = [
   },
   {
     type: 'bpmn:IntermediateCatchEvent',
-    check: hasEventDefinitionOfType([
-      'bpmn:MessageEventDefinition',
-      'bpmn:TimerEventDefinition'
-    ])
+    check: checkEvery(
+      hasEventDefinitionOfType([
+        'bpmn:TimerEventDefinition',
+        'bpmn:MessageEventDefinition'
+      ]),
+      hasSubscriptionIfMessageCatchInSubProcess
+    )
   },
   {
     type: 'bpmn:Process',
@@ -62,7 +67,10 @@ module.exports = [
   },
   {
     type: 'bpmn:ReceiveTask',
-    check: hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics')
+    check: checkEvery(
+      hasLoopCharacteristicsOfTypeOrNone('bpmn:MultiInstanceLoopCharacteristics'),
+      hasSubscriptionIfInSubProcess()
+    )
   },
   {
     type: 'bpmn:ServiceTask',

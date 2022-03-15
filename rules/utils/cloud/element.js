@@ -2,6 +2,8 @@ const { findExtensionElement, hasEventDefinitionOfType } = require('../element')
 
 const { getPath } = require('@philippfromme/moddle-helpers');
 
+const { is } = require('bpmnlint-utils');
+
 function checkZeebeCalledElement(node) {
   const calledDecision = findExtensionElement(node, 'zeebe:CalledDecision');
 
@@ -117,8 +119,49 @@ module.exports.hasZeebeTaskDefinitionIfChild = function(type) {
   };
 };
 
+module.exports.hasSubscriptionIfInSubProcess = function(childNode) {
+  return function(node) {
+
+    const parent = node.$parent;
+    let element = childNode ? childNode : node;
+
+    if (is(parent, 'bpmn:SubProcess') && parent.triggeredByEvent) {
+
+      return hasZeebeSubscription(element)
+        || getExtensionElementMessage(node.$type, 'zeebe:Subscription');
+    }
+
+    return true;
+  };
+};
+
+module.exports.hasSubscriptionIfMessageCatchInSubProcess = function(node) {
+
+  if (hasEventDefinitionOfType('bpmn:MessageEventDefinition')) {
+    const messageDefinition = getEventDefinition(node, 'bpmn:MessageEventDefinition');
+
+    return module.exports.hasSubscriptionIfInSubProcess(messageDefinition)(node);
+  }
+
+  return true;
+};
+
 function getExtensionElementMessage(type, extensionElement) {
   return {
     message: `Element of type <${ type }> must have <${ extensionElement }> extension element`
   };
+}
+
+function getEventDefinition(node, type) {
+  return node.get('eventDefinitions').find(element => is(element, type));
+}
+
+function hasZeebeSubscription(node) {
+  const message = node.get('messageRef');
+
+  if (message) {
+    return !!findExtensionElement(message, 'zeebe:Subscription');
+  }
+
+  return true;
 }

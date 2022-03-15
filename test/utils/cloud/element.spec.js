@@ -4,7 +4,8 @@ const {
   hasZeebeCalledDecisionOrTaskDefinition,
   hasZeebeTaskDefinition,
   hasZeebeCalledElement,
-  hasZeebeTaskDefinitionIfChild
+  hasZeebeTaskDefinitionIfChild,
+  hasSubscriptionIfInSubProcess
 } = require('../../../rules/utils/cloud/element');
 
 const { createElement } = require('../../helper');
@@ -212,3 +213,121 @@ describe('#hasZeebeTaskDefinitionIfChild', function() {
   });
 
 });
+
+
+describe('#hasSubscriptionIfInSubProcess', function() {
+
+  it('should return true', function() {
+
+    // given
+    const subProcess = createElement('bpmn:SubProcess', {
+      'triggeredByEvent': 'true',
+    });
+
+    const receiveTask = createReceiveTask(true);
+
+    receiveTask.$parent = subProcess;
+
+    // when
+    const result = hasSubscriptionIfInSubProcess()(receiveTask);
+
+    // then
+    expect(result).to.be.true;
+  });
+
+
+  it('should return string', function() {
+
+    // given
+    const subProcess = createElement('bpmn:SubProcess', {
+      'triggeredByEvent': 'true',
+    });
+
+    const receiveTask = createReceiveTask(false);
+
+    receiveTask.$parent = subProcess;
+
+    // when
+    const { message } = hasSubscriptionIfInSubProcess()(receiveTask);
+
+    // then
+    expect(message).to.eql('Element of type <bpmn:ReceiveTask> must have <zeebe:Subscription> extension element');
+  });
+
+});
+
+
+describe('#hasSubscriptionIfMessageCatchInSubProcess', function() {
+
+  it('should return true', function() {
+
+    // given
+    const subProcess = createElement('bpmn:SubProcess', {
+      'triggeredByEvent': 'true',
+    });
+
+    const { messageDefinition, messageCatchEvent } = createMessageIntermediateCatchEvent(true);
+
+    messageCatchEvent.$parent = subProcess;
+
+    // when
+    const result = hasSubscriptionIfInSubProcess(messageDefinition)(messageCatchEvent);
+
+    // then
+    expect(result).to.be.true;
+  });
+
+
+  it('should return string', function() {
+
+    // given
+    const subProcess = createElement('bpmn:SubProcess', {
+      'triggeredByEvent': 'true',
+    });
+
+    const { messageDefinition, messageCatchEvent } = createMessageIntermediateCatchEvent(false);
+
+    messageCatchEvent.$parent = subProcess;
+
+    // when
+    const { message } = hasSubscriptionIfInSubProcess(messageDefinition)(messageCatchEvent);
+
+    // then
+    expect(message).to.eql('Element of type <bpmn:IntermediateCatchEvent> must have <zeebe:Subscription> extension element');
+  });
+
+});
+
+
+function createReceiveTask(hasSubscription) {
+  return createElement('bpmn:ReceiveTask', {
+    messageRef: createMessage(hasSubscription)
+  });
+}
+
+function createMessageIntermediateCatchEvent(hasSubscription) {
+  const messageDefinition = createElement('bpmn:MessageEventDefinition', {
+    messageRef: createMessage(hasSubscription)
+  });
+
+  const messageCatchEvent = createElement('bpmn:IntermediateCatchEvent', {
+    eventDefinitions: [ messageDefinition ]
+  });
+
+  return { messageDefinition, messageCatchEvent };
+}
+
+
+function createMessage(hasSubscription) {
+  const extensionElements = createElement('bpmn:ExtensionElements', {
+    values: [ createElement('zeebe:Subscription') ]
+  });
+
+  if (hasSubscription) {
+    return createElement('bpmn:Message', {
+      extensionElements
+    });
+  } else {
+    return createElement('bpmn:Message');
+  }
+}
