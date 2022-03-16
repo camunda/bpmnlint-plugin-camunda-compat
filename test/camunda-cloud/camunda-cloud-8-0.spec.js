@@ -1,13 +1,13 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const camundaCloud14Rule = require('../../rules/camunda-cloud-1-4');
+const camundaCloud80Rule = require('../../rules/camunda-cloud-8-0');
 
 const {
   createDefinitions,
   createModdle
 } = require('../helper');
 
-const createCloudProcess = require('../helper').createCloudProcess('1.4.0');
+const createCloudProcess = require('../helper').createCloudProcess('8.0.0');
 
 const { valid: camundaCloud13Valid } = require('./camunda-cloud-1-3.spec');
 
@@ -23,7 +23,7 @@ const invalid = [
     moddleElement: createModdle(createCloudProcess('<bpmn:complexGateway id="ComplexGateway_1" />')),
     report: {
       id: 'ComplexGateway_1',
-      message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 1.4'
+      message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 8.0'
     }
   },
   {
@@ -43,11 +43,11 @@ const invalid = [
         xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
       `,
       executionPlatform: 'Camunda Platform',
-      executionPlatformVersion: '1.4.0'
+      executionPlatformVersion: '8.0.0'
     })),
     report: {
       id: 'Process_1',
-      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 1.4'
+      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 8.0'
     }
   },
   {
@@ -59,12 +59,12 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:StartEvent (bpmn:SignalEventDefinition)> not supported by Camunda Cloud 1.4'
+      message: 'Element of type <bpmn:StartEvent (bpmn:SignalEventDefinition)> not supported by Camunda Cloud 8.0'
     }
   }
 ];
 
-RuleTester.verify('camunda-cloud-1-4', camundaCloud14Rule, {
+RuleTester.verify('camunda-cloud-8-0', camundaCloud80Rule, {
   valid,
   invalid
 });
