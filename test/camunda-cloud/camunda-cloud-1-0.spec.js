@@ -252,7 +252,7 @@ const invalid = [
     moddleElement: createModdle(createCloudProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
     report: {
       id: 'BusinessRuleTask_1',
-      message: 'Element of type <bpmn:BusinessRuleTask> not supported by Camunda Cloud 1.0'
+      message: 'Element of type <bpmn:BusinessRuleTask> not supported by Zeebe 1.0'
     }
   },
   {
@@ -260,7 +260,7 @@ const invalid = [
     moddleElement: createModdle(createCloudProcess('<bpmn:complexGateway id="ComplexGateway_1" />')),
     report: {
       id: 'ComplexGateway_1',
-      message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 1.0'
+      message: 'Element of type <bpmn:ComplexGateway> not supported by Zeebe 1.0'
     }
   },
   {
@@ -284,7 +284,7 @@ const invalid = [
     })),
     report: {
       id: 'Process_1',
-      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 1.0'
+      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Zeebe 1.0'
     }
   },
   {
@@ -292,7 +292,7 @@ const invalid = [
     moddleElement: createModdle(createCloudProcess('<bpmn:manualTask id="ManualTask_1" />')),
     report: {
       id: 'ManualTask_1',
-      message: 'Element of type <bpmn:ManualTask> not supported by Camunda Cloud 1.0'
+      message: 'Element of type <bpmn:ManualTask> not supported by Zeebe 1.0'
     }
   },
   {
@@ -300,7 +300,7 @@ const invalid = [
     moddleElement: createModdle(createCloudProcess('<bpmn:scriptTask id="ScriptTask_1" />')),
     report: {
       id: 'ScriptTask_1',
-      message: 'Element of type <bpmn:ScriptTask> not supported by Camunda Cloud 1.0'
+      message: 'Element of type <bpmn:ScriptTask> not supported by Zeebe 1.0'
     }
   },
   {
@@ -308,7 +308,7 @@ const invalid = [
     moddleElement: createModdle(createCloudProcess('<bpmn:sendTask id="SendTask_1" />')),
     report: {
       id: 'SendTask_1',
-      message: 'Element of type <bpmn:SendTask> not supported by Camunda Cloud 1.0'
+      message: 'Element of type <bpmn:SendTask> not supported by Zeebe 1.0'
     }
   },
   {
@@ -320,7 +320,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:StartEvent (bpmn:SignalEventDefinition)> not supported by Camunda Cloud 1.0'
+      message: 'Element of type <bpmn:StartEvent (bpmn:SignalEventDefinition)> not supported by Zeebe 1.0'
     }
   }
 ];

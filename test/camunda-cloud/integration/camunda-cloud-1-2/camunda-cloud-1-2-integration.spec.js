@@ -43,7 +43,7 @@ const invalid = [
     report: {
       category: 'error',
       id: 'event',
-      message: 'Element of type <bpmn:IntermediateThrowEvent (bpmn:CancelEventDefinition)> not supported by Camunda Cloud 1.2'
+      message: 'Element of type <bpmn:IntermediateThrowEvent (bpmn:CancelEventDefinition)> not supported by Zeebe 1.2'
     }
   },
   {
@@ -53,12 +53,12 @@ const invalid = [
       {
         category: 'error',
         id: '',
-        message: 'Element of type <bpmn:InclusiveGateway> not supported by Camunda Cloud 1.2'
+        message: 'Element of type <bpmn:InclusiveGateway> not supported by Zeebe 1.2'
       },
       {
         category: 'error',
         id: '',
-        message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 1.2'
+        message: 'Element of type <bpmn:ComplexGateway> not supported by Zeebe 1.2'
       }
     ]
   },
@@ -68,7 +68,7 @@ const invalid = [
     report: {
       category: 'error',
       id: 'Process_0xhl9yb',
-      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 1.2'
+      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Zeebe 1.2'
     }
   }
 ];
