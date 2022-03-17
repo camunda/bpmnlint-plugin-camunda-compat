@@ -6,6 +6,20 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.4.0
+* `CHORE`: rename `Cloud` `1.4` to `8.0` ([#14](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/14))
+* `CHORE`: rename `Cloud` to `Platform`/`Zeebe` ([#15](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/15))
+
+## 0.3.0
+* `FEAT`: support multiInstance for subprocesses with cloud 1.0 ([#6](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/6))
+* `FEAT`: add Camunda Platform rules ([#5](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/5))
+* `FEAT`: add Camunda Cloud 1.4 rule ([#5](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/5))
+* `TEST`: add Cloud 1.1, 1.2, 1.3 integration tests ([#4](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/4))
+* `TEST`: verify exported configs ([#5](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/5))
+* `DEPS`: fix security audit warnings ([#6](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/6))
+* `DOCS`: update link to documentation
+* `DOCS`: link Camunda Cloud and Platform BPMN coverage
+
 ## 0.2.0
 
 * `FEAT`: early return if execution platform does not match
