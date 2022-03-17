@@ -11,7 +11,7 @@ const {
 
 const { toSemverMinor } = require('./engine-profile');
 
-module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatformVersion, checks) {
+module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatformVersion, checks, executionPlatformLabel) {
   return () => {
     return {
       check: (node, reporter) => {
@@ -32,11 +32,11 @@ module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatfor
         const result = checkNode(node, checks);
 
         if (result === false) {
-          reporter.report(node.get('id') || '', `Element of type <${ node.$type }> not supported by ${ ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
+          reporter.report(node.get('id') || '', `Element of type <${ node.$type }> not supported by ${ executionPlatformLabel || ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
         }
 
         if (isString(result)) {
-          reporter.report(node.get('id') || '', `Element of type <${ result }> not supported by ${ ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
+          reporter.report(node.get('id') || '', `Element of type <${ result }> not supported by ${ executionPlatformLabel || ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
         }
       }
     };

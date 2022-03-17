@@ -43,7 +43,7 @@ const invalid = [
     moddleElement: createModdle(createCloudProcess('<bpmn:complexGateway id="ComplexGateway_1" />')),
     report: {
       id: 'ComplexGateway_1',
-      message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 1.1'
+      message: 'Element of type <bpmn:ComplexGateway> not supported by Zeebe 1.1'
     }
   },
   {
@@ -67,7 +67,7 @@ const invalid = [
     })),
     report: {
       id: 'Process_1',
-      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 1.1'
+      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Zeebe 1.1'
     }
   },
   {
@@ -79,7 +79,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:StartEvent (bpmn:SignalEventDefinition)> not supported by Camunda Cloud 1.1'
+      message: 'Element of type <bpmn:StartEvent (bpmn:SignalEventDefinition)> not supported by Zeebe 1.1'
     }
   }
 ];

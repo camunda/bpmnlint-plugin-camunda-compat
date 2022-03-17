@@ -41,22 +41,22 @@ const invalid = [
       {
         category: 'error',
         id: 'sendTask',
-        message: 'Element of type <bpmn:SendTask> not supported by Camunda Cloud 1.0'
+        message: 'Element of type <bpmn:SendTask> not supported by Zeebe 1.0'
       },
       {
         category: 'error',
         id: 'scriptTask',
-        message: 'Element of type <bpmn:ScriptTask> not supported by Camunda Cloud 1.0'
+        message: 'Element of type <bpmn:ScriptTask> not supported by Zeebe 1.0'
       },
       {
         category: 'error',
         id: 'businessRuleTask',
-        message: 'Element of type <bpmn:BusinessRuleTask> not supported by Camunda Cloud 1.0'
+        message: 'Element of type <bpmn:BusinessRuleTask> not supported by Zeebe 1.0'
       },
       {
         category: 'error',
         id: 'endEvent',
-        message: 'Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Camunda Cloud 1.0'
+        message: 'Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Zeebe 1.0'
       }
     ]
   },
@@ -67,22 +67,22 @@ const invalid = [
       {
         category: "error",
         id: "sendTask",
-        message: "Element of type <bpmn:SendTask> not supported by Camunda Cloud 1.0"
+        message: "Element of type <bpmn:SendTask> not supported by Zeebe 1.0"
       },
       {
         category: "error",
         id: "scriptTask",
-        message: "Element of type <bpmn:ScriptTask> not supported by Camunda Cloud 1.0"
+        message: "Element of type <bpmn:ScriptTask> not supported by Zeebe 1.0"
       },
       {
         category: "error",
         id: "businessRuleTask",
-        message: "Element of type <bpmn:BusinessRuleTask> not supported by Camunda Cloud 1.0"
+        message: "Element of type <bpmn:BusinessRuleTask> not supported by Zeebe 1.0"
       },
       {
         category: "error",
         id: "endEvent",
-        message: "Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Camunda Cloud 1.0"
+        message: "Element of type <bpmn:EndEvent (bpmn:MessageEventDefinition)> not supported by Zeebe 1.0"
       }
     ]
   },
@@ -92,7 +92,7 @@ const invalid = [
     report: {
       category: 'error',
       id: '_3',
-      message: 'Element of type <bpmn:ScriptTask> not supported by Camunda Cloud 1.0'
+      message: 'Element of type <bpmn:ScriptTask> not supported by Zeebe 1.0'
     }
   },
   {
@@ -101,7 +101,7 @@ const invalid = [
     report: {
       category: 'error',
       id: 'event',
-      message: 'Element of type <bpmn:IntermediateThrowEvent> not supported by Camunda Cloud 1.0'
+      message: 'Element of type <bpmn:IntermediateThrowEvent> not supported by Zeebe 1.0'
     }
   },
   {
@@ -111,12 +111,12 @@ const invalid = [
       {
         category: 'error',
         id: '',
-        message: 'Element of type <bpmn:InclusiveGateway> not supported by Camunda Cloud 1.0'
+        message: 'Element of type <bpmn:InclusiveGateway> not supported by Zeebe 1.0'
       },
       {
         category: 'error',
         id: '',
-        message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Cloud 1.0'
+        message: 'Element of type <bpmn:ComplexGateway> not supported by Zeebe 1.0'
       }
     ]
   },
@@ -126,7 +126,7 @@ const invalid = [
     report: {
       category: 'error',
       id: 'Process_0xhl9yb',
-      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Camunda Cloud 1.0'
+      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Zeebe 1.0'
     }
   }
 ];
