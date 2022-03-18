@@ -1,6 +1,7 @@
 const BpmnModdle = require('bpmn-moddle');
 
-const modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
+const camundaModdleSchema = require('camunda-bpmn-moddle/resources/camunda.json'),
+      modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
       zeebeModdleSchema = require('zeebe-bpmn-moddle/resources/zeebe.json');
 
 const readFileSync = require('fs').readFileSync;
@@ -16,9 +17,9 @@ module.exports.createPlaformCollaboration = function(executionPlatformVersion) {
       `,
       executionPlatform: 'Camunda Platform',
       executionPlatformVersion
-    })
+    });
   };
-}
+};
 
 module.exports.createCloudCollaboration = function(executionPlatformVersion) {
   return function(bpmn = '', bpmndi = '') {
@@ -31,9 +32,9 @@ module.exports.createCloudCollaboration = function(executionPlatformVersion) {
       `,
       executionPlatform: 'Camunda Cloud',
       executionPlatformVersion
-    })
+    });
   };
-}
+};
 
 module.exports.createPlaformProcess = function(executionPlatformVersion) {
   return function(bpmn = '', bpmndi = '') {
@@ -46,9 +47,9 @@ module.exports.createPlaformProcess = function(executionPlatformVersion) {
       `,
       executionPlatform: 'Camunda Platform',
       executionPlatformVersion
-    })
+    });
   };
-}
+};
 
 module.exports.createCloudProcess = function(executionPlatformVersion) {
   return function(bpmn = '', bpmndi = '') {
@@ -61,9 +62,9 @@ module.exports.createCloudProcess = function(executionPlatformVersion) {
       `,
       executionPlatform: 'Camunda Cloud',
       executionPlatformVersion
-    })
+    });
   };
-}
+};
 
 function createCollaboration(options) {
   const {
@@ -81,7 +82,7 @@ function createCollaboration(options) {
     <bpmn:process id="Process_1"/>
     ${ bpmndi }
   `, rest);
-};
+}
 
 function createProcess(options) {
   const {
@@ -96,7 +97,7 @@ function createProcess(options) {
     </bpmn:process>
     ${ bpmndi }
   `, rest);
-};
+}
 
 function createDefinitions(xml = '', options = {}) {
   const {
@@ -123,13 +124,13 @@ function createDefinitions(xml = '', options = {}) {
 
 module.exports.createDefinitions = createDefinitions;
 
-module.exports.readModdle = function(version) {
+module.exports.readModdle = function(version = '1.0.0') {
   return function(filePath) {
     const contents = readFileSync(filePath, 'utf8');
-  
+
     return createModdle(contents, version);
   };
-}
+};
 
 async function createModdle(xml, version) {
   const moddle = new BpmnModdle({
@@ -137,10 +138,16 @@ async function createModdle(xml, version) {
     zeebe: zeebeModdleSchema
   });
 
-  const {
-    rootElement: root,
-    warnings = []
-  } = await moddle.fromXML(xml, 'bpmn:Definitions', { lax: true });
+  let root, warnings;
+
+  try {
+    ({
+      rootElement: root,
+      warnings = []
+    } = await moddle.fromXML(xml, 'bpmn:Definitions', { lax: true }));
+  } catch (err) {
+    console.log(err);
+  }
 
   if (version) {
     root.set('modeler:executionPlatform', 'Camunda Cloud');
@@ -158,3 +165,15 @@ async function createModdle(xml, version) {
 }
 
 module.exports.createModdle = createModdle;
+
+function createElement(type, attrs) {
+  const moddle = new BpmnModdle({
+    modeler: modelerModdleSchema,
+    camunda: camundaModdleSchema,
+    zeebe: zeebeModdleSchema
+  });
+
+  return moddle.create(type, attrs);
+}
+
+module.exports.createElement = createElement;
