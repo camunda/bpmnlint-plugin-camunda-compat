@@ -6,7 +6,8 @@ const {
   hasEventDefinitionOfType,
   hasEventDefinitionOfTypeOrNone,
   hasNoLanes,
-  isNotBpmn
+  isNotBpmn,
+  withTranslations
 } = require('./utils/element');
 
 const {
@@ -97,9 +98,14 @@ module.exports = [
   },
   {
     type: 'bpmn:ServiceTask',
-    check: checkEvery(
-      hasZeebeLoopCharacteristics,
-      hasZeebeTaskDefinition
+    check: withTranslations(
+      checkEvery(
+        hasZeebeLoopCharacteristics,
+        hasZeebeTaskDefinition
+      ),
+      {
+        'Element of type <bpmn:ServiceTask> must have <zeebe:TaskDefinition> extension element': 'Must have implementation'
+      }
     )
   },
   {
