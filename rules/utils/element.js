@@ -604,3 +604,32 @@ module.exports.checkLoopCharacteristics = function(check) {
 };
 
 module.exports.hasErrorReference = checkError(() => true);
+
+function translate(result, translations) {
+  if (isString(result)) {
+    return translations[result] || result;
+  }
+
+  const { message } = result;
+
+  return {
+    ...result,
+    message: translations[message] || message
+  };
+}
+
+module.exports.withTranslations = function(check, translations) {
+  return function(node) {
+    const results = check(node);
+
+    if (isObject(results) || isString(results)) {
+      return translate(results, translations);
+    }
+
+    if (isArray(results)) {
+      return results.map((result) => translate(result, translations));
+    }
+
+    return results;
+  };
+};

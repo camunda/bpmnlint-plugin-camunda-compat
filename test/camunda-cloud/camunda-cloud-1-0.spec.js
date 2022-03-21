@@ -905,7 +905,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess('<bpmn:serviceTask id="ServiceTask_1" />')),
       report: {
         id: 'ServiceTask_1',
-        message: 'Element of type <bpmn:ServiceTask> must have <zeebe:TaskDefinition> extension element',
+        message: 'Must have implementation',
         path: null,
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,

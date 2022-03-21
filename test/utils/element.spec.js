@@ -26,7 +26,8 @@ const {
   hasLoopCharacteristicsOfTypeOrNone,
   hasMultiInstanceLoopCharacteristics,
   hasNoEventDefinition,
-  hasNoLanes
+  hasNoLanes,
+  withTranslations
 } = require('../../rules/utils/element');
 
 const { createElement } = require('../helper');
@@ -1237,6 +1238,84 @@ describe('util - element', function() {
           propertyType: 'bpmn:LaneSet'
         }
       });
+    });
+
+  });
+
+
+  describe('withTranslations', function() {
+
+    it('should translate (string)', function() {
+
+      // given
+      const check = withTranslations(() => 'foo', {
+        'foo': 'bar'
+      });
+
+      // when
+      const results = check();
+
+      // then
+      expect(results).to.eql('bar');
+    });
+
+
+    it('should translate (object)', function() {
+
+      // given
+      const check = withTranslations(() => ({
+        message: 'foo'
+      }), {
+        'foo': 'bar'
+      });
+
+      // when
+      const results = check();
+
+      // then
+      expect(results).to.eql({ message: 'bar' });
+    });
+
+
+    it('should translate (string[])', function() {
+
+      // given
+      const check = withTranslations(() => [
+        'foo',
+        'bar'
+      ], {
+        'foo': 'baz'
+      });
+
+      // when
+      const results = check();
+
+      // then
+      expect(results).to.eql([
+        'baz',
+        'bar'
+      ]);
+    });
+
+
+    it('should translate (object[])', function() {
+
+      // given
+      const check = withTranslations(() => [
+        { message: 'foo' },
+        { message: 'bar' }
+      ], {
+        'foo': 'baz'
+      });
+
+      // when
+      const results = check();
+
+      // then
+      expect(results).to.eql([
+        { message: 'baz' },
+        { message: 'bar' }
+      ]);
     });
 
   });
