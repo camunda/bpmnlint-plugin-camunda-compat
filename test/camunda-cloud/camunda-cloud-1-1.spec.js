@@ -2,89 +2,419 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
 const camundaCloud11Rule = require('../../rules/camunda-cloud-1-1');
 
-const {
-  createDefinitions,
-  createModdle
-} = require('../helper');
+const { createModdle } = require('../helper');
 
-const createCloudProcess = require('../helper').createCloudProcess('1.1.0');
+const { ERROR_TYPES } = require('../../rules/utils/element');
 
-const { valid: camundaCloud10Valid } = require('./camunda-cloud-1-0.spec');
+const { createValid: createCamundaCloud10Valid } = require('./camunda-cloud-1-0.spec');
 
-const valid = [
-  ...camundaCloud10Valid,
-  {
-    name: 'business rule task',
-    moddleElement: createModdle(createCloudProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />'))
-  },
-  {
-    name: 'intermediate throw event',
-    moddleElement: createModdle(createCloudProcess('<bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1" />'))
-  },
-  {
-    name: 'manual task',
-    moddleElement: createModdle(createCloudProcess('<bpmn:manualTask id="ManualTask_1" />'))
-  },
-  {
-    name: 'script task',
-    moddleElement: createModdle(createCloudProcess('<bpmn:scriptTask id="ScriptTask_1" />'))
-  },
-  {
-    name: 'send task',
-    moddleElement: createModdle(createCloudProcess('<bpmn:sendTask id="SendTask_1" />'))
-  }
-];
+function createValid(executionPlatformVersion = '1.1.0') {
+  const createCloudProcess = require('../helper').createCloudProcess(executionPlatformVersion);
 
-module.exports.valid = valid;
+  return [
+    ...createCamundaCloud10Valid('1.1.0'),
 
-const invalid = [
-  {
-    name: 'complex gateway',
-    moddleElement: createModdle(createCloudProcess('<bpmn:complexGateway id="ComplexGateway_1" />')),
-    report: {
-      id: 'ComplexGateway_1',
-      message: 'Element of type <bpmn:ComplexGateway> not supported by Zeebe 1.1'
+    // bpmn:BusinessRuleTask
+    {
+      name: 'business rule task',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:businessRuleTask id="BusinessRuleTask_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:businessRuleTask>
+      `))
+    },
+    {
+      name: 'business rule task (multi-instance)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:businessRuleTask id="BusinessRuleTask_1">
+          <bpmn:multiInstanceLoopCharacteristics >
+            <bpmn:extensionElements>
+              <zeebe:loopCharacteristics inputCollection="foo" />
+            </bpmn:extensionElements>
+          </bpmn:multiInstanceLoopCharacteristics>
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:businessRuleTask>
+      `))
+    },
+    {
+      name: 'business rule task (multi-instance sequential)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:businessRuleTask id="BusinessRuleTask_1">
+          <bpmn:multiInstanceLoopCharacteristics isSequential="true" >
+            <bpmn:extensionElements>
+              <zeebe:loopCharacteristics inputCollection="foo" />
+            </bpmn:extensionElements>
+          </bpmn:multiInstanceLoopCharacteristics>
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:businessRuleTask>
+      `))
+    },
+
+    // bpmn:IntermediateThrowEvent
+    {
+      name: 'intermediate throw event',
+      moddleElement: createModdle(createCloudProcess('<bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1" />'))
+    },
+
+    // bpmn:ManualTask
+    {
+      name: 'manual task',
+      moddleElement: createModdle(createCloudProcess('<bpmn:manualTask id="ManualTask_1" />'))
+    },
+    {
+      name: 'manual task (multi-instance)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:manualTask id="ManualTask_1">
+          <bpmn:multiInstanceLoopCharacteristics >
+            <bpmn:extensionElements>
+              <zeebe:loopCharacteristics inputCollection="foo" />
+            </bpmn:extensionElements>
+          </bpmn:multiInstanceLoopCharacteristics>
+        </bpmn:manualTask>
+      `))
+    },
+    {
+      name: 'manual task (multi-instance sequential)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:manualTask id="ManualTask_1">
+          <bpmn:multiInstanceLoopCharacteristics isSequential="true" >
+            <bpmn:extensionElements>
+              <zeebe:loopCharacteristics inputCollection="foo" />
+            </bpmn:extensionElements>
+          </bpmn:multiInstanceLoopCharacteristics>
+        </bpmn:manualTask>
+      `))
+    },
+
+    // bpmn:ScriptTask
+    {
+      name: 'script task',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:scriptTask id="ScriptTask_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:scriptTask>
+      `))
+    },
+    {
+      name: 'script task (multi-instance)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:scriptTask id="ScriptTask_1">
+          <bpmn:multiInstanceLoopCharacteristics >
+            <bpmn:extensionElements>
+              <zeebe:loopCharacteristics inputCollection="foo" />
+            </bpmn:extensionElements>
+          </bpmn:multiInstanceLoopCharacteristics>
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:scriptTask>
+      `))
+    },
+    {
+      name: 'script task (multi-instance sequential)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:scriptTask id="ScriptTask_1">
+          <bpmn:multiInstanceLoopCharacteristics isSequential="true" >
+            <bpmn:extensionElements>
+              <zeebe:loopCharacteristics inputCollection="foo" />
+            </bpmn:extensionElements>
+          </bpmn:multiInstanceLoopCharacteristics>
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:scriptTask>
+      `))
+    },
+
+    // bpmn:SendTask
+    {
+      name: 'send task',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:sendTask id="SendTask_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:sendTask>
+      `))
+    },
+    {
+      name: 'send task (multi-instance)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:sendTask id="SendTask_1">
+          <bpmn:multiInstanceLoopCharacteristics >
+            <bpmn:extensionElements>
+              <zeebe:loopCharacteristics inputCollection="foo" />
+            </bpmn:extensionElements>
+          </bpmn:multiInstanceLoopCharacteristics>
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:sendTask>
+      `))
+    },
+    {
+      name: 'send task (multi-instance sequential)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:sendTask id="SendTask_1">
+          <bpmn:multiInstanceLoopCharacteristics isSequential="true" >
+            <bpmn:extensionElements>
+              <zeebe:loopCharacteristics inputCollection="foo" />
+            </bpmn:extensionElements>
+          </bpmn:multiInstanceLoopCharacteristics>
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:sendTask>
+      `))
     }
-  },
-  {
-    name: 'lane',
-    moddleElement: createModdle(createDefinitions(`
-    <bpmn:collaboration id="Collaboration_1">
-      <bpmn:participant id="Participant_1" processRef="Process_1" />
-    </bpmn:collaboration>
-    <bpmn:process id="Process_1">
-      <bpmn:laneSet id="LaneSet_1">
-        <bpmn:lane id="Lane_1" />
-      </bpmn:laneSet>
-    </bpmn:process>
-  `, {
-      namespaces: `
-        xmlns:modeler="http://camunda.org/schema/modeler/1.0"
-        xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
-      `,
-      executionPlatform: 'Camunda Platform',
-      executionPlatformVersion: '1.1.0'
-    })),
-    report: {
-      id: 'Process_1',
-      message: 'Element of type <bpmn:Process (bpmn:LaneSet)> not supported by Zeebe 1.1'
+  ];
+}
+
+module.exports.createValid = createValid;
+
+function createInvalid(executionPlatformVersion = '1.1.0') {
+  const createCloudProcess = require('../helper').createCloudProcess(executionPlatformVersion);
+
+  return [
+
+    // bpmn:BusinessRuleTask
+    {
+      name: 'business rule task (no task definition)',
+      moddleElement: createModdle(createCloudProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
+      report: {
+        id: 'BusinessRuleTask_1',
+        message: 'Element of type <bpmn:BusinessRuleTask> must have <zeebe:TaskDefinition> extension element',
+        path: null,
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          requiredExtensionElement: 'zeebe:TaskDefinition'
+        }
+      }
+    },
+    {
+      name: 'business rule task (no task definition type)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:businessRuleTask id="BusinessRuleTask_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:businessRuleTask>
+      `)),
+      report: {
+        id: 'BusinessRuleTask_1',
+        message: 'Element of type <zeebe:TaskDefinition> must have property <type>',
+        path: [
+          'extensionElements',
+          'values',
+          0,
+          'type'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'type'
+        }
+      }
+    },
+    {
+      name: 'business rule task (no loop characteristics)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:businessRuleTask id="BusinessRuleTask_1">
+          <bpmn:multiInstanceLoopCharacteristics />
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:businessRuleTask>
+      `)),
+      report: {
+        id: 'BusinessRuleTask_1',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        path: [
+          'loopCharacteristics'
+        ],
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          requiredExtensionElement: 'zeebe:LoopCharacteristics'
+        }
+      }
+    },
+
+    // bpmn:IntermediateThrowEvent
+    {
+      name: 'message intermediate throw event',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1">
+          <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
+        </bpmn:intermediateThrowEvent>
+      `)),
+      report: {
+        id: 'IntermediateThrowEvent_1',
+        message: 'Element of type <bpmn:IntermediateThrowEvent> (<bpmn:MessageEventDefinition>) not supported by Zeebe 1.1',
+        path: [
+          'eventDefinitions',
+          0
+        ],
+        error: {
+          type: 'elementType',
+          elementType: 'bpmn:IntermediateThrowEvent',
+          propertyType: 'bpmn:MessageEventDefinition'
+        }
+      }
+    },
+
+    // bpmn:ManualTask
+    {
+      name: 'manual task (no loop characteristics)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:manualTask id="ManualTask_1">
+          <bpmn:multiInstanceLoopCharacteristics />
+        </bpmn:manualTask>
+      `)),
+      report: {
+        id: 'ManualTask_1',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        path: [
+          'loopCharacteristics'
+        ],
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          requiredExtensionElement: 'zeebe:LoopCharacteristics'
+        }
+      }
+    },
+
+    // bpmn:ScriptTask
+    {
+      name: 'script task (no task definition)',
+      moddleElement: createModdle(createCloudProcess('<bpmn:scriptTask id="ScriptTask_1" />')),
+      report: {
+        id: 'ScriptTask_1',
+        message: 'Element of type <bpmn:ScriptTask> must have <zeebe:TaskDefinition> extension element',
+        path: null,
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          requiredExtensionElement: 'zeebe:TaskDefinition'
+        }
+      }
+    },
+    {
+      name: 'script task (no task definition type)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:scriptTask id="ScriptTask_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:scriptTask>
+      `)),
+      report: {
+        id: 'ScriptTask_1',
+        message: 'Element of type <zeebe:TaskDefinition> must have property <type>',
+        path: [
+          'extensionElements',
+          'values',
+          0,
+          'type'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'type'
+        }
+      }
+    },
+    {
+      name: 'script task (no loop characteristics)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:scriptTask id="ScriptTask_1">
+          <bpmn:multiInstanceLoopCharacteristics />
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:scriptTask>
+      `)),
+      report: {
+        id: 'ScriptTask_1',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        path: [
+          'loopCharacteristics'
+        ],
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          requiredExtensionElement: 'zeebe:LoopCharacteristics'
+        }
+      }
+    },
+
+    // bpmn:SendTask
+    {
+      name: 'send task (no task definition)',
+      moddleElement: createModdle(createCloudProcess('<bpmn:sendTask id="SendTask_1" />')),
+      report: {
+        id: 'SendTask_1',
+        message: 'Element of type <bpmn:SendTask> must have <zeebe:TaskDefinition> extension element',
+        path: null,
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          requiredExtensionElement: 'zeebe:TaskDefinition'
+        }
+      }
+    },
+    {
+      name: 'send task (no task definition type)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:sendTask id="SendTask_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:sendTask>
+      `)),
+      report: {
+        id: 'SendTask_1',
+        message: 'Element of type <zeebe:TaskDefinition> must have property <type>',
+        path: [
+          'extensionElements',
+          'values',
+          0,
+          'type'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'type'
+        }
+      }
+    },
+    {
+      name: 'send task (no loop characteristics)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:sendTask id="SendTask_1">
+          <bpmn:multiInstanceLoopCharacteristics />
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" retries="bar" />
+          </bpmn:extensionElements>
+        </bpmn:sendTask>
+      `)),
+      report: {
+        id: 'SendTask_1',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        path: [
+          'loopCharacteristics'
+        ],
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          requiredExtensionElement: 'zeebe:LoopCharacteristics'
+        }
+      }
     }
-  },
-  {
-    name: 'signal start event',
-    moddleElement: createModdle(createCloudProcess(`
-    <bpmn:startEvent id="StartEvent_1">
-      <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
-    </bpmn:startEvent>
-    `)),
-    report: {
-      id: 'StartEvent_1',
-      message: 'Element of type <bpmn:StartEvent (bpmn:SignalEventDefinition)> not supported by Zeebe 1.1'
-    }
-  }
-];
+  ];
+}
 
 RuleTester.verify('camunda-cloud-1-1', camundaCloud11Rule, {
-  valid,
-  invalid
+  valid: createValid(),
+  invalid: createInvalid()
 });

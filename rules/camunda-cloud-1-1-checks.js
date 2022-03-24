@@ -1,19 +1,21 @@
 const camundaCloud10Checks = require('./camunda-cloud-1-0-checks');
 
+const { checkEvery } = require('./utils/rule');
+
+const { hasNoEventDefinition } = require('./utils/element');
+
 const {
-  checkSome,
-  hasLoopCharacteristicsOfType,
-  hasNoEventDefinition,
-  hasNoLoopCharacteristics
-} = require('./utils/rule');
+  hasZeebeTaskDefinition,
+  hasZeebeLoopCharacteristics
+} = require('./utils/cloud/element');
 
 module.exports = [
   ...camundaCloud10Checks,
   {
     type: 'bpmn:BusinessRuleTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
+    check: checkEvery(
+      hasZeebeLoopCharacteristics,
+      hasZeebeTaskDefinition
     )
   },
   {
@@ -22,23 +24,20 @@ module.exports = [
   },
   {
     type: 'bpmn:ManualTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
-    )
+    check: hasZeebeLoopCharacteristics
   },
   {
     type: 'bpmn:ScriptTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
+    check: checkEvery(
+      hasZeebeLoopCharacteristics,
+      hasZeebeTaskDefinition
     )
   },
   {
     type: 'bpmn:SendTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
+    check: checkEvery(
+      hasZeebeLoopCharacteristics,
+      hasZeebeTaskDefinition
     )
   }
 ];

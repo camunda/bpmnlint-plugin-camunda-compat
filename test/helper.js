@@ -1,5 +1,7 @@
 const BpmnModdle = require('bpmn-moddle');
 
+const { isArray } = require('min-dash');
+
 const camundaModdleSchema = require('camunda-bpmn-moddle/resources/camunda.json'),
       modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
       zeebeModdleSchema = require('zeebe-bpmn-moddle/resources/zeebe.json');
@@ -66,6 +68,32 @@ module.exports.createCloudProcess = function(executionPlatformVersion) {
   };
 };
 
+module.exports.createPlatformDefinitions = function(executionPlatformVersion) {
+  return function(xml) {
+    return createDefinitions(xml, {
+      namespaces: `
+        xmlns:modeler="http://camunda.org/schema/modeler/1.0"
+        xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+      `,
+      executionPlatform: 'Camunda Platform',
+      executionPlatformVersion
+    });
+  };
+};
+
+module.exports.createCloudDefinitions = function(executionPlatformVersion) {
+  return function(xml) {
+    return createDefinitions(xml, {
+      namespaces: `
+        xmlns:modeler="http://camunda.org/schema/modeler/1.0"
+        xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+      `,
+      executionPlatform: 'Camunda Cloud',
+      executionPlatformVersion
+    });
+  };
+};
+
 function createCollaboration(options) {
   const {
     bpmn = '',
@@ -79,7 +107,7 @@ function createCollaboration(options) {
         ${ bpmn }
       </bpmn:participant>
     </bpmn:collaboration>
-    <bpmn:process id="Process_1"/>
+    <bpmn:process id="Process_1" />
     ${ bpmndi }
   `, rest);
 }
@@ -166,14 +194,48 @@ async function createModdle(xml, version) {
 
 module.exports.createModdle = createModdle;
 
-function createElement(type, attrs) {
+function createElement(type, properties) {
   const moddle = new BpmnModdle({
     modeler: modelerModdleSchema,
     camunda: camundaModdleSchema,
     zeebe: zeebeModdleSchema
   });
 
-  return moddle.create(type, attrs);
+  const moddleElement = moddle.create(type, properties);
+
+  const isReference = (propertyName, moddleElement) => {
+    const { $descriptor } = moddleElement;
+
+    const { propertiesByName } = $descriptor;
+
+    const property = propertiesByName[ propertyName ];
+
+    return property.isReference;
+  };
+
+  const setParent = (property) => {
+    if (property.$type) {
+      const childModdleElement = property;
+
+      childModdleElement.$parent = moddleElement;
+    }
+  };
+
+  if (properties) {
+    Object.entries(properties).forEach(([ propertyName, property ]) => {
+      if (isReference(propertyName, moddleElement)) {
+        return;
+      }
+
+      setParent(property);
+
+      if (isArray(property)) {
+        property.forEach(setParent);
+      }
+    });
+  }
+
+  return moddleElement;
 }
 
 module.exports.createElement = createElement;

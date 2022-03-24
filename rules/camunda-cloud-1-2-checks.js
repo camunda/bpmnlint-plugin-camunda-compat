@@ -1,19 +1,47 @@
 const camundaCloud11Checks = require('./camunda-cloud-1-1-checks');
 
-const { hasEventDefinitionOfType } = require('./utils/rule');
- 
+const {
+  checkEvery,
+  replaceChecks
+} = require('./utils/rule');
+
+const {
+  checkEventDefinition,
+  checkIf,
+  hasErrorReference,
+  hasEventDefinitionOfType,
+  hasEventDefinitionOfTypeOrNone,
+} = require('./utils/element');
+
+const { hasZeebeTaskDefinition } = require('./utils/cloud/element');
+
 module.exports = [
-  ...camundaCloud11Checks,
-  {
-    type: 'bpmn:EndEvent',
-    check: hasEventDefinitionOfType([
-      'bpmn:MessageEventDefinition'
-    ])
-  },
-  {
-    type: 'bpmn:IntermediateThrowEvent',
-    check: hasEventDefinitionOfType([
-      'bpmn:MessageEventDefinition'
-    ])
-  }
+  ...replaceChecks(
+    camundaCloud11Checks,
+    [
+      {
+        type: 'bpmn:IntermediateThrowEvent',
+        check: checkEvery(
+          hasEventDefinitionOfTypeOrNone('bpmn:MessageEventDefinition'),
+          checkIf(
+            hasZeebeTaskDefinition,
+            hasEventDefinitionOfType('bpmn:MessageEventDefinition')
+          )
+        )
+      },
+      {
+        type: 'bpmn:EndEvent',
+        check: checkEvery(
+          hasEventDefinitionOfTypeOrNone([
+            'bpmn:ErrorEventDefinition',
+            'bpmn:MessageEventDefinition'
+          ]),
+          checkIf(
+            checkEventDefinition(hasErrorReference),
+            hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
+          )
+        )
+      }
+    ]
+  )
 ];
