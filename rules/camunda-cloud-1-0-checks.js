@@ -1,19 +1,28 @@
 const {
-  checkSome,
+  checkEventDefinition,
+  checkFlowNode,
+  checkIf,
+  hasErrorReference,
   hasEventDefinitionOfType,
-  hasLoopCharacteristicsOfType,
-  hasNoEventDefinition,
+  hasEventDefinitionOfTypeOrNone,
   hasNoLanes,
-  hasNoLoopCharacteristics,
   isNotBpmn
-} = require('./utils/rule');
+} = require('./utils/element');
+
+const {
+  hasZeebeCalledElement,
+  hasZeebeLoopCharacteristics,
+  hasZeebeSubscription,
+  hasZeebeTaskDefinition
+} = require('./utils/cloud/element');
+
+const { checkEvery } = require('./utils/rule');
 
 module.exports = [
   {
     check: isNotBpmn
   },
   'bpmn:Association',
-  'bpmn:CallActivity',
   'bpmn:Collaboration',
   'bpmn:DataObject',
   'bpmn:DataObjectReference',
@@ -29,27 +38,51 @@ module.exports = [
   'bpmn:TextAnnotation',
   {
     type: 'bpmn:BoundaryEvent',
-    check: hasEventDefinitionOfType([
-      'bpmn:ErrorEventDefinition',
-      'bpmn:MessageEventDefinition',
-      'bpmn:TimerEventDefinition'
-    ])
+    check: checkEvery(
+      hasEventDefinitionOfType([
+        'bpmn:ErrorEventDefinition',
+        'bpmn:MessageEventDefinition',
+        'bpmn:TimerEventDefinition'
+      ]),
+      checkIf(
+        checkEventDefinition(hasErrorReference),
+        hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
+      ),
+      checkIf(
+        checkEventDefinition(hasZeebeSubscription),
+        hasEventDefinitionOfType('bpmn:MessageEventDefinition')
+      )
+    )
+  },
+  {
+    type: 'bpmn:CallActivity',
+    check: checkEvery(
+      hasZeebeCalledElement,
+      hasZeebeLoopCharacteristics
+    )
   },
   {
     type: 'bpmn:EndEvent',
-    check: checkSome(
-      hasNoEventDefinition,
-      hasEventDefinitionOfType([
-        'bpmn:ErrorEventDefinition'
-      ])
+    check: checkEvery(
+      hasEventDefinitionOfTypeOrNone('bpmn:ErrorEventDefinition'),
+      checkIf(
+        checkEventDefinition(hasErrorReference),
+        hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
+      )
     )
   },
   {
     type: 'bpmn:IntermediateCatchEvent',
-    check: hasEventDefinitionOfType([
-      'bpmn:MessageEventDefinition',
-      'bpmn:TimerEventDefinition'
-    ])
+    check: checkEvery(
+      hasEventDefinitionOfType([
+        'bpmn:TimerEventDefinition',
+        'bpmn:MessageEventDefinition'
+      ]),
+      checkIf(
+        checkEventDefinition(hasZeebeSubscription),
+        hasEventDefinitionOfType('bpmn:MessageEventDefinition')
+      )
+    )
   },
   {
     type: 'bpmn:Process',
@@ -57,41 +90,42 @@ module.exports = [
   },
   {
     type: 'bpmn:ReceiveTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
+    check: checkEvery(
+      checkFlowNode(hasZeebeSubscription),
+      hasZeebeLoopCharacteristics
     )
   },
   {
     type: 'bpmn:ServiceTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
+    check: checkEvery(
+      hasZeebeLoopCharacteristics,
+      hasZeebeTaskDefinition
     )
   },
   {
     type: 'bpmn:StartEvent',
-    check: checkSome(
-      hasNoEventDefinition,
-      hasEventDefinitionOfType([
+    check: checkEvery(
+      hasEventDefinitionOfTypeOrNone([
         'bpmn:ErrorEventDefinition',
         'bpmn:MessageEventDefinition',
         'bpmn:TimerEventDefinition'
-      ])
+      ]),
+      checkIf(
+        checkEventDefinition(hasErrorReference),
+        hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
+      ),
+      checkIf(
+        checkEventDefinition(hasZeebeSubscription),
+        hasEventDefinitionOfType('bpmn:MessageEventDefinition')
+      )
     )
   },
   {
     type: 'bpmn:SubProcess',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
-    )
+    check: hasZeebeLoopCharacteristics
   },
   {
     type: 'bpmn:UserTask',
-    check: checkSome(
-      hasNoLoopCharacteristics,
-      hasLoopCharacteristicsOfType('bpmn:MultiInstanceLoopCharacteristics')
-    )
+    check: hasZeebeLoopCharacteristics
   }
 ];

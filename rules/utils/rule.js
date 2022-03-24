@@ -1,7 +1,9 @@
 const {
+  every,
   isArray,
-  isNil,
+  isObject,
   isString,
+  some
 } = require('min-dash');
 
 const {
@@ -11,13 +13,26 @@ const {
 
 const { toSemverMinor } = require('./engine-profile');
 
+/**
+ * Factory function for rules. Returns a rule for a given execution platform,
+ * execution platform version and an array of checks. Must be run on
+ * bpmn:Definitions node. Returns early without traversing further if execution
+ * platform or execution platform version doesn't match. Returns early if node
+ * is not a bpmn:FlowElement or bpmn:FlowElementContainer.
+ *
+ * @param {string} ruleExecutionPlatform
+ * @param {string} ruleExecutionPlatformVersion
+ * @param {(Object|string)[]} checks
+ *
+ * @returns {Function}
+ */
 module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatformVersion, checks, executionPlatformLabel) {
   return () => {
     return {
       check: (node, reporter) => {
         if (is(node, 'bpmn:Definitions')) {
-          executionPlatform = node.get('modeler:executionPlatform');
-          executionPlatformVersion = node.get('modeler:executionPlatformVersion');
+          const executionPlatform = node.get('modeler:executionPlatform');
+          const executionPlatformVersion = node.get('modeler:executionPlatformVersion');
 
           if (!executionPlatform
             || executionPlatform !== ruleExecutionPlatform
@@ -29,20 +44,46 @@ module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatfor
           return;
         }
 
-        const result = checkNode(node, checks);
+        let results = checkNode(node, checks);
 
-        if (result === false) {
-          reporter.report(node.get('id') || '', `Element of type <${ node.$type }> not supported by ${ executionPlatformLabel || ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
+        if (results === true) {
+          return;
         }
 
-        if (isString(result)) {
-          reporter.report(node.get('id') || '', `Element of type <${ result }> not supported by ${ executionPlatformLabel || ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
+        const id = node.get('id') || '';
+
+        if (results === false) {
+          reporter.report(id, `Element of type <${ node.$type }> not supported by ${ executionPlatformLabel || ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
+        } else {
+          if (!isArray(results)) {
+            results = [ results ];
+          }
+
+          results.forEach((result) => {
+            if (isString(result)) {
+              result = { message: result };
+            }
+
+            let {
+              message,
+              ...rest
+            } = result;
+
+            message = addExecutionPlatform(message, executionPlatformLabel || ruleExecutionPlatform, toSemverMinor(ruleExecutionPlatformVersion));
+
+            reporter.report(id, message, rest);
+          });
         }
       }
     };
   };
 };
 
+/**
+ * Create no-op rule that always returns false resulting in early return.
+ *
+ * @returns {Function}
+ */
 module.exports.createNoopRule = function() {
   return () => {
     return {
@@ -52,146 +93,159 @@ module.exports.createNoopRule = function() {
 };
 
 /**
+ * Run checks on a node. Return true if at least one of the checks returns true.
+ * Otherwise return all errors or false.
+ *
  * @param {ModdleElement} node
  * @param {Array<Function>} checks
  *
- * @returns boolean|String
+ * @returns {boolean|Object|Object[]|string|string[]}
  */
 function checkNode(node, checks) {
-  return checks.reduce((previousResult, check) => {
-    if (previousResult === true) {
-      return previousResult;
-    }
+  const results = checks.map((check) => {
 
     // (1) check using type only
     if (isString(check)) {
-      return is(node, check) || previousResult;
+      return is(node, check);
     }
 
     const { type } = check;
 
     // (2) check using function only
     if (!type) {
-      return check.check(node) || previousResult;
+      return check.check(node);
     }
 
     // (3) check using type and function
     if (!is(node, type)) {
-      return previousResult;
+      return false;
     }
 
-    return check.check(node) || previousResult;
-  }, false);
+    return check.check(node);
+  });
+
+  return results.find((result) => result === true) || getErrors(results);
 }
 
+module.exports.checkNode = checkNode;
+
 /**
- * If every check returns true return true.
- * Otherwise return the first false or string returned by a check.
+ * Create function that runs checks on a node. Return true if all checks return
+ * true. Otherwise return all errors or false.
  *
  * @param  {Array<Function>} checks
  *
- * @returns {boolean|String}
+ * @returns {boolean|Object|Object[]|string|string[]}
  */
 module.exports.checkEvery = function(...checks) {
   return function(node) {
-    return checks.reduce((previousResult, check) => {
-      if (!isNil(previousResult) && previousResult !== true) {
-        return previousResult;
-      }
+    const results = checks.map((check) => check(node));
 
-      const result = check(node);
-
-      return result;
-    }, null);
+    return every(results, result => result === true) || getErrors(results);
   };
-}
+};
 
 /**
- * If some check returns true return true.
- * Otherwise return the first false or string returned by a check.
+ * Create function that runs checks on a node. Return true if at least one of
+ * the checks returns true. Otherwise return all errors or false.
  *
  * @param  {Array<Function>} checks
  *
- * @returns {boolean|String}
+ * @returns {boolean|Object|Object[]|string|string[]}
  */
 module.exports.checkSome = function(...checks) {
   return function(node) {
-    return checks.reduce((previousResult, check) => {
-      if (previousResult === true) {
-        return previousResult;
+    const results = checks.map((check) => check(node));
+
+    return some(results, result => result === true) || getErrors(results);
+  };
+};
+
+/**
+ * Replace check for element of type.
+ *
+ * @param {(Object|string)[]} checks
+ * @param {string} type
+ * @param {Function} check
+ *
+ * @returns {(Object|string)[]}
+ */
+module.exports.replaceCheck = function(checks, type, check) {
+  return replaceChecks(checks, [
+    {
+      type,
+      check
+    }
+  ]);
+};
+
+function replaceChecks(checks, replacements) {
+  return checks.map((check) => {
+    if (isString(check)) {
+      const replacement = replacements.find((replacement) => check === replacement.type);
+
+      if (replacement) {
+        return {
+          check: replacement.check,
+          type: check
+        };
       }
+    }
 
-      const result = check(node);
+    if (check.type) {
+      const replacement = replacements.find((replacement) => check.type === replacement.type);
 
-      if (isNil(previousResult) || result === true) {
-        return result;
+      if (replacement) {
+        return {
+          ...check,
+          check: replacement.check
+        };
       }
-
-      return previousResult;
-    }, null);
-  };
-}
-
-module.exports.hasEventDefinition = function(node) {
-  const eventDefinitions = node.get('eventDefinitions');
-
-  return eventDefinitions && eventDefinitions.length === 1;
-}
-
-module.exports.hasNoEventDefinition = function(node) {
-  const eventDefinitions = node.get('eventDefinitions');
-
-  return !eventDefinitions || !eventDefinitions.length || `${ node.$type} (${ eventDefinitions[ 0 ].$type })`;
-}
-
-module.exports.hasEventDefinitionOfType = function(types) {
-  return function(node) {
-    if (!isArray(types)) {
-      types = [ types ];
     }
 
-    const eventDefinitions = node.get('eventDefinitions');
+    return check;
+  });
+}
 
-    if (!eventDefinitions || eventDefinitions.length !== 1) {
-      return false;
+module.exports.replaceChecks = replaceChecks;
+
+function addExecutionPlatform(string, executionPlatform, executionPlatformVersion) {
+  return string
+    .replace('{{ executionPlatform }}', executionPlatform)
+    .replace('{{ executionPlatformVersion }}', executionPlatformVersion);
+}
+
+/**
+ * Return all errors or false.
+ *
+ * @param {(boolean|Object|string)[]} result
+ *
+ * @returns {boolean|(Object|string)[]}
+ */
+function getErrors(results) {
+  const errors = results.reduce((errors, result) => {
+    if (isArray(result)) {
+      return [
+        ...errors,
+        ...result
+      ];
     }
 
-    const eventDefinition = eventDefinitions[ 0 ];
-
-    return isAny(eventDefinition, types) || `${ node.$type} (${ eventDefinition.$type })`;
-  };
-}
-
-module.exports.hasLoopCharacteristics = function(node) {
-  const loopCharacteristics = node.get('loopCharacteristics');
-
-  return !!loopCharacteristics;
-}
-
-module.exports.hasNoLoopCharacteristics = function(node) {
-  const loopCharacteristics = node.get('loopCharacteristics');
-
-  return !loopCharacteristics || `${ node.$type} (${ loopCharacteristics.$type })`;
-}
-
-module.exports.hasNoLanes = function(node) {
-  const laneSets = node.get('laneSets');
-
-  return !laneSets || !laneSets.length || `${ node.$type} (bpmn:LaneSet)`;
-}
-
-module.exports.hasLoopCharacteristicsOfType = function(type) {
-  return function(node) {
-    const loopCharacteristics = node.get('loopCharacteristics');
-
-    if (!loopCharacteristics) {
-      return false;
+    if (isObject(result) || isString(result)) {
+      return [
+        ...errors,
+        result
+      ];
     }
 
-    return is(loopCharacteristics, type) || `${ node.$type} (${ loopCharacteristics.$type })`;
-  };
-}
+    return errors;
+  }, []);
 
-module.exports.isNotBpmn = function(node) {
-  return !is(node, 'bpmn:BaseElement');
+  if (errors.length === 1) {
+    return errors[ 0 ];
+  } else if (errors.length > 1) {
+    return errors;
+  }
+
+  return false;
 }
