@@ -104,7 +104,7 @@ module.exports = [
         hasZeebeTaskDefinition
       ),
       {
-        'Element of type <bpmn:ServiceTask> must have <zeebe:TaskDefinition> extension element': 'Must have implementation'
+        'foo': 'bar'
       }
     )
   },
