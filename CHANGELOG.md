@@ -6,11 +6,17 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.5.0
+
+* `FEAT`: update Camunda Cloud rules to lint extension elements and their properties ([#18](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/18))
+
 ## 0.4.0
+
 * `CHORE`: rename `Cloud` `1.4` to `8.0` ([#14](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/14))
 * `CHORE`: rename `Cloud` to `Platform`/`Zeebe` ([#15](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/15))
 
 ## 0.3.0
+
 * `FEAT`: support multiInstance for subprocesses with cloud 1.0 ([#6](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/6))
 * `FEAT`: add Camunda Platform rules ([#5](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/5))
 * `FEAT`: add Camunda Cloud 1.4 rule ([#5](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/5))
