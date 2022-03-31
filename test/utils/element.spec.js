@@ -605,7 +605,9 @@ describe('util - element', function() {
     it('should not return error', function() {
 
       // given
-      const error = createElement('bpmn:Error');
+      const error = createElement('bpmn:Error', {
+        errorCode: 'foo'
+      });
 
       const errorEventDefinition = createElement('bpmn:ErrorEventDefinition', {
         errorRef: error
@@ -619,7 +621,7 @@ describe('util - element', function() {
     });
 
 
-    it('should return error', function() {
+    it('should return error (no error ref)', function() {
 
       // given
       const errorEventDefinition = createElement('bpmn:ErrorEventDefinition');
@@ -634,6 +636,30 @@ describe('util - element', function() {
         error: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           requiredProperty: 'errorRef'
+        }
+      });
+    });
+
+
+    it('should return error (no error code)', function() {
+
+      // given
+      const error = createElement('bpmn:Error');
+
+      const errorEventDefinition = createElement('bpmn:ErrorEventDefinition', {
+        errorRef: error
+      });
+
+      // when
+      const results = hasErrorReference(errorEventDefinition);
+
+      // then
+      expect(results).to.eql({
+        message: 'Element of type <bpmn:Error> must have property <errorCode>',
+        path: [ 'errorCode' ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'errorCode'
         }
       });
     });

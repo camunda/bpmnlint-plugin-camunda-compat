@@ -137,7 +137,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
             <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1" />
           </bpmn:boundaryEvent>
         </bpmn:process>
-        <bpmn:error id="Error_1" name="Error_1" />
+        <bpmn:error id="Error_1" name="Error_1" errorCode="foo" />
       `))
     },
     {
@@ -231,7 +231,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
             <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1" />
           </bpmn:endEvent>
         </bpmn:process>
-        <bpmn:error id="Error_1" name="Error_1" />
+        <bpmn:error id="Error_1" name="Error_1" errorCode="foo" />
       `))
     },
 
@@ -370,7 +370,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
             <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1" />
           </bpmn:startEvent>
         </bpmn:process>
-        <bpmn:error id="Error_1" name="Error_1" />
+        <bpmn:error id="Error_1" name="Error_1" errorCode="foo" />
       `))
     },
     {
@@ -529,6 +529,35 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         error: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           requiredProperty: 'errorRef'
+        }
+      }
+    },
+    {
+      name: 'error boundary event (no error code)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:serviceTask id="ServiceTask_1">
+            <bpmn:extensionElements>
+              <zeebe:taskDefinition type="foo" retries="bar" />
+            </bpmn:extensionElements>
+          </bpmn:serviceTask>
+          <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
+            <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1" />
+          </bpmn:boundaryEvent>
+        </bpmn:process>
+        <bpmn:error id="Error_1" name="Error_1" />
+      `)),
+      report: {
+        id: 'BoundaryEvent_1',
+        message: 'Element of type <bpmn:Error> must have property <errorCode>',
+        path: [
+          'rootElements',
+          1,
+          'errorCode'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'errorCode'
         }
       }
     },
@@ -1000,6 +1029,30 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         error: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           requiredProperty: 'errorRef'
+        }
+      }
+    },
+    {
+      name: 'error start event (no error code)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:startEvent id="StartEvent_1">
+            <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1" />
+          </bpmn:startEvent>
+        </bpmn:process>
+        <bpmn:error id="Error_1" name="Error_1" />
+      `)),
+      report: {
+        id: 'StartEvent_1',
+        message: 'Element of type <bpmn:Error> must have property <errorCode>',
+        path: [
+          'rootElements',
+          1,
+          'errorCode'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'errorCode'
         }
       }
     },
