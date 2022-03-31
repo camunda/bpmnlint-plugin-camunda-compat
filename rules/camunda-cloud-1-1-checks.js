@@ -2,7 +2,10 @@ const camundaCloud10Checks = require('./camunda-cloud-1-0-checks');
 
 const { checkEvery } = require('./utils/rule');
 
-const { hasNoEventDefinition } = require('./utils/element');
+const {
+  hasNoEventDefinition,
+  withTranslations
+} = require('./utils/element');
 
 const {
   hasZeebeTaskDefinition,
@@ -13,9 +16,15 @@ module.exports = [
   ...camundaCloud10Checks,
   {
     type: 'bpmn:BusinessRuleTask',
-    check: checkEvery(
-      hasZeebeLoopCharacteristics,
-      hasZeebeTaskDefinition
+    check: withTranslations(
+      checkEvery(
+        hasZeebeLoopCharacteristics,
+        hasZeebeTaskDefinition
+      ),
+      {
+        'Element of type <bpmn:BusinessRuleTask> must have <zeebe:TaskDefinition> extension element': 'A Business Rule Task must have a Task definition type',
+        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A Business Rule Task must have a Task definition type'
+      }
     )
   },
   {
@@ -28,16 +37,28 @@ module.exports = [
   },
   {
     type: 'bpmn:ScriptTask',
-    check: checkEvery(
-      hasZeebeLoopCharacteristics,
-      hasZeebeTaskDefinition
+    check: withTranslations(
+      checkEvery(
+        hasZeebeLoopCharacteristics,
+        hasZeebeTaskDefinition
+      ),
+      {
+        'Element of type <bpmn:ScriptTask> must have <zeebe:TaskDefinition> extension element': 'A Script Task must have a Task definition type',
+        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A Script Task must have a Task definition type'
+      }
     )
   },
   {
     type: 'bpmn:SendTask',
-    check: checkEvery(
-      hasZeebeLoopCharacteristics,
-      hasZeebeTaskDefinition
+    check: withTranslations(
+      checkEvery(
+        hasZeebeLoopCharacteristics,
+        hasZeebeTaskDefinition
+      ),
+      {
+        'Element of type <bpmn:SendTask> must have <zeebe:TaskDefinition> extension element': 'A Send Task must have a Task definition type',
+        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A Send Task must have a Task definition type'
+      }
     )
   }
 ];
