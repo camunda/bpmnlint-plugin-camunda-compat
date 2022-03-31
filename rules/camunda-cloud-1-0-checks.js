@@ -5,6 +5,7 @@ const {
   hasErrorReference,
   hasEventDefinitionOfType,
   hasEventDefinitionOfTypeOrNone,
+  hasMessageReference,
   hasNoLanes,
   isNotBpmn,
   withTranslations
@@ -50,7 +51,13 @@ module.exports = [
         hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
       ),
       checkIf(
-        checkEventDefinition(hasZeebeSubscription),
+        checkEvery(
+          checkEventDefinition(hasMessageReference),
+          checkIf(
+            checkEventDefinition(hasZeebeSubscription),
+            checkEventDefinition(hasMessageReference)
+          )
+        ),
         hasEventDefinitionOfType('bpmn:MessageEventDefinition')
       )
     )
@@ -80,7 +87,13 @@ module.exports = [
         'bpmn:MessageEventDefinition'
       ]),
       checkIf(
-        checkEventDefinition(hasZeebeSubscription),
+        checkEvery(
+          checkEventDefinition(hasMessageReference),
+          checkIf(
+            checkEventDefinition(hasZeebeSubscription),
+            checkEventDefinition(hasMessageReference)
+          )
+        ),
         hasEventDefinitionOfType('bpmn:MessageEventDefinition')
       )
     )
@@ -92,7 +105,11 @@ module.exports = [
   {
     type: 'bpmn:ReceiveTask',
     check: checkEvery(
-      checkFlowNode(hasZeebeSubscription),
+      checkFlowNode(hasMessageReference),
+      checkIf(
+        checkFlowNode(hasZeebeSubscription),
+        checkFlowNode(hasMessageReference)
+      ),
       hasZeebeLoopCharacteristics
     )
   },
@@ -121,7 +138,13 @@ module.exports = [
         hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
       ),
       checkIf(
-        checkEventDefinition(hasZeebeSubscription),
+        checkEvery(
+          checkEventDefinition(hasMessageReference),
+          checkIf(
+            checkEventDefinition(hasZeebeSubscription),
+            checkEventDefinition(hasMessageReference)
+          )
+        ),
         hasEventDefinitionOfType('bpmn:MessageEventDefinition')
       )
     )

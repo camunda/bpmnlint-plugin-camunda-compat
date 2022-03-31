@@ -587,6 +587,35 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         }
       }
     },
+    {
+      name: 'message boundary event (no message name)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:serviceTask id="ServiceTask_1">
+            <bpmn:extensionElements>
+              <zeebe:taskDefinition type="foo" retries="bar" />
+            </bpmn:extensionElements>
+          </bpmn:serviceTask>
+          <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+          </bpmn:boundaryEvent>
+        </bpmn:process>
+        <bpmn:message id="Message_1" />
+      `)),
+      report: {
+        id: 'BoundaryEvent_1',
+        message: 'Element of type <bpmn:Message> must have property <name>',
+        path: [
+          'rootElements',
+          1,
+          'name'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'name'
+        }
+      }
+    },
 
     // bpmn:CallActivity
     {
@@ -812,6 +841,30 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       }
     },
     {
+      name: 'message intermediate catch event (no message name)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:intermediateCatchEvent id="IntermeditateCatchEvent_1">
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+          </bpmn:intermediateCatchEvent>
+        </bpmn:process>
+        <bpmn:message id="Message_1" />
+      `)),
+      report: {
+        id: 'IntermeditateCatchEvent_1',
+        message: 'Element of type <bpmn:Message> must have property <name>',
+        path: [
+          'rootElements',
+          1,
+          'name'
+        ],
+        error: {
+          type: 'propertyRequired',
+          requiredProperty: 'name'
+        }
+      }
+    },
+    {
       name: 'message intermediate catch event (no subscription)',
       moddleElement: createModdle(createCloudDefinitions(`
         <bpmn:process>
@@ -877,6 +930,28 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         error: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           requiredProperty: 'messageRef'
+        }
+      }
+    },
+    {
+      name: 'receive task (no message name)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process id="Process_1">
+          <bpmn:receiveTask id="ReceiveTask_1" messageRef="Message_1" />
+        </bpmn:process>
+        <bpmn:message id="Message_1" />
+      `)),
+      report: {
+        id: 'ReceiveTask_1',
+        message: 'Element of type <bpmn:Message> must have property <name>',
+        path: [
+          'rootElements',
+          1,
+          'name'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'name'
         }
       }
     },
@@ -1074,6 +1149,30 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         error: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           requiredProperty: 'messageRef'
+        }
+      }
+    },
+    {
+      name: 'message start event (no message name)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:startEvent id="StartEvent_1">
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+          </bpmn:startEvent>
+        </bpmn:process>
+        <bpmn:message id="Message_1" />
+      `)),
+      report: {
+        id: 'StartEvent_1',
+        message: 'Element of type <bpmn:Message> must have property <name>',
+        path: [
+          'rootElements',
+          1,
+          'name'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'name'
         }
       }
     },

@@ -550,7 +550,7 @@ module.exports.checkFlowNode = function(check) {
  *
  * @returns {Function}
  */
-module.exports.checkMessage = function(check) {
+function checkMessage(check) {
   return function(node, parentNode) {
     const results = checkProperties(node, {
       messageRef: {
@@ -568,7 +568,9 @@ module.exports.checkMessage = function(check) {
 
     return check(message);
   };
-};
+}
+
+module.exports.checkMessage = checkMessage;
 
 /**
  * @example
@@ -605,6 +607,24 @@ module.exports.hasErrorReference = checkError(
   (node) => {
     const results = checkProperties(node, {
       errorCode: {
+        required: true
+      }
+    });
+
+    if (results.length === 1) {
+      return results[ 0 ];
+    } else if (results.length > 1) {
+      return results;
+    }
+
+    return true;
+  }
+);
+
+module.exports.hasMessageReference = checkMessage(
+  (node) => {
+    const results = checkProperties(node, {
+      name: {
         required: true
       }
     });
