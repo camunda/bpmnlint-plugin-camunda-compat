@@ -601,7 +601,23 @@ module.exports.checkLoopCharacteristics = function(check) {
   };
 };
 
-module.exports.hasErrorReference = checkError(() => true);
+module.exports.hasErrorReference = checkError(
+  (node) => {
+    const results = checkProperties(node, {
+      errorCode: {
+        required: true
+      }
+    });
+
+    if (results.length === 1) {
+      return results[ 0 ];
+    } else if (results.length > 1) {
+      return results;
+    }
+
+    return true;
+  }
+);
 
 function translate(result, translations) {
   if (isString(result)) {
