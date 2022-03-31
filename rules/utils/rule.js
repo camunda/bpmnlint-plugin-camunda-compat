@@ -106,7 +106,7 @@ function checkNode(node, checks) {
 
     // (1) check using type only
     if (isString(check)) {
-      return is(node, check);
+      return isExactly(node, check);
     }
 
     const { type } = check;
@@ -117,7 +117,7 @@ function checkNode(node, checks) {
     }
 
     // (3) check using type and function
-    if (!is(node, type)) {
+    if (!isExactly(node, type)) {
       return false;
     }
 
@@ -248,4 +248,10 @@ function getErrors(results) {
   }
 
   return false;
+}
+
+function isExactly(node, type) {
+  const { $model } = node;
+
+  return $model.getType(node.$type) === $model.getType(type);
 }
