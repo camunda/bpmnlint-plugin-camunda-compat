@@ -29,7 +29,7 @@ function createValid(executionPlatformVersion = '1.2.0') {
         <bpmn:intermediateThrowEvent id="EndEvent_1">
           <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:intermediateThrowEvent>
       `))

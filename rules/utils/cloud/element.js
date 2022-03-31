@@ -29,9 +29,6 @@ module.exports.hasZeebeCalledDecisionOrTaskDefinition = checkFlowNode(
       properties: {
         type: {
           required: true
-        },
-        retries: {
-          required: true
         }
       }
     }
@@ -101,9 +98,6 @@ module.exports.hasZeebeTaskDefinition = checkFlowNode(
     type: 'zeebe:TaskDefinition',
     properties: {
       type: {
-        required: true
-      },
-      retries: {
         required: true
       }
     }

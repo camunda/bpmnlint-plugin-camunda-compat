@@ -278,15 +278,15 @@ describe('util - element', function() {
       it('should not return errors', function() {
 
         // given
-        const taskDefinition = createElement('zeebe:TaskDefinition', {
-          type: 'foo',
-          retries: 'bar'
+        const loopCharacteristics = createElement('zeebe:LoopCharacteristics', {
+          outputCollection: 'foo',
+          outputElement: 'bar'
         });
 
         // when
-        const results = checkProperties(taskDefinition, {
-          type: {
-            dependendRequired: 'retries'
+        const results = checkProperties(loopCharacteristics, {
+          outputCollection: {
+            dependendRequired: 'outputElement'
           }
         });
 
@@ -298,25 +298,25 @@ describe('util - element', function() {
       it('should return errors (parentNode === node)', function() {
 
         // given
-        const taskDefinition = createElement('zeebe:TaskDefinition', {
-          retries: 'bar'
+        const loopCharacteristics = createElement('zeebe:LoopCharacteristics', {
+          outputElement: 'bar'
         });
 
         // when
-        const results = checkProperties(taskDefinition, {
-          type: {
-            dependendRequired: 'retries'
+        const results = checkProperties(loopCharacteristics, {
+          outputCollection: {
+            dependendRequired: 'outputElement'
           }
         });
 
         // then
         expect(results).to.eql([
           {
-            message: 'Element of type <zeebe:TaskDefinition> must have property <type> if property <retries> is set',
-            path: [ 'type' ],
+            message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if property <outputElement> is set',
+            path: [ 'outputCollection' ],
             error: {
               type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
-              dependendRequiredProperty: 'type'
+              dependendRequiredProperty: 'outputCollection'
             }
           }
         ]);
@@ -326,33 +326,35 @@ describe('util - element', function() {
       it('should return errors (parentNode !== node)', function() {
 
         // given
-        const taskDefinition = createElement('zeebe:TaskDefinition', {
-          retries: 'bar'
+        const loopCharacteristics = createElement('zeebe:LoopCharacteristics', {
+          outputElement: 'bar'
         });
 
         const serviceTask = createElement('bpmn:ServiceTask', {
-          extensionElements: createElement('bpmn:ExtensionElements', {
-            values: [
-              taskDefinition
-            ]
+          loopCharacteristics: createElement('bpmn:MultiInstanceLoopCharacteristics', {
+            extensionElements: createElement('bpmn:ExtensionElements', {
+              values: [
+                loopCharacteristics
+              ]
+            })
           })
         });
 
         // when
-        const results = checkProperties(taskDefinition, {
-          type: {
-            dependendRequired: 'retries'
+        const results = checkProperties(loopCharacteristics, {
+          outputCollection: {
+            dependendRequired: 'outputElement'
           }
         }, serviceTask);
 
         // then
         expect(results).to.eql([
           {
-            message: 'Element of type <zeebe:TaskDefinition> must have property <type> if property <retries> is set',
-            path: [ 'extensionElements', 'values', 0, 'type' ],
+            message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if property <outputElement> is set',
+            path: [ 'loopCharacteristics', 'extensionElements', 'values', 0, 'outputCollection' ],
             error: {
               type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
-              dependendRequiredProperty: 'type'
+              dependendRequiredProperty: 'outputCollection'
             }
           }
         ]);
@@ -819,9 +821,7 @@ describe('util - element', function() {
       const serviceTask = createElement('bpmn:ServiceTask', {
         extensionElements: createElement('bpmn:ExtensionElements', {
           values: [
-            createElement('zeebe:TaskDefinition', {
-              retries: 'bar'
-            })
+            createElement('zeebe:TaskDefinition')
           ]
         })
       });

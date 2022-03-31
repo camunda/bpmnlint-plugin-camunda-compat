@@ -343,8 +343,7 @@ module.exports.checkProperties = checkProperties;
  *   {
  *     type: 'zeebe:TaskDefinition',
  *     properties: {
- *       type: { required: true },
- *       retries: { required: true }
+ *       type: { required: true }
  *     }
  *   }
  * ]);
@@ -415,8 +414,7 @@ module.exports.hasExtensionElementsOfTypes = function(types, exclusive = false) 
  *   {
  *     type: 'zeebe:TaskDefinition',
  *     properties: {
- *       type: { required: true },
- *       retries: { required: true }
+ *       type: { required: true }
  *     }
  *   }
  * );

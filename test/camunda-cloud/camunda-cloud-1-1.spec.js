@@ -20,7 +20,7 @@ function createValid(executionPlatformVersion = '1.1.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:businessRuleTask id="BusinessRuleTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:businessRuleTask>
       `))
@@ -35,7 +35,7 @@ function createValid(executionPlatformVersion = '1.1.0') {
             </bpmn:extensionElements>
           </bpmn:multiInstanceLoopCharacteristics>
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:businessRuleTask>
       `))
@@ -50,7 +50,7 @@ function createValid(executionPlatformVersion = '1.1.0') {
             </bpmn:extensionElements>
           </bpmn:multiInstanceLoopCharacteristics>
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:businessRuleTask>
       `))
@@ -98,7 +98,7 @@ function createValid(executionPlatformVersion = '1.1.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:scriptTask id="ScriptTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:scriptTask>
       `))
@@ -113,7 +113,7 @@ function createValid(executionPlatformVersion = '1.1.0') {
             </bpmn:extensionElements>
           </bpmn:multiInstanceLoopCharacteristics>
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:scriptTask>
       `))
@@ -128,7 +128,7 @@ function createValid(executionPlatformVersion = '1.1.0') {
             </bpmn:extensionElements>
           </bpmn:multiInstanceLoopCharacteristics>
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:scriptTask>
       `))
@@ -140,7 +140,7 @@ function createValid(executionPlatformVersion = '1.1.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:sendTask id="SendTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:sendTask>
       `))
@@ -155,7 +155,7 @@ function createValid(executionPlatformVersion = '1.1.0') {
             </bpmn:extensionElements>
           </bpmn:multiInstanceLoopCharacteristics>
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:sendTask>
       `))
@@ -170,7 +170,7 @@ function createValid(executionPlatformVersion = '1.1.0') {
             </bpmn:extensionElements>
           </bpmn:multiInstanceLoopCharacteristics>
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:sendTask>
       `))
@@ -204,7 +204,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:businessRuleTask id="BusinessRuleTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition retries="bar" />
+            <zeebe:taskDefinition />
           </bpmn:extensionElements>
         </bpmn:businessRuleTask>
       `)),
@@ -229,7 +229,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
         <bpmn:businessRuleTask id="BusinessRuleTask_1">
           <bpmn:multiInstanceLoopCharacteristics />
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:businessRuleTask>
       `)),
@@ -309,7 +309,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:scriptTask id="ScriptTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition retries="bar" />
+            <zeebe:taskDefinition />
           </bpmn:extensionElements>
         </bpmn:scriptTask>
       `)),
@@ -334,7 +334,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
         <bpmn:scriptTask id="ScriptTask_1">
           <bpmn:multiInstanceLoopCharacteristics />
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:scriptTask>
       `)),
@@ -370,7 +370,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:sendTask id="SendTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition retries="bar" />
+            <zeebe:taskDefinition />
           </bpmn:extensionElements>
         </bpmn:sendTask>
       `)),
@@ -395,7 +395,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
         <bpmn:sendTask id="SendTask_1">
           <bpmn:multiInstanceLoopCharacteristics />
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:sendTask>
       `)),

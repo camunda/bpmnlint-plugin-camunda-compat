@@ -130,7 +130,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
         <bpmn:process>
           <bpmn:serviceTask id="ServiceTask_1">
             <bpmn:extensionElements>
-              <zeebe:taskDefinition type="foo" retries="bar" />
+              <zeebe:taskDefinition type="foo" />
             </bpmn:extensionElements>
           </bpmn:serviceTask>
           <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
@@ -146,7 +146,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
         <bpmn:process>
           <bpmn:serviceTask id="ServiceTask_1">
             <bpmn:extensionElements>
-              <zeebe:taskDefinition type="foo" retries="bar" />
+              <zeebe:taskDefinition type="foo" />
             </bpmn:extensionElements>
           </bpmn:serviceTask>
           <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
@@ -165,7 +165,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:serviceTask id="ServiceTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:serviceTask>
         <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
@@ -319,7 +319,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:serviceTask id="ServiceTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:serviceTask>
       `))
@@ -334,7 +334,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
             </bpmn:extensionElements>
           </bpmn:multiInstanceLoopCharacteristics>
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:serviceTask>
       `))
@@ -349,7 +349,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
             </bpmn:extensionElements>
           </bpmn:multiInstanceLoopCharacteristics>
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:serviceTask>
       `))
@@ -491,7 +491,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:serviceTask id="ServiceTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:serviceTask>
         <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1" />
@@ -511,7 +511,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:serviceTask id="ServiceTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:serviceTask>
         <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
@@ -537,7 +537,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:serviceTask id="ServiceTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:serviceTask>
         <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
@@ -918,7 +918,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:serviceTask id="ServiceTask_1">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition retries="bar" />
+            <zeebe:taskDefinition />
           </bpmn:extensionElements>
         </bpmn:serviceTask>
       `)),
@@ -943,7 +943,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         <bpmn:serviceTask id="ServiceTask_1">
           <bpmn:multiInstanceLoopCharacteristics />
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="foo" retries="bar" />
+            <zeebe:taskDefinition type="foo" />
           </bpmn:extensionElements>
         </bpmn:serviceTask>
       `)),
