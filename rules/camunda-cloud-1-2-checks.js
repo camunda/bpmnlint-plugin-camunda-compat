@@ -11,6 +11,7 @@ const {
   hasErrorReference,
   hasEventDefinitionOfType,
   hasEventDefinitionOfTypeOrNone,
+  withTranslations
 } = require('./utils/element');
 
 const { hasZeebeTaskDefinition } = require('./utils/cloud/element');
@@ -21,12 +22,18 @@ module.exports = [
     [
       {
         type: 'bpmn:IntermediateThrowEvent',
-        check: checkEvery(
-          hasEventDefinitionOfTypeOrNone('bpmn:MessageEventDefinition'),
-          checkIf(
-            hasZeebeTaskDefinition,
-            hasEventDefinitionOfType('bpmn:MessageEventDefinition')
-          )
+        check: withTranslations(
+          checkEvery(
+            hasEventDefinitionOfTypeOrNone('bpmn:MessageEventDefinition'),
+            checkIf(
+              hasZeebeTaskDefinition,
+              hasEventDefinitionOfType('bpmn:MessageEventDefinition')
+            )
+          ),
+          {
+            'Element of type <bpmn:IntermediateThrowEvent> must have <zeebe:TaskDefinition> extension element': 'An Intermediate Throw Event must have a Task definition type',
+            'Element of type <zeebe:TaskDefinition> must have property <type>': 'An Intermediate Throw Event must have a Task definition type'
+          }
         )
       },
       {
