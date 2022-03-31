@@ -468,6 +468,14 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         createCloudProcess = require('../helper').createCloudProcess(executionPlatformVersion);
 
   return [
+    {
+      name: 'undefined task',
+      moddleElement: createModdle(createCloudProcess('<bpmn:Task id="Task_1" />')),
+      report: {
+        id: 'Task_1',
+        message: 'An Undefined Task is not supported by Zeebe 1.0'
+      }
+    },
     ...[
       [ 'bpmn:BusinessRuleTask', 'bpmn:businessRuleTask' ],
       [ 'bpmn:ComplexGateway', 'bpmn:complexGateway' ],
