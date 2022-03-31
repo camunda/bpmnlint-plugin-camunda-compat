@@ -24,6 +24,7 @@ const {
   hasExtensionElementOfType,
   hasExtensionElementsOfTypes,
   hasLoopCharacteristicsOfTypeOrNone,
+  hasMessageReference,
   hasMultiInstanceLoopCharacteristics,
   hasNoEventDefinition,
   hasNoLanes,
@@ -1129,6 +1130,73 @@ describe('util - element', function() {
           type: 'elementType',
           elementType: 'bpmn:ServiceTask',
           propertyType: 'bpmn:StandardLoopCharacteristics'
+        }
+      });
+    });
+
+  });
+
+
+  describe('#hasMessageReference', function() {
+
+    it('should not return error', function() {
+
+      // given
+      const message = createElement('bpmn:Message', {
+        name: 'foo'
+      });
+
+      const messageEventDefinition = createElement('bpmn:MessageEventDefinition', {
+        messageRef: message
+      });
+
+      // when
+      const results = hasMessageReference(messageEventDefinition);
+
+      // then
+      expect(results).to.be.true;
+    });
+
+
+    it('should return error (no message ref)', function() {
+
+      // given
+      const messageEventDefinition = createElement('bpmn:MessageEventDefinition');
+
+      // when
+      const results = hasMessageReference(messageEventDefinition);
+
+      // then
+      expect(results).to.eql({
+        message: 'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>',
+        path: [ 'messageRef' ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'messageRef'
+        }
+      });
+    });
+
+
+    it('should return error (no name)', function() {
+
+      // given
+      const message = createElement('bpmn:Message');
+
+      const messageEventDefinition = createElement('bpmn:MessageEventDefinition', {
+        messageRef: message
+      });
+
+      // when
+      const results = hasMessageReference(messageEventDefinition);
+
+      // then
+      expect(results).to.eql({
+        message: 'Element of type <bpmn:Message> must have property <name>',
+        path: [ 'name' ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'name'
         }
       });
     });
