@@ -143,9 +143,7 @@ describe('util - cloud - element', function() {
       const businessRuleTask = createElement('bpmn:BusinessRuleTask', {
         extensionElements: createElement('bpmn:ExtensionElements', {
           values: [
-            createElement('zeebe:TaskDefinition', {
-              retries: 'bar'
-            })
+            createElement('zeebe:TaskDefinition')
           ]
         })
       });
@@ -160,34 +158,6 @@ describe('util - cloud - element', function() {
         error: {
           type: 'propertyRequired',
           requiredProperty: 'type'
-        }
-      });
-    });
-
-
-    it('should return errors (no retries)', function() {
-
-      // given
-      const businessRuleTask = createElement('bpmn:BusinessRuleTask', {
-        extensionElements: createElement('bpmn:ExtensionElements', {
-          values: [
-            createElement('zeebe:TaskDefinition', {
-              type: 'foo'
-            })
-          ]
-        })
-      });
-
-      // when
-      const result = hasZeebeCalledDecisionOrTaskDefinition(businessRuleTask);
-
-      // then
-      expect(result).to.eql({
-        message: 'Element of type <zeebe:TaskDefinition> must have property <retries>',
-        path: [ 'extensionElements', 'values', 0, 'retries' ],
-        error: {
-          type: 'propertyRequired',
-          requiredProperty: 'retries'
         }
       });
     });
@@ -580,8 +550,7 @@ describe('util - cloud - element', function() {
         extensionElements: createElement('bpmn:ExtensionElements', {
           values: [
             createElement('zeebe:TaskDefinition', {
-              type: 'foo',
-              retries: 'bar'
+              type: 'foo'
             })
           ]
         })
@@ -621,9 +590,7 @@ describe('util - cloud - element', function() {
       const serviceTask = createElement('bpmn:ServiceTask', {
         extensionElements: createElement('bpmn:ExtensionElements', {
           values: [
-            createElement('zeebe:TaskDefinition', {
-              retries: 'bar'
-            })
+            createElement('zeebe:TaskDefinition')
           ]
         })
       });
@@ -638,34 +605,6 @@ describe('util - cloud - element', function() {
         error: {
           type: 'propertyRequired',
           requiredProperty: 'type'
-        }
-      });
-    });
-
-
-    it('should return errors (no retries)', function() {
-
-      // given
-      const serviceTask = createElement('bpmn:ServiceTask', {
-        extensionElements: createElement('bpmn:ExtensionElements', {
-          values: [
-            createElement('zeebe:TaskDefinition', {
-              type: 'foo'
-            })
-          ]
-        })
-      });
-
-      // when
-      const result = hasZeebeTaskDefinition(serviceTask);
-
-      // then
-      expect(result).to.eql({
-        message: 'Element of type <zeebe:TaskDefinition> must have property <retries>',
-        path: [ 'extensionElements', 'values', 0, 'retries' ],
-        error: {
-          type: 'propertyRequired',
-          requiredProperty: 'retries'
         }
       });
     });
