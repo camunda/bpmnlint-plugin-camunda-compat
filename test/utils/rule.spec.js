@@ -420,7 +420,7 @@ describe('util - rule', function() {
     });
 
 
-    it('should return false (type)', function() {
+    it('should return false (type not equal)', function() {
 
       // given
       const checks = [
@@ -431,6 +431,25 @@ describe('util - rule', function() {
 
       // when
       const result = checkNode(node, checks);
+
+      // then
+      expect(result).to.be.false;
+    });
+
+
+    it('should return false (type not exactly equal)', function() {
+
+      // given
+      const businessRuleTask = createElement('bpmn:BusinessRuleTask');
+
+      const checks = [
+        createCheck(() => false),
+        'bpmn:Task',
+        createCheck(() => false)
+      ];
+
+      // when
+      const result = checkNode(businessRuleTask, checks);
 
       // then
       expect(result).to.be.false;
@@ -454,7 +473,7 @@ describe('util - rule', function() {
     });
 
 
-    it('should return false (type and function)', function() {
+    it('should return false (type not equal and function)', function() {
 
       // given
       const checks = [
@@ -466,6 +485,26 @@ describe('util - rule', function() {
 
       // when
       const result = checkNode(node, checks);
+
+      // then
+      expect(result).to.be.false;
+    });
+
+
+    it('should return false (type not exactly equal and function)', function() {
+
+      // given
+      const businessRuleTask = createElement('bpmn:BusinessRuleTask');
+
+      const checks = [
+        createCheck(() => false),
+        createCheck(() => false, 'bpmn:Definitions'),
+        createCheck(() => true, 'bpmn:Task'),
+        createCheck(() => false)
+      ];
+
+      // when
+      const result = checkNode(businessRuleTask, checks);
 
       // then
       expect(result).to.be.false;
