@@ -288,7 +288,7 @@ function checkProperties(node, properties, parentNode) {
         return [
           ...results,
           {
-            message: `Element of type <${ node.$type }> must have property <${ propertyName }> if property <${ propertyChecks.dependendRequired }> is set`,
+            message: `Element of type <${ node.$type }> must have property <${ propertyName }> if it has property <${ propertyChecks.dependendRequired }>`,
             path: path
               ? [ ...path, propertyName ]
               : [ propertyName ],

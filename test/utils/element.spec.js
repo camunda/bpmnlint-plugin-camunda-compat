@@ -313,7 +313,7 @@ describe('util - element', function() {
         // then
         expect(results).to.eql([
           {
-            message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if property <outputElement> is set',
+            message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>',
             path: [ 'outputCollection' ],
             error: {
               type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
@@ -351,7 +351,7 @@ describe('util - element', function() {
         // then
         expect(results).to.eql([
           {
-            message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if property <outputElement> is set',
+            message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>',
             path: [ 'loopCharacteristics', 'extensionElements', 'values', 0, 'outputCollection' ],
             error: {
               type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,

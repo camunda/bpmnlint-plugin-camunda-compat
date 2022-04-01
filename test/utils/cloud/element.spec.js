@@ -353,7 +353,7 @@ describe('util - cloud - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if property <outputElement> is set',
+        message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>',
         path: [
           'loopCharacteristics',
           'extensionElements',
@@ -390,7 +390,7 @@ describe('util - cloud - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if property <outputCollection> is set',
+        message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if it has property <outputCollection>',
         path: [
           'loopCharacteristics',
           'extensionElements',
