@@ -235,7 +235,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'BusinessRuleTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
         path: [
           'loopCharacteristics'
         ],
@@ -279,7 +279,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'ManualTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
         path: [
           'loopCharacteristics'
         ],
@@ -340,7 +340,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'ScriptTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
         path: [
           'loopCharacteristics'
         ],
@@ -401,7 +401,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'SendTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
         path: [
           'loopCharacteristics'
         ],

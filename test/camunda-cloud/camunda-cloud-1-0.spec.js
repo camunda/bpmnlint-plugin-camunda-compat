@@ -631,7 +631,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess('<bpmn:callActivity id="CallActivity_1" />')),
       report: {
         id: 'CallActivity_1',
-        message: 'Element of type <bpmn:CallActivity> must have <zeebe:CalledElement> extension element',
+        message: 'Element of type <bpmn:CallActivity> must have extension element of type <zeebe:CalledElement>',
         path: null,
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -675,7 +675,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'CallActivity_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
         path: [
           'loopCharacteristics'
         ],
@@ -884,7 +884,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'IntermeditateCatchEvent_1',
-        message: 'Element of type <bpmn:Message> must have <zeebe:Subscription> extension element',
+        message: 'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>',
         path: [
           'rootElements',
           1
@@ -973,7 +973,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'ReceiveTask_1',
-        message: 'Element of type <bpmn:Message> must have <zeebe:Subscription> extension element',
+        message: 'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>',
         path: [
           'rootElements',
           1
@@ -1000,7 +1000,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'ReceiveTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
         path: [
           'loopCharacteristics'
         ],
@@ -1061,7 +1061,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'ServiceTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
         path: [
           'loopCharacteristics'
         ],
@@ -1196,7 +1196,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'StartEvent_1',
-        message: 'Element of type <bpmn:Message> must have <zeebe:Subscription> extension element',
+        message: 'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>',
         path: [
           'rootElements',
           1
@@ -1218,7 +1218,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'SubProcess_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
         path: [
           'loopCharacteristics'
         ],
@@ -1239,7 +1239,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'UserTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have <zeebe:LoopCharacteristics> extension element',
+        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
         path: [
           'loopCharacteristics'
         ],
