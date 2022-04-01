@@ -1017,7 +1017,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess('<bpmn:serviceTask id="ServiceTask_1" />')),
       report: {
         id: 'ServiceTask_1',
-        message: 'A Service Task must have a Task definition type',
+        message: 'A <Service Task> must have a <Task definition type>',
         path: null,
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -1036,7 +1036,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'ServiceTask_1',
-        message: 'A Service Task must have a Task definition type',
+        message: 'A <Service Task> must have a <Task definition type>',
         path: [
           'extensionElements',
           'values',

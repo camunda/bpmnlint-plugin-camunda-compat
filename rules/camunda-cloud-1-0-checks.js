@@ -125,8 +125,8 @@ module.exports = [
         hasZeebeTaskDefinition
       ),
       {
-        'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>': 'A Service Task must have a Task definition type',
-        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A Service Task must have a Task definition type'
+        'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>': 'A <Service Task> must have a <Task definition type>',
+        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A <Service Task> must have a <Task definition type>'
       }
     )
   },
