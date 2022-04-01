@@ -191,7 +191,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       moddleElement: createModdle(createCloudProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
       report: {
         id: 'BusinessRuleTask_1',
-        message: 'A Business Rule Task must have a Task definition type',
+        message: 'A <Business Rule Task> must have a <Task definition type>',
         path: null,
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -210,7 +210,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'BusinessRuleTask_1',
-        message: 'A Business Rule Task must have a Task definition type',
+        message: 'A <Business Rule Task> must have a <Task definition type>',
         path: [
           'extensionElements',
           'values',
@@ -296,7 +296,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       moddleElement: createModdle(createCloudProcess('<bpmn:scriptTask id="ScriptTask_1" />')),
       report: {
         id: 'ScriptTask_1',
-        message: 'A Script Task must have a Task definition type',
+        message: 'A <Script Task> must have a <Task definition type>',
         path: null,
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -315,7 +315,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'ScriptTask_1',
-        message: 'A Script Task must have a Task definition type',
+        message: 'A <Script Task> must have a <Task definition type>',
         path: [
           'extensionElements',
           'values',
@@ -357,7 +357,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       moddleElement: createModdle(createCloudProcess('<bpmn:sendTask id="SendTask_1" />')),
       report: {
         id: 'SendTask_1',
-        message: 'A Send Task must have a Task definition type',
+        message: 'A <Send Task> must have a <Task definition type>',
         path: null,
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -376,7 +376,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'SendTask_1',
-        message: 'A Send Task must have a Task definition type',
+        message: 'A <Send Task> must have a <Task definition type>',
         path: [
           'extensionElements',
           'values',

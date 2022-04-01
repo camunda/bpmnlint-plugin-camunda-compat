@@ -22,8 +22,8 @@ module.exports = [
         hasZeebeTaskDefinition
       ),
       {
-        'Element of type <bpmn:BusinessRuleTask> must have extension element of type <zeebe:TaskDefinition>': 'A Business Rule Task must have a Task definition type',
-        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A Business Rule Task must have a Task definition type'
+        'Element of type <bpmn:BusinessRuleTask> must have extension element of type <zeebe:TaskDefinition>': 'A <Business Rule Task> must have a <Task definition type>',
+        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A <Business Rule Task> must have a <Task definition type>'
       }
     )
   },
@@ -43,8 +43,8 @@ module.exports = [
         hasZeebeTaskDefinition
       ),
       {
-        'Element of type <bpmn:ScriptTask> must have extension element of type <zeebe:TaskDefinition>': 'A Script Task must have a Task definition type',
-        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A Script Task must have a Task definition type'
+        'Element of type <bpmn:ScriptTask> must have extension element of type <zeebe:TaskDefinition>': 'A <Script Task> must have a <Task definition type>',
+        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A <Script Task> must have a <Task definition type>'
       }
     )
   },
@@ -56,8 +56,8 @@ module.exports = [
         hasZeebeTaskDefinition
       ),
       {
-        'Element of type <bpmn:SendTask> must have extension element of type <zeebe:TaskDefinition>': 'A Send Task must have a Task definition type',
-        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A Send Task must have a Task definition type'
+        'Element of type <bpmn:SendTask> must have extension element of type <zeebe:TaskDefinition>': 'A <Send Task> must have a <Task definition type>',
+        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A <Send Task> must have a <Task definition type>'
       }
     )
   }

@@ -48,7 +48,7 @@ function createInvalid(executionPlatformVersion = '1.3.0') {
       `)),
       report: {
         id: 'BusinessRuleTask_1',
-        message: 'A Business Rule Task must have a defined Implementation',
+        message: 'A <Business Rule Task> must have a defined <Implementation>',
         path: null
       }
     },
@@ -57,7 +57,7 @@ function createInvalid(executionPlatformVersion = '1.3.0') {
       moddleElement: createModdle(createCloudProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
       report: {
         id: 'BusinessRuleTask_1',
-        message: 'A Business Rule Task must have a defined Implementation',
+        message: 'A <Business Rule Task> must have a defined <Implementation>',
         path: null,
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -76,7 +76,7 @@ function createInvalid(executionPlatformVersion = '1.3.0') {
       `)),
       report: {
         id: 'BusinessRuleTask_1',
-        message: 'A Business Rule Task with Implementation: DMN decision must have a defined Called decision ID',
+        message: 'A <Business Rule Task> with <Implementation: DMN decision> must have a defined <Called decision ID>',
         path: [
           'extensionElements',
           'values',
@@ -100,7 +100,7 @@ function createInvalid(executionPlatformVersion = '1.3.0') {
       `)),
       report: {
         id: 'BusinessRuleTask_1',
-        message: 'A Business Rule Task with Implementation: DMN decision must have a defined Result variable',
+        message: 'A Business Rule Task with <Implementation: DMN decision> must have a defined <Result variable>',
         path: [
           'extensionElements',
           'values',
