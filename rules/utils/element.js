@@ -360,7 +360,7 @@ module.exports.hasExtensionElementsOfTypes = function(types, exclusive = false) 
 
     if (!extensionElements || !extensionElements.length) {
       return {
-        message: `Element of type <${ node.$type }> must have have at least one ${ formatTypes(types, true) } extension element`,
+        message: `Element of type <${ node.$type }> must have one or many extension elements of type ${ formatTypes(types, true) }`,
         path: getPath(node, parentNode),
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -371,7 +371,7 @@ module.exports.hasExtensionElementsOfTypes = function(types, exclusive = false) 
 
     if (exclusive && extensionElements.length > 1) {
       return {
-        message: `Element of type <${ node.$type }> must have have either one ${ formatTypes(types, true) } extension element`,
+        message: `Element of type <${ node.$type }> must have one extension element of type ${ formatTypes(types, true) }`,
         path: getPath(node, parentNode)
       };
     }
@@ -431,9 +431,7 @@ module.exports.hasExtensionElementOfType = function(type) {
 
     if (!extensionElement) {
       return {
-        message: `Element of type <${ node.$type }> must have <${getType(
-          type
-        )}> extension element`,
+        message: `Element of type <${ node.$type }> must have extension element of type <${ getType(type) }>`,
         path: getPath(node, parentNode),
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,

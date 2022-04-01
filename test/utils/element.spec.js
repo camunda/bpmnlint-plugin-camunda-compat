@@ -810,7 +810,7 @@ describe('util - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <bpmn:ServiceTask> must have <zeebe:TaskDefinition> extension element',
+        message: 'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>',
         path: null,
         error: {
           type: 'extensionElementRequired',
@@ -832,7 +832,7 @@ describe('util - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <bpmn:ServiceTask> must have <zeebe:TaskDefinition> extension element',
+        message: 'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>',
         path: null,
         error: {
           type: 'extensionElementRequired',
@@ -945,7 +945,7 @@ describe('util - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <bpmn:BusinessRuleTask> must have have at least one <zeebe:CalledDecision> or <zeebe:TaskDefinition> extension element',
+        message: 'Element of type <bpmn:BusinessRuleTask> must have one or many extension elements of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
         path: null,
         error: {
           type: 'extensionElementRequired',
@@ -974,7 +974,7 @@ describe('util - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <bpmn:BusinessRuleTask> must have have at least one <zeebe:CalledDecision> or <zeebe:TaskDefinition> extension element',
+        message: 'Element of type <bpmn:BusinessRuleTask> must have one or many extension elements of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
         path: null,
         error: {
           type: 'extensionElementRequired',
@@ -1006,7 +1006,7 @@ describe('util - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <bpmn:BusinessRuleTask> must have have either one <zeebe:CalledDecision> or <zeebe:TaskDefinition> extension element',
+        message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
         path: null
       });
     });
