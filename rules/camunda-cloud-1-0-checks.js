@@ -68,9 +68,15 @@ module.exports = [
   },
   {
     type: 'bpmn:CallActivity',
-    check: checkEvery(
-      hasZeebeCalledElement,
-      hasZeebeLoopCharacteristics
+    check: withTranslations(
+      checkEvery(
+        hasZeebeCalledElement,
+        hasZeebeLoopCharacteristics
+      ),
+      {
+        'Element of type <bpmn:CallActivity> must have extension element of type <zeebe:CalledElement>': 'A <Call Activity> must have a defined <Called element>',
+        'Element of type <zeebe:CalledElement> must have property <processId>': 'A <Call Activity> must have a defined <Called element>'
+      }
     )
   },
   {

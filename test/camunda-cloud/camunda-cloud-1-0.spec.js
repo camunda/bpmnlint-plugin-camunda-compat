@@ -627,11 +627,11 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
 
     // bpmn:CallActivity
     {
-      name: 'call activity',
+      name: 'call activity (no called element)',
       moddleElement: createModdle(createCloudProcess('<bpmn:callActivity id="CallActivity_1" />')),
       report: {
         id: 'CallActivity_1',
-        message: 'Element of type <bpmn:CallActivity> must have extension element of type <zeebe:CalledElement>',
+        message: 'A <Call Activity> must have a defined <Called element>',
         path: null,
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -640,7 +640,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       }
     },
     {
-      name: 'call activity (called element)',
+      name: 'call activity (no process ID)',
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:callActivity id="CallActivity_1">
           <bpmn:extensionElements>
@@ -650,7 +650,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'CallActivity_1',
-        message: 'Element of type <zeebe:CalledElement> must have property <processId>',
+        message: 'A <Call Activity> must have a defined <Called element>',
         path: [
           'extensionElements',
           'values',
