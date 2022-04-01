@@ -37,6 +37,43 @@ function createInvalid(executionPlatformVersion = '1.3.0') {
 
     // bpmn:BusinessRuleTask
     {
+      name: 'business rule task (no task definition)',
+      moddleElement: createModdle(createCloudProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
+      report: {
+        id: 'BusinessRuleTask_1',
+        message: 'A <Business Rule Task> must have a defined <Implementation>',
+        path: null,
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          requiredExtensionElement: 'zeebe:CalledDecision'
+        }
+      }
+    },
+    {
+      name: 'business rule task (no task definition type)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:businessRuleTask id="BusinessRuleTask_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition />
+          </bpmn:extensionElements>
+        </bpmn:businessRuleTask>
+      `)),
+      report: {
+        id: 'BusinessRuleTask_1',
+        message: 'A <Business Rule Task> with <Implementation: Job worker> must have a defined <Task definition type>',
+        path: [
+          'extensionElements',
+          'values',
+          0,
+          'type'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'type'
+        }
+      }
+    },
+    {
       name: 'business rule task (called decision)',
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:businessRuleTask id="BusinessRuleTask_1">
