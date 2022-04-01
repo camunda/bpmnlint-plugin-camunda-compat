@@ -75,7 +75,11 @@ module.exports = [
       ),
       {
         'Element of type <bpmn:CallActivity> must have extension element of type <zeebe:CalledElement>': 'A <Call Activity> must have a defined <Called element>',
-        'Element of type <zeebe:CalledElement> must have property <processId>': 'A <Call Activity> must have a defined <Called element>'
+        'Element of type <zeebe:CalledElement> must have property <processId>': 'A <Call Activity> must have a defined <Called element>',
+        'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>': 'A <Call Activity> with <Multi-instance marker> must have a defined <Input collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <inputCollection>': 'A <Call Activity> with <Multi-instance marker> must have a defined <Input collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if it has property <outputCollection>': 'A <Call Activity> with <Multi-instance marker> and defined <Output element> must have a defined <Output collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>': 'A <Call Activity> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>'
       }
     )
   },
@@ -114,13 +118,21 @@ module.exports = [
   },
   {
     type: 'bpmn:ReceiveTask',
-    check: checkEvery(
-      checkFlowNode(hasMessageReference),
-      checkIf(
-        checkFlowNode(hasZeebeSubscription),
-        checkFlowNode(hasMessageReference)
+    check: withTranslations(
+      checkEvery(
+        checkFlowNode(hasMessageReference),
+        checkIf(
+          checkFlowNode(hasZeebeSubscription),
+          checkFlowNode(hasMessageReference)
+        ),
+        hasZeebeLoopCharacteristics
       ),
-      hasZeebeLoopCharacteristics
+      {
+        'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>': 'A <Receive Task> with <Multi-instance marker> must have a defined <Input collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <inputCollection>': 'A <Receive Task> with <Multi-instance marker> must have a defined <Input collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if it has property <outputCollection>': 'A <Receive Task> with <Multi-instance marker> and defined <Output element> must have a defined <Output collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>': 'A <Receive Task> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>'
+      }
     )
   },
   {
@@ -132,7 +144,11 @@ module.exports = [
       ),
       {
         'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>': 'A <Service Task> must have a <Task definition type>',
-        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A <Service Task> must have a <Task definition type>'
+        'Element of type <zeebe:TaskDefinition> must have property <type>': 'A <Service Task> must have a <Task definition type>',
+        'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>': 'A <Service Task> with <Multi-instance marker> must have a defined <Input collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <inputCollection>': 'A <Service Task> with <Multi-instance marker> must have a defined <Input collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if it has property <outputCollection>': 'A <Service Task> with <Multi-instance marker> and defined <Output element> must have a defined <Output collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>': 'A <Service Task> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>'
       }
     )
   },
@@ -162,10 +178,26 @@ module.exports = [
   },
   {
     type: 'bpmn:SubProcess',
-    check: hasZeebeLoopCharacteristics
+    check: withTranslations(
+      hasZeebeLoopCharacteristics,
+      {
+        'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>': 'A <Sub Process> with <Multi-instance marker> must have a defined <Input collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <inputCollection>': 'A <Sub Process> with <Multi-instance marker> must have a defined <Input collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if it has property <outputCollection>': 'A <Sub Process> with <Multi-instance marker> and defined <Output element> must have a defined <Output collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>': 'A <Sub Process> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>'
+      }
+    )
   },
   {
     type: 'bpmn:UserTask',
-    check: hasZeebeLoopCharacteristics
+    check: withTranslations(
+      hasZeebeLoopCharacteristics,
+      {
+        'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>': 'A <User Task> with <Multi-instance marker> must have a defined <Input collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <inputCollection>': 'A <User Task> with <Multi-instance marker> must have a defined <Input collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if it has property <outputCollection>': 'A <User Task> with <Multi-instance marker> and defined <Output element> must have a defined <Output collection>',
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>': 'A <User Task> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>'
+      }
+    )
   }
 ];

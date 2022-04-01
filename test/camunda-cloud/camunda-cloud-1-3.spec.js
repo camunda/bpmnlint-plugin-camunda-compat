@@ -149,6 +149,28 @@ function createInvalid(executionPlatformVersion = '1.3.0') {
           requiredProperty: 'resultVariable'
         }
       }
+    },
+    {
+      name: 'business rule task (no loop characteristics)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:businessRuleTask id="BusinessRuleTask_1">
+          <bpmn:multiInstanceLoopCharacteristics />
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="foo" />
+          </bpmn:extensionElements>
+        </bpmn:businessRuleTask>
+      `)),
+      report: {
+        id: 'BusinessRuleTask_1',
+        message: 'A <Business Rule Task> with <Multi-instance marker> must have a defined <Input collection>',
+        path: [
+          'loopCharacteristics'
+        ],
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          requiredExtensionElement: 'zeebe:LoopCharacteristics'
+        }
+      }
     }
   ];
 }

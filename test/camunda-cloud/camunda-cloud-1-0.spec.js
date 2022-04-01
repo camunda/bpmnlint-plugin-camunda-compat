@@ -675,13 +675,43 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'CallActivity_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
+        message: 'A <Call Activity> with <Multi-instance marker> must have a defined <Input collection>',
         path: [
           'loopCharacteristics'
         ],
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
           requiredExtensionElement: 'zeebe:LoopCharacteristics'
+        }
+      }
+    },
+    {
+      name: 'call activity (no loop input collection)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:callActivity id="CallActivity_1">
+          <bpmn:multiInstanceLoopCharacteristics >
+            <bpmn:extensionElements>
+              <zeebe:loopCharacteristics />
+            </bpmn:extensionElements>
+          </bpmn:multiInstanceLoopCharacteristics>
+          <bpmn:extensionElements>
+            <zeebe:calledElement processId="foo" />
+          </bpmn:extensionElements>
+        </bpmn:callActivity>
+      `)),
+      report: {
+        id: 'CallActivity_1',
+        message: 'A <Call Activity> with <Multi-instance marker> must have a defined <Input collection>',
+        path: [
+          'loopCharacteristics',
+          'extensionElements',
+          'values',
+          0,
+          'inputCollection'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'inputCollection'
         }
       }
     },
@@ -701,7 +731,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'CallActivity_1',
-        message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if property <outputCollection> is set',
+        message: 'A <Call Activity> with <Multi-instance marker> and defined <Output element> must have a defined <Output collection>',
         path: [
           'loopCharacteristics',
           'extensionElements',
@@ -731,7 +761,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'CallActivity_1',
-        message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if property <outputElement> is set',
+        message: 'A <Call Activity> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>',
         path: [
           'loopCharacteristics',
           'extensionElements',
@@ -1000,7 +1030,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'ReceiveTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
+        message: 'A <Receive Task> with <Multi-instance marker> must have a defined <Input collection>',
         path: [
           'loopCharacteristics'
         ],
@@ -1061,7 +1091,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'ServiceTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
+        message: 'A <Service Task> with <Multi-instance marker> must have a defined <Input collection>',
         path: [
           'loopCharacteristics'
         ],
@@ -1218,7 +1248,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'SubProcess_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
+        message: 'A <Sub Process> with <Multi-instance marker> must have a defined <Input collection>',
         path: [
           'loopCharacteristics'
         ],
@@ -1239,7 +1269,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'UserTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
+        message: 'A <User Task> with <Multi-instance marker> must have a defined <Input collection>',
         path: [
           'loopCharacteristics'
         ],

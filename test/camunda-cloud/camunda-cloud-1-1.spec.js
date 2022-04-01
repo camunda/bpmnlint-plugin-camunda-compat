@@ -235,7 +235,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'BusinessRuleTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
+        message: 'A <Business Rule Task> with <Multi-instance marker> must have a defined <Input collection>',
         path: [
           'loopCharacteristics'
         ],
@@ -279,7 +279,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'ManualTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
+        message: 'A <Manual Task> with <Multi-instance marker> must have a defined <Input collection>',
         path: [
           'loopCharacteristics'
         ],
@@ -340,7 +340,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'ScriptTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
+        message: 'A <Script Task> with <Multi-instance marker> must have a defined <Input collection>',
         path: [
           'loopCharacteristics'
         ],
@@ -401,7 +401,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'SendTask_1',
-        message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
+        message: 'A <Send Task> with <Multi-instance marker> must have a defined <Input collection>',
         path: [
           'loopCharacteristics'
         ],
