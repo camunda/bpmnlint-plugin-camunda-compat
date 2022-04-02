@@ -68,7 +68,9 @@ module.exports = [
       ),
       {
         'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>': 'An <Error Boundary Event> must have a defined <Error Reference>',
-        'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error Boundary Event> with <Error Reference> must have a defined <Error code>'
+        'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error Boundary Event> with <Error Reference> must have a defined <Error code>',
+        'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>': 'A <Message Boundary Event> must have a defined <Message Reference>',
+        'Element of type <bpmn:Message> must have property <name>': 'A <Message Boundary Event> with <Message Reference> must have a defined <Name>'
       }
     )
   },
@@ -107,21 +109,27 @@ module.exports = [
   },
   {
     type: 'bpmn:IntermediateCatchEvent',
-    check: checkEvery(
-      hasEventDefinitionOfType([
-        'bpmn:TimerEventDefinition',
-        'bpmn:MessageEventDefinition'
-      ]),
-      checkIf(
-        checkEvery(
-          checkEventDefinition(hasMessageReference),
-          checkIf(
-            checkEventDefinition(hasZeebeSubscription),
-            checkEventDefinition(hasMessageReference)
-          )
-        ),
-        hasEventDefinitionOfType('bpmn:MessageEventDefinition')
-      )
+    check: withTranslations(
+      checkEvery(
+        hasEventDefinitionOfType([
+          'bpmn:TimerEventDefinition',
+          'bpmn:MessageEventDefinition'
+        ]),
+        checkIf(
+          checkEvery(
+            checkEventDefinition(hasMessageReference),
+            checkIf(
+              checkEventDefinition(hasZeebeSubscription),
+              checkEventDefinition(hasMessageReference)
+            )
+          ),
+          hasEventDefinitionOfType('bpmn:MessageEventDefinition')
+        )
+      ),
+      {
+        'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>': 'A <Message Intermediate Catch Event> must have a defined <Message Reference>',
+        'Element of type <bpmn:Message> must have property <name>': 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Name>'
+      }
     )
   },
   {
@@ -143,7 +151,9 @@ module.exports = [
         'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>': 'A <Receive Task> with <Multi-instance marker> must have a defined <Input collection>',
         'Element of type <zeebe:LoopCharacteristics> must have property <inputCollection>': 'A <Receive Task> with <Multi-instance marker> must have a defined <Input collection>',
         'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if it has property <outputCollection>': 'A <Receive Task> with <Multi-instance marker> and defined <Output element> must have a defined <Output collection>',
-        'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>': 'A <Receive Task> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>'
+        'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>': 'A <Receive Task> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>',
+        'Element of type <bpmn:ReceiveTask> must have property <messageRef>': 'A <Receive Task> must have a defined <Message Reference>',
+        'Element of type <bpmn:Message> must have property <name>': 'A <Receive Task> with <Message Reference> must have a defined <Name>'
       }
     )
   },
@@ -190,7 +200,9 @@ module.exports = [
       ),
       {
         'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>': 'An <Error Start Event> must have a defined <Error Reference>',
-        'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error Start Event> with <Error Reference> must have a defined <Error code>'
+        'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error Start Event> with <Error Reference> must have a defined <Error code>',
+        'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>': 'A <Message Start Event> must have a defined <Message Reference>',
+        'Element of type <bpmn:Message> must have property <name>': 'A <Message Start Event> with <Message Reference> must have a defined <Name>'
       }
     )
   },
