@@ -583,7 +583,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'BoundaryEvent_1',
-        message: 'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>',
+        message: 'A <Message Boundary Event> must have a defined <Message Reference>',
         path: [
           'eventDefinitions',
           0,
@@ -612,7 +612,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'BoundaryEvent_1',
-        message: 'Element of type <bpmn:Message> must have property <name>',
+        message: 'A <Message Boundary Event> with <Message Reference> must have a defined <Name>',
         path: [
           'rootElements',
           1,
@@ -866,7 +866,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'IntermeditateCatchEvent_1',
-        message: 'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>',
+        message: 'A <Message Intermediate Catch Event> must have a defined <Message Reference>',
         path: [
           'eventDefinitions',
           0,
@@ -890,7 +890,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'IntermeditateCatchEvent_1',
-        message: 'Element of type <bpmn:Message> must have property <name>',
+        message: 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Name>',
         path: [
           'rootElements',
           1,
@@ -961,7 +961,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'ReceiveTask_1',
-        message: 'Element of type <bpmn:ReceiveTask> must have property <messageRef>',
+        message: 'A <Receive Task> must have a defined <Message Reference>',
         path: [
           'messageRef'
         ],
@@ -981,7 +981,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'ReceiveTask_1',
-        message: 'Element of type <bpmn:Message> must have property <name>',
+        message: 'A <Receive Task> with <Message Reference> must have a defined <Name>',
         path: [
           'rootElements',
           1,
@@ -1178,7 +1178,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'StartEvent_1',
-        message: 'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>',
+        message: 'A <Message Start Event> must have a defined <Message Reference>',
         path: [
           'eventDefinitions',
           0,
@@ -1202,7 +1202,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'StartEvent_1',
-        message: 'Element of type <bpmn:Message> must have property <name>',
+        message: 'A <Message Start Event> with <Message Reference> must have a defined <Name>',
         path: [
           'rootElements',
           1,
