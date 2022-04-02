@@ -44,26 +44,32 @@ module.exports = [
   'bpmn:TextAnnotation',
   {
     type: 'bpmn:BoundaryEvent',
-    check: checkEvery(
-      hasEventDefinitionOfType([
-        'bpmn:ErrorEventDefinition',
-        'bpmn:MessageEventDefinition',
-        'bpmn:TimerEventDefinition'
-      ]),
-      checkIf(
-        checkEventDefinition(hasErrorReference),
-        hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
-      ),
-      checkIf(
-        checkEvery(
-          checkEventDefinition(hasMessageReference),
-          checkIf(
-            checkEventDefinition(hasZeebeSubscription),
-            checkEventDefinition(hasMessageReference)
-          )
+    check: withTranslations(
+      checkEvery(
+        hasEventDefinitionOfType([
+          'bpmn:ErrorEventDefinition',
+          'bpmn:MessageEventDefinition',
+          'bpmn:TimerEventDefinition'
+        ]),
+        checkIf(
+          checkEventDefinition(hasErrorReference),
+          hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
         ),
-        hasEventDefinitionOfType('bpmn:MessageEventDefinition')
-      )
+        checkIf(
+          checkEvery(
+            checkEventDefinition(hasMessageReference),
+            checkIf(
+              checkEventDefinition(hasZeebeSubscription),
+              checkEventDefinition(hasMessageReference)
+            )
+          ),
+          hasEventDefinitionOfType('bpmn:MessageEventDefinition')
+        )
+      ),
+      {
+        'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>': 'An <Error Boundary Event> must have a defined <Error Reference>',
+        'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error Boundary Event> with <Error Reference> must have a defined <Error code>'
+      }
     )
   },
   {
@@ -85,12 +91,18 @@ module.exports = [
   },
   {
     type: 'bpmn:EndEvent',
-    check: checkEvery(
-      hasEventDefinitionOfTypeOrNone('bpmn:ErrorEventDefinition'),
-      checkIf(
-        checkEventDefinition(hasErrorReference),
-        hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
-      )
+    check: withTranslations(
+      checkEvery(
+        hasEventDefinitionOfTypeOrNone('bpmn:ErrorEventDefinition'),
+        checkIf(
+          checkEventDefinition(hasErrorReference),
+          hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
+        )
+      ),
+      {
+        'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>': 'An <Error End Event> must have a defined <Error Reference>',
+        'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error End Event> with <Error Reference> must have a defined <Error code>'
+      }
     )
   },
   {
@@ -154,26 +166,32 @@ module.exports = [
   },
   {
     type: 'bpmn:StartEvent',
-    check: checkEvery(
-      hasEventDefinitionOfTypeOrNone([
-        'bpmn:ErrorEventDefinition',
-        'bpmn:MessageEventDefinition',
-        'bpmn:TimerEventDefinition'
-      ]),
-      checkIf(
-        checkEventDefinition(hasErrorReference),
-        hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
-      ),
-      checkIf(
-        checkEvery(
-          checkEventDefinition(hasMessageReference),
-          checkIf(
-            checkEventDefinition(hasZeebeSubscription),
-            checkEventDefinition(hasMessageReference)
-          )
+    check: withTranslations(
+      checkEvery(
+        hasEventDefinitionOfTypeOrNone([
+          'bpmn:ErrorEventDefinition',
+          'bpmn:MessageEventDefinition',
+          'bpmn:TimerEventDefinition'
+        ]),
+        checkIf(
+          checkEventDefinition(hasErrorReference),
+          hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
         ),
-        hasEventDefinitionOfType('bpmn:MessageEventDefinition')
-      )
+        checkIf(
+          checkEvery(
+            checkEventDefinition(hasMessageReference),
+            checkIf(
+              checkEventDefinition(hasZeebeSubscription),
+              checkEventDefinition(hasMessageReference)
+            )
+          ),
+          hasEventDefinitionOfType('bpmn:MessageEventDefinition')
+        )
+      ),
+      {
+        'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>': 'An <Error Start Event> must have a defined <Error Reference>',
+        'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error Start Event> with <Error Reference> must have a defined <Error code>'
+      }
     )
   },
   {

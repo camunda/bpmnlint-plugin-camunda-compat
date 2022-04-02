@@ -38,15 +38,21 @@ module.exports = [
       },
       {
         type: 'bpmn:EndEvent',
-        check: checkEvery(
-          hasEventDefinitionOfTypeOrNone([
-            'bpmn:ErrorEventDefinition',
-            'bpmn:MessageEventDefinition'
-          ]),
-          checkIf(
-            checkEventDefinition(hasErrorReference),
-            hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
-          )
+        check: withTranslations(
+          checkEvery(
+            hasEventDefinitionOfTypeOrNone([
+              'bpmn:ErrorEventDefinition',
+              'bpmn:MessageEventDefinition'
+            ]),
+            checkIf(
+              checkEventDefinition(hasErrorReference),
+              hasEventDefinitionOfType('bpmn:ErrorEventDefinition')
+            )
+          ),
+          {
+            'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>': 'An <Error End Event> must have a defined <Error Reference>',
+            'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error End Event> with <Error Reference> must have a defined <Error code>'
+          }
         )
       }
     ]

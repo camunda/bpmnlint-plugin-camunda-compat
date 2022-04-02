@@ -528,7 +528,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'BoundaryEvent_1',
-        message: 'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>',
+        message: 'An <Error Boundary Event> must have a defined <Error Reference>',
         path: [
           'eventDefinitions',
           0,
@@ -557,7 +557,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'BoundaryEvent_1',
-        message: 'Element of type <bpmn:Error> must have property <errorCode>',
+        message: 'An <Error Boundary Event> with <Error Reference> must have a defined <Error code>',
         path: [
           'rootElements',
           1,
@@ -807,7 +807,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'EndEvent_1',
-        message: 'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>',
+        message: 'An <Error End Event> must have a defined <Error Reference>',
         path: [
           'eventDefinitions',
           0,
@@ -1133,7 +1133,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'StartEvent_1',
-        message: 'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>',
+        message: 'An <Error Start Event> must have a defined <Error Reference>',
         path: [
           'eventDefinitions',
           0,
@@ -1157,7 +1157,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'StartEvent_1',
-        message: 'Element of type <bpmn:Error> must have property <errorCode>',
+        message: 'An <Error Start Event> with <Error Reference> must have a defined <Error code>',
         path: [
           'rootElements',
           1,
