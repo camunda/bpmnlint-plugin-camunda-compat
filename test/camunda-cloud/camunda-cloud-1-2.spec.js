@@ -40,9 +40,57 @@ function createValid(executionPlatformVersion = '1.2.0') {
 module.exports.createValid = createValid;
 
 function createInvalid(executionPlatformVersion = '1.2.0') {
-  const createCloudProcess = require('../helper').createCloudProcess(executionPlatformVersion);
+  const createCloudDefinitions = require('../helper').createCloudDefinitions(executionPlatformVersion),
+        createCloudProcess = require('../helper').createCloudProcess(executionPlatformVersion);
 
   return [
+
+    // bpmn:EndEvent
+    {
+      name: 'message end event (no error ref)',
+      moddleElement: createModdle(createCloudProcess(`
+        <bpmn:endEvent id="EndEvent_1">
+          <bpmn:errorEventDefinition id="ErrorEventDefinition_1" />
+        </bpmn:endEvent>
+      `)),
+      report: {
+        id: 'EndEvent_1',
+        message: 'An <Error End Event> must have a defined <Error Reference>',
+        path: [
+          'eventDefinitions',
+          0,
+          'errorRef'
+        ],
+        error: {
+          type: 'propertyRequired',
+          requiredProperty: 'errorRef'
+        }
+      }
+    },
+    {
+      name: 'message end event (no error code)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:endEvent id="EndEvent_1">
+            <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1" />
+          </bpmn:endEvent>
+        </bpmn:process>
+        <bpmn:error id="Error_1" name="Error_1" />
+      `)),
+      report: {
+        id: 'EndEvent_1',
+        message: 'An <Error End Event> with <Error Reference> must have a defined <Error code>',
+        path: [
+          'rootElements',
+          1,
+          'errorCode'
+        ],
+        error: {
+          type: 'propertyRequired',
+          requiredProperty: 'errorCode'
+        }
+      }
+    },
 
     // bpmn:IntermediateThrowEvent
     {
