@@ -125,7 +125,7 @@ const ERROR_TYPES = {
 ```js
 {
   id: 'ServiceTask_1',
-  message: 'Element of type <bpmn:ServiceTask> must have <zeebe:TaskDefinition> extension element',
+  message: 'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>',
   path: null,
   error: {
     type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -150,7 +150,6 @@ const ERROR_TYPES = {
  * @property {Object} [error]
  * @property {ERROR_TYPES} [error.type]
  * @property {string} [dependendRequiredProperty]
- * @property {string} [dependendRequiredPropertyType]
  */
 ```
 
@@ -159,7 +158,7 @@ const ERROR_TYPES = {
 ```js
 {
   id: 'ServiceTask_1',
-  message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if property <outputElement> is set',
+  message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>',
   path: [
     'loopCharacteristics',
     'extensionElements',
@@ -169,8 +168,7 @@ const ERROR_TYPES = {
   ],
   error: {
     type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
-    dependendRequiredProperty: 'outputCollection',
-    dependendRequiredPropertyType: undefined
+    dependendRequiredProperty: 'outputCollection'
   }
 }
 ```
@@ -191,7 +189,6 @@ const ERROR_TYPES = {
  * @property {Object} [error]
  * @property {ERROR_TYPES} [error.type]
  * @property {string} [requiredProperty]
- * @property {string} [requiredPropertyType]
  */
 ```
 
@@ -200,12 +197,11 @@ const ERROR_TYPES = {
 ```js
 {
   id: 'BoundaryEvent_1',
-  message: 'Element of type <bpmn:ErrorEventDefinition> must reference <bpmn:Error>',
+  message: 'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>',
   path: [ 'eventDefinitions', 0, 'errorRef' ],
   error: {
     type: ERROR_TYPES.PROPERTY_REQUIRED,
-    requiredProperty: 'errorRef',
-    requiredPropertyType: 'bpmn:error'
+    requiredProperty: 'errorRef'
   }
 }
 ```
@@ -225,7 +221,6 @@ const ERROR_TYPES = {
  * @property {(number|string)[]} [path]
  * @property {Object} [error]
  * @property {ERROR_TYPES} [error.type]
- * @property {string} [property]
  * @property {string} [propertyType]
  */
 ```
@@ -241,7 +236,6 @@ const ERROR_TYPES = {
   ],
   error: {
     type: ERROR_TYPES.PROPERTY_TYPE,
-    property: 'loopCharacteristics',
     propertyType: 'bpmn:MultiInstanceLoopCharacteristics'
   }
 }
