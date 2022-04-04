@@ -803,7 +803,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'CallActivity_1',
-        message: 'A <Call Activity> with <Multi-instance marker> and defined <Output element> must have a defined <Output collection>',
+        message: 'A <Call Activity> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>',
         path: [
           'loopCharacteristics',
           'extensionElements',
@@ -833,7 +833,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'CallActivity_1',
-        message: 'A <Call Activity> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>',
+        message: 'A <Call Activity> with <Multi-instance marker> and defined <Output element> must have a defined <Output collection>',
         path: [
           'loopCharacteristics',
           'extensionElements',
