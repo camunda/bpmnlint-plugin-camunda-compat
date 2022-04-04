@@ -24,10 +24,6 @@ module.exports = [
   {
     check: isNotBpmn
   },
-  {
-    type: 'bpmn:Task',
-    check: () => 'An Undefined Task is not supported by {{ executionPlatform }} {{ executionPlatformVersion }}'
-  },
   'bpmn:Association',
   'bpmn:Collaboration',
   'bpmn:DataObject',

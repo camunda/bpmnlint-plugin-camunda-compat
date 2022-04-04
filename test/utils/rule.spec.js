@@ -24,6 +24,8 @@ const {
   replaceChecks
 } = require('../../rules/utils/rule');
 
+const { ERROR_TYPES } = require('../../rules/utils/element');
+
 const { createElement } = require('../helper');
 
 describe('util - rule', function() {
@@ -159,7 +161,11 @@ describe('util - rule', function() {
         expect(reporter.getReports()).to.eql([
           {
             id: 'Definitions_1',
-            message: 'Element of type <bpmn:Definitions> not supported by Camunda Cloud 1.0'
+            message: 'A <Definitions> is not supported by Camunda Cloud 1.0',
+            error: {
+              type: ERROR_TYPES.ELEMENT_TYPE,
+              element: 'bpmn:Definitions'
+            }
           }
         ]);
       });

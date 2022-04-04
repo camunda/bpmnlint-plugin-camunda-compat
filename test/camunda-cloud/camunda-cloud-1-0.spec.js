@@ -473,22 +473,30 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess('<bpmn:Task id="Task_1" />')),
       report: {
         id: 'Task_1',
-        message: 'An Undefined Task is not supported by Zeebe 1.0'
+        message: 'An <Undefined Task> is not supported by Zeebe 1.0',
+        error: {
+          type: ERROR_TYPES.ELEMENT_TYPE,
+          element: 'bpmn:Task'
+        }
       }
     },
     ...[
-      [ 'bpmn:BusinessRuleTask', 'bpmn:businessRuleTask' ],
-      [ 'bpmn:ComplexGateway', 'bpmn:complexGateway' ],
-      [ 'bpmn:ManualTask', 'bpmn:manualTask' ],
-      [ 'bpmn:ScriptTask', 'bpmn:scriptTask' ],
-      [ 'bpmn:SendTask', 'bpmn:sendTask' ]
-    ].map(([ type, tagName ]) => {
+      [ 'A <Business Rule Task>', 'bpmn:BusinessRuleTask', 'bpmn:businessRuleTask' ],
+      [ 'A <Complex Gateway>', 'bpmn:ComplexGateway', 'bpmn:complexGateway' ],
+      [ 'A <Manual Task>', 'bpmn:ManualTask', 'bpmn:manualTask' ],
+      [ 'A <Script Task>', 'bpmn:ScriptTask', 'bpmn:scriptTask' ],
+      [ 'A <Send Task>', 'bpmn:SendTask', 'bpmn:sendTask' ]
+    ].map(([ string, type, tagName ]) => {
       return {
         name: type,
         moddleElement: createModdle(createCloudProcess(`<${ tagName } id="FlowNode_1" />`)),
         report: {
           id: 'FlowNode_1',
-          message: `Element of type <${ type }> not supported by Zeebe 1.0`
+          message: `${ string } is not supported by Zeebe 1.0`,
+          error: {
+            type: ERROR_TYPES.ELEMENT_TYPE,
+            element: type
+          }
         }
       };
     }),
