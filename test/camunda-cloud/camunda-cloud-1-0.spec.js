@@ -1044,7 +1044,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'Process_1',
-        message: 'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by Zeebe 1.0',
+        message: 'A <Lane> is not supported by Zeebe 1.0',
         path: [
           'laneSets'
         ],
