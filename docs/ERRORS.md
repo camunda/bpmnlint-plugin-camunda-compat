@@ -53,7 +53,7 @@ const ERROR_TYPES = {
 ```js
 {
   id: 'ComplexGateway_1',
-  message: 'Element of type <bpmn:ComplexGateway> not supported by Zeebe 1.0',
+  message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Platform 8 (Zeebe 1.0)',
   path: null,
   error: {
     type: ERROR_TYPES.ELEMENT_TYPE,
@@ -65,7 +65,7 @@ const ERROR_TYPES = {
 ```js
 {
   id: 'StartEvent_1',
-  message: 'Element of type <bpmn:StartEvent> (<bpmn:ErrorEventDefinition>) not supported by Zeebe 1.0',
+  message: 'Element of type <bpmn:StartEvent> (<bpmn:ErrorEventDefinition>) not supported by Camunda Platform 8 (Zeebe 1.0)',
   path: [ 'eventDefinitions', 0 ],
   error: {
     type: ERROR_TYPES.ELEMENT_TYPE,
@@ -78,7 +78,7 @@ const ERROR_TYPES = {
 ```js
 {
   id: 'ServiceTask_1',
-  message: 'Element of type <bpmn:ServiceTask> (<bpmn:StandardLoopCharacteristics>) not supported by Zeebe 1.0',
+  message: 'Element of type <bpmn:ServiceTask> (<bpmn:StandardLoopCharacteristics>) not supported by Camunda Platform 8 (Zeebe 1.0)',
   path: [ 'loopCharacteristics' ],
   error: {
     type: ERROR_TYPES.ELEMENT_TYPE,
@@ -91,7 +91,7 @@ const ERROR_TYPES = {
 ```js
 {
   id: 'Process_1',
-  message: 'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by Zeebe 1.0',
+  message: 'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by Camunda Platform 8 (Zeebe 1.0)',
   path: [ 'laneSets' ],
   error: {
     type: ERROR_TYPES.ELEMENT_TYPE,

@@ -63,7 +63,7 @@ module.exports = [
         )
       ),
       {
-        'Element of type <bpmn:BoundaryEvent> not supported by {{ executionPlatform }} {{ executionPlatformVersion }}': 'An <Undefined Boundary Event> is not supported by {{ executionPlatform }} {{ executionPlatformVersion }}',
+        'Element of type <bpmn:BoundaryEvent> not supported by {{ executionPlatform }}': 'An <Undefined Boundary Event> is not supported by {{ executionPlatform }}',
         'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>': 'An <Error Boundary Event> must have a defined <Error Reference>',
         'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error Boundary Event> with <Error Reference> must have a defined <Error code>',
         'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>': 'A <Message Boundary Event> must have a defined <Message Reference>',
@@ -101,7 +101,7 @@ module.exports = [
         )
       ),
       {
-        'Element of type <bpmn:EndEvent> (<bpmn:MessageEventDefinition>) not supported by {{ executionPlatform }} {{ executionPlatformVersion }}': 'A <Message End Event> is not supported by {{ executionPlatform }} {{ executionPlatformVersion }}',
+        'Element of type <bpmn:EndEvent> (<bpmn:MessageEventDefinition>) not supported by {{ executionPlatform }}': 'A <Message End Event> is not supported by {{ executionPlatform }}',
         'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>': 'An <Error End Event> must have a defined <Error Reference>',
         'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error End Event> with <Error Reference> must have a defined <Error code>'
       }
@@ -127,7 +127,7 @@ module.exports = [
         )
       ),
       {
-        'Element of type <bpmn:IntermediateCatchEvent> not supported by {{ executionPlatform }} {{ executionPlatformVersion }}': 'A <Undefined Intermediate Catch Event> is not supported by {{ executionPlatform }} {{ executionPlatformVersion }}',
+        'Element of type <bpmn:IntermediateCatchEvent> not supported by {{ executionPlatform }}': 'A <Undefined Intermediate Catch Event> is not supported by {{ executionPlatform }}',
         'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>': 'A <Message Intermediate Catch Event> must have a defined <Message Reference>',
         'Element of type <bpmn:Message> must have property <name>': 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Name>',
         'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>': 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Subscription correlation key>',
@@ -140,7 +140,7 @@ module.exports = [
     check: withTranslations(
       hasNoLanes,
       {
-        'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by {{ executionPlatform }} {{ executionPlatformVersion }}': 'A <Lane> is not supported by Zeebe 1.0'
+        'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by {{ executionPlatform }}': 'A <Lane> is not supported by Camunda Platform 8 (Zeebe 1.0)'
       }
     )
   },
