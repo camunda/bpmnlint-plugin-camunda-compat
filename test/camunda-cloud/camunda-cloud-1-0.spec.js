@@ -155,7 +155,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
         </bpmn:process>
         <bpmn:message id="Message_1" name="Message_1">
           <bpmn:extensionElements>
-            <zeebe:Subscription correlationKey="foo" />
+            <zeebe:subscription correlationKey="foo" />
           </bpmn:extensionElements>
         </bpmn:message>
       `))
@@ -246,7 +246,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
         </bpmn:process>
         <bpmn:message id="Message_1" name="Message_1">
           <bpmn:extensionElements>
-            <zeebe:Subscription correlationKey="foo" />
+            <zeebe:subscription correlationKey="foo" />
           </bpmn:extensionElements>
         </bpmn:message>
       `))
@@ -383,7 +383,7 @@ function createValid(executionPlatformVersion = '1.0.0') {
         </bpmn:process>
         <bpmn:message id="Message_1" name="Message_1">
           <bpmn:extensionElements>
-            <zeebe:Subscription correlationKey="foo" />
+            <zeebe:subscription correlationKey="foo" />
           </bpmn:extensionElements>
         </bpmn:message>
       `))
@@ -621,6 +621,70 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         error: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           requiredProperty: 'name'
+        }
+      }
+    },
+    {
+      name: 'message boundary event (no subscription)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:serviceTask id="ServiceTask_1">
+            <bpmn:extensionElements>
+              <zeebe:taskDefinition type="foo" retries="bar" />
+            </bpmn:extensionElements>
+          </bpmn:serviceTask>
+          <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+          </bpmn:boundaryEvent>
+        </bpmn:process>
+        <bpmn:message id="Message_1" name="Message_1" />
+      `)),
+      report: {
+        id: 'BoundaryEvent_1',
+        message: 'A <Message Boundary Event> with <Message Reference> must have a defined <Subscription correlation key>',
+        path: [
+          'rootElements',
+          1
+        ],
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          requiredExtensionElement: 'zeebe:Subscription'
+        }
+      }
+    },
+    {
+      name: 'message boundary event (no subscription correlation key)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:serviceTask id="ServiceTask_1">
+            <bpmn:extensionElements>
+              <zeebe:taskDefinition type="foo" retries="bar" />
+            </bpmn:extensionElements>
+          </bpmn:serviceTask>
+          <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="ServiceTask_1">
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+          </bpmn:boundaryEvent>
+        </bpmn:process>
+        <bpmn:message id="Message_1" name="Message_1">
+          <bpmn:extensionElements>
+            <zeebe:subscription />
+          </bpmn:extensionElements>
+        </bpmn:message>
+      `)),
+      report: {
+        id: 'BoundaryEvent_1',
+        message: 'A <Message Boundary Event> with <Message Reference> must have a defined <Subscription correlation key>',
+        path: [
+          'rootElements',
+          1,
+          'extensionElements',
+          'values',
+          0,
+          'correlationKey'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'correlationKey'
         }
       }
     },
@@ -914,7 +978,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'IntermeditateCatchEvent_1',
-        message: 'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>',
+        message: 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Subscription correlation key>',
         path: [
           'rootElements',
           1
@@ -922,6 +986,37 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
           requiredExtensionElement: 'zeebe:Subscription'
+        }
+      }
+    },
+    {
+      name: 'message intermediate catch event (no subscription correlation key)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:intermediateCatchEvent id="IntermeditateCatchEvent_1">
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+          </bpmn:intermediateCatchEvent>
+        </bpmn:process>
+        <bpmn:message id="Message_1" name="Message_1">
+          <bpmn:extensionElements>
+            <zeebe:subscription />
+          </bpmn:extensionElements>
+        </bpmn:message>
+      `)),
+      report: {
+        id: 'IntermeditateCatchEvent_1',
+        message: 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Subscription correlation key>',
+        path: [
+          'rootElements',
+          1,
+          'extensionElements',
+          'values',
+          0,
+          'correlationKey'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'correlationKey'
         }
       }
     },
@@ -1003,7 +1098,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'ReceiveTask_1',
-        message: 'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>',
+        message: 'A <Receive Task> with <Message Reference> must have a defined <Subscription correlation key>',
         path: [
           'rootElements',
           1
@@ -1226,7 +1321,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'StartEvent_1',
-        message: 'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>',
+        message: 'A <Message Start Event> with <Message Reference> must have a defined <Subscription correlation key>',
         path: [
           'rootElements',
           1
@@ -1234,6 +1329,37 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
           requiredExtensionElement: 'zeebe:Subscription'
+        }
+      }
+    },
+    {
+      name: 'message start event (no subscription correlation key)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:startEvent id="StartEvent_1">
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+          </bpmn:startEvent>
+        </bpmn:process>
+        <bpmn:message id="Message_1" name="Message_1">
+          <bpmn:extensionElements>
+            <zeebe:subscription />
+          </bpmn:extensionElements>
+        </bpmn:message>
+      `)),
+      report: {
+        id: 'StartEvent_1',
+        message: 'A <Message Start Event> with <Message Reference> must have a defined <Subscription correlation key>',
+        path: [
+          'rootElements',
+          1,
+          'extensionElements',
+          'values',
+          0,
+          'correlationKey'
+        ],
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          requiredProperty: 'correlationKey'
         }
       }
     },

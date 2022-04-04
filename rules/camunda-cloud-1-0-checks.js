@@ -70,7 +70,9 @@ module.exports = [
         'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>': 'An <Error Boundary Event> must have a defined <Error Reference>',
         'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error Boundary Event> with <Error Reference> must have a defined <Error code>',
         'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>': 'A <Message Boundary Event> must have a defined <Message Reference>',
-        'Element of type <bpmn:Message> must have property <name>': 'A <Message Boundary Event> with <Message Reference> must have a defined <Name>'
+        'Element of type <bpmn:Message> must have property <name>': 'A <Message Boundary Event> with <Message Reference> must have a defined <Name>',
+        'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>': 'A <Message Boundary Event> with <Message Reference> must have a defined <Subscription correlation key>',
+        'Element of type <zeebe:Subscription> must have property <correlationKey>': 'A <Message Boundary Event> with <Message Reference> must have a defined <Subscription correlation key>'
       }
     )
   },
@@ -128,7 +130,9 @@ module.exports = [
       ),
       {
         'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>': 'A <Message Intermediate Catch Event> must have a defined <Message Reference>',
-        'Element of type <bpmn:Message> must have property <name>': 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Name>'
+        'Element of type <bpmn:Message> must have property <name>': 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Name>',
+        'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>': 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Subscription correlation key>',
+        'Element of type <zeebe:Subscription> must have property <correlationKey>': 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Subscription correlation key>'
       }
     )
   },
@@ -153,7 +157,9 @@ module.exports = [
         'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if it has property <outputCollection>': 'A <Receive Task> with <Multi-instance marker> and defined <Output element> must have a defined <Output collection>',
         'Element of type <zeebe:LoopCharacteristics> must have property <outputCollection> if it has property <outputElement>': 'A <Receive Task> with <Multi-instance marker> and defined <Output collection> must have a defined <Output element>',
         'Element of type <bpmn:ReceiveTask> must have property <messageRef>': 'A <Receive Task> must have a defined <Message Reference>',
-        'Element of type <bpmn:Message> must have property <name>': 'A <Receive Task> with <Message Reference> must have a defined <Name>'
+        'Element of type <bpmn:Message> must have property <name>': 'A <Receive Task> with <Message Reference> must have a defined <Name>',
+        'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>': 'A <Receive Task> with <Message Reference> must have a defined <Subscription correlation key>',
+        'Element of type <zeebe:Subscription> must have property <correlationKey>': 'A <Receive Task> with <Message Reference> must have a defined <Subscription correlation key>'
       }
     )
   },
@@ -202,7 +208,9 @@ module.exports = [
         'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>': 'An <Error Start Event> must have a defined <Error Reference>',
         'Element of type <bpmn:Error> must have property <errorCode>': 'An <Error Start Event> with <Error Reference> must have a defined <Error code>',
         'Element of type <bpmn:MessageEventDefinition> must have property <messageRef>': 'A <Message Start Event> must have a defined <Message Reference>',
-        'Element of type <bpmn:Message> must have property <name>': 'A <Message Start Event> with <Message Reference> must have a defined <Name>'
+        'Element of type <bpmn:Message> must have property <name>': 'A <Message Start Event> with <Message Reference> must have a defined <Name>',
+        'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>': 'A <Message Start Event> with <Message Reference> must have a defined <Subscription correlation key>',
+        'Element of type <zeebe:Subscription> must have property <correlationKey>': 'A <Message Start Event> with <Message Reference> must have a defined <Subscription correlation key>'
       }
     )
   },

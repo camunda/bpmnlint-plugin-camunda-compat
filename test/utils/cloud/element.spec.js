@@ -491,7 +491,7 @@ describe('util - cloud - element', function() {
     });
 
 
-    it('should return errors (no correlation key)', function() {
+    it('should return errors (no subscription correlation key)', function() {
 
       // given
       const message = createElement('bpmn:Message', {
