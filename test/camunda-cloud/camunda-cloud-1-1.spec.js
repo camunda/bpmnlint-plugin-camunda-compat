@@ -256,7 +256,7 @@ function createInvalid(executionPlatformVersion = '1.1.0') {
       `)),
       report: {
         id: 'IntermediateThrowEvent_1',
-        message: 'Element of type <bpmn:IntermediateThrowEvent> (<bpmn:MessageEventDefinition>) not supported by Zeebe 1.1',
+        message: 'A <Message Intermediate Throw Event> is not supported by Zeebe 1.1',
         path: [
           'eventDefinitions',
           0

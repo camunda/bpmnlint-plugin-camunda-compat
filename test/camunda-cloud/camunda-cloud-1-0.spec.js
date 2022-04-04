@@ -503,7 +503,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
 
     // bpmn:BoundaryEvent
     {
-      name: 'boundary event',
+      name: 'undefined boundary event',
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:serviceTask id="ServiceTask_1">
           <bpmn:extensionElements>
@@ -514,7 +514,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'BoundaryEvent_1',
-        message: 'Element of type <bpmn:BoundaryEvent> not supported by Zeebe 1.0',
+        message: 'An <Undefined Boundary Event> is not supported by Zeebe 1.0',
         path: null,
         error: {
           type: ERROR_TYPES.ELEMENT_TYPE,
@@ -858,7 +858,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'EndEvent_1',
-        message: 'Element of type <bpmn:EndEvent> (<bpmn:MessageEventDefinition>) not supported by Zeebe 1.0',
+        message: 'A <Message End Event> is not supported by Zeebe 1.0',
         path: [
           'eventDefinitions',
           0
@@ -894,13 +894,13 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
 
     // bpmn:IntermediateCatchEvent
     {
-      name: 'intermediate catch event',
+      name: 'undefined intermediate catch event',
       moddleElement: createModdle(createCloudProcess(`
         <bpmn:intermediateCatchEvent id="IntermeditateCatchEvent_1" />
       `)),
       report: {
         id: 'IntermeditateCatchEvent_1',
-        message: 'Element of type <bpmn:IntermediateCatchEvent> not supported by Zeebe 1.0',
+        message: 'A <Undefined Intermediate Catch Event> is not supported by Zeebe 1.0',
         path: null,
         error: {
           type: ERROR_TYPES.ELEMENT_TYPE,
