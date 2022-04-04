@@ -13,6 +13,12 @@ const {
 
 const { toSemverMinor } = require('./engine-profile');
 
+const {
+  ERROR_TYPES,
+  translate
+} = require('./element');
+const { getTypeString } = require('./type');
+
 /**
  * Factory function for rules. Returns a rule for a given execution platform,
  * execution platform version and an array of checks. Must be run on
@@ -53,7 +59,14 @@ module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatfor
         const id = node.get('id') || '';
 
         if (results === false) {
-          reporter.report(id, `Element of type <${ node.$type }> not supported by ${ executionPlatformLabel || ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
+          const message = getMessage(node, executionPlatformLabel || ruleExecutionPlatform, ruleExecutionPlatformVersion);
+
+          reporter.report(id, message, {
+            error: {
+              type: ERROR_TYPES.ELEMENT_TYPE,
+              element: node.$type
+            }
+          });
         } else {
           if (!isArray(results)) {
             results = [ results ];
@@ -254,4 +267,26 @@ function isExactly(node, type) {
   const { $model } = node;
 
   return $model.getType(node.$type) === $model.getType(type);
+}
+
+function getIndefiniteArticle(type) {
+  if ([
+    'Error',
+    'Escalation',
+    'Event',
+    'Intermediate',
+    'Undefined'
+  ].includes(type.split(' ')[ 0 ])) {
+    return 'An';
+  }
+
+  return 'A';
+}
+
+function getMessage(node, executionPlatform, executionPlatformVersion) {
+  const type = getTypeString(node);
+
+  const indefiniteArticle = getIndefiniteArticle(type);
+
+  return `${ indefiniteArticle } <${ type }> is not supported by ${ executionPlatform } ${ toSemverMinor(executionPlatformVersion) }`;
 }
