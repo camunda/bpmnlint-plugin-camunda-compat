@@ -31,7 +31,7 @@ module.exports = [
             )
           ),
           {
-            'Element of type <bpmn:IntermediateThrowEvent> must have <zeebe:TaskDefinition> extension element': 'An <Intermediate Throw Event> must have a <Task definition type>',
+            'Element of type <bpmn:IntermediateThrowEvent> must have extension element of type <zeebe:TaskDefinition>': 'An <Intermediate Throw Event> must have a <Task definition type>',
             'Element of type <zeebe:TaskDefinition> must have property <type>': 'An <Intermediate Throw Event> must have a <Task definition type>'
           }
         )
