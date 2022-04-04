@@ -137,7 +137,12 @@ module.exports = [
   },
   {
     type: 'bpmn:Process',
-    check: hasNoLanes
+    check: withTranslations(
+      hasNoLanes,
+      {
+        'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by {{ executionPlatform }} {{ executionPlatformVersion }}': 'A <Lane> is not supported by Zeebe 1.0'
+      }
+    )
   },
   {
     type: 'bpmn:ReceiveTask',
