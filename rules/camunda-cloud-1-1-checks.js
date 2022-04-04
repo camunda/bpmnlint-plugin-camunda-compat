@@ -36,7 +36,7 @@ module.exports = [
     check: withTranslations(
       hasNoEventDefinition,
       {
-        'Element of type <bpmn:IntermediateThrowEvent> (<bpmn:MessageEventDefinition>) not supported by {{ executionPlatform }} {{ executionPlatformVersion }}': 'A <Message Intermediate Throw Event> is not supported by {{ executionPlatform }} {{ executionPlatformVersion }}'
+        'Element of type <bpmn:IntermediateThrowEvent> (<bpmn:MessageEventDefinition>) not supported by {{ executionPlatform }}': 'A <Message Intermediate Throw Event> is not supported by {{ executionPlatform }}'
       }
     )
   },

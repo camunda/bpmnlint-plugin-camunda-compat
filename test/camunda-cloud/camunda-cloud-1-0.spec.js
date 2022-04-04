@@ -473,7 +473,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       moddleElement: createModdle(createCloudProcess('<bpmn:Task id="Task_1" />')),
       report: {
         id: 'Task_1',
-        message: 'An <Undefined Task> is not supported by Zeebe 1.0',
+        message: 'An <Undefined Task> is not supported by Camunda Platform 8 (Zeebe 1.0)',
         error: {
           type: ERROR_TYPES.ELEMENT_TYPE,
           element: 'bpmn:Task'
@@ -492,7 +492,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         moddleElement: createModdle(createCloudProcess(`<${ tagName } id="FlowNode_1" />`)),
         report: {
           id: 'FlowNode_1',
-          message: `${ string } is not supported by Zeebe 1.0`,
+          message: `${ string } is not supported by Camunda Platform 8 (Zeebe 1.0)`,
           error: {
             type: ERROR_TYPES.ELEMENT_TYPE,
             element: type
@@ -514,7 +514,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'BoundaryEvent_1',
-        message: 'An <Undefined Boundary Event> is not supported by Zeebe 1.0',
+        message: 'An <Undefined Boundary Event> is not supported by Camunda Platform 8 (Zeebe 1.0)',
         path: null,
         error: {
           type: ERROR_TYPES.ELEMENT_TYPE,
@@ -858,7 +858,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'EndEvent_1',
-        message: 'A <Message End Event> is not supported by Zeebe 1.0',
+        message: 'A <Message End Event> is not supported by Camunda Platform 8 (Zeebe 1.0)',
         path: [
           'eventDefinitions',
           0
@@ -900,7 +900,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'IntermeditateCatchEvent_1',
-        message: 'A <Undefined Intermediate Catch Event> is not supported by Zeebe 1.0',
+        message: 'A <Undefined Intermediate Catch Event> is not supported by Camunda Platform 8 (Zeebe 1.0)',
         path: null,
         error: {
           type: ERROR_TYPES.ELEMENT_TYPE,
@@ -917,7 +917,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'IntermeditateCatchEvent_1',
-        message: 'Element of type <bpmn:IntermediateCatchEvent> (<bpmn:SignalEventDefinition>) not supported by Zeebe 1.0',
+        message: 'Element of type <bpmn:IntermediateCatchEvent> (<bpmn:SignalEventDefinition>) not supported by Camunda Platform 8 (Zeebe 1.0)',
         path: [
           'eventDefinitions',
           0
@@ -1044,7 +1044,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'Process_1',
-        message: 'A <Lane> is not supported by Zeebe 1.0',
+        message: 'A <Lane> is not supported by Camunda Platform 8 (Zeebe 1.0)',
         path: [
           'laneSets'
         ],
@@ -1215,7 +1215,7 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       `)),
       report: {
         id: 'StartEvent_1',
-        message: 'Element of type <bpmn:StartEvent> (<bpmn:SignalEventDefinition>) not supported by Zeebe 1.0',
+        message: 'Element of type <bpmn:StartEvent> (<bpmn:SignalEventDefinition>) not supported by Camunda Platform 8 (Zeebe 1.0)',
         path: [
           'eventDefinitions',
           0

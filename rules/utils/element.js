@@ -176,7 +176,7 @@ module.exports.findExtensionElement = findExtensionElement;
 function getElementNotSupportedError(type, propertyType, path = null) {
   if (propertyType) {
     return {
-      message: `Element of type <${ type }> (<${ propertyType }>) not supported by {{ executionPlatform }} {{ executionPlatformVersion }}`,
+      message: `Element of type <${ type }> (<${ propertyType }>) not supported by {{ executionPlatform }}`,
       path,
       error: {
         type: ERROR_TYPES.ELEMENT_TYPE,
@@ -187,7 +187,7 @@ function getElementNotSupportedError(type, propertyType, path = null) {
   }
 
   return {
-    message: `Element of type <${ type }> not supported by {{ executionPlatform }} {{ executionPlatformVersion }}`,
+    message: `Element of type <${ type }> not supported by {{ executionPlatform }}`,
     path,
     error: {
       type: ERROR_TYPES.ELEMENT_TYPE,

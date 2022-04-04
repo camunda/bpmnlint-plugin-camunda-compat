@@ -102,7 +102,7 @@ function createInvalid(executionPlatformVersion = '1.2.0') {
       `)),
       report: {
         id: 'IntermediateThrowEvent_1',
-        message: 'Element of type <bpmn:IntermediateThrowEvent> (<bpmn:SignalEventDefinition>) not supported by Zeebe 1.2',
+        message: 'Element of type <bpmn:IntermediateThrowEvent> (<bpmn:SignalEventDefinition>) not supported by Camunda Platform 8 (Zeebe 1.2)',
         path: [
           'eventDefinitions',
           0

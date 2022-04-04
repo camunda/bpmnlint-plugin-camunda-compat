@@ -13,10 +13,8 @@ const {
 
 const { toSemverMinor } = require('./engine-profile');
 
-const {
-  ERROR_TYPES,
-  translate
-} = require('./element');
+const { ERROR_TYPES } = require('./element');
+
 const { getTypeString } = require('./type');
 
 /**
@@ -32,7 +30,7 @@ const { getTypeString } = require('./type');
  *
  * @returns {Function}
  */
-module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatformVersion, checks, executionPlatformLabel) {
+module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatformVersion, checks, label) {
   return () => {
     return {
       check: (node, reporter) => {
@@ -59,7 +57,7 @@ module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatfor
         const id = node.get('id') || '';
 
         if (results === false) {
-          const message = getMessage(node, executionPlatformLabel || ruleExecutionPlatform, ruleExecutionPlatformVersion);
+          const message = getMessage(node, ruleExecutionPlatform, ruleExecutionPlatformVersion, label);
 
           reporter.report(id, message, {
             error: {
@@ -82,7 +80,7 @@ module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatfor
               ...rest
             } = result;
 
-            message = addExecutionPlatform(message, executionPlatformLabel || ruleExecutionPlatform, toSemverMinor(ruleExecutionPlatformVersion));
+            message = addExecutionPlatform(message, label || `${ ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
 
             reporter.report(id, message, rest);
           });
@@ -222,10 +220,9 @@ function replaceChecks(checks, replacements) {
 
 module.exports.replaceChecks = replaceChecks;
 
-function addExecutionPlatform(string, executionPlatform, executionPlatformVersion) {
+function addExecutionPlatform(string, executionPlatform) {
   return string
-    .replace('{{ executionPlatform }}', executionPlatform)
-    .replace('{{ executionPlatformVersion }}', executionPlatformVersion);
+    .replace('{{ executionPlatform }}', executionPlatform);
 }
 
 /**
@@ -283,10 +280,10 @@ function getIndefiniteArticle(type) {
   return 'A';
 }
 
-function getMessage(node, executionPlatform, executionPlatformVersion) {
+function getMessage(node, executionPlatform, executionPlatformVersion, label) {
   const type = getTypeString(node);
 
   const indefiniteArticle = getIndefiniteArticle(type);
 
-  return `${ indefiniteArticle } <${ type }> is not supported by ${ executionPlatform } ${ toSemverMinor(executionPlatformVersion) }`;
+  return addExecutionPlatform(`${ indefiniteArticle } <${ type }> is not supported by {{ executionPlatform }}`, label || `${ executionPlatform } ${ toSemverMinor(executionPlatformVersion) }`);
 }

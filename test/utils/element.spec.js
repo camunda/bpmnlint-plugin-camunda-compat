@@ -697,7 +697,7 @@ describe('util - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <bpmn:StartEvent> (<bpmn:ErrorEventDefinition>) not supported by {{ executionPlatform }} {{ executionPlatformVersion }}',
+        message: 'Element of type <bpmn:StartEvent> (<bpmn:ErrorEventDefinition>) not supported by {{ executionPlatform }}',
         path: [
           'eventDefinitions',
           0
@@ -755,7 +755,7 @@ describe('util - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <bpmn:StartEvent> (<bpmn:ErrorEventDefinition>) not supported by {{ executionPlatform }} {{ executionPlatformVersion }}',
+        message: 'Element of type <bpmn:StartEvent> (<bpmn:ErrorEventDefinition>) not supported by {{ executionPlatform }}',
         path: [
           'eventDefinitions',
           0
@@ -1122,7 +1122,7 @@ describe('util - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <bpmn:ServiceTask> (<bpmn:StandardLoopCharacteristics>) not supported by {{ executionPlatform }} {{ executionPlatformVersion }}',
+        message: 'Element of type <bpmn:ServiceTask> (<bpmn:StandardLoopCharacteristics>) not supported by {{ executionPlatform }}',
         path: [
           'loopCharacteristics'
         ],
@@ -1272,7 +1272,7 @@ describe('util - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <bpmn:StartEvent> (<bpmn:ErrorEventDefinition>) not supported by {{ executionPlatform }} {{ executionPlatformVersion }}',
+        message: 'Element of type <bpmn:StartEvent> (<bpmn:ErrorEventDefinition>) not supported by {{ executionPlatform }}',
         path: [
           'eventDefinitions',
           0
@@ -1322,7 +1322,7 @@ describe('util - element', function() {
 
       // then
       expect(result).to.eql({
-        message: 'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by {{ executionPlatform }} {{ executionPlatformVersion }}',
+        message: 'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by {{ executionPlatform }}',
         path: [
           'laneSets'
         ],

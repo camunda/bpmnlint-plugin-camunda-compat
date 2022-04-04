@@ -53,7 +53,7 @@ describe('util - rule', function() {
 
         // given
         const check1Spy = spy(() => false);
-        const check2Spy = spy(() => 'foo {{ executionPlatform }} bar {{ executionPlatformVersion }} baz');
+        const check2Spy = spy(() => 'foo {{ executionPlatform }} bar');
         const check3Spy = spy(() => false);
 
         const checks = [
@@ -80,7 +80,7 @@ describe('util - rule', function() {
         expect(reporter.getReports()).to.eql([
           {
             id: 'Definitions_1',
-            message: 'foo Camunda Cloud bar 1.0 baz'
+            message: 'foo Camunda Cloud 1.0 bar'
           }
         ]);
 
@@ -94,7 +94,7 @@ describe('util - rule', function() {
 
         // given
         const check1Spy = spy(() => false);
-        const check2Spy = spy(() => 'foo {{ executionPlatform }} bar {{ executionPlatformVersion }} baz');
+        const check2Spy = spy(() => 'foo {{ executionPlatform }} bar');
         const check3Spy = spy(() => false);
 
         const checks = [
@@ -295,7 +295,7 @@ describe('util - rule', function() {
 
         // given
         const checks = [
-          createCheck(() => 'foo {{ executionPlatform }} bar {{ executionPlatformVersion }} baz')
+          createCheck(() => 'foo {{ executionPlatform }} bar')
         ];
 
         const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
@@ -308,20 +308,20 @@ describe('util - rule', function() {
         expect(reporter.getReports()).to.eql([
           {
             id: 'Definitions_1',
-            message: 'foo Camunda Cloud bar 1.0 baz'
+            message: 'foo Camunda Cloud 1.0 bar'
           }
         ]);
       });
 
 
-      it('should add execution platform label and version', async function() {
+      it('should add label', async function() {
 
         // given
         const checks = [
-          createCheck(() => 'foo {{ executionPlatform }} bar {{ executionPlatformVersion }} baz')
+          createCheck(() => 'foo {{ executionPlatform }} bar')
         ];
 
-        const ruleFactory = createRule('Camunda Cloud', '1.0', checks, 'Camunda Platform'),
+        const ruleFactory = createRule('Camunda Cloud', '1.0', checks, 'Microsoft Paint 1.0'),
               rule = ruleFactory();
 
         // when
@@ -331,7 +331,7 @@ describe('util - rule', function() {
         expect(reporter.getReports()).to.eql([
           {
             id: 'Definitions_1',
-            message: 'foo Camunda Platform bar 1.0 baz'
+            message: 'foo Microsoft Paint 1.0 bar'
           }
         ]);
       });
