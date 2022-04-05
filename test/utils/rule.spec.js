@@ -314,7 +314,7 @@ describe('util - rule', function() {
       });
 
 
-      it('should add label', async function() {
+      it('should add execution platform label', async function() {
 
         // given
         const checks = [
@@ -332,6 +332,37 @@ describe('util - rule', function() {
           {
             id: 'Definitions_1',
             message: 'foo Microsoft Paint 1.0 bar'
+          }
+        ]);
+      });
+
+
+      it('should add label', async function() {
+
+        // given
+        const checks = [
+          createCheck(() => 'foo')
+        ];
+
+        const ruleFactory = createRule('Camunda Cloud', '1.0', checks),
+              rule = ruleFactory();
+
+        node = createElement('bpmn:Definitions', {
+          id: 'Definitions_1',
+          name: 'Foo',
+          'modeler:executionPlatform': 'Camunda Cloud',
+          'modeler:executionPlatformVersion': '1.0.0'
+        });
+
+        // when
+        rule.check(node, reporter);
+
+        // then
+        expect(reporter.getReports()).to.eql([
+          {
+            id: 'Definitions_1',
+            label: 'Foo',
+            message: 'foo'
           }
         ]);
       });

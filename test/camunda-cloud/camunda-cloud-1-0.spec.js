@@ -470,9 +470,10 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
   return [
     {
       name: 'undefined task',
-      moddleElement: createModdle(createCloudProcess('<bpmn:Task id="Task_1" />')),
+      moddleElement: createModdle(createCloudProcess('<bpmn:Task id="Task_1" name="Foo Bar" />')),
       report: {
         id: 'Task_1',
+        label: 'Foo Bar',
         message: 'An <Undefined Task> is not supported by Camunda Platform 8 (Zeebe 1.0)',
         error: {
           type: ERROR_TYPES.ELEMENT_TYPE,
