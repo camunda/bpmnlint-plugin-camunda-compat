@@ -27,10 +27,11 @@ const { getTypeString } = require('./type');
  * @param {string} ruleExecutionPlatform
  * @param {string} ruleExecutionPlatformVersion
  * @param {(Object|string)[]} checks
+ * @param {string} executionPlatformLabel
  *
  * @returns {Function}
  */
-module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatformVersion, checks, label) {
+module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatformVersion, checks, executionPlatformLabel) {
   return () => {
     return {
       check: (node, reporter) => {
@@ -56,15 +57,26 @@ module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatfor
 
         const id = node.get('id') || '';
 
-        if (results === false) {
-          const message = getMessage(node, ruleExecutionPlatform, ruleExecutionPlatformVersion, label);
+        const label = getLabel(node);
 
-          reporter.report(id, message, {
+        if (results === false) {
+          const message = getMessage(node, ruleExecutionPlatform, ruleExecutionPlatformVersion, executionPlatformLabel);
+
+          let options = {
             error: {
               type: ERROR_TYPES.ELEMENT_TYPE,
               element: node.$type
             }
-          });
+          };
+
+          if (label) {
+            options = {
+              ...options,
+              label
+            };
+          }
+
+          reporter.report(id, message, options);
         } else {
           if (!isArray(results)) {
             results = [ results ];
@@ -80,9 +92,20 @@ module.exports.createRule = function(ruleExecutionPlatform, ruleExecutionPlatfor
               ...rest
             } = result;
 
-            message = addExecutionPlatform(message, label || `${ ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
+            message = addExecutionPlatform(message, executionPlatformLabel || `${ ruleExecutionPlatform } ${ toSemverMinor(ruleExecutionPlatformVersion) }`);
 
-            reporter.report(id, message, rest);
+            let options = {
+              ...rest
+            };
+
+            if (label) {
+              options = {
+                ...options,
+                label
+              };
+            }
+
+            reporter.report(id, message, options);
           });
         }
       }
@@ -286,4 +309,16 @@ function getMessage(node, executionPlatform, executionPlatformVersion, label) {
   const indefiniteArticle = getIndefiniteArticle(type);
 
   return addExecutionPlatform(`${ indefiniteArticle } <${ type }> is not supported by {{ executionPlatform }}`, label || `${ executionPlatform } ${ toSemverMinor(executionPlatformVersion) }`);
+}
+
+function getLabel(node) {
+  if (is(node, 'bpmn:Group')) {
+    const categoryValueRef = node.get('categoryValueRef');
+
+    return categoryValueRef && categoryValueRef.get('value');
+  } else if (is(node, 'bpmn:TextAnnotation')) {
+    return node.get('text');
+  }
+
+  return node.get('name');
 }
