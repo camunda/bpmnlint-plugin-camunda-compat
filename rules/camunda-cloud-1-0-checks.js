@@ -6,7 +6,6 @@ const {
   hasEventDefinitionOfType,
   hasEventDefinitionOfTypeOrNone,
   hasMessageReference,
-  hasNoLanes,
   isNotBpmn,
   withTranslations
 } = require('./utils/element');
@@ -36,6 +35,7 @@ module.exports = [
   'bpmn:MessageFlow',
   'bpmn:ParallelGateway',
   'bpmn:Participant',
+  'bpmn:Process',
   'bpmn:SequenceFlow',
   'bpmn:TextAnnotation',
   {
@@ -132,15 +132,6 @@ module.exports = [
         'Element of type <bpmn:Message> must have property <name>': 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Name>',
         'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>': 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Subscription correlation key>',
         'Element of type <zeebe:Subscription> must have property <correlationKey>': 'A <Message Intermediate Catch Event> with <Message Reference> must have a defined <Subscription correlation key>'
-      }
-    )
-  },
-  {
-    type: 'bpmn:Process',
-    check: withTranslations(
-      hasNoLanes,
-      {
-        'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by {{ executionPlatform }}': 'A <Lane> is not supported by Camunda Platform 8 (Zeebe 1.0)'
       }
     )
   },

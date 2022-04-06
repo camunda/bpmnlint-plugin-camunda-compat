@@ -131,14 +131,6 @@ module.exports.hasMultiInstanceLoopCharacteristics = function(node) {
   return true;
 };
 
-module.exports.hasNoLanes = function(node) {
-  const laneSets = node.get('laneSets');
-
-  return !laneSets
-    || !laneSets.length
-    || getElementNotSupportedError(node.$type, 'bpmn:LaneSet', [ 'laneSets' ]);
-};
-
 module.exports.isNotBpmn = function(node) {
   return !is(node, 'bpmn:BaseElement');
 };
