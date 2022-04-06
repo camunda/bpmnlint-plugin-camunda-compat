@@ -6,6 +6,12 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.6.0
+
+* `FEAT`: adjust error messages to be more friendly ([#22](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/22))
+* `FEAT`: lint error code and message name ([#21](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/21))
+* `FIX`: task definition retries not required ([#20](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/20))
+
 ## 0.5.0
 
 * `FEAT`: update Camunda Cloud rules to lint extension elements and their properties ([#18](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/18))
