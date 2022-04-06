@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.6.1
+
+* `FIX`: lanes supported ([#26](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/26))
+
 ## 0.6.0
 
 * `FEAT`: adjust error messages to be more friendly ([#22](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/22))
