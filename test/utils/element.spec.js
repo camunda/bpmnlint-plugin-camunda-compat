@@ -27,7 +27,6 @@ const {
   hasMessageReference,
   hasMultiInstanceLoopCharacteristics,
   hasNoEventDefinition,
-  hasNoLanes,
   withTranslations
 } = require('../../rules/utils/element');
 
@@ -1281,55 +1280,6 @@ describe('util - element', function() {
           type: 'elementType',
           elementType: 'bpmn:StartEvent',
           propertyType: 'bpmn:ErrorEventDefinition'
-        }
-      });
-    });
-
-  });
-
-
-  describe('#hasNoLanes', function() {
-
-    it('should not return error', function() {
-
-      // given
-      const node = createElement('bpmn:Process');
-
-      // when
-      const result = hasNoLanes(node);
-
-      // then
-      expect(result).to.be.true;
-    });
-
-
-    it('should return error', function() {
-
-      // given
-      const node = createElement('bpmn:Process', {
-        laneSets: [
-          createElement('bpmn:LaneSet', {
-            lanes: [
-              createElement('bpmn:Lane'),
-              createElement('bpmn:Lane')
-            ]
-          })
-        ]
-      });
-
-      // when
-      const result = hasNoLanes(node);
-
-      // then
-      expect(result).to.eql({
-        message: 'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by {{ executionPlatform }}',
-        path: [
-          'laneSets'
-        ],
-        error: {
-          type: 'elementType',
-          elementType: 'bpmn:Process',
-          propertyType: 'bpmn:LaneSet'
         }
       });
     });

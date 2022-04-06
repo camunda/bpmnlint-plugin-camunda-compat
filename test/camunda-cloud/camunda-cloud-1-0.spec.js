@@ -260,6 +260,21 @@ function createValid(executionPlatformVersion = '1.0.0') {
       `))
     },
 
+    // bpmn:Process
+    {
+      name: 'process (lanes)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:collaboration id="Collaboration_1">
+          <bpmn:participant id="Participant_1" processRef="Process_1" />
+        </bpmn:collaboration>
+        <bpmn:process id="Process_1">
+          <bpmn:laneSet id="LaneSet_1">
+            <bpmn:lane id="Lane_1" />
+          </bpmn:laneSet>
+        </bpmn:process>
+      `))
+    },
+
     // bpmn:ReceiveTask
     {
       name: 'receive task',
@@ -1026,33 +1041,6 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
         error: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           requiredProperty: 'correlationKey'
-        }
-      }
-    },
-
-    // bpmn:Process
-    {
-      name: 'lane',
-      moddleElement: createModdle(createCloudDefinitions(`
-        <bpmn:collaboration id="Collaboration_1">
-          <bpmn:participant id="Participant_1" processRef="Process_1" />
-        </bpmn:collaboration>
-        <bpmn:process id="Process_1">
-          <bpmn:laneSet id="LaneSet_1">
-            <bpmn:lane id="Lane_1" />
-          </bpmn:laneSet>
-        </bpmn:process>
-      `)),
-      report: {
-        id: 'Process_1',
-        message: 'A <Lane> is not supported by Camunda Platform 8 (Zeebe 1.0)',
-        path: [
-          'laneSets'
-        ],
-        error: {
-          type: ERROR_TYPES.ELEMENT_TYPE,
-          elementType: 'bpmn:Process',
-          propertyType: 'bpmn:LaneSet'
         }
       }
     },
