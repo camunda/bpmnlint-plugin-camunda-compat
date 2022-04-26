@@ -137,7 +137,7 @@ function createInvalid(executionPlatformVersion = '1.3.0') {
       `)),
       report: {
         id: 'BusinessRuleTask_1',
-        message: 'A Business Rule Task with <Implementation: DMN decision> must have a defined <Result variable>',
+        message: 'A <Business Rule Task> with <Implementation: DMN decision> must have a defined <Result variable>',
         path: [
           'extensionElements',
           'values',
