@@ -1,147 +1,23 @@
 const {
   isArray,
-  isObject,
-  isString,
   some
 } = require('min-dash');
 
-const {
-  is,
-  isAny
-} = require('bpmnlint-utils');
+const { isAny } = require('bpmnlint-utils');
 
 const { getPath } = require('@philippfromme/moddle-helpers');
 
-const ERROR_TYPES = Object.freeze({
-  ELEMENT_TYPE: 'elementType',
-  EXTENSION_ELEMENT_REQUIRED: 'extensionElementRequired',
-  PROPERTY_DEPENDEND_REQUIRED: 'propertyDependendRequired',
-  PROPERTY_REQUIRED: 'propertyRequired',
-  PROPERTY_TYPE: 'propertyType'
-});
+const { ERROR_TYPES } = require('./error-types');
 
 module.exports.ERROR_TYPES = ERROR_TYPES;
 
-/**
- * @param {ModdleElement} node
- *
- * @returns {boolean|string}
- */
-function hasNoEventDefinition(node) {
+module.exports.getEventDefinition = function(node) {
   const eventDefinitions = node.get('eventDefinitions');
 
-  return !eventDefinitions
-    || !eventDefinitions.length
-    || getElementNotSupportedError(node.$type, eventDefinitions[ 0 ].$type, [ 'eventDefinitions', 0 ]);
-}
-
-module.exports.hasNoEventDefinition = hasNoEventDefinition;
-
-/**
- * @param {ModdleElement} node
- * @param {string[]} types
- *
- * @returns {boolean|string}
- */
-function hasEventDefinitionOfType(node, types) {
-  if (!isArray(types)) {
-    types = [ types ];
+  if (eventDefinitions) {
+    return eventDefinitions[ 0 ];
   }
-
-  const eventDefinitions = node.get('eventDefinitions');
-
-  if (!eventDefinitions || eventDefinitions.length !== 1) {
-    return getElementNotSupportedError(node.$type, null);
-  }
-
-  const eventDefinition = eventDefinitions[ 0 ];
-
-  return isAny(eventDefinition, types)
-    || getElementNotSupportedError(node.$type, eventDefinition.$type, [ 'eventDefinitions', 0 ]);
-}
-
-/**
- * @param {string[]} types
- *
- * @returns {Function}
- */
-module.exports.hasEventDefinitionOfType = function(types) {
-  return function(node) {
-    return hasEventDefinitionOfType(node, types);
-  };
 };
-
-/**
- * @param {string[]} types
- *
- * @returns {Function}
- */
-module.exports.hasEventDefinitionOfTypeOrNone = function(types) {
-  return function(node) {
-    const results = [
-      hasNoEventDefinition(node),
-      hasEventDefinitionOfType(node, types)
-    ];
-
-    return some(results, result => result === true)
-      || results.find(result => isArray(result) || isObject(result) || isString(result));
-  };
-};
-
-module.exports.hasLoopCharacteristics = function(node) {
-  return !!node.get('loopCharacteristics');
-};
-
-/**
- * @param {string[]} types
- *
- * @returns {boolean|string}
- */
-module.exports.hasLoopCharacteristicsOfTypeOrNone = function(type) {
-  return function(node) {
-    const loopCharacteristics = node.get('loopCharacteristics');
-
-    if (!loopCharacteristics) {
-      return true;
-    }
-
-    return is(loopCharacteristics, type)
-      || getElementNotSupportedError(node.$type, loopCharacteristics.$type, [ 'loopCharacteristics' ]);
-  };
-};
-
-/**
- * @param {ModdleElement} node
- *
- * @returns {boolean|Object|Object[]}
- */
-module.exports.hasMultiInstanceLoopCharacteristics = function(node) {
-  const results = checkProperties(node, {
-    loopCharacteristics: {
-      type: 'bpmn:MultiInstanceLoopCharacteristics'
-    }
-  }, node);
-
-  if (results.length === 1) {
-    return results[ 0 ];
-  } else if (results.length > 1) {
-    return results;
-  }
-
-  return true;
-};
-
-module.exports.isNotBpmn = function(node) {
-  return !is(node, 'bpmn:BaseElement');
-};
-
-function findExtensionElement(node, types) {
-  const extensionElements = findExtensionElements(node, types);
-
-  if (extensionElements && extensionElements.length) {
-    return extensionElements[ 0 ];
-  }
-}
 
 function findExtensionElements(node, types) {
   const extensionElements = node.get('extensionElements');
@@ -163,75 +39,18 @@ function findExtensionElements(node, types) {
   return values.filter(value => isAny(value, types));
 }
 
+function findExtensionElement(node, types) {
+  const extensionElements = findExtensionElements(node, types);
+
+  if (extensionElements && extensionElements.length) {
+    return extensionElements[ 0 ];
+  }
+}
+
 module.exports.findExtensionElement = findExtensionElement;
-
-function getElementNotSupportedError(type, propertyType, path = null) {
-  if (propertyType) {
-    return {
-      message: `Element of type <${ type }> (<${ propertyType }>) not supported by {{ executionPlatform }}`,
-      path,
-      error: {
-        type: ERROR_TYPES.ELEMENT_TYPE,
-        elementType: type,
-        propertyType
-      }
-    };
-  }
-
-  return {
-    message: `Element of type <${ type }> not supported by {{ executionPlatform }}`,
-    path,
-    error: {
-      type: ERROR_TYPES.ELEMENT_TYPE,
-      elementType: type
-    }
-  };
-}
-
-/**
- * @param {string|Object} type
- *
- * @returns {string}
- */
-function getType(type) {
-  if (isObject(type)) {
-    return type.type;
-  }
-
-  return type;
-}
-
-/**
- * @param {string|Object} type
- *
- * @returns {string|Object}
- */
-function getProperties(type) {
-  if (isObject(type)) {
-    return type.properties;
-  }
-}
-
-/**
- * @param {Function} check
- * @param {Function} ifFn
- * @param {*} [elseReturnValue]
- *
- * @returns {Function}
- */
-module.exports.checkIf = function(check, ifFn, elseReturnValue = true) {
-  return function(node) {
-    if (ifFn(node) === true) {
-      return check(node);
-    }
-
-    return elseReturnValue;
-  };
-};
 
 function formatTypes(types, exclusive = false) {
   return types.reduce((string, type, index) => {
-    type = getType(type);
 
     // first
     if (index === 0) {
@@ -249,7 +68,7 @@ function formatTypes(types, exclusive = false) {
 
 module.exports.formatTypes = formatTypes;
 
-function checkProperties(node, properties, parentNode) {
+module.exports.hasProperties = function(node, properties, parentNode = null) {
   return Object.entries(properties).reduce((results, property) => {
     const [ propertyName, propertyChecks ] = property;
 
@@ -267,6 +86,8 @@ function checkProperties(node, properties, parentNode) {
             : [ propertyName ],
           error: {
             type: ERROR_TYPES.PROPERTY_REQUIRED,
+            node,
+            parentNode: parentNode == node ? null : parentNode,
             requiredProperty: propertyName
           }
         }
@@ -286,6 +107,9 @@ function checkProperties(node, properties, parentNode) {
               : [ propertyName ],
             error: {
               type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
+              node,
+              parentNode: parentNode == node ? null : parentNode,
+              property: propertyChecks.dependendRequired,
               dependendRequiredProperty: propertyName
             }
           }
@@ -293,17 +117,28 @@ function checkProperties(node, properties, parentNode) {
       }
     }
 
-    if (propertyChecks.type && propertyValue && (!propertyValue.$instanceOf || !propertyValue.$instanceOf(propertyChecks.type))) {
+    if (
+      propertyChecks.type
+      && propertyValue
+      && (
+        !propertyValue.$instanceOf
+        || (!isArray(propertyChecks.type) && !propertyValue.$instanceOf(propertyChecks.type))
+        || (isArray(propertyChecks.type) && !some(propertyChecks.type, type => propertyValue.$instanceOf(type)))
+      )
+    ) {
       return [
         ...results,
         {
-          message: `Element of type <${ node.$type }> must have property <${ propertyName }> of type <${ propertyChecks.type }>`,
+          message: `Property <${ propertyName }> of type <${ propertyValue.$type }> not allowed`,
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
           error: {
-            type: ERROR_TYPES.PROPERTY_TYPE,
-            propertyType: propertyChecks.type
+            type: ERROR_TYPES.PROPERTY_TYPE_NOT_ALLOWED,
+            node,
+            parentNode: parentNode == node ? null : parentNode,
+            property: propertyName,
+            allowedPropertyType: propertyChecks.type
           }
         }
       ];
@@ -311,349 +146,77 @@ function checkProperties(node, properties, parentNode) {
 
     return results;
   }, []);
-}
+};
 
-module.exports.checkProperties = checkProperties;
+module.exports.hasExtensionElementsOfTypes = function(node, types, parentNode = null, exclusive = false) {
+  const extensionElements = findExtensionElements(node, types);
 
-/**
- * @example
- *
- * const check = hasExtensionElementsOfTypes([ 'zeebe:CalledDecision', 'zeebe:TaskDefinition' ]);
- *
- * check(node, parentNode);
- *
- * @example
- *
- * const check = hasExtensionElementsOfTypes([
- *   {
- *     type: 'zeebe:CalledDecision',
- *     properties: {
- *       decisionId: { required: true },
- *       resultVariable: { required: true }
- *     }
- *   },
- *   {
- *     type: 'zeebe:TaskDefinition',
- *     properties: {
- *       type: { required: true }
- *     }
- *   }
- * ]);
- *
- * check(node, parentNode);
- *
- * @param {string[]|Object[]} types
- *
- * @returns {Function}
- */
-module.exports.hasExtensionElementsOfTypes = function(types, exclusive = false) {
-  return function(node, parentNode) {
-    const extensionElements = findExtensionElements(node, types.map(type => getType(type)));
-
-    if (!extensionElements || !extensionElements.length) {
-      return {
-        message: `Element of type <${ node.$type }> must have one or many extension elements of type ${ formatTypes(types, true) }`,
+  if (!extensionElements || !extensionElements.length) {
+    return [
+      {
+        message: exclusive
+          ? `Element of type <${ node.$type }> must have one extension element of type ${ formatTypes(types, true) }`
+          : `Element of type <${ node.$type }> must have one or many extension elements of type ${ formatTypes(types, true) }`,
         path: getPath(node, parentNode),
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
-          requiredExtensionElement: getType(types[ 0 ])
+          node,
+          parentNode: parentNode == node ? null : parentNode,
+          requiredExtensionElement: types,
+          exclusive
         }
-      };
-    }
+      }
+    ];
+  }
 
-    if (exclusive && extensionElements.length > 1) {
-      return {
+  if (exclusive && extensionElements.length > 1) {
+    return [
+      {
         message: `Element of type <${ node.$type }> must have one extension element of type ${ formatTypes(types, true) }`,
-        path: getPath(node, parentNode)
-      };
-    }
-
-    const results = extensionElements.reduce((errors, extensionElement) => {
-      const type = types.find(type => is(extensionElement, getType(type)));
-
-      const properties = getProperties(type);
-
-      if (properties) {
-        return [
-          ...errors,
-          ...checkProperties(extensionElement, properties, parentNode)
-        ];
-      }
-
-      return errors;
-    }, []);
-
-    if (results.length === 1) {
-      return results[ 0 ];
-    } else if (results.length > 1) {
-      return results;
-    }
-
-    return true;
-  };
-};
-
-/**
- * @example
- *
- * const check = hasExtensionElementOfType('zeebe:TaskDefinition');
- *
- * check(node, parentNode);
- *
- * @example
- *
- * const check = hasExtensionElementOfType(
- *   {
- *     type: 'zeebe:TaskDefinition',
- *     properties: {
- *       type: { required: true }
- *     }
- *   }
- * );
- *
- * check(node, parentNode);
- *
- * @param {string[]|Object[]} types
- *
- * @returns {Function}
- */
-module.exports.hasExtensionElementOfType = function(type) {
-  return function(node, parentNode) {
-    const extensionElement = findExtensionElement(node, getType(type));
-
-    if (!extensionElement) {
-      return {
-        message: `Element of type <${ node.$type }> must have extension element of type <${ getType(type) }>`,
         path: getPath(node, parentNode),
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
-          requiredExtensionElement: getType(type)
+          node,
+          parentNode: parentNode == node ? null : parentNode,
+          requiredExtensionElement: types,
+          exclusive
         }
-      };
-    }
-
-    const properties = getProperties(type);
-
-    if (properties) {
-      const results = checkProperties(extensionElement, properties, parentNode);
-
-      if (results.length === 1) {
-        return results[ 0 ];
-      } else if (results.length > 1) {
-        return results;
       }
-    }
-
-    return true;
-  };
-};
-
-/**
- * @example
- *
- * const check = checkError((error) => { ... });
- *
- * check(errorEventDefinition);
- *
- * @param {Function} check
- *
- * @returns {Function}
- */
-function checkError(check) {
-  return function(node, parentNode) {
-    const results = checkProperties(node, {
-      errorRef: {
-        required: true
-      }
-    }, parentNode);
-
-    if (results.length === 1) {
-      return results[ 0 ];
-    } else if (results.length > 1) {
-      return results;
-    }
-
-    const error = node.get('errorRef');
-
-    return check(error);
-  };
-}
-
-module.exports.checkError = checkError;
-
-/**
- * @example
- *
- * const check = checkEventDefinition((eventDefinition, event) => { ... });
- *
- * check(startEvent);
- *
- * @param {Function} check
- *
- * @returns {Function}
- */
-module.exports.checkEventDefinition = function(check) {
-  return function(node) {
-    const results = checkProperties(node, {
-      eventDefinitions: {
-        required: true
-      }
-    });
-
-    if (results.length === 1) {
-      return results[ 0 ];
-    } else if (results.length > 1) {
-      return results;
-    }
-
-    const eventDefinitions = node.get('eventDefinitions');
-
-    return check(eventDefinitions[ 0 ], node);
-  };
-};
-
-/**
- * @example
- *
- * const check = checkFlowNode((node, parentNode) => { ... });
- *
- * check(serviceTask);
- *
- * @param {Function} check
- *
- * @returns {Function}
- */
-module.exports.checkFlowNode = function(check) {
-  return function(node) {
-    return check(node, node);
-  };
-};
-
-/**
- * @example
- *
- * const check = checkMessage((message) => { ... });
- *
- * check(messageEventDefinition);
- *
- * @param {Function} check
- *
- * @returns {Function}
- */
-function checkMessage(check) {
-  return function(node, parentNode) {
-    const results = checkProperties(node, {
-      messageRef: {
-        required: true
-      }
-    }, parentNode);
-
-    if (results.length === 1) {
-      return results[ 0 ];
-    } else if (results.length > 1) {
-      return results;
-    }
-
-    const message = node.get('messageRef');
-
-    return check(message);
-  };
-}
-
-module.exports.checkMessage = checkMessage;
-
-/**
- * @example
- *
- * const check = checkLoopCharacteristics((loopCharacteristics, activity) => { ... });
- *
- * check(serviceTask);
- *
- * @param {Function} check
- *
- * @returns {Function}
- */
-module.exports.checkLoopCharacteristics = function(check) {
-  return function(node) {
-    const results = checkProperties(node, {
-      loopCharacteristics: {
-        required: true
-      }
-    });
-
-    if (results.length === 1) {
-      return results[ 0 ];
-    } else if (results.length > 1) {
-      return results;
-    }
-
-    const loopCharacteristics = node.get('loopCharacteristics');
-
-    return check(loopCharacteristics, node);
-  };
-};
-
-module.exports.hasErrorReference = checkError(
-  (node) => {
-    const results = checkProperties(node, {
-      errorCode: {
-        required: true
-      }
-    });
-
-    if (results.length === 1) {
-      return results[ 0 ];
-    } else if (results.length > 1) {
-      return results;
-    }
-
-    return true;
-  }
-);
-
-module.exports.hasMessageReference = checkMessage(
-  (node) => {
-    const results = checkProperties(node, {
-      name: {
-        required: true
-      }
-    });
-
-    if (results.length === 1) {
-      return results[ 0 ];
-    } else if (results.length > 1) {
-      return results;
-    }
-
-    return true;
-  }
-);
-
-function translate(result, translations) {
-  if (isString(result)) {
-    return translations[result] || result;
+    ];
   }
 
-  const { message } = result;
+  return [];
+};
 
-  return {
-    ...result,
-    message: translations[message] || message
-  };
+module.exports.hasExtensionElementOfType = function(node, type, parentNode = null) {
+  const extensionElement = findExtensionElement(node, type);
+
+  if (!extensionElement) {
+    return [
+      {
+        message: `Element of type <${ node.$type }> must have extension element of type <${ type }>`,
+        path: getPath(node, parentNode),
+        error: {
+          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          node,
+          parentNode: parentNode == node ? null : parentNode,
+          requiredExtensionElement: type
+        }
+      }
+    ];
+  }
+
+  return [];
+};
+
+function isExactly(node, type) {
+  const { $model } = node;
+
+  return $model.getType(node.$type) === $model.getType(type);
 }
 
-module.exports.withTranslations = function(check, translations) {
-  return function(node) {
-    const results = check(node);
+module.exports.isExactly = isExactly;
 
-    if (isObject(results) || isString(results)) {
-      return translate(results, translations);
-    }
-
-    if (isArray(results)) {
-      return results.map((result) => translate(result, translations));
-    }
-
-    return results;
-  };
+module.exports.isAnyExactly = function(node, types) {
+  return some(types, (type) => isExactly(node, type));
 };
