@@ -20,31 +20,31 @@
 ```js
 /** @enum {string} */
 const ERROR_TYPES = {
-  ELEMENT_TYPE: 'elementType',
+  ELEMENT_TYPE_NOT_ALLOWED: 'elementTypeNotAllowed',
   EXTENSION_ELEMENT_REQUIRED: 'extensionElementRequired',
   PROPERTY_DEPENDEND_REQUIRED: 'propertyDependendRequired',
   PROPERTY_REQUIRED: 'propertyRequired',
-  PROPERTY_TYPE: 'propertyType'
+  PROPERTY_TYPE_NOT_ALLOWED: 'propertyTypeNotAllowed'
 };
 ```
 
-## ❌ Element Type Error
+## ❌ Element Type Not Allowed Error
 
 ### Type Definition
 
 ```js
 /**
- * @typedef ElementTypeError
+ * @typedef ElementTypeNotAllowedError
  *
  * @type {Object}
  *
  * @property {string} id
  * @property {string} message
- * @property {(number|string)[]} [path]
- * @property {Object} [error]
- * @property {ERROR_TYPES} [error.type]
- * @property {string} [elementType]
- * @property {string} [propertyType]
+ * @property {(number|string)[]|null} path
+ * @property {Object} error
+ * @property {ERROR_TYPES} error.type
+ * @property {import('moddle/lib/base')} error.node
+ * @property {import('moddle/lib/base')|null} error.parentNode
  */
 ```
 
@@ -53,50 +53,53 @@ const ERROR_TYPES = {
 ```js
 {
   id: 'ComplexGateway_1',
-  message: 'Element of type <bpmn:ComplexGateway> not supported by Camunda Platform 8 (Zeebe 1.0)',
+  message: 'Element of type <bpmn:ComplexGateway> not allowed',
   path: null,
   error: {
-    type: ERROR_TYPES.ELEMENT_TYPE,
-    elementType: 'bpmn:ComplexGateway'
+    type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+    node: Base { $type: 'bpmn:ComplexGateway', ... }
+    parentNode: null
   }
 }
 ```
 
+## ❌ Extension Element Not Allowed Error
+
+### Type Definition
+
 ```js
-{
-  id: 'StartEvent_1',
-  message: 'Element of type <bpmn:StartEvent> (<bpmn:ErrorEventDefinition>) not supported by Camunda Platform 8 (Zeebe 1.0)',
-  path: [ 'eventDefinitions', 0 ],
-  error: {
-    type: ERROR_TYPES.ELEMENT_TYPE,
-    elementType: 'bpmn:ComplexGateway',
-    propertyType: 'bpmn:ErrorEventDefinition'
-  }
-}
+/**
+ * @typedef ExtensionElementNotAllowedError
+ *
+ * @type {Object}
+ *
+ * @property {string} id
+ * @property {string} message
+ * @property {(number|string)[]|null} path
+ * @property {Object} error
+ * @property {ERROR_TYPES} error.type
+ * @property {import('moddle/lib/base')} error.node
+ * @property {import('moddle/lib/base')|null} error.parentNode
+ * @property {import('moddle/lib/base')} error.extensionElement
+ */
 ```
+
+### Example
 
 ```js
 {
-  id: 'ServiceTask_1',
-  message: 'Element of type <bpmn:ServiceTask> (<bpmn:StandardLoopCharacteristics>) not supported by Camunda Platform 8 (Zeebe 1.0)',
-  path: [ 'loopCharacteristics' ],
+  id: 'BusinessRuleTask_1',
+  message: 'Extension element of type <zeebe:CalledDecision> not allowed',
+  path: [
+    'extensionElements',
+    'values',
+    0
+  ],
   error: {
-    type: ERROR_TYPES.ELEMENT_TYPE,
-    elementType: 'bpmn:ServiceTask',
-    propertyType: 'bpmn:StandardLoopCharacteristics'
-  }
-}
-```
-
-```js
-{
-  id: 'Process_1',
-  message: 'Element of type <bpmn:Process> (<bpmn:LaneSet>) not supported by Camunda Platform 8 (Zeebe 1.0)',
-  path: [ 'laneSets' ],
-  error: {
-    type: ERROR_TYPES.ELEMENT_TYPE,
-    elementType: 'bpmn:Process',
-    propertyType: 'bpmn:LaneSet'
+    type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
+    node: Base { $type: 'bpmn:BusinessRuleTask', ... },
+    parentNode: null,
+    extensionElement: Base { $type: 'zeebe:CalledDecision', ... }
   }
 }
 ```
@@ -113,10 +116,13 @@ const ERROR_TYPES = {
  *
  * @property {string} id
  * @property {string} message
- * @property {(number|string)[]} [path]
- * @property {Object} [error]
- * @property {ERROR_TYPES} [error.type]
- * @property {string} [requiredExtensionElementType]
+ * @property {(number|string)[]|null} path
+ * @property {Object} error
+ * @property {ERROR_TYPES} error.type
+ * @property {import('moddle/lib/base')} error.node
+ * @property {import('moddle/lib/base')|null} error.parentNode
+ * @property {string|string[]} error.requiredExtensionElement
+ * @property {boolean} [error.exclusive]
  */
 ```
 
@@ -129,7 +135,27 @@ const ERROR_TYPES = {
   path: null,
   error: {
     type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+    node: Base { $type: 'bpmn:ServiceTask', ... },
+    parentNode: null,
     requiredExtensionElement: 'zeebe:TaskDefinition'
+  }
+}
+```
+
+```js
+{
+  id: 'BusinessRuleTask_1',
+  message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
+  path: null,
+  error: {
+    type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+    node: Base { $type: 'bpmn:BusinessRuleTask', ... },
+    parentNode: null,
+    requiredExtensionElement: [
+      'zeebe:CalledDecision',
+      'zeebe:TaskDefinition'
+    ],
+    exclusive: true
   }
 }
 ```
@@ -146,10 +172,13 @@ const ERROR_TYPES = {
  *
  * @property {string} id
  * @property {string} message
- * @property {(number|string)[]} [path]
- * @property {Object} [error]
- * @property {ERROR_TYPES} [error.type]
- * @property {string} [dependendRequiredProperty]
+ * @property {(number|string)[]|null} path
+ * @property {Object} error
+ * @property {ERROR_TYPES} error.type
+ * @property {import('moddle/lib/base')} error.node
+ * @property {import('moddle/lib/base')|null} error.parentNode
+ * @property {string} error.property
+ * @property {string} error.dependendRequiredProperty
  */
 ```
 
@@ -168,6 +197,9 @@ const ERROR_TYPES = {
   ],
   error: {
     type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
+    node: Base { $type: 'zeebe:LoopCharacteristics', ... },
+    parentNode: Base { $type: 'bpmn:ServiceTask', ... },
+    property: 'outputElement',
     dependendRequiredProperty: 'outputCollection'
   }
 }
@@ -185,10 +217,12 @@ const ERROR_TYPES = {
  *
  * @property {string} id
  * @property {string} message
- * @property {(number|string)[]} [path]
- * @property {Object} [error]
- * @property {ERROR_TYPES} [error.type]
- * @property {string} [requiredProperty]
+ * @property {(number|string)[]|null} path
+ * @property {Object} error
+ * @property {ERROR_TYPES} error.type
+ * @property {import('moddle/lib/base')} error.node
+ * @property {import('moddle/lib/base')|null} error.parentNode
+ * @property {string} error.requiredProperty
  */
 ```
 
@@ -198,30 +232,38 @@ const ERROR_TYPES = {
 {
   id: 'BoundaryEvent_1',
   message: 'Element of type <bpmn:ErrorEventDefinition> must have property <errorRef>',
-  path: [ 'eventDefinitions', 0, 'errorRef' ],
+  path: [
+    'eventDefinitions',
+    0,
+    'errorRef'
+  ],
   error: {
     type: ERROR_TYPES.PROPERTY_REQUIRED,
+    node: Base { $type: 'bpmn:ErrorEventDefinition', ... },
+    parentNode: Base { $type: 'bpmn:BoundaryEvent', ... },
     requiredProperty: 'errorRef'
   }
 }
 ```
 
-## ❌ Property Type Error
+## ❌ Property Type Not Allowed Error
 
 ### Type Definition
 
 ```js
 /**
- * @typedef PropertyTypeError
+ * @typedef PropertyTypeNotAllowedError
  *
  * @type {Object}
  *
  * @property {string} id
- * @property {string} message
- * @property {(number|string)[]} [path]
- * @property {Object} [error]
- * @property {ERROR_TYPES} [error.type]
- * @property {string} [propertyType]
+ * @property {(number|string)[]|null} path
+ * @property {Object} error
+ * @property {ERROR_TYPES} error.type
+ * @property {import('moddle/lib/base')} error.node
+ * @property {import('moddle/lib/base')|null} error.parentNode
+ * @property {string} error.property
+ * @property {string|string[]} error.allowedPropertyType
  */
 ```
 
@@ -229,14 +271,39 @@ const ERROR_TYPES = {
 
 ```js
 {
+  id: 'StartEvent_1',
+  message: 'Property <eventDefinitions> of type <bpmn:SignalEventDefinition> not allowed',
+  path: [
+    'eventDefinitions',
+    0
+  ],
+  error: {
+    type: ERROR_TYPES.PROPERTY_TYPE_NOT_ALLOWED,
+    node: Base { $type: 'bpmn:StartEvent', ... },
+    parentNode: null,
+    property: 'eventDefinitions',
+    allowedPropertyType: [
+      'bpmn:ErrorEventDefinition',
+      'bpmn:MessageEventDefinition',
+      'bpmn:TimerEventDefinition'
+    ]
+  }
+}
+```
+
+```js
+{
   id: 'ServiceTask_1',
-  message: 'Element of type <bpmn:ServiceTask> must have property <loopCharacteristics> of type <bpmn:MultiInstanceLoopCharacteristics>',
+  message: 'Property <loopCharacteristics> of type <bpmn:StandardInstanceLoopCharacteristics> not allowed',
   path: [
     'loopCharacteristics'
   ],
   error: {
-    type: ERROR_TYPES.PROPERTY_TYPE,
-    propertyType: 'bpmn:MultiInstanceLoopCharacteristics'
+    type: ERROR_TYPES.PROPERTY_TYPE_NOT_ALLOWED,
+    node: Base { $type: 'bpmn:ServiceTask', ... },
+    parentNode: null,
+    property: 'loopCharacteristics',
+    allowedPropertyType: 'bpmn:MultiInstanceLoopCharacteristics'
   }
 }
 ```
