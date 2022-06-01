@@ -4,6 +4,9 @@
     <bpmn:participant id="Participant_1lhpzkq" processRef="Process_07pko08" />
   </bpmn:collaboration>
   <bpmn:process id="Process_07pko08" isExecutable="true">
+    <bpmn:extensionElements>
+      <zeebe:userTaskForm id="userTaskForm_0iprp5h">{}</zeebe:userTaskForm>
+    </bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_1c9prry</bpmn:outgoing>
     </bpmn:startEvent>
@@ -63,6 +66,9 @@
       <bpmn:outgoing>Flow_0k2v5e1</bpmn:outgoing>
     </bpmn:receiveTask>
     <bpmn:userTask id="Activity_18h7yic">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_0iprp5h" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0uqdyxp</bpmn:incoming>
       <bpmn:outgoing>Flow_1a5127t</bpmn:outgoing>
     </bpmn:userTask>
@@ -216,9 +222,6 @@
       <bpmndi:BPMNShape id="Event_0gcrrhl_di" bpmnElement="Event_195u06h">
         <dc:Bounds x="1262" y="472" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0wspz7j_di" bpmnElement="Gateway_1adft3c" isMarkerVisible="true">
-        <dc:Bounds x="715" y="355" width="50" height="50" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_09495yf_di" bpmnElement="Activity_09495yf" isExpanded="true">
         <dc:Bounds x="1280" y="167" width="350" height="200" />
       </bpmndi:BPMNShape>
@@ -227,6 +230,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_16u5s1h_di" bpmnElement="Event_0el3zk8">
         <dc:Bounds x="442" y="482" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0wspz7j_di" bpmnElement="Gateway_1adft3c" isMarkerVisible="true">
+        <dc:Bounds x="715" y="355" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_092byka_di" bpmnElement="TextAnnotation_092byka">
         <dc:Bounds x="370" y="140" width="100" height="30" />
