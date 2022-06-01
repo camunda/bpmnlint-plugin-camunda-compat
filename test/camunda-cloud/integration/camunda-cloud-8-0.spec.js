@@ -176,6 +176,9 @@ describe('integration - camunda-cloud-8-0', function() {
 
       expect(reports[ 'camunda-compat/subscription' ]).to.exist;
       expect(reports[ 'camunda-compat/subscription' ]).to.have.length(1);
+
+      expect(reports[ 'camunda-compat/user-task-form' ]).to.exist;
+      expect(reports[ 'camunda-compat/user-task-form' ]).to.have.length(2);
     });
 
   });

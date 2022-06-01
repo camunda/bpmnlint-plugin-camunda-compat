@@ -40,6 +40,8 @@ function findExtensionElements(node, types) {
   return values.filter(value => isAny(value, types));
 }
 
+module.exports.findExtensionElements = findExtensionElements;
+
 function findExtensionElement(node, types) {
   const extensionElements = findExtensionElements(node, types);
 

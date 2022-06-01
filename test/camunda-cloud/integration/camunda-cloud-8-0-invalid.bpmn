@@ -4,6 +4,9 @@
     <bpmn:participant id="Participant_1lhpzkq" processRef="Process_07pko08" />
   </bpmn:collaboration>
   <bpmn:process id="Process_07pko08" isExecutable="true">
+    <bpmn:extensionElements>
+      <zeebe:userTaskForm id="userTaskForm_2nls4jr"></zeebe:userTaskForm>
+    </bpmn:extensionElements>
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_1c9prry</bpmn:outgoing>
       <bpmn:outgoing>Flow_00dv1kp</bpmn:outgoing>
@@ -59,8 +62,12 @@
       <bpmn:outgoing>Flow_0k2v5e1</bpmn:outgoing>
     </bpmn:receiveTask>
     <bpmn:userTask id="Activity_18h7yic">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_2nls4jr" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0uqdyxp</bpmn:incoming>
       <bpmn:outgoing>Flow_1a5127t</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0sw5u2l</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:endEvent id="Event_195u06h">
       <bpmn:incoming>Flow_1a5127t</bpmn:incoming>
@@ -146,6 +153,13 @@
       <bpmn:incoming>Flow_0n84ml1</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_04t0675" />
     </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0sw5u2l" sourceRef="Activity_18h7yic" targetRef="Activity_08oewfm" />
+    <bpmn:userTask id="Activity_08oewfm">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0sw5u2l</bpmn:incoming>
+    </bpmn:userTask>
     <bpmn:textAnnotation id="TextAnnotation_092byka">
       <bpmn:text>foo</bpmn:text>
     </bpmn:textAnnotation>
@@ -256,6 +270,10 @@
         <di:waypoint x="215" y="267" />
         <di:waypoint x="270" y="267" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sw5u2l_di" bpmnElement="Flow_0sw5u2l">
+        <di:waypoint x="1180" y="380" />
+        <di:waypoint x="1270" y="380" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="249" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -293,6 +311,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0gcrrhl_di" bpmnElement="Event_195u06h">
         <dc:Bounds x="1262" y="472" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1km6ix6_di" bpmnElement="Activity_08oewfm">
+        <dc:Bounds x="1270" y="340" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_09495yf_di" bpmnElement="Activity_09495yf" isExpanded="true">
         <dc:Bounds x="1280" y="167" width="350" height="200" />

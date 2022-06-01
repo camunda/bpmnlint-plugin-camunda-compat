@@ -153,6 +153,9 @@ describe('integration - camunda-cloud-1-3', function() {
 
       expect(reports[ 'camunda-compat/subscription' ]).to.exist;
       expect(reports[ 'camunda-compat/subscription' ]).to.have.length(1);
+
+      expect(reports[ 'camunda-compat/user-task-form' ]).to.exist;
+      expect(reports[ 'camunda-compat/user-task-form' ]).to.have.length(2);
     });
 
   });

@@ -12,7 +12,8 @@ module.exports = {
         'loop-characteristics': 'error',
         'message-reference': 'error',
         'no-template': 'error',
-        'subscription': 'error'
+        'subscription': 'error',
+        'user-task-form': 'error'
       }
     },
     'camunda-cloud-1-1': {
@@ -24,7 +25,8 @@ module.exports = {
         'loop-characteristics': 'error',
         'message-reference': 'error',
         'no-template': 'error',
-        'subscription': 'error'
+        'subscription': 'error',
+        'user-task-form': 'error'
       }
     },
     'camunda-cloud-1-2': {
@@ -36,7 +38,8 @@ module.exports = {
         'loop-characteristics': 'error',
         'message-reference': 'error',
         'no-template': 'error',
-        'subscription': 'error'
+        'subscription': 'error',
+        'user-task-form': 'error'
       }
     },
     'camunda-cloud-1-3': {
@@ -48,7 +51,8 @@ module.exports = {
         'loop-characteristics': 'error',
         'message-reference': 'error',
         'no-template': 'error',
-        'subscription': 'error'
+        'subscription': 'error',
+        'user-task-form': 'error'
       }
     },
     'camunda-cloud-8-0': {
@@ -59,7 +63,8 @@ module.exports = {
         'error-reference': 'error',
         'loop-characteristics': 'error',
         'message-reference': 'error',
-        'subscription': 'error'
+        'subscription': 'error',
+        'user-task-form': 'error'
       }
     }
   }
