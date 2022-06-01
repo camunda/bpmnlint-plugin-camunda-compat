@@ -6,6 +6,19 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.7.0
+
+* `FEAT`: refactor plugin structure ([#29](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/29))
+* `DEPS`: update to `bpmnlint@7.8.0` ([#29](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/29))
+
+### Breaking Changes
+
+* configuration not selected based on execution platform and version anymore
+* error message not adjusted to be shown in Camunda Modeler anymore
+* error type ELEMENT_TYPE changed to ELEMENT_TYPE_NOT_ALLOWED
+* error type PROPERTY_TYPE changed to PROPERTY_TYPE_NOT_ALLOWED
+* error data changed (cf. docs/ERRORS.md)
+
 ## 0.6.2
 
 * `FIX`: fix error message formatting ([#27](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/27))
