@@ -19,6 +19,19 @@ const valid = [
           <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
         </bpmn:startEvent>
       </bpmn:process>
+      <bpmn:message id="Message_1" name="Message_1" />
+    `))
+  },
+  {
+    name: 'start event (event sub process)',
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:subProcess id="SubProcess_1" triggeredByEvent="true">
+          <bpmn:startEvent id="StartEvent_1" isInterrupting="false">
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+          </bpmn:startEvent>
+        </bpmn:subProcess>
+      </bpmn:process>
       <bpmn:message id="Message_1" name="Message_1">
         <bpmn:extensionElements>
           <zeebe:subscription correlationKey="foo" />
@@ -62,9 +75,11 @@ const invalid = [
     name: 'message start event (no subscription)',
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1">
-        <bpmn:startEvent id="StartEvent_1">
-          <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
-        </bpmn:startEvent>
+        <bpmn:subProcess id="SubProcess_1" triggeredByEvent="true">
+          <bpmn:startEvent id="StartEvent_1" isInterrupting="false">
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+          </bpmn:startEvent>
+        </bpmn:subProcess>
       </bpmn:process>
       <bpmn:message id="Message_1" name="Message_1" />
     `)),
@@ -87,9 +102,11 @@ const invalid = [
     name: 'message start event (no correlation key)',
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1">
-        <bpmn:startEvent id="StartEvent_1">
-          <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
-        </bpmn:startEvent>
+        <bpmn:subProcess id="SubProcess_1" triggeredByEvent="true">
+          <bpmn:startEvent id="StartEvent_1" isInterrupting="false">
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+          </bpmn:startEvent>
+        </bpmn:subProcess>
       </bpmn:process>
       <bpmn:message id="Message_1" name="Message_1">
         <bpmn:extensionElements>

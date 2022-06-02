@@ -14,7 +14,8 @@ const { reportErrors } = require('./utils/reporter');
 
 module.exports = function() {
   function check(node, reporter) {
-    if (!isAny(node, [ 'bpmn:CatchEvent', 'bpmn:ThrowEvent', 'bpmn:ReceiveTask' ])) {
+    if (!isAny(node, [ 'bpmn:CatchEvent', 'bpmn:ThrowEvent', 'bpmn:ReceiveTask' ])
+      || (is(node, 'bpmn:StartEvent') && !is(node.$parent, 'bpmn:SubProcess'))) {
       return;
     }
 
