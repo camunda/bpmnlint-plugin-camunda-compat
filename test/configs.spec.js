@@ -10,6 +10,7 @@ describe('configs', function() {
     'has-error-reference': 'error',
     'has-loop-characteristics': 'error',
     'has-message-reference': 'error',
+    'has-no-template': 'error',
     'has-subscription': 'error',
     'is-element': 'error'
   }));
@@ -21,6 +22,7 @@ describe('configs', function() {
     'has-error-reference': 'error',
     'has-loop-characteristics': 'error',
     'has-message-reference': 'error',
+    'has-no-template': 'error',
     'has-subscription': 'error',
     'is-element': 'error'
   }));
@@ -32,6 +34,7 @@ describe('configs', function() {
     'has-error-reference': 'error',
     'has-loop-characteristics': 'error',
     'has-message-reference': 'error',
+    'has-no-template': 'error',
     'has-subscription': 'error',
     'is-element': 'error'
   }));
@@ -43,6 +46,7 @@ describe('configs', function() {
     'has-error-reference': 'error',
     'has-loop-characteristics': 'error',
     'has-message-reference': 'error',
+    'has-no-template': 'error',
     'has-subscription': 'error',
     'is-element': 'error'
   }));

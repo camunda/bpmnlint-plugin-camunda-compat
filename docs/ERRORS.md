@@ -205,6 +205,44 @@ const ERROR_TYPES = {
 }
 ```
 
+## ❌ Property Not Allowed Error
+
+### Type Definition
+
+```js
+/**
+ * @typedef PropertyNotAllowedError
+ *
+ * @type {Object}
+ *
+ * @property {string} id
+ * @property {(number|string)[]|null} path
+ * @property {Object} error
+ * @property {ERROR_TYPES} error.type
+ * @property {import('moddle/lib/base')} error.node
+ * @property {import('moddle/lib/base')|null} error.parentNode
+ * @property {string} error.property
+ */
+```
+
+### Example
+
+```js
+{
+  id: 'ServiceTask_1',
+  message: 'Property <modelerTemplate> not allowed',
+  path: [
+    'modelerTemplate'
+  ],
+  error: {
+    type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
+    node: Base { $type: 'bpmn:ServiceTask', ... },
+    parentNode: null,
+    property: 'modelerTemplate'
+  }
+}
+```
+
 ## ❌ Property Required Error
 
 ### Type Definition

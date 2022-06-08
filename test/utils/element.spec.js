@@ -340,6 +340,172 @@ describe('utils/element', function() {
 
     });
 
+
+    describe('dependend required', function() {
+
+      it('should not return errors', function() {
+
+        // given
+        const loopCharacteristics = createElement('zeebe:LoopCharacteristics', {
+          outputCollection: 'foo',
+          outputElement: 'bar'
+        });
+
+        // when
+        const errors = hasProperties(loopCharacteristics, {
+          outputElement: {
+            dependendRequired: 'outputCollection'
+          }
+        });
+
+        // then
+        expect(errors).to.be.empty;
+      });
+
+
+      it('should return errors', function() {
+
+        // given
+        const loopCharacteristics = createElement('zeebe:LoopCharacteristics', {
+          outputCollection: 'foo'
+        });
+
+        // when
+        const errors = hasProperties(loopCharacteristics, {
+          outputElement: {
+            dependendRequired: 'outputCollection'
+          }
+        });
+
+        // then
+        expect(errors).eql([
+          {
+            message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if it has property <outputCollection>',
+            path: [
+              'outputElement'
+            ],
+            error: {
+              type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
+              node: loopCharacteristics,
+              parentNode: null,
+              property: 'outputCollection',
+              dependendRequiredProperty: 'outputElement'
+            }
+          }
+        ]);
+      });
+
+    });
+
+
+    describe('type', function() {
+
+      it('should not return errors', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask', {
+          loopCharacteristics: createElement('bpmn:MultiInstanceLoopCharacteristics')
+        });
+
+        // when
+        const errors = hasProperties(serviceTask, {
+          loopCharacteristics: {
+            type: 'bpmn:MultiInstanceLoopCharacteristics'
+          }
+        });
+
+        // then
+        expect(errors).to.be.empty;
+      });
+
+
+      it('should return errors', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask', {
+          loopCharacteristics: createElement('bpmn:StandardLoopCharacteristics')
+        });
+
+        // when
+        const errors = hasProperties(serviceTask, {
+          loopCharacteristics: {
+            type: 'bpmn:MultiInstanceLoopCharacteristics'
+          }
+        });
+
+        // then
+        expect(errors).eql([
+          {
+            message: 'Property <loopCharacteristics> of type <bpmn:StandardLoopCharacteristics> not allowed',
+            path: [
+              'loopCharacteristics'
+            ],
+            error: {
+              type: ERROR_TYPES.PROPERTY_TYPE_NOT_ALLOWED,
+              node: serviceTask,
+              parentNode: null,
+              property: 'loopCharacteristics',
+              allowedPropertyType: 'bpmn:MultiInstanceLoopCharacteristics'
+            }
+          }
+        ]);
+      });
+
+    });
+
+
+    describe('allowed', function() {
+
+      it('should not return errors', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask');
+
+        // when
+        const errors = hasProperties(serviceTask, {
+          modelerTemplate: {
+            allowed: false
+          }
+        });
+
+        // then
+        expect(errors).to.be.empty;
+      });
+
+
+      it('should return errors', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask', {
+          modelerTemplate: 'foo'
+        });
+
+        // when
+        const errors = hasProperties(serviceTask, {
+          modelerTemplate: {
+            allowed: false
+          }
+        });
+
+        // then
+        expect(errors).eql([
+          {
+            message: 'Property <modelerTemplate> not allowed',
+            path: [
+              'modelerTemplate'
+            ],
+            error: {
+              type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
+              node: serviceTask,
+              parentNode: null,
+              property: 'modelerTemplate'
+            }
+          }
+        ]);
+      });
+
+    });
+
   });
 
 

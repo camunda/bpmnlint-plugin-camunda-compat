@@ -119,6 +119,9 @@ describe('integration - camunda-cloud-1-2', function() {
       expect(reports[ 'camunda-compat/has-message-reference' ]).to.exist;
       expect(reports[ 'camunda-compat/has-message-reference' ]).to.have.length(2);
 
+      expect(reports[ 'camunda-compat/has-no-template' ]).to.exist;
+      expect(reports[ 'camunda-compat/has-no-template' ]).to.have.length(1);
+
       expect(reports[ 'camunda-compat/has-subscription' ]).to.exist;
       expect(reports[ 'camunda-compat/has-subscription' ]).to.have.length(1);
 

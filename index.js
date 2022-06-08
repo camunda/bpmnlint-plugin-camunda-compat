@@ -10,6 +10,7 @@ module.exports = {
         'has-error-reference': 'error',
         'has-loop-characteristics': 'error',
         'has-message-reference': 'error',
+        'has-no-template': 'error',
         'has-subscription': 'error',
         'is-element': [ 'error', isElementConfig.camundaCloud10 ]
       }
@@ -21,6 +22,7 @@ module.exports = {
         'has-error-reference': 'error',
         'has-loop-characteristics': 'error',
         'has-message-reference': 'error',
+        'has-no-template': 'error',
         'has-subscription': 'error',
         'is-element': [ 'error', isElementConfig.camundaCloud11 ]
       }
@@ -32,6 +34,7 @@ module.exports = {
         'has-error-reference': 'error',
         'has-loop-characteristics': 'error',
         'has-message-reference': 'error',
+        'has-no-template': 'error',
         'has-subscription': 'error',
         'is-element': [ 'error', isElementConfig.camundaCloud12 ]
       }
@@ -43,6 +46,7 @@ module.exports = {
         'has-error-reference': 'error',
         'has-loop-characteristics': 'error',
         'has-message-reference': 'error',
+        'has-no-template': 'error',
         'has-subscription': 'error',
         'is-element': [ 'error', isElementConfig.camundaCloud12 ]
       }
