@@ -7,7 +7,7 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_1c9prry</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:serviceTask id="Activity_0tmvr8k" name="foo">
+    <bpmn:serviceTask id="Activity_0tmvr8k" name="foo" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v1.noAuth">
       <bpmn:extensionElements>
         <zeebe:taskDefinition />
       </bpmn:extensionElements>

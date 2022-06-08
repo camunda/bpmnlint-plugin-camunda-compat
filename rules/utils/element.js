@@ -1,5 +1,6 @@
 const {
   isArray,
+  isDefined,
   some
 } = require('min-dash');
 
@@ -139,6 +140,24 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
             parentNode: parentNode == node ? null : parentNode,
             property: propertyName,
             allowedPropertyType: propertyChecks.type
+          }
+        }
+      ];
+    }
+
+    if (propertyChecks.allowed === false && isDefined(propertyValue)) {
+      return [
+        ...results,
+        {
+          message: `Property <${ propertyName }> not allowed`,
+          path: path
+            ? [ ...path, propertyName ]
+            : [ propertyName ],
+          error: {
+            type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
+            node,
+            parentNode: parentNode == node ? null : parentNode,
+            property: propertyName
           }
         }
       ];

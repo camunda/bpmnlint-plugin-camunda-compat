@@ -2,8 +2,7 @@ const BpmnModdle = require('bpmn-moddle');
 
 const { isArray } = require('min-dash');
 
-const camundaModdleSchema = require('camunda-bpmn-moddle/resources/camunda.json'),
-      modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
+const modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
       zeebeModdleSchema = require('zeebe-bpmn-moddle/resources/zeebe.json');
 
 const { readFileSync } = require('fs');
@@ -27,6 +26,8 @@ function createDefinitions(xml = '') {
       xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
       xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
       xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+      xmlns:modeler="http://camunda.org/schema/modeler/1.0"
+      xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
       id="Definitions_1">
       ${ xml }
     </bpmn:definitions>
@@ -82,7 +83,6 @@ module.exports.createModdle = createModdle;
 function createElement(type, properties) {
   const moddle = new BpmnModdle({
     modeler: modelerModdleSchema,
-    camunda: camundaModdleSchema,
     zeebe: zeebeModdleSchema
   });
 
