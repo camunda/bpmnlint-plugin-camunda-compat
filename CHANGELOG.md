@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.7.1
+
+* `FIX`: lint subscription only if start event child of sub process ([#34](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/34))
+
 ## 0.7.0
 
 * `FEAT`: refactor plugin structure ([#29](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/29))
