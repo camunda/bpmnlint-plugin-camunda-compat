@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.6.3
+
+* `FIX`: backport of ([#34](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/34)) to v0.6
+
 ## 0.6.2
 
 * `FIX`: fix error message formatting ([#27](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/27))
