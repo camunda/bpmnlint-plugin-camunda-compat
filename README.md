@@ -2,24 +2,23 @@
 
 [![CI](https://github.com/camunda/bpmnlint-plugin-camunda-compat/workflows/CI/badge.svg)](https://github.com/camunda/bpmnlint-plugin-camunda-compat/actions?query=workflow%3ACI)
 
-Camunda BPMN compatibility, packed as a [bpmnlint](https://github.com/bpmn-io/bpmnlint) plug-in.
+Camunda BPMN compatibility provided as a [bpmnlint](https://github.com/bpmn-io/bpmnlint) plug-in.
 
 
 ## Usage
 
-Add the plug-in via your `.bpmnlintrc` file:
+To configure the linter dynamically based on the [execution platform and version](https://github.com/camunda/modeler-moddle), use [`@camunda/linting`](https://github.com/camunda/linting).
+
+To configure the linter statically, add the configuration corresponding to your execution platform and version to your `.bpmnlintrc` file:
 
 ```
 {
   "extends": [
     "bpmnlint:recommended",
-    "plugin:camunda-compat/recommended"
+    "plugin:camunda-compat/camunda-cloud-8-0"
   ]
 }
 ```
-
-To validate a diagram it must be pinned to a particular execution platform via the [`modeler`](https://github.com/camunda/modeler-moddle) BPMN 2.0 extension.
-
 
 ## Resources
 
