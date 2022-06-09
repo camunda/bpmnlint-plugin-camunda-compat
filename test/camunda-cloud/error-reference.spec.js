@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/has-error-reference');
+const rule = require('../../rules/error-reference');
 
 const {
   createDefinitions,
@@ -92,7 +92,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('has-error-reference', rule, {
+RuleTester.verify('error-reference', rule, {
   valid,
   invalid
 });

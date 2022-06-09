@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/has-loop-characteristics');
+const rule = require('../../rules/loop-characteristics');
 
 const {
   createModdle,
@@ -163,7 +163,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('has-loop-characteristics', rule, {
+RuleTester.verify('loop-characteristics', rule, {
   valid,
   invalid
 });

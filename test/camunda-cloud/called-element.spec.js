@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/has-called-element');
+const rule = require('../../rules/called-element');
 
 const {
   createModdle,
@@ -70,7 +70,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('has-called-element', rule, {
+RuleTester.verify('called-element', rule, {
   valid,
   invalid
 });

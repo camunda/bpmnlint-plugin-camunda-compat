@@ -1,8 +1,8 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/is-element');
+const rule = require('../../rules/element-type');
 
-const isElementConfig = require('../../rules/is-element/config');
+const elementTypeConfig = require('../../rules/element-type/config');
 
 const {
   addConfig,
@@ -13,7 +13,7 @@ const {
 const { ERROR_TYPES } = require('../../rules/utils/element');
 
 const valid = [
-  ...require('./camunda-cloud-1-0-elements.spec').valid,
+  ...require('./camunda-cloud-1-0-element-type.spec').valid,
   {
     name: 'business rule task',
     moddleElement: createModdle(createProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />'))
@@ -90,7 +90,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('camunda-cloud-1-1-elements', rule, {
-  valid: addConfig(valid, isElementConfig.camundaCloud11),
-  invalid: addConfig(invalid, isElementConfig.camundaCloud11)
+RuleTester.verify('camunda-cloud-1-1-element-type', rule, {
+  valid: addConfig(valid, elementTypeConfig.camundaCloud11),
+  invalid: addConfig(invalid, elementTypeConfig.camundaCloud11)
 });
