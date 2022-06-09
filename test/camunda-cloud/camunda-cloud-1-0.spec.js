@@ -396,6 +396,19 @@ function createValid(executionPlatformVersion = '1.0.0') {
             <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
           </bpmn:startEvent>
         </bpmn:process>
+        <bpmn:message id="Message_1" name="Message_1" />
+      `))
+    },
+    {
+      name: 'message start event (sub process)',
+      moddleElement: createModdle(createCloudDefinitions(`
+        <bpmn:process>
+          <bpmn:subProcess triggeredByEvent="true">
+            <bpmn:startEvent id="StartEvent_1">
+              <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+            </bpmn:startEvent>
+          </bpmn:subProcess>
+        </bpmn:process>
         <bpmn:message id="Message_1" name="Message_1">
           <bpmn:extensionElements>
             <zeebe:subscription correlationKey="foo" />
@@ -1310,9 +1323,11 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       name: 'message start event (no subscription)',
       moddleElement: createModdle(createCloudDefinitions(`
         <bpmn:process>
-          <bpmn:startEvent id="StartEvent_1">
-            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
-          </bpmn:startEvent>
+          <bpmn:subProcess triggeredByEvent="true">
+            <bpmn:startEvent id="StartEvent_1">
+              <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+            </bpmn:startEvent>
+          </bpmn:subProcess>
         </bpmn:process>
         <bpmn:message id="Message_1" name="Message_1" />
       `)),
@@ -1333,9 +1348,11 @@ function createInvalid(executionPlatformVersion = '1.0.0') {
       name: 'message start event (no subscription correlation key)',
       moddleElement: createModdle(createCloudDefinitions(`
         <bpmn:process>
-          <bpmn:startEvent id="StartEvent_1">
-            <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
-          </bpmn:startEvent>
+          <bpmn:subProcess triggeredByEvent="true">
+            <bpmn:startEvent id="StartEvent_1">
+              <bpmn:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1" />
+            </bpmn:startEvent>
+          </bpmn:subProcess>
         </bpmn:process>
         <bpmn:message id="Message_1" name="Message_1">
           <bpmn:extensionElements>

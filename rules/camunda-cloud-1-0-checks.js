@@ -1,3 +1,5 @@
+const { is } = require('bpmnlint-utils');
+
 const {
   checkEventDefinition,
   checkFlowNode,
@@ -193,7 +195,14 @@ module.exports = [
             checkEventDefinition(hasMessageReference),
             checkIf(
               checkEventDefinition(hasZeebeSubscription),
-              checkEventDefinition(hasMessageReference)
+              checkEvery(
+                checkEventDefinition(hasMessageReference),
+                (node) => {
+                  const { $parent } = node;
+
+                  return $parent && is($parent, 'bpmn:SubProcess');
+                }
+              )
             )
           ),
           hasEventDefinitionOfType('bpmn:MessageEventDefinition')
