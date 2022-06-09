@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.8.0
+
+* `FEAT`: add templates rule ([#31](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/31))
+
 ## 0.7.1
 
 * `FIX`: lint subscription only if start event child of sub process ([#34](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/34))
@@ -17,7 +21,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ### Breaking Changes
 
-* configuration not selected based on execution platform and version anymore
+* configuration not selected based on execution platform and version anymore, either configure manually or use [`@camunda/linting`](https://github.com/camunda/linting)
 * error message not adjusted to be shown in Camunda Modeler anymore
 * error type ELEMENT_TYPE changed to ELEMENT_TYPE_NOT_ALLOWED
 * error type PROPERTY_TYPE changed to PROPERTY_TYPE_NOT_ALLOWED
