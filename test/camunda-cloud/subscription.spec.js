@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/has-subscription');
+const rule = require('../../rules/subscription');
 
 const {
   createDefinitions,
@@ -189,7 +189,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('has-subscription', rule, {
+RuleTester.verify('subscription', rule, {
   valid,
   invalid
 });

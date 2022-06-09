@@ -1,8 +1,8 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/has-called-decision-or-task-definition');
+const rule = require('../../rules/called-decision-or-task-definition');
 
-const hasCalledDecisionOrTaskDefinitionConfig = require('../../rules/has-called-decision-or-task-definition/config');
+const calledDecisionOrTaskDefinitionConfig = require('../../rules/called-decision-or-task-definition/config');
 
 const {
   createModdle,
@@ -14,7 +14,7 @@ const { ERROR_TYPES } = require('../../rules/utils/error-types');
 const valid = [
   {
     name: 'service task (Camunda Cloud 1.0)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud10,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud10,
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="ServiceTask_1">
         <bpmn:extensionElements>
@@ -25,12 +25,12 @@ const valid = [
   },
   {
     name: 'task (Camunda Cloud 1.0)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud10,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud10,
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
   },
   {
     name: 'business rule task (Camunda Cloud 1.1)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud11,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud11,
     moddleElement: createModdle(createProcess(`
       <bpmn:businessRuleTask id="BusinessRuleTask_1">
         <bpmn:extensionElements>
@@ -41,12 +41,12 @@ const valid = [
   },
   {
     name: 'task (Camunda Cloud 1.1)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud11,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud11,
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
   },
   {
     name: 'intermediate throw event (Camunda Cloud 1.2)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud12,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud12,
     moddleElement: createModdle(createProcess(`
       <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1">
         <bpmn:extensionElements>
@@ -58,12 +58,12 @@ const valid = [
   },
   {
     name: 'task (Camunda Cloud 1.2)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud12,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud12,
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
   },
   {
     name: 'service task (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="ServiceTask_1">
         <bpmn:extensionElements>
@@ -74,12 +74,12 @@ const valid = [
   },
   {
     name: 'task (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
   },
   {
     name: 'business rule task (called decision) (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess(`
       <bpmn:businessRuleTask id="BusinessRuleTask_1">
         <bpmn:extensionElements>
@@ -90,7 +90,7 @@ const valid = [
   },
   {
     name: 'business rule task (task definition) (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess(`
       <bpmn:businessRuleTask id="BusinessRuleTask_1">
         <bpmn:extensionElements>
@@ -104,7 +104,7 @@ const valid = [
 const invalid = [
   {
     name: 'service task (no task definition) (Camunda Cloud 1.0)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud10,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud10,
     moddleElement: createModdle(createProcess('<bpmn:serviceTask id="ServiceTask_1" />')),
     report: {
       id: 'ServiceTask_1',
@@ -120,7 +120,7 @@ const invalid = [
   },
   {
     name: 'service task (no task definition type) (Camunda Cloud 1.0)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud10,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud10,
     moddleElement: createModdle(createProcess(`
         <bpmn:serviceTask id="ServiceTask_1">
           <bpmn:extensionElements>
@@ -147,7 +147,7 @@ const invalid = [
   },
   {
     name: 'business rule task (no task definition) (Camunda Cloud 1.1)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud11,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud11,
     moddleElement: createModdle(createProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
     report: {
       id: 'BusinessRuleTask_1',
@@ -163,7 +163,7 @@ const invalid = [
   },
   {
     name: 'business rule task (no task definition type) (Camunda Cloud 1.1)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud11,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud11,
     moddleElement: createModdle(createProcess(`
         <bpmn:businessRuleTask id="BusinessRuleTask_1">
           <bpmn:extensionElements>
@@ -190,7 +190,7 @@ const invalid = [
   },
   {
     name: 'business rule task (called decision) (Camunda Cloud 1.1)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud11,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud11,
     moddleElement: createModdle(createProcess(`
         <bpmn:businessRuleTask id="BusinessRuleTask_1">
           <bpmn:extensionElements>
@@ -216,7 +216,7 @@ const invalid = [
   },
   {
     name: 'intermediate throw event (no task definition) (Camunda Cloud 1.2)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud12,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud12,
     moddleElement: createModdle(createProcess(`
       <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1">
         <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
@@ -236,7 +236,7 @@ const invalid = [
   },
   {
     name: 'intermediate throw event (no task definition type) (Camunda Cloud 1.2)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud12,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud12,
     moddleElement: createModdle(createProcess(`
         <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1">
           <bpmn:extensionElements>
@@ -264,7 +264,7 @@ const invalid = [
   },
   {
     name: 'service task (no task definition) (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess('<bpmn:serviceTask id="ServiceTask_1" />')),
     report: {
       id: 'ServiceTask_1',
@@ -280,7 +280,7 @@ const invalid = [
   },
   {
     name: 'service task (no task definition type) (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess(`
         <bpmn:serviceTask id="ServiceTask_1">
           <bpmn:extensionElements>
@@ -307,7 +307,7 @@ const invalid = [
   },
   {
     name: 'business rule task (no called decision or task definition) (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
     report: {
       id: 'BusinessRuleTask_1',
@@ -327,7 +327,7 @@ const invalid = [
   },
   {
     name: 'business rule task (called decision and task definition) (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess(`
       <bpmn:businessRuleTask id="BusinessRuleTask_1">
         <bpmn:extensionElements>
@@ -354,7 +354,7 @@ const invalid = [
   },
   {
     name: 'business rule task (no called decision ID) (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess(`
       <bpmn:businessRuleTask id="BusinessRuleTask_1">
         <bpmn:extensionElements>
@@ -381,7 +381,7 @@ const invalid = [
   },
   {
     name: 'business rule task (no called decision result variable) (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess(`
       <bpmn:businessRuleTask id="BusinessRuleTask_1">
         <bpmn:extensionElements>
@@ -408,7 +408,7 @@ const invalid = [
   },
   {
     name: 'business rule task (no task definition type) (Camunda Cloud 1.3)',
-    config: hasCalledDecisionOrTaskDefinitionConfig.camundaCloud13,
+    config: calledDecisionOrTaskDefinitionConfig.camundaCloud13,
     moddleElement: createModdle(createProcess(`
       <bpmn:businessRuleTask id="BusinessRuleTask_1">
         <bpmn:extensionElements>
@@ -435,7 +435,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('has-called-decision-or-task-definition', rule, {
+RuleTester.verify('called-decision-or-task-definition', rule, {
   valid,
   invalid
 });

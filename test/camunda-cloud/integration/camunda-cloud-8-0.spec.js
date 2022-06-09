@@ -156,26 +156,26 @@ describe('integration - camunda-cloud-8-0', function() {
       // then
       expect(reports).not.to.be.empty;
 
-      expect(reports[ 'camunda-compat/has-called-decision-or-task-definition' ]).to.exist;
-      expect(reports[ 'camunda-compat/has-called-decision-or-task-definition' ]).to.have.length(3);
+      expect(reports[ 'camunda-compat/called-decision-or-task-definition' ]).to.exist;
+      expect(reports[ 'camunda-compat/called-decision-or-task-definition' ]).to.have.length(3);
 
-      expect(reports[ 'camunda-compat/has-called-element' ]).to.exist;
-      expect(reports[ 'camunda-compat/has-called-element' ]).to.have.length(1);
+      expect(reports[ 'camunda-compat/called-element' ]).to.exist;
+      expect(reports[ 'camunda-compat/called-element' ]).to.have.length(1);
 
-      expect(reports[ 'camunda-compat/has-error-reference' ]).to.exist;
-      expect(reports[ 'camunda-compat/has-error-reference' ]).to.have.length(1);
+      expect(reports[ 'camunda-compat/element-type' ]).to.exist;
+      expect(reports[ 'camunda-compat/element-type' ]).to.have.length(1);
 
-      expect(reports[ 'camunda-compat/has-loop-characteristics' ]).to.exist;
-      expect(reports[ 'camunda-compat/has-loop-characteristics' ]).to.have.length(1);
+      expect(reports[ 'camunda-compat/error-reference' ]).to.exist;
+      expect(reports[ 'camunda-compat/error-reference' ]).to.have.length(1);
 
-      expect(reports[ 'camunda-compat/has-message-reference' ]).to.exist;
-      expect(reports[ 'camunda-compat/has-message-reference' ]).to.have.length(2);
+      expect(reports[ 'camunda-compat/loop-characteristics' ]).to.exist;
+      expect(reports[ 'camunda-compat/loop-characteristics' ]).to.have.length(1);
 
-      expect(reports[ 'camunda-compat/has-subscription' ]).to.exist;
-      expect(reports[ 'camunda-compat/has-subscription' ]).to.have.length(1);
+      expect(reports[ 'camunda-compat/message-reference' ]).to.exist;
+      expect(reports[ 'camunda-compat/message-reference' ]).to.have.length(2);
 
-      expect(reports[ 'camunda-compat/is-element' ]).to.exist;
-      expect(reports[ 'camunda-compat/is-element' ]).to.have.length(1);
+      expect(reports[ 'camunda-compat/subscription' ]).to.exist;
+      expect(reports[ 'camunda-compat/subscription' ]).to.have.length(1);
     });
 
   });

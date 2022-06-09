@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/has-no-template');
+const rule = require('../../rules/no-template');
 
 const {
   createModdle,
@@ -59,7 +59,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('has-no-template', rule, {
+RuleTester.verify('no-template', rule, {
   valid,
   invalid
 });

@@ -1,8 +1,8 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/is-element');
+const rule = require('../../rules/element-type');
 
-const isElementConfig = require('../../rules/is-element/config');
+const elementTypeConfig = require('../../rules/element-type/config');
 
 const {
   addConfig,
@@ -280,7 +280,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('camunda-cloud-1-0-elements', rule, {
-  valid: addConfig(valid, isElementConfig.camundaCloud10),
-  invalid: addConfig(invalid, isElementConfig.camundaCloud10)
+RuleTester.verify('camunda-cloud-1-0-element-type', rule, {
+  valid: addConfig(valid, elementTypeConfig.camundaCloud10),
+  invalid: addConfig(invalid, elementTypeConfig.camundaCloud10)
 });

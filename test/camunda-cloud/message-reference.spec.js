@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/has-message-reference');
+const rule = require('../../rules/message-reference');
 
 const {
   createDefinitions,
@@ -144,7 +144,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('has-message-reference', rule, {
+RuleTester.verify('message-reference', rule, {
   valid,
   invalid
 });
