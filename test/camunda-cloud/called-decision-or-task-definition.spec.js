@@ -109,7 +109,7 @@ const invalid = [
     report: {
       id: 'ServiceTask_1',
       message: 'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>',
-      path: null,
+      path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'ServiceTask_1',
@@ -152,7 +152,7 @@ const invalid = [
     report: {
       id: 'BusinessRuleTask_1',
       message: 'Element of type <bpmn:BusinessRuleTask> must have extension element of type <zeebe:TaskDefinition>',
-      path: null,
+      path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'BusinessRuleTask_1',
@@ -225,7 +225,7 @@ const invalid = [
     report: {
       id: 'IntermediateThrowEvent_1',
       message: 'Element of type <bpmn:IntermediateThrowEvent> must have extension element of type <zeebe:TaskDefinition>',
-      path: null,
+      path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'IntermediateThrowEvent_1',
@@ -269,7 +269,7 @@ const invalid = [
     report: {
       id: 'ServiceTask_1',
       message: 'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>',
-      path: null,
+      path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'ServiceTask_1',
@@ -312,7 +312,7 @@ const invalid = [
     report: {
       id: 'BusinessRuleTask_1',
       message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
-      path: null,
+      path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'BusinessRuleTask_1',
@@ -339,7 +339,7 @@ const invalid = [
     report: {
       id: 'BusinessRuleTask_1',
       message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
-      path: null,
+      path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'BusinessRuleTask_1',

@@ -33,7 +33,7 @@ const invalid = [
     report: {
       id: 'CallActivity_1',
       message: 'Element of type <bpmn:CallActivity> must have extension element of type <zeebe:CalledElement>',
-      path: null,
+      path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'CallActivity_1',

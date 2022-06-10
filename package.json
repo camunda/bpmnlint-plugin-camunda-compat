@@ -35,7 +35,7 @@
     "zeebe-bpmn-moddle": "^0.12.1"
   },
   "dependencies": {
-    "@philippfromme/moddle-helpers": "^0.1.0",
+    "@bpmn-io/moddle-utils": "^0.1.0",
     "bpmnlint-utils": "^1.0.2",
     "min-dash": "^3.8.0"
   },

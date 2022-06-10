@@ -3,7 +3,7 @@ const {
   isAny
 } = require('bpmnlint-utils');
 
-const { getPath } = require('@philippfromme/moddle-helpers');
+const { getPath } = require('@bpmn-io/moddle-utils');
 
 const {
   findExtensionElement,
