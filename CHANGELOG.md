@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.9.1
+
+* `FIX`: add name to reports ([#38](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/38))
+
 ## 0.9.0
 
 * `FEAT`: add user task forms rule ([#32](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/32))
