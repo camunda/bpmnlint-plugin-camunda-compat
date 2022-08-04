@@ -1,6 +1,7 @@
 const {
   isArray,
   isDefined,
+  isNil,
   some
 } = require('min-dash');
 
@@ -147,7 +148,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       ];
     }
 
-    if (propertyChecks.allowed === false && isDefined(propertyValue)) {
+    if (propertyChecks.allowed === false && isDefined(propertyValue) && !isNil(propertyValue)) {
       return [
         ...results,
         {
