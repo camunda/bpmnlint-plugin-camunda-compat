@@ -456,10 +456,29 @@ describe('utils/element', function() {
 
     describe('allowed', function() {
 
-      it('should not return errors', function() {
+      it('should not return errors (undefined)', function() {
 
         // given
         const serviceTask = createElement('bpmn:ServiceTask');
+
+        // when
+        const errors = hasProperties(serviceTask, {
+          modelerTemplate: {
+            allowed: false
+          }
+        });
+
+        // then
+        expect(errors).to.be.empty;
+      });
+
+
+      it('should not return errors (null)', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask', {
+          modelerTemplate: null
+        });
 
         // when
         const errors = hasProperties(serviceTask, {

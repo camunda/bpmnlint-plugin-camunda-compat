@@ -99,7 +99,7 @@ function createElement(type, properties) {
   };
 
   const setParent = (property) => {
-    if (property.$type) {
+    if (property && property.$type) {
       const childModdleElement = property;
 
       childModdleElement.$parent = moddleElement;
