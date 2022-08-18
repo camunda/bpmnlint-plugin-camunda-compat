@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const {
   ERROR_TYPES,
   formatTypes,
+  hasDuplicatedPropertyValues,
   hasExtensionElementOfType,
   hasExtensionElementsOfTypes,
   hasProperties,
@@ -281,6 +282,138 @@ describe('utils/element', function() {
           }
         }
       ]);
+    });
+
+  });
+
+
+  describe('#hasDuplicatedPropertyValues', function() {
+
+    it('should not return errors', function() {
+
+      // given
+      const taskHeaders = createElement('zeebe:TaskHeaders', {
+        values: [
+          createElement('zeebe:Header', {
+            key: 'foo'
+          }),
+          createElement('zeebe:Header', {
+            key: 'bar'
+          }),
+          createElement('zeebe:Header', {
+            key: 'baz'
+          })
+        ]
+      });
+
+      // when
+      const errors = hasDuplicatedPropertyValues(taskHeaders, 'values', 'key');
+
+      // then
+      expect(errors).to.be.empty;
+    });
+
+
+    it('should return error', function() {
+
+      // given
+      const taskHeaders = createElement('zeebe:TaskHeaders', {
+        values: [
+          createElement('zeebe:Header', {
+            key: 'foo'
+          }),
+          createElement('zeebe:Header', {
+            key: 'foo'
+          }),
+          createElement('zeebe:Header', {
+            key: 'bar'
+          }),
+          createElement('zeebe:Header', {
+            key: 'baz'
+          })
+        ]
+      });
+
+      // when
+      const errors = hasDuplicatedPropertyValues(taskHeaders, 'values', 'key');
+
+      // then
+      expect(errors).to.exist;
+      expect(errors).to.have.length(1);
+
+      expect(errors[ 0 ]).eql({
+        message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
+        path: null,
+        error: {
+          type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+          node: taskHeaders,
+          parentNode: null,
+          duplicatedProperty: 'key',
+          duplicatedPropertyValue: 'foo',
+          properties: taskHeaders.get('values').filter(header => header.get('key') === 'foo'),
+          propertiesName: 'values'
+        }
+      });
+    });
+
+
+    it('should return errors', function() {
+
+      // given
+      const taskHeaders = createElement('zeebe:TaskHeaders', {
+        values: [
+          createElement('zeebe:Header', {
+            key: 'foo'
+          }),
+          createElement('zeebe:Header', {
+            key: 'foo'
+          }),
+          createElement('zeebe:Header', {
+            key: 'bar'
+          }),
+          createElement('zeebe:Header', {
+            key: 'bar'
+          }),
+          createElement('zeebe:Header', {
+            key: 'baz'
+          })
+        ]
+      });
+
+      // when
+      const errors = hasDuplicatedPropertyValues(taskHeaders, 'values', 'key');
+
+      // then
+      expect(errors).to.exist;
+      expect(errors).to.have.length(2);
+
+      expect(errors[ 0 ]).eql({
+        message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
+        path: null,
+        error: {
+          type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+          node: taskHeaders,
+          parentNode: null,
+          duplicatedProperty: 'key',
+          duplicatedPropertyValue: 'foo',
+          properties: taskHeaders.get('values').filter(header => header.get('key') === 'foo'),
+          propertiesName: 'values'
+        }
+      });
+
+      expect(errors[ 1 ]).eql({
+        message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <bar>',
+        path: null,
+        error: {
+          type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+          node: taskHeaders,
+          parentNode: null,
+          duplicatedProperty: 'key',
+          duplicatedPropertyValue: 'bar',
+          properties: taskHeaders.get('values').filter(header => header.get('key') === 'bar'),
+          propertiesName: 'values'
+        }
+      });
     });
 
   });

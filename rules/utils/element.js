@@ -72,6 +72,50 @@ function formatTypes(types, exclusive = false) {
 
 module.exports.formatTypes = formatTypes;
 
+module.exports.hasDuplicatedPropertyValues = function(node, propertiesName, propertyName, parentNode = null) {
+  const properties = node.get(propertiesName);
+
+  const propertyValues = properties.map(property => property.get(propertyName));
+
+  // (1) find duplicates
+  const duplicates = propertyValues.reduce((duplicates, propertyValue, index) => {
+    if (propertyValues.indexOf(propertyValue) !== index && !duplicates.includes(propertyValue)) {
+      return [
+        ...duplicates,
+        propertyValue
+      ];
+    }
+
+    return duplicates;
+  }, []);
+
+  // (2) report error for each duplicate
+  if (duplicates.length) {
+    return duplicates.map(duplicate => {
+
+      // (3) find properties with duplicate
+      const duplicateProperties = properties.filter(property => property.get(propertyName) === duplicate);
+
+      // (4) report error
+      return {
+        message: `Properties of type <${ duplicateProperties[ 0 ].$type }> have property <${ propertyName }> with duplicate value of <${ duplicate }>`,
+        path: null,
+        error: {
+          type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+          node,
+          parentNode: parentNode == node ? null : parentNode,
+          duplicatedProperty: propertyName,
+          duplicatedPropertyValue: duplicate,
+          properties: duplicateProperties,
+          propertiesName
+        }
+      };
+    });
+  }
+
+  return [];
+};
+
 module.exports.hasProperties = function(node, properties, parentNode = null) {
   return Object.entries(properties).reduce((results, property) => {
     const [ propertyName, propertyChecks ] = property;

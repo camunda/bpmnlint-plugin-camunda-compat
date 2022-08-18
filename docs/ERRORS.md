@@ -345,3 +345,48 @@ const ERROR_TYPES = {
   }
 }
 ```
+
+## ❌ Property Value Duplicated Error
+
+### Type Definition
+
+```js
+/**
+ * @typedef PropertyValueDuplicatedError
+ *
+ * @type {Object}
+ *
+ * @property {string} id
+ * @property {(number|string)[]|null} path
+ * @property {Object} error
+ * @property {ERROR_TYPES} error.type
+ * @property {import('moddle/lib/base')} error.node
+ * @property {import('moddle/lib/base')|null} error.parentNode
+ * @property {string} error.duplicatedProperty
+ * @property {string} error.duplicatedPropertyValue
+ * @property {import('moddle/lib/base')[]} error.properties
+ * @property {string} error.propertiesName
+ */
+```
+
+### Example
+
+```js
+{
+  id: 'ServiceTask_1',
+  message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
+  path: null,
+  error: {
+    type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+    node: Base { $type: 'zeebe:TaskHeaders', ... },
+    parentNode: Base { $type: 'zeebe:ServiceTask', ... },
+    duplicatedProperty: 'key',
+    duplicatedPropertyValue: 'foo',
+    properties: [
+      Base { $type: 'zeebe:Header', ... },
+      Base { $type: 'zeebe:Header', ... }
+    ],
+    propertiesName: 'values'
+  }
+}
+```

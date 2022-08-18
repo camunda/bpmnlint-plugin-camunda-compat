@@ -5,5 +5,6 @@ module.exports.ERROR_TYPES = Object.freeze({
   PROPERTY_DEPENDEND_REQUIRED: 'propertyDependendRequired',
   PROPERTY_NOT_ALLOWED: 'propertyNotAllowed',
   PROPERTY_REQUIRED: 'propertyRequired',
-  PROPERTY_TYPE_NOT_ALLOWED: 'propertyTypeNotAllowed'
+  PROPERTY_TYPE_NOT_ALLOWED: 'propertyTypeNotAllowed',
+  PROPERTY_VALUE_DUPLICATED: 'propertyValueDuplicated'
 });
