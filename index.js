@@ -7,6 +7,7 @@ module.exports = {
       rules: {
         'called-decision-or-task-definition': [ 'error', calledDecisionOrTaskDefinitionConfig.camundaCloud10 ],
         'called-element': 'error',
+        'duplicate-task-headers': 'error',
         'element-type': [ 'error', elementTypeConfig.camundaCloud10 ],
         'error-reference': 'error',
         'loop-characteristics': 'error',
@@ -20,6 +21,7 @@ module.exports = {
       rules: {
         'called-decision-or-task-definition': [ 'error', calledDecisionOrTaskDefinitionConfig.camundaCloud11 ],
         'called-element': 'error',
+        'duplicate-task-headers': 'error',
         'element-type': [ 'error', elementTypeConfig.camundaCloud11 ],
         'error-reference': 'error',
         'loop-characteristics': 'error',
@@ -33,6 +35,7 @@ module.exports = {
       rules: {
         'called-decision-or-task-definition': [ 'error', calledDecisionOrTaskDefinitionConfig.camundaCloud12 ],
         'called-element': 'error',
+        'duplicate-task-headers': 'error',
         'element-type': [ 'error', elementTypeConfig.camundaCloud12 ],
         'error-reference': 'error',
         'loop-characteristics': 'error',
@@ -46,6 +49,7 @@ module.exports = {
       rules: {
         'called-decision-or-task-definition': [ 'error', calledDecisionOrTaskDefinitionConfig.camundaCloud13 ],
         'called-element': 'error',
+        'duplicate-task-headers': 'error',
         'element-type': [ 'error', elementTypeConfig.camundaCloud12 ],
         'error-reference': 'error',
         'loop-characteristics': 'error',
@@ -59,6 +63,7 @@ module.exports = {
       rules: {
         'called-decision-or-task-definition': [ 'error', calledDecisionOrTaskDefinitionConfig.camundaCloud13 ],
         'called-element': 'error',
+        'duplicate-task-headers': 'error',
         'element-type': [ 'error', elementTypeConfig.camundaCloud12 ],
         'error-reference': 'error',
         'loop-characteristics': 'error',

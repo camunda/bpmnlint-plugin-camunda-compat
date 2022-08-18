@@ -56,6 +56,8 @@ module.exports = function() {
   };
 };
 
+// helpers //////////
+
 function findUserTaskForm(node, formKey) {
   const process = findParent(node, 'bpmn:Process');
 

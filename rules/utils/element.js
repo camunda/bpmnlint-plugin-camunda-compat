@@ -5,7 +5,10 @@ const {
   some
 } = require('min-dash');
 
-const { isAny } = require('bpmnlint-utils');
+const {
+  is,
+  isAny
+} = require('bpmnlint-utils');
 
 const { getPath } = require('@bpmn-io/moddle-utils');
 
@@ -13,12 +16,22 @@ const { ERROR_TYPES } = require('./error-types');
 
 module.exports.ERROR_TYPES = ERROR_TYPES;
 
-module.exports.getEventDefinition = function(node) {
+function getEventDefinition(node) {
   const eventDefinitions = node.get('eventDefinitions');
 
   if (eventDefinitions) {
     return eventDefinitions[ 0 ];
   }
+}
+
+module.exports.getEventDefinition = getEventDefinition;
+
+module.exports.getMessageEventDefinition = function(node) {
+  if (is(node, 'bpmn:ReceiveTask')) {
+    return node;
+  }
+
+  return getEventDefinition(node);
 };
 
 function findExtensionElements(node, types) {

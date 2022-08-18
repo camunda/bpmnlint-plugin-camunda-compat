@@ -7,6 +7,7 @@ describe('configs', function() {
   it('camunda-cloud-1-0', expectRules(configs, 'camunda-cloud-1-0', {
     'called-decision-or-task-definition': 'error',
     'called-element': 'error',
+    'duplicate-task-headers': 'error',
     'element-type': 'error',
     'error-reference': 'error',
     'loop-characteristics': 'error',
@@ -20,6 +21,7 @@ describe('configs', function() {
   it('camunda-cloud-1-1', expectRules(configs, 'camunda-cloud-1-1', {
     'called-decision-or-task-definition': 'error',
     'called-element': 'error',
+    'duplicate-task-headers': 'error',
     'element-type': 'error',
     'error-reference': 'error',
     'loop-characteristics': 'error',
@@ -33,6 +35,7 @@ describe('configs', function() {
   it('camunda-cloud-1-2', expectRules(configs, 'camunda-cloud-1-2', {
     'called-decision-or-task-definition': 'error',
     'called-element': 'error',
+    'duplicate-task-headers': 'error',
     'element-type': 'error',
     'error-reference': 'error',
     'loop-characteristics': 'error',
@@ -46,6 +49,7 @@ describe('configs', function() {
   it('camunda-cloud-1-3', expectRules(configs, 'camunda-cloud-1-3', {
     'called-decision-or-task-definition': 'error',
     'called-element': 'error',
+    'duplicate-task-headers': 'error',
     'element-type': 'error',
     'error-reference': 'error',
     'loop-characteristics': 'error',
@@ -59,6 +63,7 @@ describe('configs', function() {
   it('camunda-cloud-8-0', expectRules(configs, 'camunda-cloud-8-0', {
     'called-decision-or-task-definition': 'error',
     'called-element': 'error',
+    'duplicate-task-headers': 'error',
     'element-type': 'error',
     'error-reference': 'error',
     'loop-characteristics': 'error',
