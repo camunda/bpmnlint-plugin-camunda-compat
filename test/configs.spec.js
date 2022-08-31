@@ -77,6 +77,19 @@ describe('configs', function() {
     'user-task-form': 'error'
   }));
 
+
+  it('camunda-cloud-8-1', expectRules(configs, 'camunda-cloud-8-1', {
+    'called-decision-or-task-definition': 'error',
+    'called-element': 'error',
+    'duplicate-task-headers': 'error',
+    'element-type': 'error',
+    'error-reference': 'error',
+    'loop-characteristics': 'error',
+    'message-reference': 'error',
+    'subscription': 'error',
+    'user-task-form': 'error'
+  }));
+
 });
 
 function expectRules(configs, name, rules) {

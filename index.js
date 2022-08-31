@@ -76,6 +76,19 @@ module.exports = {
         'subscription': 'error',
         'user-task-form': 'error'
       }
+    },
+    'camunda-cloud-8-1': {
+      rules: {
+        'called-decision-or-task-definition': [ 'error', calledDecisionOrTaskDefinitionConfig.camundaCloud13 ],
+        'called-element': 'error',
+        'duplicate-task-headers': 'error',
+        'element-type': [ 'error', elementTypeConfig.camundaCloud12 ],
+        'error-reference': 'error',
+        'loop-characteristics': 'error',
+        'message-reference': 'error',
+        'subscription': 'error',
+        'user-task-form': 'error'
+      }
     }
   }
 };
