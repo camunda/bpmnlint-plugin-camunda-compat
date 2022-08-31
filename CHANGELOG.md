@@ -6,10 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: add `zeebe:Properties` rule ([#43](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/43))
+
 ## 0.10.0
 
 * `FEAT`: add duplicate task headers rule ([#41](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/41))
-
 
 ## 0.9.2
 
