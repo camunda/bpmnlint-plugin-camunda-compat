@@ -13,6 +13,7 @@ describe('configs', function() {
     'loop-characteristics': 'error',
     'message-reference': 'error',
     'no-template': 'error',
+    'no-zeebe-properties': 'error',
     'subscription': 'error',
     'user-task-form': 'error'
   }));
@@ -27,6 +28,7 @@ describe('configs', function() {
     'loop-characteristics': 'error',
     'message-reference': 'error',
     'no-template': 'error',
+    'no-zeebe-properties': 'error',
     'subscription': 'error',
     'user-task-form': 'error'
   }));
@@ -41,6 +43,7 @@ describe('configs', function() {
     'loop-characteristics': 'error',
     'message-reference': 'error',
     'no-template': 'error',
+    'no-zeebe-properties': 'error',
     'subscription': 'error',
     'user-task-form': 'error'
   }));
@@ -55,6 +58,7 @@ describe('configs', function() {
     'loop-characteristics': 'error',
     'message-reference': 'error',
     'no-template': 'error',
+    'no-zeebe-properties': 'error',
     'subscription': 'error',
     'user-task-form': 'error'
   }));
@@ -68,6 +72,7 @@ describe('configs', function() {
     'error-reference': 'error',
     'loop-characteristics': 'error',
     'message-reference': 'error',
+    'no-zeebe-properties': 'error',
     'subscription': 'error',
     'user-task-form': 'error'
   }));
