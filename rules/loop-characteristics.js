@@ -3,7 +3,7 @@ const { is } = require('bpmnlint-utils');
 const {
   findExtensionElement,
   hasProperties,
-  hasExtensionElementOfType
+  hasExtensionElement
 } = require('./utils/element');
 
 const { reportErrors } = require('./utils/reporter');
@@ -32,7 +32,7 @@ module.exports = function() {
       return;
     }
 
-    errors = hasExtensionElementOfType(loopCharacteristics, 'zeebe:LoopCharacteristics', node);
+    errors = hasExtensionElement(loopCharacteristics, 'zeebe:LoopCharacteristics', node);
 
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);

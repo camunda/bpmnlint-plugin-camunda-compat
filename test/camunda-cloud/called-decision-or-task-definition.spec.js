@@ -108,7 +108,7 @@ const invalid = [
     moddleElement: createModdle(createProcess('<bpmn:serviceTask id="ServiceTask_1" />')),
     report: {
       id: 'ServiceTask_1',
-      message: 'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>',
+      message: 'Element of type <bpmn:ServiceTask> must have one extension element of type <zeebe:TaskDefinition>',
       path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -151,7 +151,7 @@ const invalid = [
     moddleElement: createModdle(createProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />')),
     report: {
       id: 'BusinessRuleTask_1',
-      message: 'Element of type <bpmn:BusinessRuleTask> must have extension element of type <zeebe:TaskDefinition>',
+      message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:TaskDefinition>',
       path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -224,7 +224,7 @@ const invalid = [
     `)),
     report: {
       id: 'IntermediateThrowEvent_1',
-      message: 'Element of type <bpmn:IntermediateThrowEvent> must have extension element of type <zeebe:TaskDefinition>',
+      message: 'Element of type <bpmn:IntermediateThrowEvent> must have one extension element of type <zeebe:TaskDefinition>',
       path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -268,7 +268,7 @@ const invalid = [
     moddleElement: createModdle(createProcess('<bpmn:serviceTask id="ServiceTask_1" />')),
     report: {
       id: 'ServiceTask_1',
-      message: 'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>',
+      message: 'Element of type <bpmn:ServiceTask> must have one extension element of type <zeebe:TaskDefinition>',
       path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
@@ -320,8 +320,7 @@ const invalid = [
         requiredExtensionElement: [
           'zeebe:CalledDecision',
           'zeebe:TaskDefinition'
-        ],
-        exclusive: true
+        ]
       }
     }
   },
@@ -347,8 +346,7 @@ const invalid = [
         requiredExtensionElement: [
           'zeebe:CalledDecision',
           'zeebe:TaskDefinition'
-        ],
-        exclusive: true
+        ]
       }
     }
   },

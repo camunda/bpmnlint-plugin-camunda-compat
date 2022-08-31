@@ -190,7 +190,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       return [
         ...results,
         {
-          message: `Property <${ propertyName }> of type <${ propertyValue.$type }> not allowed`,
+          message: `Element of type <${ node.$type }> must not have property <${ propertyName }> of type <${ propertyValue.$type }>`,
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
@@ -209,7 +209,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       return [
         ...results,
         {
-          message: `Property <${ propertyName }> not allowed`,
+          message: `Element of type <${ node.$type }> must not have property <${ propertyName }>`,
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
@@ -227,38 +227,21 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
   }, []);
 };
 
-module.exports.hasExtensionElementsOfTypes = function(node, types, parentNode = null, exclusive = false) {
-  const extensionElements = findExtensionElements(node, types);
+module.exports.hasExtensionElement = function(node, types, parentNode = null) {
+  const typesArray = isArray(types) ? types : [ types ];
 
-  if (!extensionElements || !extensionElements.length) {
+  const extensionElements = findExtensionElements(node, typesArray);
+
+  if (!extensionElements || extensionElements.length !== 1) {
     return [
       {
-        message: exclusive
-          ? `Element of type <${ node.$type }> must have one extension element of type ${ formatTypes(types, true) }`
-          : `Element of type <${ node.$type }> must have one or many extension elements of type ${ formatTypes(types, true) }`,
+        message: `Element of type <${ node.$type }> must have one extension element of type ${ formatTypes(typesArray, true) }`,
         path: getPath(node, parentNode),
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
           node,
           parentNode: parentNode == node ? null : parentNode,
-          requiredExtensionElement: types,
-          exclusive
-        }
-      }
-    ];
-  }
-
-  if (exclusive && extensionElements.length > 1) {
-    return [
-      {
-        message: `Element of type <${ node.$type }> must have one extension element of type ${ formatTypes(types, true) }`,
-        path: getPath(node, parentNode),
-        error: {
-          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
-          node,
-          parentNode: parentNode == node ? null : parentNode,
-          requiredExtensionElement: types,
-          exclusive
+          requiredExtensionElement: types
         }
       }
     ];
@@ -267,19 +250,19 @@ module.exports.hasExtensionElementsOfTypes = function(node, types, parentNode = 
   return [];
 };
 
-module.exports.hasExtensionElementOfType = function(node, type, parentNode = null) {
+module.exports.hasNoExtensionElement = function(node, type, parentNode = null) {
   const extensionElement = findExtensionElement(node, type);
 
-  if (!extensionElement) {
+  if (extensionElement) {
     return [
       {
-        message: `Element of type <${ node.$type }> must have extension element of type <${ type }>`,
-        path: getPath(node, parentNode),
+        message: `Element of type <${ node.$type }> must not have extension element of type <${ type }>`,
+        path: getPath(extensionElement, parentNode),
         error: {
-          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
           node,
           parentNode: parentNode == node ? null : parentNode,
-          requiredExtensionElement: type
+          extensionElement
         }
       }
     ];

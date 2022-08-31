@@ -38,7 +38,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Property <loopCharacteristics> of type <bpmn:StandardLoopCharacteristics> not allowed',
+      message: 'Element of type <bpmn:ServiceTask> must not have property <loopCharacteristics> of type <bpmn:StandardLoopCharacteristics>',
       path: [
         'loopCharacteristics'
       ],
@@ -60,7 +60,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have extension element of type <zeebe:LoopCharacteristics>',
+      message: 'Element of type <bpmn:MultiInstanceLoopCharacteristics> must have one extension element of type <zeebe:LoopCharacteristics>',
       path: [
         'loopCharacteristics'
       ],

@@ -85,7 +85,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>',
+      message: 'Element of type <bpmn:Message> must have one extension element of type <zeebe:Subscription>',
       path: [
         'rootElements',
         1
@@ -143,7 +143,7 @@ const invalid = [
     `)),
     report: {
       id: 'ReceiveTask_1',
-      message: 'Element of type <bpmn:Message> must have extension element of type <zeebe:Subscription>',
+      message: 'Element of type <bpmn:Message> must have one extension element of type <zeebe:Subscription>',
       path: [
         'rootElements',
         1

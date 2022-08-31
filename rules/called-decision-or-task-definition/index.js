@@ -8,9 +8,8 @@ const { getPath } = require('@bpmn-io/moddle-utils');
 const {
   findExtensionElement,
   getEventDefinition,
-  hasProperties,
-  hasExtensionElementOfType,
-  hasExtensionElementsOfTypes
+  hasExtensionElement,
+  hasProperties
 } = require('../utils/element');
 
 const { reportErrors } = require('../utils/reporter');
@@ -99,14 +98,14 @@ module.exports = function(config) {
     }
 
     if (isAny(node, elementsCalledDecision) && isAny(node, elementsTaskDefinition)) {
-      errors = hasExtensionElementsOfTypes(node, [
+      errors = hasExtensionElement(node, [
         'zeebe:CalledDecision',
         'zeebe:TaskDefinition'
-      ], node, true);
+      ], node);
     } else if (isAny(node, elementsCalledDecision)) {
-      errors = hasExtensionElementOfType(node, 'zeebe:CalledDecision', node);
+      errors = hasExtensionElement(node, 'zeebe:CalledDecision', node);
     } else {
-      errors = hasExtensionElementOfType(node, 'zeebe:TaskDefinition', node);
+      errors = hasExtensionElement(node, 'zeebe:TaskDefinition', node);
     }
 
     if (errors && errors.length) {
