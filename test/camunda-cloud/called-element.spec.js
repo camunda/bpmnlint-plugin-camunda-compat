@@ -32,7 +32,7 @@ const invalid = [
     moddleElement: createModdle(createProcess('<bpmn:callActivity id="CallActivity_1" />')),
     report: {
       id: 'CallActivity_1',
-      message: 'Element of type <bpmn:CallActivity> must have extension element of type <zeebe:CalledElement>',
+      message: 'Element of type <bpmn:CallActivity> must have one extension element of type <zeebe:CalledElement>',
       path: [],
       error: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,

@@ -4,8 +4,8 @@ const {
   ERROR_TYPES,
   formatTypes,
   hasDuplicatedPropertyValues,
-  hasExtensionElementOfType,
-  hasExtensionElementsOfTypes,
+  hasExtensionElement,
+  hasNoExtensionElement,
   hasProperties,
   isAnyExactly,
   isExactly
@@ -59,226 +59,255 @@ describe('utils/element', function() {
   });
 
 
-  describe('#hasExtensionElementOfType', function() {
+  describe('#hasExtensionElement', function() {
 
-    it('should not return errors', function() {
+    describe('one type', function() {
 
-      // given
-      const serviceTask = createElement('bpmn:ServiceTask', {
-        extensionElements: createElement('bpmn:ExtensionElements', {
-          values: [
-            createElement('zeebe:TaskDefinition')
-          ]
-        })
+      it('should not return errors', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask', {
+          extensionElements: createElement('bpmn:ExtensionElements', {
+            values: [
+              createElement('zeebe:TaskDefinition')
+            ]
+          })
+        });
+
+        // when
+        const errors = hasExtensionElement(serviceTask, 'zeebe:TaskDefinition');
+
+        // then
+        expect(errors).to.be.empty;
       });
 
-      // when
-      const errors = hasExtensionElementOfType(serviceTask, 'zeebe:TaskDefinition');
 
-      // then
-      expect(errors).to.be.empty;
+      it('should return errors (no extension elements)', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask', {
+          extensionElements: createElement('bpmn:ExtensionElements', {
+            values: []
+          })
+        });
+
+        // when
+        const errors = hasExtensionElement(serviceTask, 'zeebe:TaskDefinition');
+
+        // then
+        expect(errors).to.eql([
+          {
+            message: 'Element of type <bpmn:ServiceTask> must have one extension element of type <zeebe:TaskDefinition>',
+            path: null,
+            error: {
+              type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+              node: serviceTask,
+              parentNode: null,
+              requiredExtensionElement: 'zeebe:TaskDefinition'
+            }
+          }
+        ]);
+      });
+
+
+      it('should return errors (no task definition)', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask');
+
+        // when
+        const errors = hasExtensionElement(serviceTask, 'zeebe:TaskDefinition');
+
+        // then
+        expect(errors).to.eql([
+          {
+            message: 'Element of type <bpmn:ServiceTask> must have one extension element of type <zeebe:TaskDefinition>',
+            path: null,
+            error: {
+              type: 'extensionElementRequired',
+              node: serviceTask,
+              parentNode: null,
+              requiredExtensionElement: 'zeebe:TaskDefinition'
+            }
+          }
+        ]);
+      });
+
     });
 
 
-    it('should return errors (no extension elements)', function() {
+    describe('many types', function() {
 
-      // given
-      const serviceTask = createElement('bpmn:ServiceTask', {
-        extensionElements: createElement('bpmn:ExtensionElements', {
-          values: []
-        })
+      it('should not return errors', function() {
+
+        // given
+        const businessRuleTask = createElement('bpmn:BusinessRuleTask', {
+          extensionElements: createElement('bpmn:ExtensionElements', {
+            values: [
+              createElement('zeebe:TaskDefinition')
+            ]
+          })
+        });
+
+        // when
+        const errors = hasExtensionElement(businessRuleTask, [
+          'zeebe:CalledDecision',
+          'zeebe:TaskDefinition'
+        ]);
+
+        // then
+        expect(errors).to.be.empty;
       });
 
-      // when
-      const errors = hasExtensionElementOfType(serviceTask, 'zeebe:TaskDefinition');
 
-      // then
-      expect(errors).to.eql([
-        {
-          message: 'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>',
-          path: null,
-          error: {
-            type: 'extensionElementRequired',
-            node: serviceTask,
-            parentNode: null,
-            requiredExtensionElement: 'zeebe:TaskDefinition'
+      it('should return errors (no extension elements)', function() {
+
+        // given
+        const businessRuleTask = createElement('bpmn:BusinessRuleTask');
+
+        // when
+        const errors = hasExtensionElement(businessRuleTask, [
+          'zeebe:CalledDecision',
+          'zeebe:TaskDefinition'
+        ]);
+
+        // then
+        expect(errors).to.eql([
+          {
+            message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
+            path: null,
+            error: {
+              type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+              node: businessRuleTask,
+              parentNode: null,
+              requiredExtensionElement: [
+                'zeebe:CalledDecision',
+                'zeebe:TaskDefinition'
+              ]
+            }
           }
-        }
-      ]);
-    });
+        ]);
+      });
 
 
-    it('should return errors (no task definition)', function() {
+      it('should return errors (no task definition)', function() {
 
-      // given
-      const serviceTask = createElement('bpmn:ServiceTask');
+        // given
+        const businessRuleTask = createElement('bpmn:BusinessRuleTask', {
+          extensionElements: createElement('bpmn:ExtensionElements', {
+            values: []
+          })
+        });
 
-      // when
-      const errors = hasExtensionElementOfType(serviceTask, 'zeebe:TaskDefinition');
+        // when
+        const result = hasExtensionElement(businessRuleTask, [
+          'zeebe:CalledDecision',
+          'zeebe:TaskDefinition'
+        ]);
 
-      // then
-      expect(errors).to.eql([
-        {
-          message: 'Element of type <bpmn:ServiceTask> must have extension element of type <zeebe:TaskDefinition>',
-          path: null,
-          error: {
-            type: 'extensionElementRequired',
-            node: serviceTask,
-            parentNode: null,
-            requiredExtensionElement: 'zeebe:TaskDefinition'
+        // then
+        expect(result).to.eql([
+          {
+            message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
+            path: null,
+            error: {
+              type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+              node: businessRuleTask,
+              parentNode: null,
+              requiredExtensionElement: [
+                'zeebe:CalledDecision',
+                'zeebe:TaskDefinition'
+              ]
+            }
           }
-        }
-      ]);
+        ]);
+      });
+
+
+      it('should return errors (called decision and task definition)', function() {
+
+        // given
+        const businessRuleTask = createElement('bpmn:BusinessRuleTask', {
+          extensionElements: createElement('bpmn:ExtensionElements', {
+            values: [
+              createElement('zeebe:CalledDecision'),
+              createElement('zeebe:TaskDefinition')
+            ]
+          })
+        });
+
+        // when
+        const errors = hasExtensionElement(businessRuleTask, [
+          'zeebe:CalledDecision',
+          'zeebe:TaskDefinition'
+        ], null);
+
+        // then
+        expect(errors).to.eql([
+          {
+            message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
+            path: null,
+            error: {
+              type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+              node: businessRuleTask,
+              parentNode: null,
+              requiredExtensionElement: [
+                'zeebe:CalledDecision',
+                'zeebe:TaskDefinition'
+              ]
+            }
+          }
+        ]);
+      });
+
     });
 
   });
 
 
-  describe('#hasExtensionElementsOfTypes', function() {
+  describe('#hasNoExtensionElement', function() {
 
     it('should not return errors', function() {
 
       // given
-      const businessRuleTask = createElement('bpmn:BusinessRuleTask', {
-        extensionElements: createElement('bpmn:ExtensionElements', {
-          values: [
-            createElement('zeebe:TaskDefinition')
-          ]
-        })
-      });
+      const serviceTask = createElement('bpmn:ServiceTask');
 
       // when
-      const errors = hasExtensionElementsOfTypes(businessRuleTask, [
-        'zeebe:CalledDecision',
-        'zeebe:TaskDefinition'
-      ]);
+      const errors = hasNoExtensionElement(serviceTask, 'zeebe:Property');
 
       // then
       expect(errors).to.be.empty;
     });
 
 
-    it('should not return errors (not exclusive)', function() {
+    it('should return errors', function() {
 
       // given
-      const businessRuleTask = createElement('bpmn:BusinessRuleTask', {
+      const serviceTask = createElement('bpmn:ServiceTask', {
         extensionElements: createElement('bpmn:ExtensionElements', {
           values: [
-            createElement('zeebe:CalledDecision'),
-            createElement('zeebe:TaskDefinition')
+            createElement('zeebe:Properties', {
+              properties: [
+                createElement('zeebe:Property')
+              ]
+            })
           ]
         })
       });
 
       // when
-      const errors = hasExtensionElementsOfTypes(businessRuleTask, [
-        'zeebe:CalledDecision',
-        'zeebe:TaskDefinition'
-      ]);
-
-      // then
-      expect(errors).to.be.empty;
-    });
-
-
-    it('should return errors (no extension elements)', function() {
-
-      // given
-      const businessRuleTask = createElement('bpmn:BusinessRuleTask');
-
-      // when
-      const errors = hasExtensionElementsOfTypes(businessRuleTask, [
-        'zeebe:CalledDecision',
-        'zeebe:TaskDefinition'
-      ]);
+      const errors = hasNoExtensionElement(serviceTask, 'zeebe:Properties');
 
       // then
       expect(errors).to.eql([
         {
-          message: 'Element of type <bpmn:BusinessRuleTask> must have one or many extension elements of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
+          message: 'Element of type <bpmn:ServiceTask> must not have extension element of type <zeebe:Properties>',
           path: null,
           error: {
-            type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
-            node: businessRuleTask,
+            type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
+            node: serviceTask,
             parentNode: null,
-            requiredExtensionElement: [
-              'zeebe:CalledDecision',
-              'zeebe:TaskDefinition'
-            ],
-            exclusive: false
-          }
-        }
-      ]);
-    });
-
-
-    it('should return errors (no task definition)', function() {
-
-      // given
-      const businessRuleTask = createElement('bpmn:BusinessRuleTask', {
-        extensionElements: createElement('bpmn:ExtensionElements', {
-          values: []
-        })
-      });
-
-      // when
-      const result = hasExtensionElementsOfTypes(businessRuleTask, [
-        'zeebe:CalledDecision',
-        'zeebe:TaskDefinition'
-      ]);
-
-      // then
-      expect(result).to.eql([
-        {
-          message: 'Element of type <bpmn:BusinessRuleTask> must have one or many extension elements of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
-          path: null,
-          error: {
-            type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
-            node: businessRuleTask,
-            parentNode: null,
-            requiredExtensionElement: [
-              'zeebe:CalledDecision',
-              'zeebe:TaskDefinition'
-            ],
-            exclusive: false
-          }
-        }
-      ]);
-    });
-
-
-    it('should return errors (exlusive)', function() {
-
-      // given
-      const businessRuleTask = createElement('bpmn:BusinessRuleTask', {
-        extensionElements: createElement('bpmn:ExtensionElements', {
-          values: [
-            createElement('zeebe:CalledDecision'),
-            createElement('zeebe:TaskDefinition')
-          ]
-        })
-      });
-
-      // when
-      const errors = hasExtensionElementsOfTypes(businessRuleTask, [
-        'zeebe:CalledDecision',
-        'zeebe:TaskDefinition'
-      ], null, true);
-
-      // then
-      expect(errors).to.eql([
-        {
-          message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
-          path: null,
-          error: {
-            type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
-            node: businessRuleTask,
-            parentNode: null,
-            requiredExtensionElement: [
-              'zeebe:CalledDecision',
-              'zeebe:TaskDefinition'
-            ],
-            exclusive: true
+            extensionElement: serviceTask.get('extensionElements').get('values')[ 0 ]
           }
         }
       ]);
@@ -569,7 +598,7 @@ describe('utils/element', function() {
         // then
         expect(errors).eql([
           {
-            message: 'Property <loopCharacteristics> of type <bpmn:StandardLoopCharacteristics> not allowed',
+            message: 'Element of type <bpmn:ServiceTask> must not have property <loopCharacteristics> of type <bpmn:StandardLoopCharacteristics>',
             path: [
               'loopCharacteristics'
             ],
@@ -642,7 +671,7 @@ describe('utils/element', function() {
         // then
         expect(errors).eql([
           {
-            message: 'Property <modelerTemplate> not allowed',
+            message: 'Element of type <bpmn:ServiceTask> must not have property <modelerTemplate>',
             path: [
               'modelerTemplate'
             ],

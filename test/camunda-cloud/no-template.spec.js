@@ -26,7 +26,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Property <modelerTemplate> not allowed',
+      message: 'Element of type <bpmn:ServiceTask> must not have property <modelerTemplate>',
       path: [
         'modelerTemplate'
       ],
@@ -45,7 +45,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Property <modelerTemplate> not allowed',
+      message: 'Element of type <bpmn:ServiceTask> must not have property <modelerTemplate>',
       path: [
         'modelerTemplate'
       ],

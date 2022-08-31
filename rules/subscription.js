@@ -6,7 +6,7 @@ const {
 const {
   findExtensionElement,
   getEventDefinition,
-  hasExtensionElementOfType,
+  hasExtensionElement,
   hasProperties
 } = require('./utils/element');
 
@@ -37,7 +37,7 @@ module.exports = function() {
       return;
     }
 
-    let errors = hasExtensionElementOfType(messageRef, 'zeebe:Subscription', node);
+    let errors = hasExtensionElement(messageRef, 'zeebe:Subscription', node);
 
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);

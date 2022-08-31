@@ -2,7 +2,7 @@ const { is } = require('bpmnlint-utils');
 
 const {
   findExtensionElement,
-  hasExtensionElementOfType,
+  hasExtensionElement,
   hasProperties
 } = require('./utils/element');
 
@@ -14,7 +14,7 @@ module.exports = function() {
       return;
     }
 
-    let errors = hasExtensionElementOfType(node, 'zeebe:CalledElement', node);
+    let errors = hasExtensionElement(node, 'zeebe:CalledElement', node);
 
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);
