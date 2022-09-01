@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.11.0
+
 * `FEAT`: add `zeebe:Properties` rule ([#43](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/43))
 
 ## 0.10.0
