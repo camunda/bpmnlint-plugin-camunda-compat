@@ -8,7 +8,8 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 0.11.0
 
-* `FEAT`: add `zeebe:Properties` rule ([#43](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/43))
+* `FEAT`: add `no-zeebe-properties` rule ([#43](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/43))
+* `FEAT`: add Camunda Platform 8.1
 
 ## 0.10.0
 
