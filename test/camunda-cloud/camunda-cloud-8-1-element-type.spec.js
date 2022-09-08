@@ -13,14 +13,14 @@ const {
 const { ERROR_TYPES } = require('../../rules/utils/element');
 
 const valid = [
-  ...require('./camunda-cloud-1-0-element-type.spec').valid,
+  ...require('./camunda-cloud-1-2-element-type.spec').valid,
   {
-    name: 'business rule task',
-    moddleElement: createModdle(createProcess('<bpmn:businessRuleTask id="BusinessRuleTask_1" />'))
+    name: 'inclusive gateway',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:inclusiveGateway id="InclusiveGateway_1" />
+    `))
   }
 ];
-
-module.exports.valid = valid;
 
 const invalid = [
   {
@@ -87,24 +87,10 @@ const invalid = [
         parentNode: null
       }
     }
-  },
-  {
-    name: 'inlusive gateway',
-    moddleElement: createModdle(createProcess('<bpmn:inclusiveGateway id="InclusiveGateway_1" />')),
-    report: {
-      id: 'InclusiveGateway_1',
-      message: 'Element of type <bpmn:InclusiveGateway> not allowed',
-      path: null,
-      error: {
-        type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
-        node: 'InclusiveGateway_1',
-        parentNode: null
-      }
-    }
   }
 ];
 
-RuleTester.verify('camunda-cloud-1-1-element-type', rule, {
-  valid: addConfig(valid, elementTypeConfig.camundaCloud11),
-  invalid: addConfig(invalid, elementTypeConfig.camundaCloud11)
+RuleTester.verify('camunda-cloud-8-1-element-type', rule, {
+  valid: addConfig(valid, elementTypeConfig.camundaCloud81),
+  invalid: addConfig(invalid, elementTypeConfig.camundaCloud81)
 });

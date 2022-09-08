@@ -35,6 +35,11 @@ const camundaCloud12Elements = [
   ...camundaCloud11Elements
 ];
 
+const camundaCloud81Elements = [
+  ...camundaCloud12Elements,
+  'bpmn:InclusiveGateway'
+];
+
 const camundaCloud10ElementsNoEventDefinitionRequired = [
   'bpmn:EndEvent',
   'bpmn:StartEvent'
@@ -47,6 +52,10 @@ const camundaCloud11ElementsNoEventDefinitionRequired = [
 
 const camundaCloud12ElementsNoEventDefinitionRequired = [
   ...camundaCloud11ElementsNoEventDefinitionRequired
+];
+
+const camundaCloud81ElementsNoEventDefinitionRequired = [
+  ...camundaCloud12ElementsNoEventDefinitionRequired
 ];
 
 const camundaCloud10EventDefinitions = {
@@ -84,6 +93,10 @@ const camundaCloud12EventDefinitions = {
   ]
 };
 
+const camundaCloud81EventDefinitions = {
+  ...camundaCloud12EventDefinitions
+};
+
 module.exports = {
   camundaCloud10: {
     elements: camundaCloud10Elements,
@@ -99,5 +112,10 @@ module.exports = {
     elements: camundaCloud12Elements,
     elementsNoEventDefinitionRequired: camundaCloud12ElementsNoEventDefinitionRequired,
     eventDefinitions: camundaCloud12EventDefinitions
+  },
+  camundaCloud81: {
+    elements: camundaCloud81Elements,
+    elementsNoEventDefinitionRequired: camundaCloud81ElementsNoEventDefinitionRequired,
+    eventDefinitions: camundaCloud81EventDefinitions
   }
 };

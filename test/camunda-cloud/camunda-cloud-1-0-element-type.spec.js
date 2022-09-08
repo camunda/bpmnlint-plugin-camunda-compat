@@ -277,6 +277,20 @@ const invalid = [
         parentNode: null
       }
     }
+  },
+  {
+    name: 'inlusive gateway',
+    moddleElement: createModdle(createProcess('<bpmn:inclusiveGateway id="InclusiveGateway_1" />')),
+    report: {
+      id: 'InclusiveGateway_1',
+      message: 'Element of type <bpmn:InclusiveGateway> not allowed',
+      path: null,
+      error: {
+        type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+        node: 'InclusiveGateway_1',
+        parentNode: null
+      }
+    }
   }
 ];
 
