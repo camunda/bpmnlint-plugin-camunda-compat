@@ -36,7 +36,11 @@ const camundaCloud13Rules = {
 
 const camundaCloud80Rules = omit(camundaCloud13Rules, 'no-template');
 
-const camundaCloud81Rules = omit(camundaCloud13Rules, 'no-zeebe-properties');
+const camundaCloud81Rules = {
+  ...omit(camundaCloud80Rules, 'no-zeebe-properties'),
+  'element-type': [ 'error', elementTypeConfig.camundaCloud81 ],
+  'inclusive-gateway': 'error'
+};
 
 module.exports = {
   configs: {

@@ -85,7 +85,7 @@ describe('integration - camunda-cloud-1-1', function() {
       expect(reports[ 'camunda-compat/called-element' ]).to.have.length(1);
 
       expect(reports[ 'camunda-compat/element-type' ]).to.exist;
-      expect(reports[ 'camunda-compat/element-type' ]).to.have.length(1);
+      expect(reports[ 'camunda-compat/element-type' ]).to.have.length(2);
 
       expect(reports[ 'camunda-compat/error-reference' ]).to.exist;
       expect(reports[ 'camunda-compat/error-reference' ]).to.have.length(1);
