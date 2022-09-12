@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.12.0
+
+* `FEAT`: add `inclusive-gateway` rule ([#44](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/44))
+
 ## 0.11.0
 
 * `FEAT`: add `no-zeebe-properties` rule ([#43](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/43))
