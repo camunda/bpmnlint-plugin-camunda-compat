@@ -223,9 +223,61 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       ];
     }
 
+    if (propertyChecks.validate && !propertyChecks.validate(propertyValue)) {
+      return [
+        ...results,
+        {
+          message: `Property <${ propertyName }> of element of type <${ node.$type }> has invalid value`,
+          path: path
+            ? [ ...path, propertyName ]
+            : [ propertyName ],
+          error: {
+            type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+            node,
+            parentNode: parentNode == node ? null : parentNode,
+            property: propertyName,
+          }
+        }
+      ];
+    }
+
     return results;
   }, []);
 };
+
+module.exports.hasProperty = function(node, types, parentNode = null) {
+  const typesArray = isArray(types) ? types : [ types ];
+
+  const properties = findProperties(node, typesArray);
+
+  if (properties.length !== 1) {
+    return [
+      {
+        message: `Element of type <${ node.$type }> must have one property of type ${ formatTypes(typesArray, true) }`,
+        path: getPath(node, parentNode),
+        error: {
+          type: ERROR_TYPES.PROPERTY_REQUIRED,
+          node,
+          parentNode: parentNode == node ? null : parentNode,
+          requiredProperty: types
+        }
+      }
+    ];
+  }
+
+  return [];
+};
+
+function findProperties(node, types) {
+  const properties = [];
+  for (const type of types) {
+    if (isDefined(node.get(type))) {
+      properties.push(node.get(type));
+    }
+  }
+
+  return properties;
+}
 
 module.exports.hasExtensionElement = function(node, types, parentNode = null) {
   const typesArray = isArray(types) ? types : [ types ];

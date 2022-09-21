@@ -7,6 +7,7 @@ const {
   hasExtensionElement,
   hasNoExtensionElement,
   hasProperties,
+  hasProperty,
   isAnyExactly,
   isExactly
 } = require('../../rules/utils/element');
@@ -447,6 +448,109 @@ describe('utils/element', function() {
 
   });
 
+  describe('#hasProperty', function() {
+
+    it('should not return errors (single property)', function() {
+
+      // given
+      const timerEventDefition = createElement('bpmn:TimerEventDefinition', {
+        timeCycle: createElement('bpmn:FormalExpression', {})
+      });
+
+      // when
+      const errors = hasProperty(timerEventDefition, 'timeCycle');
+
+      // then
+      expect(errors).to.be.empty;
+    });
+
+
+    it('should not return errors (one property array)', function() {
+
+      // given
+      const timerEventDefition = createElement('bpmn:TimerEventDefinition', {
+        timeCycle: createElement('bpmn:FormalExpression', {})
+      });
+
+      // when
+      const errors = hasProperty(timerEventDefition, [ 'timeCycle' ]);
+
+      // then
+      expect(errors).to.be.empty;
+    });
+
+
+    it('should not return errors (more properties array)', function() {
+
+      // given
+      const timerEventDefition = createElement('bpmn:TimerEventDefinition', {
+        timeCycle: createElement('bpmn:FormalExpression', {})
+      });
+
+      // when
+      const errors = hasProperty(timerEventDefition, [ 'timeCycle', 'timeDuration' ]);
+
+      // then
+      expect(errors).to.be.empty;
+    });
+
+
+    it('should return errors (no properties set)', function() {
+
+      // given
+      const timerEventDefition = createElement('bpmn:TimerEventDefinition', {});
+
+      // when
+      const errors = hasProperty(timerEventDefition, [ 'timeCycle', 'timeDuration' ]);
+
+      // then
+      expect(errors).to.eql([
+        {
+          message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle> or <timeDuration>',
+          path: null,
+          error: {
+            type: ERROR_TYPES.PROPERTY_REQUIRED,
+            node: timerEventDefition,
+            parentNode: null,
+            requiredProperty: [
+              'timeCycle',
+              'timeDuration'
+            ]
+          }
+        }
+      ]);
+    });
+
+
+    it('should return errors (both properties set)', function() {
+
+      // given
+      const timerEventDefition = createElement('bpmn:TimerEventDefinition', {
+        timeCycle: createElement('bpmn:FormalExpression', {}),
+        timeDuration: createElement('bpmn:FormalExpression', {})
+      });
+
+      // when
+      const errors = hasProperty(timerEventDefition, [ 'timeCycle', 'timeDuration' ]);
+
+      // then
+      expect(errors).to.eql([
+        {
+          message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle> or <timeDuration>',
+          path: null,
+          error: {
+            type: ERROR_TYPES.PROPERTY_REQUIRED,
+            node: timerEventDefition,
+            parentNode: null,
+            requiredProperty: [
+              'timeCycle',
+              'timeDuration'
+            ]
+          }
+        }
+      ]);
+    });
+  });
 
   describe('#hasProperties', function() {
 
@@ -685,6 +789,96 @@ describe('utils/element', function() {
         ]);
       });
 
+    });
+
+
+    describe('validate', function() {
+
+      it('should not return errors (undefined)', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask');
+
+        // when
+        const errors = hasProperties(serviceTask, {
+          modelerTemplate: {
+            validate: undefined
+          }
+        });
+
+        // then
+        expect(errors).to.be.empty;
+      });
+
+
+      it('should not return errors (null)', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask', {
+          modelerTemplate: null
+        });
+
+        // when
+        const errors = hasProperties(serviceTask, {
+          modelerTemplate: {
+            validate: null
+          }
+        });
+
+        // then
+        expect(errors).to.be.empty;
+      });
+
+
+      it('should not return errors (() => true)', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask', {
+          modelerTemplate: null
+        });
+
+        // when
+        const errors = hasProperties(serviceTask, {
+          modelerTemplate: {
+            validate: () => true
+          }
+        });
+
+        // then
+        expect(errors).to.be.empty;
+      });
+
+
+      it('should return errors (() => false)', function() {
+
+        // given
+        const serviceTask = createElement('bpmn:ServiceTask', {
+          modelerTemplate: null
+        });
+
+        // when
+        const errors = hasProperties(serviceTask, {
+          modelerTemplate: {
+            validate: () => false
+          }
+        });
+
+        // then
+        expect(errors).eql([
+          {
+            message: 'Property <modelerTemplate> of element of type <bpmn:ServiceTask> has invalid value',
+            path: [
+              'modelerTemplate'
+            ],
+            error: {
+              type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+              node: serviceTask,
+              parentNode: null,
+              property: 'modelerTemplate'
+            }
+          }
+        ]);
+      });
     });
 
   });
