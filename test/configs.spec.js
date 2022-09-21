@@ -15,6 +15,7 @@ describe('configs', function() {
     'no-template': 'error',
     'no-zeebe-properties': 'error',
     'subscription': 'error',
+    'timer': 'error',
     'user-task-form': 'error'
   }));
 
@@ -30,6 +31,7 @@ describe('configs', function() {
     'no-template': 'error',
     'no-zeebe-properties': 'error',
     'subscription': 'error',
+    'timer': 'error',
     'user-task-form': 'error'
   }));
 
@@ -45,6 +47,7 @@ describe('configs', function() {
     'no-template': 'error',
     'no-zeebe-properties': 'error',
     'subscription': 'error',
+    'timer': 'error',
     'user-task-form': 'error'
   }));
 
@@ -60,6 +63,7 @@ describe('configs', function() {
     'no-template': 'error',
     'no-zeebe-properties': 'error',
     'subscription': 'error',
+    'timer': 'error',
     'user-task-form': 'error'
   }));
 
@@ -74,6 +78,7 @@ describe('configs', function() {
     'message-reference': 'error',
     'no-zeebe-properties': 'error',
     'subscription': 'error',
+    'timer': 'error',
     'user-task-form': 'error'
   }));
 
@@ -87,6 +92,7 @@ describe('configs', function() {
     'loop-characteristics': 'error',
     'message-reference': 'error',
     'subscription': 'error',
+    'timer': 'error',
     'user-task-form': 'error'
   }));
 
