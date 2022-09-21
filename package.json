@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "all": "npm run lint && npm test",
+    "dev": "npm run test:watch",
     "lint": "eslint .",
     "test": "mocha test/**/*.spec.js",
     "test:watch": "npm run test -- --watch"
