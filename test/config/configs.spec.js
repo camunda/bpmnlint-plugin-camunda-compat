@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 
-const { configs } = require('../index');
+const { configs } = require('../..');
 
 describe('configs', function() {
 
@@ -89,6 +89,7 @@ describe('configs', function() {
     'duplicate-task-headers': 'error',
     'element-type': 'error',
     'error-reference': 'error',
+    'inclusive-gateway': 'error',
     'loop-characteristics': 'error',
     'message-reference': 'error',
     'subscription': 'error',
