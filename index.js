@@ -1,7 +1,8 @@
 const { omit } = require('min-dash');
 
 const calledDecisionOrTaskDefinitionConfig = require('./rules/called-decision-or-task-definition/config'),
-      elementTypeConfig = require('./rules/element-type/config');
+      elementTypeConfig = require('./rules/element-type/config'),
+      timerConfig = require('./rules/timer/config');
 
 const camundaCloud10Rules = {
   'called-decision-or-task-definition': [ 'error', calledDecisionOrTaskDefinitionConfig.camundaCloud10 ],
@@ -14,7 +15,7 @@ const camundaCloud10Rules = {
   'no-template': 'error',
   'no-zeebe-properties': 'error',
   'subscription': 'error',
-  'timer': 'error',
+  'timer': [ 'error', timerConfig.camundaCloud10 ],
   'user-task-form': 'error'
 };
 
@@ -40,7 +41,8 @@ const camundaCloud80Rules = omit(camundaCloud13Rules, 'no-template');
 const camundaCloud81Rules = {
   ...omit(camundaCloud80Rules, 'no-zeebe-properties'),
   'element-type': [ 'error', elementTypeConfig.camundaCloud81 ],
-  'inclusive-gateway': 'error'
+  'inclusive-gateway': 'error',
+  'timer': [ 'error', timerConfig.camundaCloud81 ]
 };
 
 module.exports = {
