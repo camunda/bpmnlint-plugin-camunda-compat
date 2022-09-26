@@ -247,7 +247,7 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Property <body> of element of type <bpmn:FormalExpression> has invalid value',
+      message: 'Property <body> of element of type <bpmn:FormalExpression> must not have value of <@daily>',
       path: [
         'eventDefinitions',
         0,
@@ -275,7 +275,7 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Property <body> of element of type <bpmn:FormalExpression> has invalid value',
+      message: 'Property <body> of element of type <bpmn:FormalExpression> must not have value of <invalid>',
       path: [
         'eventDefinitions',
         0,
@@ -303,7 +303,7 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Property <body> of element of type <bpmn:FormalExpression> has invalid value',
+      message: 'Property <body> of element of type <bpmn:FormalExpression> must not have value of <invalid>',
       path: [
         'eventDefinitions',
         0,
@@ -330,7 +330,7 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Property <body> of element of type <bpmn:FormalExpression> has invalid value',
+      message: 'Property <body> of element of type <bpmn:FormalExpression> must not have value of <invalid>',
       path: [
         'eventDefinitions',
         0,
