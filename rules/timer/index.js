@@ -9,6 +9,7 @@ const {
 } = require('../utils/element');
 
 const { validateCronExpression } = require('../utils/cron');
+
 const {
   validateCycle: validateISO8601Cycle,
   validateDate: validateISO8601Date,
@@ -32,20 +33,25 @@ module.exports = function(config = {}) {
     }
 
     let errors = checkTimePropertyExists(eventDefinition, node);
+
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);
+
       return;
     }
 
     const timeProperty = getTimeProperty(eventDefinition);
 
     errors = checkTimePropertyNotEmpty(timeProperty, node);
+
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);
+
       return;
     }
 
     errors = checkTimePropertyCorrectFormat(eventDefinition, node, formats);
+
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);
     }
