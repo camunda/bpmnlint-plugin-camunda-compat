@@ -1,19 +1,17 @@
-const camundaCloud10 = {
-  formats: [
-    'iso8601'
-  ]
-};
+const camundaCloud10Formats = [
+  'iso8601'
+];
+
+const camundaCloud81Formats = [
+  ...camundaCloud10Formats,
+  'cron'
+];
 
 module.exports = {
-  camundaCloud10: camundaCloud10,
-  camundaCloud11: camundaCloud10,
-  camundaCloud12: camundaCloud10,
-  camundaCloud13: camundaCloud10,
-  camundaCloud80: camundaCloud10,
+  camundaCloud10: {
+    formats: camundaCloud10Formats
+  },
   camundaCloud81: {
-    formats: [
-      ...camundaCloud10.formats,
-      'cron'
-    ]
+    formats: camundaCloud81Formats
   }
 };
