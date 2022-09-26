@@ -722,163 +722,133 @@ describe('utils/element', function() {
 
     describe('allowed', function() {
 
-      it('should not return errors (undefined)', function() {
+      describe('boolean', function() {
 
-        // given
-        const serviceTask = createElement('bpmn:ServiceTask');
+        it('should not return errors (undefined)', function() {
 
-        // when
-        const errors = hasProperties(serviceTask, {
-          modelerTemplate: {
-            allowed: false
-          }
-        });
+          // given
+          const serviceTask = createElement('bpmn:ServiceTask');
 
-        // then
-        expect(errors).to.be.empty;
-      });
-
-
-      it('should not return errors (null)', function() {
-
-        // given
-        const serviceTask = createElement('bpmn:ServiceTask', {
-          modelerTemplate: null
-        });
-
-        // when
-        const errors = hasProperties(serviceTask, {
-          modelerTemplate: {
-            allowed: false
-          }
-        });
-
-        // then
-        expect(errors).to.be.empty;
-      });
-
-
-      it('should return errors', function() {
-
-        // given
-        const serviceTask = createElement('bpmn:ServiceTask', {
-          modelerTemplate: 'foo'
-        });
-
-        // when
-        const errors = hasProperties(serviceTask, {
-          modelerTemplate: {
-            allowed: false
-          }
-        });
-
-        // then
-        expect(errors).eql([
-          {
-            message: 'Element of type <bpmn:ServiceTask> must not have property <modelerTemplate>',
-            path: [
-              'modelerTemplate'
-            ],
-            error: {
-              type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
-              node: serviceTask,
-              parentNode: null,
-              property: 'modelerTemplate'
+          // when
+          const errors = hasProperties(serviceTask, {
+            modelerTemplate: {
+              allowed: false
             }
-          }
-        ]);
-      });
+          });
 
-    });
-
-
-    describe('validate', function() {
-
-      it('should not return errors (undefined)', function() {
-
-        // given
-        const serviceTask = createElement('bpmn:ServiceTask');
-
-        // when
-        const errors = hasProperties(serviceTask, {
-          modelerTemplate: {
-            validate: undefined
-          }
+          // then
+          expect(errors).to.be.empty;
         });
 
-        // then
-        expect(errors).to.be.empty;
-      });
 
+        it('should not return errors (null)', function() {
 
-      it('should not return errors (null)', function() {
+          // given
+          const serviceTask = createElement('bpmn:ServiceTask', {
+            modelerTemplate: null
+          });
 
-        // given
-        const serviceTask = createElement('bpmn:ServiceTask', {
-          modelerTemplate: null
-        });
-
-        // when
-        const errors = hasProperties(serviceTask, {
-          modelerTemplate: {
-            validate: null
-          }
-        });
-
-        // then
-        expect(errors).to.be.empty;
-      });
-
-
-      it('should not return errors (() => true)', function() {
-
-        // given
-        const serviceTask = createElement('bpmn:ServiceTask', {
-          modelerTemplate: null
-        });
-
-        // when
-        const errors = hasProperties(serviceTask, {
-          modelerTemplate: {
-            validate: () => true
-          }
-        });
-
-        // then
-        expect(errors).to.be.empty;
-      });
-
-
-      it('should return errors (() => false)', function() {
-
-        // given
-        const serviceTask = createElement('bpmn:ServiceTask', {
-          modelerTemplate: null
-        });
-
-        // when
-        const errors = hasProperties(serviceTask, {
-          modelerTemplate: {
-            validate: () => false
-          }
-        });
-
-        // then
-        expect(errors).eql([
-          {
-            message: 'Property <modelerTemplate> of element of type <bpmn:ServiceTask> has invalid value',
-            path: [
-              'modelerTemplate'
-            ],
-            error: {
-              type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
-              node: serviceTask,
-              parentNode: null,
-              property: 'modelerTemplate'
+          // when
+          const errors = hasProperties(serviceTask, {
+            modelerTemplate: {
+              allowed: false
             }
-          }
-        ]);
+          });
+
+          // then
+          expect(errors).to.be.empty;
+        });
+
+
+        it('should return errors', function() {
+
+          // given
+          const serviceTask = createElement('bpmn:ServiceTask', {
+            modelerTemplate: 'foo'
+          });
+
+          // when
+          const errors = hasProperties(serviceTask, {
+            modelerTemplate: {
+              allowed: false
+            }
+          });
+
+          // then
+          expect(errors).eql([
+            {
+              message: 'Element of type <bpmn:ServiceTask> must not have property <modelerTemplate>',
+              path: [
+                'modelerTemplate'
+              ],
+              error: {
+                type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
+                node: serviceTask,
+                parentNode: null,
+                property: 'modelerTemplate'
+              }
+            }
+          ]);
+        });
+
       });
+
+
+      describe('function', function() {
+
+        it('should not return errors (() => true)', function() {
+
+          // given
+          const serviceTask = createElement('bpmn:ServiceTask', {
+            modelerTemplate: null
+          });
+
+          // when
+          const errors = hasProperties(serviceTask, {
+            modelerTemplate: {
+              allowed: () => true
+            }
+          });
+
+          // then
+          expect(errors).to.be.empty;
+        });
+
+
+        it('should return errors (() => false)', function() {
+
+          // given
+          const serviceTask = createElement('bpmn:ServiceTask', {
+            modelerTemplate: null
+          });
+
+          // when
+          const errors = hasProperties(serviceTask, {
+            modelerTemplate: {
+              allowed: () => false
+            }
+          });
+
+          // then
+          expect(errors).eql([
+            {
+              message: 'Property <modelerTemplate> of element of type <bpmn:ServiceTask> must not have value of <null>',
+              path: [
+                'modelerTemplate'
+              ],
+              error: {
+                type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+                node: serviceTask,
+                parentNode: null,
+                property: 'modelerTemplate'
+              }
+            }
+          ]);
+        });
+
+      });
+
+
     });
 
   });

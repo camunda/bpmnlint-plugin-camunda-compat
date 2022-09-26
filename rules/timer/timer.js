@@ -88,19 +88,19 @@ function checkTimePropertyCorrectFormat(eventDefinition, event, formats) {
   if (timeCycle) {
     return hasProperties(timeCycle, {
       body: {
-        validate: cycle => validateCycle(cycle, formats)
+        allowed: cycle => validateCycle(cycle, formats)
       }
     }, event);
   } else if (timeDate) {
     return hasProperties(timeDate, {
       body: {
-        validate: date => validateDate(date, formats)
+        allowed: date => validateDate(date, formats)
       }
     }, event);
   } else if (timeDuration) {
     return hasProperties(timeDuration, {
       body: {
-        validate: duration => validateDuration(duration, formats)
+        allowed: duration => validateDuration(duration, formats)
       }
     }, event);
   }

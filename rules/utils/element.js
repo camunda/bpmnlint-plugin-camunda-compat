@@ -1,6 +1,7 @@
 const {
   isArray,
   isDefined,
+  isFunction,
   isNil,
   some
 } = require('min-dash');
@@ -223,11 +224,11 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       ];
     }
 
-    if (propertyChecks.validate && !propertyChecks.validate(propertyValue)) {
+    if (isFunction(propertyChecks.allowed) && !propertyChecks.allowed(propertyValue)) {
       return [
         ...results,
         {
-          message: `Property <${ propertyName }> of element of type <${ node.$type }> has invalid value`,
+          message: `Property <${ propertyName }> of element of type <${ node.$type }> must not have value of <${ propertyValue }>`,
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
