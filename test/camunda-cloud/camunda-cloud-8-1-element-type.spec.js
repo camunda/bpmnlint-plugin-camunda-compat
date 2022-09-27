@@ -19,6 +19,14 @@ const valid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:inclusiveGateway id="InclusiveGateway_1" />
     `))
+  },
+  {
+    name: 'Termiante end event',
+    moddleElement: createModdle(createProcess(`
+    <bpmn:endEvent id="Event_1qpo2zy">
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_0c6uql1" />
+    </bpmn:endEvent>
+    `))
   }
 ];
 

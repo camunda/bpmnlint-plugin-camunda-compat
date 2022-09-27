@@ -94,7 +94,11 @@ const camundaCloud12EventDefinitions = {
 };
 
 const camundaCloud81EventDefinitions = {
-  ...camundaCloud12EventDefinitions
+  ...camundaCloud12EventDefinitions,
+  'bpmn:EndEvent': [
+    ...camundaCloud12EventDefinitions['bpmn:EndEvent'],
+    'bpmn:TerminateEventDefinition'
+  ]
 };
 
 module.exports = {
