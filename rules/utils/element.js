@@ -228,7 +228,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       return [
         ...results,
         {
-          message: `Property <${ propertyName }> of element of type <${ node.$type }> must not have value of <${ propertyValue }>`,
+          message: `Property <${ propertyName }> of element of type <${ node.$type }> must not have value of <${ truncate(propertyValue) }>`,
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
@@ -335,3 +335,9 @@ module.exports.isExactly = isExactly;
 module.exports.isAnyExactly = function(node, types) {
   return some(types, (type) => isExactly(node, type));
 };
+
+function truncate(string, maxLength = 10) {
+  const stringified = `${ string }`;
+
+  return stringified.length > maxLength ? `${ stringified.slice(0, maxLength) }...` : stringified;
+}

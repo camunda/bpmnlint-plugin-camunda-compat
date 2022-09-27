@@ -846,6 +846,38 @@ describe('utils/element', function() {
           ]);
         });
 
+
+        it('should truncate', function() {
+
+          // given
+          const serviceTask = createElement('bpmn:ServiceTask', {
+            modelerTemplate: 'fooBarBazFooBarBazFooBarBaz'
+          });
+
+          // when
+          const errors = hasProperties(serviceTask, {
+            modelerTemplate: {
+              allowed: () => false
+            }
+          });
+
+          // then
+          expect(errors).eql([
+            {
+              message: 'Property <modelerTemplate> of element of type <bpmn:ServiceTask> must not have value of <fooBarBazF...>',
+              path: [
+                'modelerTemplate'
+              ],
+              error: {
+                type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+                node: serviceTask,
+                parentNode: null,
+                property: 'modelerTemplate'
+              }
+            }
+          ]);
+        });
+
       });
 
 
