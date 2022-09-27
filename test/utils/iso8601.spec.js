@@ -121,6 +121,9 @@ describe('utils/iso8601', function() {
       'P1Y2F',
       '1S',
       'T2M',
+      'P',
+      'PT',
+      'P2DT',
 
       // unsupported in Zeebe
       '2007-03-01T13:00:00Z/2008-05-11T15:30:00Z',
