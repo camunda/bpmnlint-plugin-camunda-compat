@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.13.1
+
+* `FIX`: improve time date validation ([#49](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/49))
+
 ## 0.13.0
 
 * `FEAT`: allow terminate end event in Camunda Platform 8.1 ([#48](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/48))
