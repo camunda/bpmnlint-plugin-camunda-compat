@@ -16,7 +16,8 @@ const camundaCloud10Rules = {
   'no-zeebe-properties': 'error',
   'subscription': 'error',
   'timer': [ 'error', timerConfig.camundaCloud10 ],
-  'user-task-form': 'error'
+  'user-task-form': 'error',
+  'feel': 'error'
 };
 
 const camundaCloud11Rules = {
