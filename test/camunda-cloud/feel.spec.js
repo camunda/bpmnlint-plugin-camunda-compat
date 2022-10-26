@@ -51,7 +51,7 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: 'Invalid FEEL expression in <source>',
+      message: 'Property <source> is not valid FEEL expression',
       path: [
         'extensionElements',
         'values',
