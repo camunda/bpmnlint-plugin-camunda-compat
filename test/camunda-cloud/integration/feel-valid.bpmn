@@ -3,7 +3,7 @@
   <bpmn:process id="Process_1u4gdfk" isExecutable="true">
     <bpmn:serviceTask id="Activity_164sk7r">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition retries="=3" />
+        <zeebe:taskDefinition type="foo" retries="=3" />
       </bpmn:extensionElements>
     </bpmn:serviceTask>
   </bpmn:process>
