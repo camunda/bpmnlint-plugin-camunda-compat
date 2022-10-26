@@ -11,7 +11,7 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 
 const valid = [
   {
-    name: 'Valid FEEL expression',
+    name: 'valid FEEL expression',
     moddleElement: createModdle(createProcess(`
       <bpmn:extensionElements>
         <zeebe:taskDefinition retries="=5" />
@@ -19,32 +19,31 @@ const valid = [
       <bpmn:serviceTask id="Task_1">
         <bpmn:extensionElements>
           <zeebe:ioMapping>
-            <zeebe:output source="=source" target="OutputVariable_0f8d4s0" />
+            <zeebe:output source="=source" target="OutputVariable_1" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
       </bpmn:serviceTask>
     `))
   },
   {
-    name: 'Non-FEEL expressions',
+    name: 'static value',
     moddleElement: createModdle(createProcess(`
       <bpmn:extensionElements>
         <zeebe:taskDefinition retries="5" />
       </bpmn:extensionElements>
-      <bpmn:serviceTask id="Task_1">
-      </bpmn:serviceTask>
+      <bpmn:serviceTask id="Task_1" />
     `))
   }
 ];
 
 const invalid = [
   {
-    name: 'inalid FEEL expression)',
+    name: 'invalid FEEL expression',
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="Task_1">
         <bpmn:extensionElements>
           <zeebe:ioMapping>
-            <zeebe:output source="==foo" target="OutputVariable_0f8d4s0" />
+            <zeebe:output source="==foo" target="OutputVariable_1" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
       </bpmn:serviceTask>
