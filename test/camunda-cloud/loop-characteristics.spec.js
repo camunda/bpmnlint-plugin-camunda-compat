@@ -38,7 +38,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Element of type <bpmn:ServiceTask> must not have property <loopCharacteristics> of type <bpmn:StandardLoopCharacteristics>',
+      message: 'Property <loopCharacteristics> of type <bpmn:StandardLoopCharacteristics> not allowed',
       path: [
         'loopCharacteristics'
       ],
@@ -47,7 +47,8 @@ const invalid = [
         node: 'ServiceTask_1',
         parentNode: null,
         property: 'loopCharacteristics',
-        allowedPropertyType: 'bpmn:MultiInstanceLoopCharacteristics'
+        allowedPropertyType: 'bpmn:MultiInstanceLoopCharacteristics',
+        allowedVersion: null
       }
     }
   },

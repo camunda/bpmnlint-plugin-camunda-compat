@@ -6,7 +6,8 @@ module.exports = function() {
   function check(node, reporter) {
     const errors = hasProperties(node, {
       modelerTemplate: {
-        allowed: false
+        allowed: false,
+        allowedVersion: '8.0'
       }
     }, node);
 

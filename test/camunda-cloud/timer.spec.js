@@ -250,7 +250,7 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Property <body> of element of type <bpmn:FormalExpression> must not have value of <@daily>',
+      message: 'Property value of <@daily> not allowed',
       path: [
         'eventDefinitions',
         0,
@@ -261,7 +261,8 @@ const invalid = [
         type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'body'
+        property: 'body',
+        allowedVersion: null
       }
     }
   },
@@ -278,7 +279,7 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Property <body> of element of type <bpmn:FormalExpression> must not have value of <invalid>',
+      message: 'Property value of <invalid> not allowed',
       path: [
         'eventDefinitions',
         0,
@@ -289,7 +290,8 @@ const invalid = [
         type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'body'
+        property: 'body',
+        allowedVersion: null
       }
     }
   },
@@ -306,7 +308,7 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Property <body> of element of type <bpmn:FormalExpression> must not have value of <invalid>',
+      message: 'Property value of <invalid> not allowed',
       path: [
         'eventDefinitions',
         0,
@@ -317,7 +319,8 @@ const invalid = [
         type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'body'
+        property: 'body',
+        allowedVersion: null
       }
     }
   },
@@ -333,7 +336,7 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Property <body> of element of type <bpmn:FormalExpression> must not have value of <invalid>',
+      message: 'Property value of <invalid> not allowed',
       path: [
         'eventDefinitions',
         0,
@@ -344,7 +347,8 @@ const invalid = [
         type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'body'
+        property: 'body',
+        allowedVersion: null
       }
     }
   }
