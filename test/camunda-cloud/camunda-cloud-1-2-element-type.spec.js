@@ -46,7 +46,8 @@ const invalid = [
       error: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'BoundaryEvent_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: null
       }
     }
   },
@@ -60,7 +61,8 @@ const invalid = [
       error: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'ComplexGateway_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: null
       }
     }
   },
@@ -74,7 +76,8 @@ const invalid = [
       error: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'IntermediateCatchEvent_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: null
       }
     }
   },
@@ -88,7 +91,8 @@ const invalid = [
       error: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'Task_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: null
       }
     }
   },
@@ -97,12 +101,33 @@ const invalid = [
     moddleElement: createModdle(createProcess('<bpmn:inclusiveGateway id="InclusiveGateway_1" />')),
     report: {
       id: 'InclusiveGateway_1',
-      message: 'Element of type <bpmn:InclusiveGateway> not allowed',
+      message: 'Element of type <bpmn:InclusiveGateway> only allowed by Camunda Platform 8.1 or newer',
       path: null,
       error: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'InclusiveGateway_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: '8.1'
+      }
+    }
+  },
+  {
+    name: 'end event (terminate)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:endEvent id="EndEvent_1">
+        <bpmn:terminateEventDefinition id="TerminateEventDefinition_1" />
+      </bpmn:endEvent>
+    `)),
+    report: {
+      id: 'EndEvent_1',
+      message: 'Element of type <bpmn:EndEvent> with event definition of type <bpmn:TerminateEventDefinition> only allowed by Camunda Platform 8.1 or newer',
+      path: null,
+      error: {
+        type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+        node: 'EndEvent_1',
+        parentNode: null,
+        eventDefinition: 'TerminateEventDefinition_1',
+        allowedVersion: '8.1'
       }
     }
   }
