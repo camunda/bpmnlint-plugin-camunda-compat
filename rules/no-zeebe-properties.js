@@ -10,7 +10,7 @@ module.exports = function() {
       return;
     }
 
-    const errors = hasNoExtensionElement(node, 'zeebe:Properties', node);
+    const errors = hasNoExtensionElement(node, 'zeebe:Properties', node, '8.1');
 
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);

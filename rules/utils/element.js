@@ -314,13 +314,15 @@ module.exports.hasExtensionElement = function(node, types, parentNode = null) {
   return [];
 };
 
-module.exports.hasNoExtensionElement = function(node, type, parentNode = null) {
+module.exports.hasNoExtensionElement = function(node, type, parentNode = null, allowedVersion = null) {
   const extensionElement = findExtensionElement(node, type);
 
   if (extensionElement) {
     return [
       {
-        message: `Element of type <${ node.$type }> must not have extension element of type <${ type }>`,
+        message: allowedVersion
+          ? `Extension element of type <${ type }> only allowed by Camunda Platform ${ allowedVersion }`
+          : `Extension element of type <${ type }> not allowed`,
         path: getPath(extensionElement, parentNode),
         error: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
