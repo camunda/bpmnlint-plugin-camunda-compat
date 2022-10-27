@@ -37,14 +37,19 @@ module.exports = function({ version }) {
     if (calledDecision && !taskDefinition) {
 
       if (!isCalledDecisionAllowed(node, version)) {
+        const allowedVersion = config.calledDecision[ node.$type ] || null;
+
         reportErrors(node, reporter, {
-          message: 'Extension element of type <zeebe:CalledDecision> not allowed',
+          message: allowedVersion
+            ? `Extension element of type <zeebe:CalledDecision> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            : 'Extension element of type <zeebe:CalledDecision> not allowed',
           path: getPath(calledDecision, node),
           error: {
             type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
             node,
             parentNode: null,
-            extensionElement: calledDecision
+            extensionElement: calledDecision,
+            allowedVersion
           }
         });
 
@@ -70,14 +75,19 @@ module.exports = function({ version }) {
     if (!calledDecision && taskDefinition) {
 
       if (!isTaskDefinitionAllowed(node, version)) {
+        const allowedVersion = config.taskDefinition[ node.$type ] || null;
+
         reportErrors(node, reporter, {
-          message: 'Extension element of type <zeebe:TaskDefinition> not allowed',
+          message: allowedVersion
+            ? `Extension element of type <zeebe:TaskDefinition> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            : 'Extension element of type <zeebe:TaskDefinition> not allowed',
           path: getPath(taskDefinition, node),
           error: {
             type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
             node,
             parentNode: null,
-            extensionElement: taskDefinition
+            extensionElement: taskDefinition,
+            allowedVersion
           }
         });
 
