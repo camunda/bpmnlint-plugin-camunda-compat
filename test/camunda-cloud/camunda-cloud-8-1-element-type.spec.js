@@ -42,7 +42,8 @@ const invalid = [
       error: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'BoundaryEvent_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: null
       }
     }
   },
@@ -56,7 +57,8 @@ const invalid = [
       error: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'ComplexGateway_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: null
       }
     }
   },
@@ -70,7 +72,8 @@ const invalid = [
       error: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'IntermediateCatchEvent_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: null
       }
     }
   },
@@ -84,7 +87,8 @@ const invalid = [
       error: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'Task_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: null
       }
     }
   }

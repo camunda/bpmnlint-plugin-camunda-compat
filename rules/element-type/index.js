@@ -23,13 +23,18 @@ module.exports = function({ version }) {
     if (!element || (isString(element) && !greaterOrEqual(version, element))) {
 
       // (1) Element not allowed
+      const allowedVersion = element || null;
+
       const error = {
-        message: `Element of type <${ node.$type }> not allowed`,
+        message: allowedVersion
+          ? `Element of type <${ node.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`
+          : `Element of type <${ node.$type }> not allowed`,
         path: null,
         error: {
           type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
           node,
-          parentNode: null
+          parentNode: null,
+          allowedVersion
         }
       };
 
@@ -48,14 +53,19 @@ module.exports = function({ version }) {
       if (!element[ eventDefinition.$type ] || !greaterOrEqual(version, element[ eventDefinition.$type ])) {
 
         // (2) Element with event definition not allowed
+        const allowedVersion = element[ eventDefinition.$type ] || null;
+
         const error = {
-          message: `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> not allowed`,
+          message: allowedVersion
+            ? `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            : `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> not allowed`,
           path: null,
           error: {
             type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
             node,
             parentNode: null,
-            eventDefinition
+            eventDefinition,
+            allowedVersion
           }
         };
 
@@ -65,14 +75,19 @@ module.exports = function({ version }) {
       if (!element[ '_' ] || !greaterOrEqual(version, element[ '_' ])) {
 
         // (3) Element without event definition not allowed
+        const allowedVersion = element[ '_' ] || null;
+
         const error = {
-          message: `Element of type <${ node.$type }> with no event definition not allowed`,
+          message: allowedVersion
+            ? `Element of type <${ node.$type }> with no event definition only allowed by Camunda Platform ${ allowedVersion } or newer`
+            : `Element of type <${ node.$type }> with no event definition not allowed`,
           path: null,
           error: {
             type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
             node,
             parentNode: null,
-            eventDefinition
+            eventDefinition,
+            allowedVersion
           }
         };
 
