@@ -26,7 +26,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Element of type <bpmn:ServiceTask> must not have property <modelerTemplate>',
+      message: 'Property <modelerTemplate> only allowed by Camunda Platform 8.0 or newer',
       path: [
         'modelerTemplate'
       ],
@@ -34,7 +34,8 @@ const invalid = [
         type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'ServiceTask_1',
         parentNode: null,
-        property: 'modelerTemplate'
+        property: 'modelerTemplate',
+        allowedVersion: '8.0'
       }
     }
   },
@@ -45,7 +46,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Element of type <bpmn:ServiceTask> must not have property <modelerTemplate>',
+      message: 'Property <modelerTemplate> only allowed by Camunda Platform 8.0 or newer',
       path: [
         'modelerTemplate'
       ],
@@ -53,7 +54,8 @@ const invalid = [
         type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'ServiceTask_1',
         parentNode: null,
-        property: 'modelerTemplate'
+        property: 'modelerTemplate',
+        allowedVersion: '8.0'
       }
     }
   }

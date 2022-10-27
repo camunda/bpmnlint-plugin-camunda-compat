@@ -302,13 +302,14 @@ describe('utils/element', function() {
       // then
       expect(errors).to.eql([
         {
-          message: 'Element of type <bpmn:ServiceTask> must not have extension element of type <zeebe:Properties>',
+          message: 'Extension element of type <zeebe:Properties> not allowed',
           path: null,
           error: {
             type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
             node: serviceTask,
             parentNode: null,
-            extensionElement: serviceTask.get('extensionElements').get('values')[ 0 ]
+            extensionElement: serviceTask.get('extensionElements').get('values')[ 0 ],
+            allowedVersion: null
           }
         }
       ]);
@@ -702,7 +703,7 @@ describe('utils/element', function() {
         // then
         expect(errors).eql([
           {
-            message: 'Element of type <bpmn:ServiceTask> must not have property <loopCharacteristics> of type <bpmn:StandardLoopCharacteristics>',
+            message: 'Property <loopCharacteristics> of type <bpmn:StandardLoopCharacteristics> not allowed',
             path: [
               'loopCharacteristics'
             ],
@@ -711,7 +712,8 @@ describe('utils/element', function() {
               node: serviceTask,
               parentNode: null,
               property: 'loopCharacteristics',
-              allowedPropertyType: 'bpmn:MultiInstanceLoopCharacteristics'
+              allowedPropertyType: 'bpmn:MultiInstanceLoopCharacteristics',
+              allowedVersion: null
             }
           }
         ]);
@@ -777,7 +779,7 @@ describe('utils/element', function() {
           // then
           expect(errors).eql([
             {
-              message: 'Element of type <bpmn:ServiceTask> must not have property <modelerTemplate>',
+              message: 'Property <modelerTemplate> not allowed',
               path: [
                 'modelerTemplate'
               ],
@@ -785,7 +787,8 @@ describe('utils/element', function() {
                 type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
                 node: serviceTask,
                 parentNode: null,
-                property: 'modelerTemplate'
+                property: 'modelerTemplate',
+                allowedVersion: null
               }
             }
           ]);
@@ -832,7 +835,7 @@ describe('utils/element', function() {
           // then
           expect(errors).eql([
             {
-              message: 'Property <modelerTemplate> of element of type <bpmn:ServiceTask> must not have value of <null>',
+              message: 'Property value of <null> not allowed',
               path: [
                 'modelerTemplate'
               ],
@@ -840,7 +843,8 @@ describe('utils/element', function() {
                 type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
                 node: serviceTask,
                 parentNode: null,
-                property: 'modelerTemplate'
+                property: 'modelerTemplate',
+                allowedVersion: null
               }
             }
           ]);
@@ -864,7 +868,7 @@ describe('utils/element', function() {
           // then
           expect(errors).eql([
             {
-              message: 'Property <modelerTemplate> of element of type <bpmn:ServiceTask> must not have value of <fooBarBazF...>',
+              message: 'Property value of <fooBarBazF...> not allowed',
               path: [
                 'modelerTemplate'
               ],
@@ -872,7 +876,8 @@ describe('utils/element', function() {
                 type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
                 node: serviceTask,
                 parentNode: null,
-                property: 'modelerTemplate'
+                property: 'modelerTemplate',
+                allowedVersion: null
               }
             }
           ]);

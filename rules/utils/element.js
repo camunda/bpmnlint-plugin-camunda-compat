@@ -134,6 +134,8 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
   return Object.entries(properties).reduce((results, property) => {
     const [ propertyName, propertyChecks ] = property;
 
+    const { allowedVersion = null } = propertyChecks;
+
     const path = getPath(node, parentNode);
 
     const propertyValue = node.get(propertyName);
@@ -191,7 +193,9 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       return [
         ...results,
         {
-          message: `Element of type <${ node.$type }> must not have property <${ propertyName }> of type <${ propertyValue.$type }>`,
+          message: allowedVersion
+            ? `Property <${ propertyName }> of type <${ propertyValue.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            : `Property <${ propertyName }> of type <${ propertyValue.$type }> not allowed`,
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
@@ -200,7 +204,8 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
             node,
             parentNode: parentNode == node ? null : parentNode,
             property: propertyName,
-            allowedPropertyType: propertyChecks.type
+            allowedPropertyType: propertyChecks.type,
+            allowedVersion
           }
         }
       ];
@@ -210,7 +215,9 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       return [
         ...results,
         {
-          message: `Element of type <${ node.$type }> must not have property <${ propertyName }>`,
+          message: allowedVersion
+            ? `Property <${ propertyName }> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            : `Property <${ propertyName }> not allowed`,
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
@@ -218,7 +225,8 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
             type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
             node,
             parentNode: parentNode == node ? null : parentNode,
-            property: propertyName
+            property: propertyName,
+            allowedVersion
           }
         }
       ];
@@ -228,7 +236,9 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       return [
         ...results,
         {
-          message: `Property <${ propertyName }> of element of type <${ node.$type }> must not have value of <${ truncate(propertyValue) }>`,
+          message: allowedVersion
+            ? `Property value of <${ truncate(propertyValue) }> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            : `Property value of <${ truncate(propertyValue) }> not allowed`,
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
@@ -237,6 +247,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
             node,
             parentNode: parentNode == node ? null : parentNode,
             property: propertyName,
+            allowedVersion
           }
         }
       ];
@@ -315,7 +326,8 @@ module.exports.hasNoExtensionElement = function(node, type, parentNode = null) {
           type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
           node,
           parentNode: parentNode == node ? null : parentNode,
-          extensionElement
+          extensionElement,
+          allowedVersion
         }
       }
     ];
