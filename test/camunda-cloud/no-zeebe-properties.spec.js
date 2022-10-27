@@ -32,7 +32,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Element of type <bpmn:ServiceTask> must not have extension element of type <zeebe:Properties>',
+      message: 'Extension element of type <zeebe:Properties> only allowed by Camunda Platform 8.1',
       path: [
         'extensionElements',
         'values',
@@ -42,7 +42,8 @@ const invalid = [
         type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
         node: 'ServiceTask_1',
         parentNode: null,
-        extensionElement: 'zeebe:Properties'
+        extensionElement: 'zeebe:Properties',
+        allowedVersion: '8.1'
       }
     }
   }
