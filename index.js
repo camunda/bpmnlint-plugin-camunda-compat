@@ -1,7 +1,5 @@
 const { omit } = require('min-dash');
 
-const timerConfig = require('./rules/timer/config');
-
 const camundaCloud10Rules = {
   'called-decision-or-task-definition': [ 'error', { version: '1.0' } ],
   'called-element': 'error',
@@ -14,7 +12,7 @@ const camundaCloud10Rules = {
   'no-template': 'error',
   'no-zeebe-properties': 'error',
   'subscription': 'error',
-  'timer': [ 'error', timerConfig.camundaCloud10 ],
+  'timer': [ 'error', { version: '1.0' } ],
   'user-task-form': 'error',
   'feel': 'error'
 };
@@ -22,25 +20,29 @@ const camundaCloud10Rules = {
 const camundaCloud11Rules = {
   ...camundaCloud10Rules,
   'called-decision-or-task-definition': [ 'error', { version: '1.1' } ],
-  'element-type': [ 'error', { version: '1.1' } ]
+  'element-type': [ 'error', { version: '1.1' } ],
+  'timer': [ 'error', { version: '1.1' } ]
 };
 
 const camundaCloud12Rules = {
   ...camundaCloud11Rules,
   'called-decision-or-task-definition': [ 'error', { version: '1.2' } ],
-  'element-type': [ 'error', { version: '1.2' } ]
+  'element-type': [ 'error', { version: '1.2' } ],
+  'timer': [ 'error', { version: '1.2' } ]
 };
 
 const camundaCloud13Rules = {
   ...camundaCloud12Rules,
   'called-decision-or-task-definition': [ 'error', { version: '1.3' } ],
-  'element-type': [ 'error', { version: '1.3' } ]
+  'element-type': [ 'error', { version: '1.3' } ],
+  'timer': [ 'error', { version: '1.3' } ]
 };
 
 const camundaCloud80Rules = {
   ...omit(camundaCloud13Rules, 'no-template'),
   'called-decision-or-task-definition': [ 'error', { version: '8.0' } ],
-  'element-type': [ 'error', { version: '8.0' } ]
+  'element-type': [ 'error', { version: '8.0' } ],
+  'timer': [ 'error', { version: '8.0' } ]
 };
 
 const camundaCloud81Rules = {
@@ -48,7 +50,7 @@ const camundaCloud81Rules = {
   'called-decision-or-task-definition': [ 'error', { version: '8.1' } ],
   'element-type': [ 'error', { version: '8.1' } ],
   'inclusive-gateway': 'error',
-  'timer': [ 'error', timerConfig.camundaCloud81 ]
+  'timer': [ 'error', { version: '8.1' } ]
 };
 
 module.exports = {

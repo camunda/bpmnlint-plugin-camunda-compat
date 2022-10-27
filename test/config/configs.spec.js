@@ -17,7 +17,7 @@ describe('configs', function() {
     'no-template': 'error',
     'no-zeebe-properties': 'error',
     'subscription': 'error',
-    'timer': [ 'error', require('../../rules/timer/config').camundaCloud10 ],
+    'timer': [ 'error', { version: '1.0' } ],
     'user-task-form': 'error'
   }));
 
@@ -35,7 +35,7 @@ describe('configs', function() {
     'no-template': 'error',
     'no-zeebe-properties': 'error',
     'subscription': 'error',
-    'timer': [ 'error', require('../../rules/timer/config').camundaCloud10 ],
+    'timer': [ 'error', { version: '1.1' } ],
     'user-task-form': 'error'
   }));
 
@@ -53,7 +53,7 @@ describe('configs', function() {
     'no-template': 'error',
     'no-zeebe-properties': 'error',
     'subscription': 'error',
-    'timer': [ 'error', require('../../rules/timer/config').camundaCloud10 ],
+    'timer': [ 'error', { version: '1.2' } ],
     'user-task-form': 'error'
   }));
 
@@ -71,7 +71,7 @@ describe('configs', function() {
     'no-template': 'error',
     'no-zeebe-properties': 'error',
     'subscription': 'error',
-    'timer': [ 'error', require('../../rules/timer/config').camundaCloud10 ],
+    'timer': [ 'error', { version: '1.3' } ],
     'user-task-form': 'error'
   }));
 
@@ -88,7 +88,7 @@ describe('configs', function() {
     'message-reference': 'error',
     'no-zeebe-properties': 'error',
     'subscription': 'error',
-    'timer': [ 'error', require('../../rules/timer/config').camundaCloud10 ],
+    'timer': [ 'error', { version: '8.0' } ],
     'user-task-form': 'error'
   }));
 
@@ -105,7 +105,7 @@ describe('configs', function() {
     'loop-characteristics': 'error',
     'message-reference': 'error',
     'subscription': 'error',
-    'timer': [ 'error', require('../../rules/timer/config').camundaCloud81 ],
+    'timer': [ 'error', { version: '8.1' } ],
     'user-task-form': 'error'
   }));
 

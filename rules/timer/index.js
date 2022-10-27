@@ -2,6 +2,10 @@ const {
   is
 } = require('bpmnlint-utils');
 
+const config = require('./config');
+
+const { greaterOrEqual } = require('../utils/version');
+
 const {
   getEventDefinition,
   hasProperties,
@@ -18,9 +22,7 @@ const {
 
 const { reportErrors } = require('../utils/reporter');
 
-module.exports = function(config = {}) {
-  const { formats = [] } = config;
-
+module.exports = function({ version }) {
   function check(node, reporter) {
     if (!is(node, 'bpmn:Event')) {
       return;
@@ -50,7 +52,7 @@ module.exports = function(config = {}) {
       return;
     }
 
-    errors = checkTimePropertyCorrectFormat(eventDefinition, node, formats);
+    errors = checkTimePropertyCorrectFormat(eventDefinition, node, version);
 
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);
@@ -86,7 +88,7 @@ function checkTimePropertyNotEmpty(timeProperty, event) {
   }, event);
 }
 
-function checkTimePropertyCorrectFormat(eventDefinition, event, formats) {
+function checkTimePropertyCorrectFormat(eventDefinition, event, version) {
   const timeCycle = eventDefinition.get('timeCycle'),
         timeDate = eventDefinition.get('timeDate'),
         timeDuration = eventDefinition.get('timeDuration');
@@ -94,19 +96,19 @@ function checkTimePropertyCorrectFormat(eventDefinition, event, formats) {
   if (timeCycle) {
     return hasProperties(timeCycle, {
       body: {
-        allowed: cycle => validateCycle(cycle, formats)
+        allowed: cycle => validateCycle(cycle, version)
       }
     }, event);
   } else if (timeDate) {
     return hasProperties(timeDate, {
       body: {
-        allowed: date => validateDate(date, formats)
+        allowed: date => validateDate(date, version)
       }
     }, event);
   } else if (timeDuration) {
     return hasProperties(timeDuration, {
       body: {
-        allowed: duration => validateDuration(duration, formats)
+        allowed: duration => validateDuration(duration, version)
       }
     }, event);
   }
@@ -123,37 +125,37 @@ function isInterruptingBoundaryEvent(event) {
   return is(event, 'bpmn:BoundaryEvent') && event.get('cancelActivity') !== false;
 }
 
-function validateDate(date, formats) {
+function validateDate(date, version) {
   if (validateExpression(date)) {
     return true;
   }
 
-  if (formats.includes('iso8601') && validateISO8601Date(date)) {
-    return true;
+  if (validateISO8601Date(date)) {
+    return greaterOrEqual(version, config.iso8601);
   }
 }
 
-function validateCycle(cycle, formats) {
+function validateCycle(cycle, version) {
   if (validateExpression(cycle)) {
     return true;
   }
 
-  if (formats.includes('iso8601') && validateISO8601Cycle(cycle)) {
-    return true;
+  if (validateISO8601Cycle(cycle)) {
+    return greaterOrEqual(version, config.iso8601);;
   }
 
-  if (formats.includes('cron') && validateCronExpression(cycle)) {
-    return true;
+  if (validateCronExpression(cycle)) {
+    return greaterOrEqual(version, config.cron);
   }
 }
 
-function validateDuration(duration, formats) {
+function validateDuration(duration, version) {
   if (validateExpression(duration)) {
     return true;
   }
 
-  if (formats.includes('iso8601') && validateISO8601Duration(duration)) {
-    return true;
+  if (validateISO8601Duration(duration)) {
+    return greaterOrEqual(version, config.iso8601);
   }
 }
 

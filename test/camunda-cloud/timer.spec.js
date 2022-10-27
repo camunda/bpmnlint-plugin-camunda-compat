@@ -2,8 +2,6 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
 const rule = require('../../rules/timer');
 
-const timerConfig = require('../../rules/timer/config');
-
 const {
   createModdle,
   createProcess
@@ -14,7 +12,7 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 const valid = [
   {
     name: 'time duration (ISO-8601)',
-    config: timerConfig.camundaCloud10,
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
       <bpmn:task id="Task" />
       <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -26,7 +24,7 @@ const valid = [
   },
   {
     name: 'time duration (expression)',
-    config: timerConfig.camundaCloud10,
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
       <bpmn:task id="Task" />
       <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -38,7 +36,7 @@ const valid = [
   },
   {
     name: 'time date (ISO-8601)',
-    config: timerConfig.camundaCloud10,
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
       <bpmn:startEvent id="Event">
         <bpmn:timerEventDefinition id="TimerEventDefinition">
@@ -49,7 +47,7 @@ const valid = [
   },
   {
     name: 'time date (expression)',
-    config: timerConfig.camundaCloud10,
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
       <bpmn:startEvent id="Event">
         <bpmn:timerEventDefinition id="TimerEventDefinition">
@@ -60,7 +58,7 @@ const valid = [
   },
   {
     name: 'time cycle (ISO-8601)',
-    config: timerConfig.camundaCloud10,
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
       <bpmn:task id="Task" />
       <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -72,7 +70,7 @@ const valid = [
   },
   {
     name: 'time cycle (cron)',
-    config: timerConfig.camundaCloud81,
+    config: { version: '8.1' },
     moddleElement: createModdle(createProcess(`
       <bpmn:task id="Task" />
       <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -84,7 +82,7 @@ const valid = [
   },
   {
     name: 'time cycle (cron macro)',
-    config: timerConfig.camundaCloud81,
+    config: { version: '8.1' },
     moddleElement: createModdle(createProcess(`
       <bpmn:task id="Task" />
       <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -96,7 +94,7 @@ const valid = [
   },
   {
     name: 'time cycle (expression)',
-    config: timerConfig.camundaCloud10,
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
       <bpmn:task id="Task" />
       <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -111,6 +109,7 @@ const valid = [
 const invalid = [
   {
     name: 'timer start event (no expression)',
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
       <bpmn:startEvent id="Event">
         <bpmn:timerEventDefinition id="TimerEventDefinition" />
@@ -136,6 +135,7 @@ const invalid = [
   },
   {
     name: 'timer intermediate catch event (no expression)',
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
       <bpmn:intermediateCatchEvent id="Event">
         <bpmn:timerEventDefinition id="TimerEventDefinition" />
@@ -159,6 +159,7 @@ const invalid = [
   },
   {
     name: 'timer interrupting boundary event (no expression)',
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
     <bpmn:task id="Task" />
     <bpmn:boundaryEvent id="Event" attachedToRef="Task">
@@ -183,6 +184,7 @@ const invalid = [
   },
   {
     name: 'timer non-interrupting boundary event (no expression)',
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
     <bpmn:task id="Task" />
     <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -209,6 +211,7 @@ const invalid = [
   },
   {
     name: 'timer start event (empty expression)',
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
     <bpmn:task id="Task" />
     <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -235,8 +238,8 @@ const invalid = [
     }
   },
   {
-    name: 'timer boundary event (cron in C8.0)',
-    config: timerConfig.camundaCloud80,
+    name: 'timer boundary event (cron in Camunda Platform 8.0)',
+    config: { version: '8.0' },
     moddleElement: createModdle(createProcess(`
     <bpmn:task id="Task" />
     <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -264,7 +267,7 @@ const invalid = [
   },
   {
     name: 'timer boundary event (invalid duration)',
-    config: timerConfig.camundaCloud80,
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
     <bpmn:task id="Task" />
     <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -292,7 +295,7 @@ const invalid = [
   },
   {
     name: 'timer boundary event (invalid cycle)',
-    config: timerConfig.camundaCloud80,
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
     <bpmn:task id="Task" />
     <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
@@ -320,7 +323,7 @@ const invalid = [
   },
   {
     name: 'timer start event (invalid date)',
-    config: timerConfig.camundaCloud80,
+    config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
     <bpmn:startEvent id="Event">
       <bpmn:timerEventDefinition id="TimerEventDefinition">
