@@ -2,8 +2,6 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
 const rule = require('../../rules/element-type');
 
-const elementTypeConfig = require('../../rules/element-type/config');
-
 const {
   addConfig,
   createModdle,
@@ -43,15 +41,12 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:BoundaryEvent> must have property <eventDefinitions>',
-      path: [
-        'eventDefinitions'
-      ],
+      message: 'Element of type <bpmn:BoundaryEvent> with no event definition not allowed',
+      path: null,
       error: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'BoundaryEvent_1',
-        parentNode: null,
-        requiredProperty: 'eventDefinitions'
+        parentNode: null
       }
     }
   },
@@ -74,15 +69,12 @@ const invalid = [
     moddleElement: createModdle(createProcess('<bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1" />')),
     report: {
       id: 'IntermediateCatchEvent_1',
-      message: 'Element of type <bpmn:IntermediateCatchEvent> must have property <eventDefinitions>',
-      path: [
-        'eventDefinitions'
-      ],
+      message: 'Element of type <bpmn:IntermediateCatchEvent> with no event definition not allowed',
+      path: null,
       error: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'IntermediateCatchEvent_1',
-        parentNode: null,
-        requiredProperty: 'eventDefinitions'
+        parentNode: null
       }
     }
   },
@@ -117,6 +109,6 @@ const invalid = [
 ];
 
 RuleTester.verify('camunda-cloud-1-1-element-type', rule, {
-  valid: addConfig(valid, elementTypeConfig.camundaCloud12),
-  invalid: addConfig(invalid, elementTypeConfig.camundaCloud12)
+  valid: addConfig(valid, { version: '1.2' }),
+  invalid: addConfig(invalid, { version: '1.2' })
 });
