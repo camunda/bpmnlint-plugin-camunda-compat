@@ -39,7 +39,8 @@
     "@bpmn-io/feel-lint": "^0.1.0",
     "@bpmn-io/moddle-utils": "^0.1.0",
     "bpmnlint-utils": "^1.0.2",
-    "min-dash": "^3.8.1"
+    "min-dash": "^3.8.1",
+    "semver-compare": "^1.0.0"
   },
   "files": [
     "rules",

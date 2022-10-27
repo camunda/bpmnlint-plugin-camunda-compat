@@ -1,27 +1,28 @@
+const { isString } = require('min-dash');
+
 const { isAny } = require('bpmnlint-utils');
 
-const {
-  isAnyExactly,
-  getEventDefinition
-} = require('../utils/element');
+const config = require('./config');
+
+const { greaterOrEqual } = require('../utils/version');
+
+const { getEventDefinition } = require('../utils/element');
 
 const { ERROR_TYPES } = require('../utils/error-types');
 
 const { reportErrors } = require('../utils/reporter');
 
-module.exports = function(config) {
-  const {
-    elements,
-    elementsNoEventDefinitionRequired,
-    eventDefinitions
-  } = config;
-
+module.exports = function({ version }) {
   function check(node, reporter) {
     if (!isAny(node, [ 'bpmn:FlowElement', 'bpmn:FlowElementsContainer' ])) {
       return;
     }
 
-    if (!isAnyExactly(node, elements)) {
+    const element = config[ node.$type ];
+
+    if (!element || (isString(element) && !greaterOrEqual(version, element))) {
+
+      // (1) Element not allowed
       const error = {
         message: `Element of type <${ node.$type }> not allowed`,
         path: null,
@@ -37,46 +38,46 @@ module.exports = function(config) {
       return;
     }
 
+    if (!isAny(node, [ 'bpmn:CatchEvent', 'bpmn:ThrowEvent' ])) {
+      return;
+    }
+
     const eventDefinition = getEventDefinition(node);
 
-    if (isAny(node, [ 'bpmn:CatchEvent', 'ThrowEvent' ]) && !eventDefinition && !elementsNoEventDefinitionRequired.includes(node.$type)) {
-      const error = {
-        message: `Element of type <${ node.$type }> must have property <eventDefinitions>`,
-        path: [ 'eventDefinitions' ],
-        error: {
-          type: ERROR_TYPES.PROPERTY_REQUIRED,
-          node,
-          parentNode: null,
-          requiredProperty: 'eventDefinitions'
-        }
-      };
+    if (eventDefinition) {
+      if (!element[ eventDefinition.$type ] || !greaterOrEqual(version, element[ eventDefinition.$type ])) {
 
-      reportErrors(node, reporter, error);
+        // (2) Element with event definition not allowed
+        const error = {
+          message: `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> not allowed`,
+          path: null,
+          error: {
+            type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+            node,
+            parentNode: null,
+            eventDefinition
+          }
+        };
 
-      return;
-    }
+        reportErrors(node, reporter, error);
+      }
+    } else {
+      if (!element[ '_' ] || !greaterOrEqual(version, element[ '_' ])) {
 
-    if (!eventDefinition) {
-      return;
-    }
+        // (3) Element without event definition not allowed
+        const error = {
+          message: `Element of type <${ node.$type }> with no event definition not allowed`,
+          path: null,
+          error: {
+            type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+            node,
+            parentNode: null,
+            eventDefinition
+          }
+        };
 
-    if (!eventDefinitions[ node.$type ] || !isAny(eventDefinition, eventDefinitions[ node.$type ])) {
-      const error = {
-        message: `Property of type <${ eventDefinition.$type }> not allowed`,
-        path: [
-          'eventDefinitions',
-          0
-        ],
-        error: {
-          type: ERROR_TYPES.PROPERTY_TYPE_NOT_ALLOWED,
-          node: node,
-          parentNode: null,
-          property: 'eventDefinitions',
-          requiredPropertyType: eventDefinitions[ node.$type ]
-        }
-      };
-
-      reportErrors(node, reporter, error);
+        reportErrors(node, reporter, error);
+      }
     }
   }
 
