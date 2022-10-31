@@ -126,7 +126,7 @@ describe('utils/element', function() {
             message: 'Element of type <bpmn:ServiceTask> must have one extension element of type <zeebe:TaskDefinition>',
             path: null,
             data: {
-              type: 'extensionElementRequired',
+              type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
               node: serviceTask,
               parentNode: null,
               requiredExtensionElement: 'zeebe:TaskDefinition'
