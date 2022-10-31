@@ -6,51 +6,65 @@ const NodeResolver = require('bpmnlint/lib/resolver/node-resolver');
 
 const { readModdle } = require('../../helper');
 
-const config = {
-  extends: 'plugin:camunda-compat/camunda-cloud-8-1'
-};
+const versions = [
+  '1.0',
+  '1.1',
+  '1.2',
+  '1.3',
+  '8.0',
+  '8.1'
+];
 
 describe('integration - feel', function() {
 
-  let linter;
+  versions.forEach(function(version) {
 
-  beforeEach(function() {
-    linter = new Linter({
-      config,
-      resolver: new NodeResolver()
-    });
-  });
+    let linter;
 
-
-  describe('valid', function() {
-
-    it('should be valid', async function() {
-
-      // given
-      const { root } = await readModdle('test/camunda-cloud/integration/feel-valid.bpmn');
-
-      // when
-      const reports = await linter.lint(root);
-
-      // then
-      expect(reports).to.be.empty;
+    beforeEach(function() {
+      linter = new Linter({
+        config: {
+          extends: `plugin:camunda-compat/camunda-cloud-${ version.replace('.', '-') }`
+        },
+        resolver: new NodeResolver()
+      });
     });
 
-  });
+
+    describe(`Camunda Cloud ${ version }`, function() {
+
+      describe('no errors', function() {
+
+        it('should not have errors', async function() {
+
+          // given
+          const { root } = await readModdle('test/camunda-cloud/integration/feel.bpmn');
+
+          // when
+          const reports = await linter.lint(root);
+
+          // then
+          expect(reports[ 'camunda-compat/feel' ]).not.to.exist;
+        });
+
+      });
 
 
-  describe('invalid', function() {
+      describe('errors', function() {
 
-    it('should be invalid', async function() {
+        it('should have errors', async function() {
 
-      // given
-      const { root } = await readModdle('test/camunda-cloud/integration/feel-invalid.bpmn');
+          // given
+          const { root } = await readModdle('test/camunda-cloud/integration/feel-errors.bpmn');
 
-      // when
-      const reports = await linter.lint(root);
+          // when
+          const reports = await linter.lint(root);
 
-      // then
-      expect(reports).not.to.be.empty;
+          // then
+          expect(reports[ 'camunda-compat/feel' ]).to.exist;
+        });
+
+      });
 
     });
 
