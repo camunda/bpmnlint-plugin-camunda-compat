@@ -4,6 +4,7 @@ const {
   ERROR_TYPES,
   formatTypes,
   hasDuplicatedPropertyValues,
+  hasExpression,
   hasExtensionElement,
   hasNoExtensionElement,
   hasProperties,
@@ -449,6 +450,7 @@ describe('utils/element', function() {
 
   });
 
+
   describe('#hasProperty', function() {
 
     it('should not return errors (single property)', function() {
@@ -552,6 +554,7 @@ describe('utils/element', function() {
       ]);
     });
   });
+
 
   describe('#hasProperties', function() {
 
@@ -886,6 +889,182 @@ describe('utils/element', function() {
       });
 
 
+    });
+
+  });
+
+
+  describe('#hasExpression', function() {
+
+    it('should not return errors (required)', function() {
+
+      // given
+      const timerEventDefinition = createElement('bpmn:TimerEventDefinition', {
+        timeCycle: createElement('bpmn:FormalExpression', {
+          body: 'R/P1D'
+        })
+      });
+
+      // when
+      const errors = hasExpression(timerEventDefinition, 'timeCycle', {
+        allowed: () => true
+      });
+
+      // then
+      expect(errors).to.be.empty;
+    });
+
+
+    it('should not return errors (not required)', function() {
+
+      // given
+      const timerEventDefinition = createElement('bpmn:TimerEventDefinition', {
+        timeCycle: createElement('bpmn:FormalExpression')
+      });
+
+      // when
+      const errors = hasExpression(timerEventDefinition, 'timeCycle', {
+        allowed: () => true,
+        required: false
+      });
+
+      // then
+      expect(errors).to.be.empty;
+    });
+
+
+    it('should throw (no expression)', function() {
+
+      // given
+      const endEvent = createElement('bpmn:EndEvent', {
+        eventDefinitions: [
+          createElement('bpmn:TimerEventDefinition')
+        ]
+      });
+
+      // when
+      // then
+      expect(() => hasExpression(endEvent.get('eventDefinitions')[ 0 ], 'timeCycle', {
+        allowed: () => true
+      }, endEvent)).to.throw('Expression not found');
+    });
+
+
+    it('should return errors (no body)', function() {
+
+      // given
+      const endEvent = createElement('bpmn:EndEvent', {
+        eventDefinitions: [
+          createElement('bpmn:TimerEventDefinition', {
+            timeCycle: createElement('bpmn:FormalExpression')
+          })
+        ]
+      });
+
+      // when
+      const errors = hasExpression(endEvent.get('eventDefinitions')[ 0 ], 'timeCycle', {
+        allowed: () => true
+      }, endEvent);
+
+      // then
+      expect(errors).to.eql([
+        {
+          message: 'Property <timeCycle> must have expression value',
+          path: [
+            'eventDefinitions',
+            0,
+            'timeCycle'
+          ],
+          error: {
+            type: ERROR_TYPES.EXPRESSION_REQUIRED,
+            node: endEvent.get('eventDefinitions')[ 0 ].get('timeCycle'),
+            parentNode: endEvent,
+            property: 'timeCycle'
+          }
+        }
+      ]);
+    });
+
+
+    it('should return errors (invalid)', function() {
+
+      // given
+      const endEvent = createElement('bpmn:EndEvent', {
+        eventDefinitions: [
+          createElement('bpmn:TimerEventDefinition', {
+            timeCycle: createElement('bpmn:FormalExpression', {
+              body: 'foo'
+            })
+          })
+        ]
+      });
+
+      // when
+      const errors = hasExpression(endEvent.get('eventDefinitions')[ 0 ], 'timeCycle', {
+        allowed: () => false
+      }, endEvent);
+
+      // then
+      expect(errors).to.eql([
+        {
+          message: 'Expression value of <foo> not allowed',
+          path: [
+            'eventDefinitions',
+            0,
+            'timeCycle'
+          ],
+          error: {
+            type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
+            node: endEvent.get('eventDefinitions')[ 0 ].get('timeCycle'),
+            parentNode: endEvent,
+            property: 'timeCycle',
+            allowedVersion: null
+          }
+        }
+      ]);
+    });
+
+
+    it('should return allowed version (invalid)', function() {
+
+      // given
+      const endEvent = createElement('bpmn:EndEvent', {
+        eventDefinitions: [
+          createElement('bpmn:TimerEventDefinition', {
+            timeCycle: createElement('bpmn:FormalExpression', {
+              body: 'foo'
+            })
+          })
+        ]
+      });
+
+      // when
+      const errors = hasExpression(endEvent.get('eventDefinitions')[ 0 ], 'timeCycle', {
+        allowed: () => {
+          return {
+            allowedVersion: '1.0'
+          };
+        }
+      }, endEvent);
+
+      // then
+      expect(errors).to.eql([
+        {
+          message: 'Expression value of <foo> only allowed by Camunda Platform 1.0',
+          path: [
+            'eventDefinitions',
+            0,
+            'timeCycle'
+          ],
+          error: {
+            type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
+            node: endEvent.get('eventDefinitions')[ 0 ].get('timeCycle'),
+            parentNode: endEvent,
+            property: 'timeCycle',
+            allowedVersion: '1.0'
+          }
+        }
+      ]);
     });
 
   });

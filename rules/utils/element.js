@@ -3,6 +3,7 @@ const {
   isDefined,
   isFunction,
   isNil,
+  isObject,
   some
 } = require('min-dash');
 
@@ -329,6 +330,69 @@ module.exports.hasNoExtensionElement = function(node, type, parentNode = null, a
           node,
           parentNode: parentNode == node ? null : parentNode,
           extensionElement,
+          allowedVersion
+        }
+      }
+    ];
+  }
+
+  return [];
+};
+
+module.exports.hasExpression = function(node, propertyName, check, parentNode = null) {
+  const expression = node.get(propertyName);
+
+  if (!expression) {
+    throw new Error('Expression not found');
+  }
+
+  const body = expression.get('body');
+
+  const path = getPath(node, parentNode);
+
+  if (!body) {
+    if (check.required !== false) {
+      return [
+        {
+          message: `Property <${ propertyName }> must have expression value`,
+          path: path
+            ? [ ...path, propertyName ]
+            : null,
+          error: {
+            type: ERROR_TYPES.EXPRESSION_REQUIRED,
+            node: expression,
+            parentNode,
+            property: propertyName
+          }
+        }
+      ];
+    }
+
+    return [];
+  }
+
+  const allowed = check.allowed(body);
+
+  if (allowed !== true) {
+    let allowedVersion = null;
+
+    if (isObject(allowed)) {
+      ({ allowedVersion } = allowed);
+    }
+
+    return [
+      {
+        message: allowedVersion
+          ? `Expression value of <${ body }> only allowed by Camunda Platform ${ allowedVersion }`
+          : `Expression value of <${ body }> not allowed`,
+        path: path
+          ? [ ...path, propertyName ]
+          : null,
+        error: {
+          type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
+          node: expression,
+          parentNode,
+          property: propertyName,
           allowedVersion
         }
       }

@@ -8,6 +8,7 @@ const { greaterOrEqual } = require('../utils/version');
 
 const {
   getEventDefinition,
+  hasExpression,
   hasProperties,
   hasProperty
 } = require('../utils/element');
@@ -42,17 +43,7 @@ module.exports = function({ version }) {
       return;
     }
 
-    const timeProperty = getTimeProperty(eventDefinition);
-
-    errors = checkTimePropertyNotEmpty(timeProperty, node);
-
-    if (errors && errors.length) {
-      reportErrors(node, reporter, errors);
-
-      return;
-    }
-
-    errors = checkTimePropertyCorrectFormat(eventDefinition, node, version);
+    errors = checkTimeProperty(eventDefinition, node, version);
 
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);
@@ -80,36 +71,22 @@ function checkTimePropertyExists(eventDefinition, event) {
   return [];
 }
 
-function checkTimePropertyNotEmpty(timeProperty, event) {
-  return hasProperties(timeProperty, {
-    body: {
-      required: true,
-    }
-  }, event);
-}
-
-function checkTimePropertyCorrectFormat(eventDefinition, event, version) {
+function checkTimeProperty(eventDefinition, event, version) {
   const timeCycle = eventDefinition.get('timeCycle'),
         timeDate = eventDefinition.get('timeDate'),
         timeDuration = eventDefinition.get('timeDuration');
 
   if (timeCycle) {
-    return hasProperties(timeCycle, {
-      body: {
-        allowed: cycle => validateCycle(cycle, version)
-      }
+    return hasExpression(eventDefinition, 'timeCycle', {
+      allowed: cycle => validateCycle(cycle, version)
     }, event);
   } else if (timeDate) {
-    return hasProperties(timeDate, {
-      body: {
-        allowed: date => validateDate(date, version)
-      }
+    return hasExpression(eventDefinition, 'timeDate', {
+      allowed: date => validateDate(date, version)
     }, event);
   } else if (timeDuration) {
-    return hasProperties(timeDuration, {
-      body: {
-        allowed: duration => validateDuration(duration, version)
-      }
+    return hasExpression(eventDefinition, 'timeDuration', {
+      allowed: duration => validateDuration(duration, version)
     }, event);
   }
 }
@@ -117,10 +94,6 @@ function checkTimePropertyCorrectFormat(eventDefinition, event, version) {
 
 
 // helper //////////////
-function getTimeProperty(eventDefinition) {
-  return eventDefinition.get('timeCycle') || eventDefinition.get('timeDate') || eventDefinition.get('timeDuration');
-}
-
 function isInterruptingBoundaryEvent(event) {
   return is(event, 'bpmn:BoundaryEvent') && event.get('cancelActivity') !== false;
 }
@@ -141,11 +114,11 @@ function validateCycle(cycle, version) {
   }
 
   if (validateISO8601Cycle(cycle)) {
-    return greaterOrEqual(version, config.iso8601);;
+    return greaterOrEqual(version, config.iso8601);
   }
 
   if (validateCronExpression(cycle)) {
-    return greaterOrEqual(version, config.cron);
+    return greaterOrEqual(version, config.cron) || { allowedVersion: config.cron };
   }
 }
 
