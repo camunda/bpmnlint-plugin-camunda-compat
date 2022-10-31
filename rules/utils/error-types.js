@@ -9,5 +9,7 @@ module.exports.ERROR_TYPES = Object.freeze({
   PROPERTY_TYPE_NOT_ALLOWED: 'propertyTypeNotAllowed',
   PROPERTY_VALUE_DUPLICATED: 'propertyValueDuplicated',
   PROPERTY_VALUE_NOT_ALLOWED: 'propertyValueNotAllowed',
-  FEEL_INVALID: 'feelInvalid'
+  FEEL_INVALID: 'feelInvalid',
+  EXPRESSION_REQUIRED: 'expressionRequired',
+  EXPRESSION_VALUE_NOT_ALLOWED: 'expressionValueNotAllowed'
 });

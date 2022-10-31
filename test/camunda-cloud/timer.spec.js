@@ -161,10 +161,10 @@ const invalid = [
     name: 'timer interrupting boundary event (no expression)',
     config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
-    <bpmn:task id="Task" />
-    <bpmn:boundaryEvent id="Event" attachedToRef="Task">
-      <bpmn:timerEventDefinition id="TimerEventDefinition" />
-    </bpmn:boundaryEvent>
+      <bpmn:task id="Task" />
+      <bpmn:boundaryEvent id="Event" attachedToRef="Task">
+        <bpmn:timerEventDefinition id="TimerEventDefinition" />
+      </bpmn:boundaryEvent>
     `)),
     report: {
       id: 'Event',
@@ -186,10 +186,10 @@ const invalid = [
     name: 'timer non-interrupting boundary event (no expression)',
     config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
-    <bpmn:task id="Task" />
-    <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
-      <bpmn:timerEventDefinition id="TimerEventDefinition" />
-    </bpmn:boundaryEvent>
+      <bpmn:task id="Task" />
+      <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
+        <bpmn:timerEventDefinition id="TimerEventDefinition" />
+      </bpmn:boundaryEvent>
     `)),
     report: {
       id: 'Event',
@@ -213,27 +213,26 @@ const invalid = [
     name: 'timer start event (empty expression)',
     config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
-    <bpmn:task id="Task" />
-    <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
-      <bpmn:timerEventDefinition id="TimerEventDefinition">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression" />
-      </bpmn:timerEventDefinition>
-    </bpmn:boundaryEvent>
+      <bpmn:task id="Task" />
+      <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
+        <bpmn:timerEventDefinition id="TimerEventDefinition">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression" />
+        </bpmn:timerEventDefinition>
+      </bpmn:boundaryEvent>
     `)),
     report: {
       id: 'Event',
-      message: 'Element of type <bpmn:FormalExpression> must have property <body>',
+      message: 'Property <timeDuration> must have expression value',
       path: [
         'eventDefinitions',
         0,
-        'timeDuration',
-        'body'
+        'timeDuration'
       ],
       error: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        type: ERROR_TYPES.EXPRESSION_REQUIRED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        requiredProperty: 'body'
+        property: 'timeDuration'
       }
     }
   },
@@ -241,27 +240,26 @@ const invalid = [
     name: 'timer boundary event (cron in Camunda Platform 8.0)',
     config: { version: '8.0' },
     moddleElement: createModdle(createProcess(`
-    <bpmn:task id="Task" />
-    <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
-      <bpmn:timerEventDefinition id="TimerEventDefinition">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">@daily</bpmn:timeDuration>
-      </bpmn:timerEventDefinition>
-    </bpmn:boundaryEvent>
+      <bpmn:task id="Task" />
+      <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
+        <bpmn:timerEventDefinition id="TimerEventDefinition">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">@daily</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
+      </bpmn:boundaryEvent>
     `)),
     report: {
       id: 'Event',
-      message: 'Property value of <@daily> not allowed',
+      message: 'Expression value of <@daily> not allowed',
       path: [
         'eventDefinitions',
         0,
-        'timeDuration',
-        'body'
+        'timeDuration'
       ],
       error: {
-        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'body',
+        property: 'timeDuration',
         allowedVersion: null
       }
     }
@@ -270,27 +268,26 @@ const invalid = [
     name: 'timer boundary event (invalid duration)',
     config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
-    <bpmn:task id="Task" />
-    <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
-      <bpmn:timerEventDefinition id="TimerEventDefinition">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">invalid</bpmn:timeDuration>
-      </bpmn:timerEventDefinition>
-    </bpmn:boundaryEvent>
+      <bpmn:task id="Task" />
+      <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
+        <bpmn:timerEventDefinition id="TimerEventDefinition">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">invalid</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
+      </bpmn:boundaryEvent>
     `)),
     report: {
       id: 'Event',
-      message: 'Property value of <invalid> not allowed',
+      message: 'Expression value of <invalid> not allowed',
       path: [
         'eventDefinitions',
         0,
-        'timeDuration',
-        'body'
+        'timeDuration'
       ],
       error: {
-        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'body',
+        property: 'timeDuration',
         allowedVersion: null
       }
     }
@@ -299,27 +296,26 @@ const invalid = [
     name: 'timer boundary event (invalid cycle)',
     config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
-    <bpmn:task id="Task" />
-    <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
-      <bpmn:timerEventDefinition id="TimerEventDefinition">
-        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">invalid</bpmn:timeCycle>
-      </bpmn:timerEventDefinition>
-    </bpmn:boundaryEvent>
+      <bpmn:task id="Task" />
+      <bpmn:boundaryEvent id="Event" cancelActivity="false" attachedToRef="Task">
+        <bpmn:timerEventDefinition id="TimerEventDefinition">
+          <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">invalid</bpmn:timeCycle>
+        </bpmn:timerEventDefinition>
+      </bpmn:boundaryEvent>
     `)),
     report: {
       id: 'Event',
-      message: 'Property value of <invalid> not allowed',
+      message: 'Expression value of <invalid> not allowed',
       path: [
         'eventDefinitions',
         0,
-        'timeCycle',
-        'body'
+        'timeCycle'
       ],
       error: {
-        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'body',
+        property: 'timeCycle',
         allowedVersion: null
       }
     }
@@ -328,26 +324,25 @@ const invalid = [
     name: 'timer start event (invalid date)',
     config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
-    <bpmn:startEvent id="Event">
-      <bpmn:timerEventDefinition id="TimerEventDefinition">
-        <bpmn:timeDate xsi:type="bpmn:tFormalExpression">invalid</bpmn:timeDate>
-      </bpmn:timerEventDefinition>
-    </bpmn:startEvent>
+      <bpmn:startEvent id="Event">
+        <bpmn:timerEventDefinition id="TimerEventDefinition">
+          <bpmn:timeDate xsi:type="bpmn:tFormalExpression">invalid</bpmn:timeDate>
+        </bpmn:timerEventDefinition>
+      </bpmn:startEvent>
     `)),
     report: {
       id: 'Event',
-      message: 'Property value of <invalid> not allowed',
+      message: 'Expression value of <invalid> not allowed',
       path: [
         'eventDefinitions',
         0,
-        'timeDate',
-        'body'
+        'timeDate'
       ],
       error: {
-        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'body',
+        property: 'timeDate',
         allowedVersion: null
       }
     }
