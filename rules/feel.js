@@ -1,23 +1,36 @@
+const { isString } = require('min-dash');
+
 const { is } = require('bpmnlint-utils');
+
 const { lintExpression } = require('@bpmn-io/feel-lint');
 
-const { reportErrors } = require('./utils/reporter');
 const { getPath } = require('@bpmn-io/moddle-utils');
+
+const { reportErrors } = require('./utils/reporter');
+
 const { ERROR_TYPES } = require('./utils/error-types');
 
 module.exports = function() {
   function check(node, reporter) {
+    if (is(node, 'bpmn:Expression')) {
+      return;
+    }
 
     const parentNode = findFlowElement(node);
-    const errors = [];
 
     if (!parentNode) {
       return;
     }
 
-    Object.entries(node).forEach(([ propertyName, value ]) => {
-      if (isFeelValue([ propertyName, value ])) {
-        const lintErrors = lintExpression(value.substring(1));
+    const errors = [];
+
+    Object.entries(node).forEach(([ propertyName, propertyValue ]) => {
+      if (propertyValue && is(propertyValue, 'bpmn:Expression')) {
+        propertyValue = propertyValue.get('body');
+      }
+
+      if (isFeelProperty([ propertyName, propertyValue ])) {
+        const lintErrors = lintExpression(propertyValue.substring(1));
 
         // syntax error
         if (lintErrors.find(({ type }) => type === 'syntaxError')) {
@@ -30,8 +43,8 @@ module.exports = function() {
                 ? [ ...path, propertyName ]
                 : [ propertyName ],
               data: {
-                type: ERROR_TYPES.FEEL_INVALID,
-                node: node,
+                type: ERROR_TYPES.FEEL_EXPRESSION_INVALID,
+                node,
                 parentNode,
                 property: propertyName
               }
@@ -41,7 +54,9 @@ module.exports = function() {
       }
     });
 
-    errors.length && reportErrors(parentNode, reporter, errors);
+    if (errors && errors.length) {
+      reportErrors(parentNode, reporter, errors);
+    }
   }
 
   return {
@@ -49,12 +64,12 @@ module.exports = function() {
   };
 };
 
-const isFeelValue = ([ key, value ]) => {
-  return shouldCheck(key) && typeof value === 'string' && value.startsWith('=');
+const isFeelProperty = ([ propertyName, value ]) => {
+  return !isIgnoredProperty(propertyName) && isString(value) && value.startsWith('=');
 };
 
-const shouldCheck = key => {
-  return !key.startsWith('$');
+const isIgnoredProperty = propertyName => {
+  return propertyName.startsWith('$');
 };
 
 const findFlowElement = node => {
