@@ -1,33 +1,12 @@
-const camundaCloud10ElementsTaskDefinition = [
-  'bpmn:ServiceTask'
-];
-
-const camundaCloud11ElementsTaskDefinition = [
-  ...camundaCloud10ElementsTaskDefinition,
-  'bpmn:BusinessRuleTask',
-  'bpmn:ScriptTask',
-  'bpmn:SendTask'
-];
-
-const camundaCloud12ElementsTaskDefinition = [
-  ...camundaCloud11ElementsTaskDefinition,
-  'bpmn:IntermediateThrowEvent'
-];
-
 module.exports = {
-  camundaCloud10: {
-    elementsTaskDefinition: camundaCloud10ElementsTaskDefinition
+  calledDecision: {
+    'bpmn:BusinessRuleTask': '1.3'
   },
-  camundaCloud11: {
-    elementsTaskDefinition: camundaCloud11ElementsTaskDefinition
-  },
-  camundaCloud12: {
-    elementsTaskDefinition: camundaCloud12ElementsTaskDefinition
-  },
-  camundaCloud13: {
-    elementsCalledDecision: [
-      'bpmn:BusinessRuleTask'
-    ],
-    elementsTaskDefinition: camundaCloud12ElementsTaskDefinition
+  taskDefinition: {
+    'bpmn:BusinessRuleTask': '1.1',
+    'bpmn:IntermediateThrowEvent': '1.2',
+    'bpmn:ScriptTask': '1.1',
+    'bpmn:SendTask': '1.1',
+    'bpmn:ServiceTask': '1.0'
   }
 };
