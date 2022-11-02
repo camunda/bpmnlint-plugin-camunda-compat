@@ -7,6 +7,7 @@ describe('configs', function() {
   it('camunda-cloud-1-0', expectRules(configs, 'camunda-cloud-1-0', {
     'called-decision-or-task-definition': [ 'error', require('../../rules/called-decision-or-task-definition/config').camundaCloud10 ],
     'called-element': 'error',
+    'collapsed-subprocess': 'error',
     'duplicate-task-headers': 'error',
     'element-type': [ 'error', require('../../rules/element-type/config').camundaCloud10 ],
     'error-reference': 'error',
@@ -24,6 +25,7 @@ describe('configs', function() {
   it('camunda-cloud-1-1', expectRules(configs, 'camunda-cloud-1-1', {
     'called-decision-or-task-definition': [ 'error', require('../../rules/called-decision-or-task-definition/config').camundaCloud11 ],
     'called-element': 'error',
+    'collapsed-subprocess': 'error',
     'duplicate-task-headers': 'error',
     'element-type': [ 'error', require('../../rules/element-type/config').camundaCloud11 ],
     'error-reference': 'error',
@@ -41,6 +43,7 @@ describe('configs', function() {
   it('camunda-cloud-1-2', expectRules(configs, 'camunda-cloud-1-2', {
     'called-decision-or-task-definition': [ 'error', require('../../rules/called-decision-or-task-definition/config').camundaCloud12 ],
     'called-element': 'error',
+    'collapsed-subprocess': 'error',
     'duplicate-task-headers': 'error',
     'element-type': [ 'error', require('../../rules/element-type/config').camundaCloud12 ],
     'error-reference': 'error',
@@ -58,6 +61,7 @@ describe('configs', function() {
   it('camunda-cloud-1-3', expectRules(configs, 'camunda-cloud-1-3', {
     'called-decision-or-task-definition': [ 'error', require('../../rules/called-decision-or-task-definition/config').camundaCloud13 ],
     'called-element': 'error',
+    'collapsed-subprocess': 'error',
     'duplicate-task-headers': 'error',
     'element-type': [ 'error', require('../../rules/element-type/config').camundaCloud12 ],
     'error-reference': 'error',
@@ -75,6 +79,7 @@ describe('configs', function() {
   it('camunda-cloud-8-0', expectRules(configs, 'camunda-cloud-8-0', {
     'called-decision-or-task-definition': [ 'error', require('../../rules/called-decision-or-task-definition/config').camundaCloud13 ],
     'called-element': 'error',
+    'collapsed-subprocess': 'error',
     'duplicate-task-headers': 'error',
     'element-type': [ 'error', require('../../rules/element-type/config').camundaCloud12 ],
     'error-reference': 'error',
@@ -91,6 +96,7 @@ describe('configs', function() {
   it('camunda-cloud-8-1', expectRules(configs, 'camunda-cloud-8-1', {
     'called-decision-or-task-definition': [ 'error', require('../../rules/called-decision-or-task-definition/config').camundaCloud13 ],
     'called-element': 'error',
+    'collapsed-subprocess': 'error',
     'duplicate-task-headers': 'error',
     'element-type': [ 'error', require('../../rules/element-type/config').camundaCloud81 ],
     'error-reference': 'error',

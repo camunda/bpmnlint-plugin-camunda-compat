@@ -7,6 +7,7 @@ const calledDecisionOrTaskDefinitionConfig = require('./rules/called-decision-or
 const camundaCloud10Rules = {
   'called-decision-or-task-definition': [ 'error', calledDecisionOrTaskDefinitionConfig.camundaCloud10 ],
   'called-element': 'error',
+  'collapsed-subprocess': 'error',
   'duplicate-task-headers': 'error',
   'element-type': [ 'error', elementTypeConfig.camundaCloud10 ],
   'error-reference': 'error',
