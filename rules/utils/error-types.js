@@ -1,5 +1,6 @@
 module.exports.ERROR_TYPES = Object.freeze({
   ELEMENT_TYPE_NOT_ALLOWED: 'elementTypeNotAllowed',
+  ELEMENT_COLLAPSED_NOT_ALLOWED: 'elementCollapsedNotAllowed',
   EXTENSION_ELEMENT_NOT_ALLOWED: 'extensionElementNotAllowed',
   EXTENSION_ELEMENT_REQUIRED: 'extensionElementRequired',
   PROPERTY_DEPENDEND_REQUIRED: 'propertyDependendRequired',
