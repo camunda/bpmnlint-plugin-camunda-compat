@@ -65,7 +65,7 @@ const invalid = [
         0,
         'messageRef'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'MessageEventDefinition_1',
         parentNode: 'StartEvent_1',
@@ -91,7 +91,7 @@ const invalid = [
         1,
         'name'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'Message_1',
         parentNode: 'StartEvent_1',
@@ -110,7 +110,7 @@ const invalid = [
       path: [
         'messageRef'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'ReceiveTask_1',
         parentNode: null,
@@ -134,7 +134,7 @@ const invalid = [
         1,
         'name'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'Message_1',
         parentNode: 'ReceiveTask_1',

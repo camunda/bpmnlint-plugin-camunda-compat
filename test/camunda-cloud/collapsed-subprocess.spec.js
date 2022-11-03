@@ -59,7 +59,7 @@ const invalid = [
     report: {
       id: 'Activity_1ehskbd',
       message: 'A <bpmn:SubProcess> must be expanded.',
-      error: {
+      data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'Activity_1ehskbd',
         parentNode: null
@@ -83,7 +83,7 @@ const invalid = [
     report: {
       id: 'Activity_1ehskbd',
       message: 'A <bpmn:SubProcess> must be expanded.',
-      error: {
+      data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'Activity_1ehskbd',
         parentNode: null
@@ -110,7 +110,7 @@ const invalid = [
     report: {
       id: 'Activity_1ehskbd',
       message: 'A <bpmn:AdHocSubProcess> must be expanded.',
-      error: {
+      data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'Activity_1ehskbd',
         parentNode: null

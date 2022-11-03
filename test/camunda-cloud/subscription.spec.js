@@ -90,7 +90,7 @@ const invalid = [
         'rootElements',
         1
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'Message_1',
         parentNode: 'StartEvent_1',
@@ -125,7 +125,7 @@ const invalid = [
         0,
         'correlationKey'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:Subscription',
         parentNode: 'StartEvent_1',
@@ -148,7 +148,7 @@ const invalid = [
         'rootElements',
         1
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'Message_1',
         parentNode: 'ReceiveTask_1',
@@ -179,7 +179,7 @@ const invalid = [
         0,
         'correlationKey'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:Subscription',
         parentNode: 'ReceiveTask_1',

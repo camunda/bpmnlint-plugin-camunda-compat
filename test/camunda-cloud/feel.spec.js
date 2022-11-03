@@ -59,7 +59,7 @@ const invalid = [
         0,
         'source'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.FEEL_INVALID,
         node: 'zeebe:Output',
         parentNode: 'Task_1',

@@ -15,7 +15,7 @@ module.exports = function() {
 
     const error = {
       message: `A <${ node.$type }> must be expanded.`,
-      error: {
+      data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: node,
         parentNode: null

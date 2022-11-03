@@ -34,7 +34,7 @@ const invalid = [
       id: 'CallActivity_1',
       message: 'Element of type <bpmn:CallActivity> must have one extension element of type <zeebe:CalledElement>',
       path: [],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'CallActivity_1',
         parentNode: null,
@@ -60,7 +60,7 @@ const invalid = [
         0,
         'processId'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:CalledElement',
         parentNode: 'CallActivity_1',

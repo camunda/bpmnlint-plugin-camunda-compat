@@ -38,7 +38,7 @@ const invalid = [
         'values',
         0
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
         node: 'ServiceTask_1',
         parentNode: null,

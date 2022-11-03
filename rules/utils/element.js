@@ -115,7 +115,7 @@ module.exports.hasDuplicatedPropertyValues = function(node, propertiesName, prop
       return {
         message: `Properties of type <${ duplicateProperties[ 0 ].$type }> have property <${ propertyName }> with duplicate value of <${ duplicate }>`,
         path: null,
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
           node,
           parentNode: parentNode == node ? null : parentNode,
@@ -149,7 +149,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
-          error: {
+          data: {
             type: ERROR_TYPES.PROPERTY_REQUIRED,
             node,
             parentNode: parentNode == node ? null : parentNode,
@@ -170,7 +170,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
             path: path
               ? [ ...path, propertyName ]
               : [ propertyName ],
-            error: {
+            data: {
               type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
               node,
               parentNode: parentNode == node ? null : parentNode,
@@ -200,7 +200,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
-          error: {
+          data: {
             type: ERROR_TYPES.PROPERTY_TYPE_NOT_ALLOWED,
             node,
             parentNode: parentNode == node ? null : parentNode,
@@ -222,7 +222,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
-          error: {
+          data: {
             type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
             node,
             parentNode: parentNode == node ? null : parentNode,
@@ -243,7 +243,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
-          error: {
+          data: {
             type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
             node,
             parentNode: parentNode == node ? null : parentNode,
@@ -268,7 +268,7 @@ module.exports.hasProperty = function(node, types, parentNode = null) {
       {
         message: `Element of type <${ node.$type }> must have one property of type ${ formatTypes(typesArray, true) }`,
         path: getPath(node, parentNode),
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           node,
           parentNode: parentNode == node ? null : parentNode,
@@ -302,7 +302,7 @@ module.exports.hasExtensionElement = function(node, types, parentNode = null) {
       {
         message: `Element of type <${ node.$type }> must have one extension element of type ${ formatTypes(typesArray, true) }`,
         path: getPath(node, parentNode),
-        error: {
+        data: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
           node,
           parentNode: parentNode == node ? null : parentNode,
@@ -325,7 +325,7 @@ module.exports.hasNoExtensionElement = function(node, type, parentNode = null, a
           ? `Extension element of type <${ type }> only allowed by Camunda Platform ${ allowedVersion }`
           : `Extension element of type <${ type }> not allowed`,
         path: getPath(extensionElement, parentNode),
-        error: {
+        data: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
           node,
           parentNode: parentNode == node ? null : parentNode,
@@ -358,7 +358,7 @@ module.exports.hasExpression = function(node, propertyName, check, parentNode = 
           path: path
             ? [ ...path, propertyName ]
             : null,
-          error: {
+          data: {
             type: ERROR_TYPES.EXPRESSION_REQUIRED,
             node: expression,
             parentNode,
@@ -388,8 +388,8 @@ module.exports.hasExpression = function(node, propertyName, check, parentNode = 
         path: path
           ? [ ...path, propertyName ]
           : null,
-        error: {
-          type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
+        data: {
+          type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
           node: expression,
           parentNode,
           property: propertyName,

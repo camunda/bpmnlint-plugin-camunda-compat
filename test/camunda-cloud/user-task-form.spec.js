@@ -50,7 +50,7 @@ const invalid = [
         0,
         'formKey'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:FormDefinition',
         parentNode: 'UserTask_1',
@@ -81,7 +81,7 @@ const invalid = [
         0,
         'body'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:UserTaskForm',
         parentNode: 'UserTask_1',

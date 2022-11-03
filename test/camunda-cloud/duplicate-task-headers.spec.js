@@ -109,7 +109,7 @@ const invalid = [
       id: 'ServiceTask_1',
       message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
         node: 'zeebe:TaskHeaders',
         parentNode: 'ServiceTask_1',
@@ -141,7 +141,7 @@ const invalid = [
         id: 'ServiceTask_1',
         message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
         path: null,
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
           node: 'zeebe:TaskHeaders',
           parentNode: 'ServiceTask_1',
@@ -176,7 +176,7 @@ const invalid = [
         id: 'ServiceTask_1',
         message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
         path: null,
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
           node: 'zeebe:TaskHeaders',
           parentNode: 'ServiceTask_1',
@@ -193,7 +193,7 @@ const invalid = [
         id: 'ServiceTask_1',
         message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <bar>',
         path: null,
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
           node: 'zeebe:TaskHeaders',
           parentNode: 'ServiceTask_1',
@@ -224,7 +224,7 @@ const invalid = [
       id: 'ServiceTask_1',
       message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <undefined>',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
         node: 'zeebe:TaskHeaders',
         parentNode: 'ServiceTask_1',
@@ -254,7 +254,7 @@ const invalid = [
       id: 'SendTask_1',
       message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
         node: 'zeebe:TaskHeaders',
         parentNode: 'SendTask_1',
@@ -284,7 +284,7 @@ const invalid = [
       id: 'UserTask_1',
       message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
         node: 'zeebe:TaskHeaders',
         parentNode: 'UserTask_1',
@@ -315,7 +315,7 @@ const invalid = [
       id: 'BusinessRuleTask_1',
       message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
         node: 'zeebe:TaskHeaders',
         parentNode: 'BusinessRuleTask_1',
@@ -345,7 +345,7 @@ const invalid = [
       id: 'ScriptTask_1',
       message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
         node: 'zeebe:TaskHeaders',
         parentNode: 'ScriptTask_1',
@@ -376,7 +376,7 @@ const invalid = [
       id: 'MessageEvent_1',
       message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
         node: 'zeebe:TaskHeaders',
         parentNode: 'MessageEvent_1',

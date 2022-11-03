@@ -29,7 +29,7 @@ module.exports = function() {
               path: path
                 ? [ ...path, propertyName ]
                 : [ propertyName ],
-              error: {
+              data: {
                 type: ERROR_TYPES.FEEL_INVALID,
                 node: node,
                 parentNode,
