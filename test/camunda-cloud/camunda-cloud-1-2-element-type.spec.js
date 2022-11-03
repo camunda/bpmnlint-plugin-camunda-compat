@@ -43,7 +43,7 @@ const invalid = [
       id: 'BoundaryEvent_1',
       message: 'Element of type <bpmn:BoundaryEvent> with no event definition not allowed',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'BoundaryEvent_1',
         parentNode: null,
@@ -58,7 +58,7 @@ const invalid = [
       id: 'ComplexGateway_1',
       message: 'Element of type <bpmn:ComplexGateway> not allowed',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'ComplexGateway_1',
         parentNode: null,
@@ -73,7 +73,7 @@ const invalid = [
       id: 'IntermediateCatchEvent_1',
       message: 'Element of type <bpmn:IntermediateCatchEvent> with no event definition not allowed',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'IntermediateCatchEvent_1',
         parentNode: null,
@@ -88,7 +88,7 @@ const invalid = [
       id: 'Task_1',
       message: 'Element of type <bpmn:Task> not allowed',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'Task_1',
         parentNode: null,
@@ -103,7 +103,7 @@ const invalid = [
       id: 'InclusiveGateway_1',
       message: 'Element of type <bpmn:InclusiveGateway> only allowed by Camunda Platform 8.1 or newer',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'InclusiveGateway_1',
         parentNode: null,
@@ -122,7 +122,7 @@ const invalid = [
       id: 'EndEvent_1',
       message: 'Element of type <bpmn:EndEvent> with event definition of type <bpmn:TerminateEventDefinition> only allowed by Camunda Platform 8.1 or newer',
       path: null,
-      error: {
+      data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'EndEvent_1',
         parentNode: null,

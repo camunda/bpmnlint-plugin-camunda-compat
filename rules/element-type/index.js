@@ -30,7 +30,7 @@ module.exports = function({ version }) {
           ? `Element of type <${ node.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`
           : `Element of type <${ node.$type }> not allowed`,
         path: null,
-        error: {
+        data: {
           type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
           node,
           parentNode: null,
@@ -60,7 +60,7 @@ module.exports = function({ version }) {
             ? `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`
             : `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> not allowed`,
           path: null,
-          error: {
+          data: {
             type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
             node,
             parentNode: null,
@@ -82,7 +82,7 @@ module.exports = function({ version }) {
             ? `Element of type <${ node.$type }> with no event definition only allowed by Camunda Platform ${ allowedVersion } or newer`
             : `Element of type <${ node.$type }> with no event definition not allowed`,
           path: null,
-          error: {
+          data: {
             type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
             node,
             parentNode: null,

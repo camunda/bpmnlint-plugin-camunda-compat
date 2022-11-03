@@ -56,7 +56,7 @@ const invalid = [
         0,
         'errorRef'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'ErrorEventDefinition_1',
         parentNode: 'EndEvent_1',
@@ -82,7 +82,7 @@ const invalid = [
         1,
         'errorCode'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'Error_1',
         parentNode: 'EndEvent_1',

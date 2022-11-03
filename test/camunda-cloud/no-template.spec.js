@@ -30,7 +30,7 @@ const invalid = [
       path: [
         'modelerTemplate'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'ServiceTask_1',
         parentNode: null,
@@ -50,7 +50,7 @@ const invalid = [
       path: [
         'modelerTemplate'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'ServiceTask_1',
         parentNode: null,

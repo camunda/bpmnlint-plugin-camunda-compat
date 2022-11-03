@@ -101,7 +101,7 @@ describe('utils/element', function() {
           {
             message: 'Element of type <bpmn:ServiceTask> must have one extension element of type <zeebe:TaskDefinition>',
             path: null,
-            error: {
+            data: {
               type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
               node: serviceTask,
               parentNode: null,
@@ -125,7 +125,7 @@ describe('utils/element', function() {
           {
             message: 'Element of type <bpmn:ServiceTask> must have one extension element of type <zeebe:TaskDefinition>',
             path: null,
-            error: {
+            data: {
               type: 'extensionElementRequired',
               node: serviceTask,
               parentNode: null,
@@ -178,7 +178,7 @@ describe('utils/element', function() {
           {
             message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
             path: null,
-            error: {
+            data: {
               type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
               node: businessRuleTask,
               parentNode: null,
@@ -212,7 +212,7 @@ describe('utils/element', function() {
           {
             message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
             path: null,
-            error: {
+            data: {
               type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
               node: businessRuleTask,
               parentNode: null,
@@ -249,7 +249,7 @@ describe('utils/element', function() {
           {
             message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
             path: null,
-            error: {
+            data: {
               type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
               node: businessRuleTask,
               parentNode: null,
@@ -305,7 +305,7 @@ describe('utils/element', function() {
         {
           message: 'Extension element of type <zeebe:Properties> not allowed',
           path: null,
-          error: {
+          data: {
             type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
             node: serviceTask,
             parentNode: null,
@@ -376,7 +376,7 @@ describe('utils/element', function() {
       expect(errors[ 0 ]).eql({
         message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
         path: null,
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
           node: taskHeaders,
           parentNode: null,
@@ -422,7 +422,7 @@ describe('utils/element', function() {
       expect(errors[ 0 ]).eql({
         message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <foo>',
         path: null,
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
           node: taskHeaders,
           parentNode: null,
@@ -436,7 +436,7 @@ describe('utils/element', function() {
       expect(errors[ 1 ]).eql({
         message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <bar>',
         path: null,
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
           node: taskHeaders,
           parentNode: null,
@@ -511,7 +511,7 @@ describe('utils/element', function() {
         {
           message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle> or <timeDuration>',
           path: null,
-          error: {
+          data: {
             type: ERROR_TYPES.PROPERTY_REQUIRED,
             node: timerEventDefition,
             parentNode: null,
@@ -541,7 +541,7 @@ describe('utils/element', function() {
         {
           message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle> or <timeDuration>',
           path: null,
-          error: {
+          data: {
             type: ERROR_TYPES.PROPERTY_REQUIRED,
             node: timerEventDefition,
             parentNode: null,
@@ -598,7 +598,7 @@ describe('utils/element', function() {
             path: [
               'type'
             ],
-            error: {
+            data: {
               type: ERROR_TYPES.PROPERTY_REQUIRED,
               node: taskDefinition,
               parentNode: null,
@@ -654,7 +654,7 @@ describe('utils/element', function() {
             path: [
               'outputElement'
             ],
-            error: {
+            data: {
               type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
               node: loopCharacteristics,
               parentNode: null,
@@ -710,7 +710,7 @@ describe('utils/element', function() {
             path: [
               'loopCharacteristics'
             ],
-            error: {
+            data: {
               type: ERROR_TYPES.PROPERTY_TYPE_NOT_ALLOWED,
               node: serviceTask,
               parentNode: null,
@@ -786,7 +786,7 @@ describe('utils/element', function() {
               path: [
                 'modelerTemplate'
               ],
-              error: {
+              data: {
                 type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
                 node: serviceTask,
                 parentNode: null,
@@ -842,7 +842,7 @@ describe('utils/element', function() {
               path: [
                 'modelerTemplate'
               ],
-              error: {
+              data: {
                 type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
                 node: serviceTask,
                 parentNode: null,
@@ -875,7 +875,7 @@ describe('utils/element', function() {
               path: [
                 'modelerTemplate'
               ],
-              error: {
+              data: {
                 type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
                 node: serviceTask,
                 parentNode: null,
@@ -975,7 +975,7 @@ describe('utils/element', function() {
             0,
             'timeCycle'
           ],
-          error: {
+          data: {
             type: ERROR_TYPES.EXPRESSION_REQUIRED,
             node: endEvent.get('eventDefinitions')[ 0 ].get('timeCycle'),
             parentNode: endEvent,
@@ -1013,8 +1013,8 @@ describe('utils/element', function() {
             0,
             'timeCycle'
           ],
-          error: {
-            type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
+          data: {
+            type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
             node: endEvent.get('eventDefinitions')[ 0 ].get('timeCycle'),
             parentNode: endEvent,
             property: 'timeCycle',
@@ -1056,8 +1056,8 @@ describe('utils/element', function() {
             0,
             'timeCycle'
           ],
-          error: {
-            type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
+          data: {
+            type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
             node: endEvent.get('eventDefinitions')[ 0 ].get('timeCycle'),
             parentNode: endEvent,
             property: 'timeCycle',

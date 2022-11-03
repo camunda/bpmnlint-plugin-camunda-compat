@@ -44,7 +44,7 @@ module.exports = function({ version }) {
             ? `Extension element of type <zeebe:CalledDecision> only allowed by Camunda Platform ${ allowedVersion } or newer`
             : 'Extension element of type <zeebe:CalledDecision> not allowed',
           path: getPath(calledDecision, node),
-          error: {
+          data: {
             type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
             node,
             parentNode: null,
@@ -82,7 +82,7 @@ module.exports = function({ version }) {
             ? `Extension element of type <zeebe:TaskDefinition> only allowed by Camunda Platform ${ allowedVersion } or newer`
             : 'Extension element of type <zeebe:TaskDefinition> not allowed',
           path: getPath(taskDefinition, node),
-          error: {
+          data: {
             type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
             node,
             parentNode: null,

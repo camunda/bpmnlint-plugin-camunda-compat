@@ -16,7 +16,7 @@ module.exports = function() {
       const error = {
         message: `Element of type <${ node.$type }> must have one property <incoming> of type <bpmn:SequenceFlow>`,
         path: [ 'incoming' ],
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
           node,
           parentNode: null,

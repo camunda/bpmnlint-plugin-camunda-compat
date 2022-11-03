@@ -122,7 +122,7 @@ const invalid = [
         'eventDefinitions',
         0
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'TimerEventDefinition',
         parentNode: 'Event',
@@ -149,7 +149,7 @@ const invalid = [
         0,
         'timeDuration'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'TimerEventDefinition',
         parentNode: 'Event',
@@ -174,7 +174,7 @@ const invalid = [
         0,
         'timeDuration'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'TimerEventDefinition',
         parentNode: 'Event',
@@ -198,7 +198,7 @@ const invalid = [
         'eventDefinitions',
         0
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'TimerEventDefinition',
         parentNode: 'Event',
@@ -228,7 +228,7 @@ const invalid = [
         0,
         'timeDuration'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.EXPRESSION_REQUIRED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
@@ -255,8 +255,8 @@ const invalid = [
         0,
         'timeDuration'
       ],
-      error: {
-        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
+      data: {
+        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
         property: 'timeDuration',
@@ -283,8 +283,8 @@ const invalid = [
         0,
         'timeDuration'
       ],
-      error: {
-        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
+      data: {
+        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
         property: 'timeDuration',
@@ -311,8 +311,8 @@ const invalid = [
         0,
         'timeCycle'
       ],
-      error: {
-        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
+      data: {
+        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
         property: 'timeCycle',
@@ -338,8 +338,8 @@ const invalid = [
         0,
         'timeDate'
       ],
-      error: {
-        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWEDOT_ALLOWED,
+      data: {
+        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
         property: 'timeDate',

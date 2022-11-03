@@ -42,7 +42,7 @@ const invalid = [
       path: [
         'loopCharacteristics'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_TYPE_NOT_ALLOWED,
         node: 'ServiceTask_1',
         parentNode: null,
@@ -65,7 +65,7 @@ const invalid = [
       path: [
         'loopCharacteristics'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'bpmn:MultiInstanceLoopCharacteristics',
         parentNode: 'ServiceTask_1',
@@ -94,7 +94,7 @@ const invalid = [
         0,
         'inputCollection'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:LoopCharacteristics',
         parentNode: 'ServiceTask_1',
@@ -123,7 +123,7 @@ const invalid = [
         0,
         'outputCollection'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
         node: 'zeebe:LoopCharacteristics',
         parentNode: 'ServiceTask_1',
@@ -153,7 +153,7 @@ const invalid = [
         0,
         'outputElement'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
         node: 'zeebe:LoopCharacteristics',
         parentNode: 'ServiceTask_1',

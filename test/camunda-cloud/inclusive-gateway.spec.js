@@ -95,7 +95,7 @@ const invalid = [
       path: [
         'incoming'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'InclusiveGateway_1',
         parentNode: null,
@@ -127,7 +127,7 @@ const invalid = [
       path: [
         'conditionExpression'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'SequenceFlow_2',
         parentNode: null,
@@ -158,7 +158,7 @@ const invalid = [
         path: [
           'conditionExpression'
         ],
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           node: 'SequenceFlow_1',
           parentNode: null,
@@ -171,7 +171,7 @@ const invalid = [
         path: [
           'conditionExpression'
         ],
-        error: {
+        data: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           node: 'SequenceFlow_2',
           parentNode: null,

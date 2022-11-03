@@ -108,7 +108,7 @@ const invalid = [
       id: 'ServiceTask_1',
       message: 'Element of type <bpmn:ServiceTask> must have one extension element of type <zeebe:TaskDefinition>',
       path: [],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'ServiceTask_1',
         parentNode: null,
@@ -135,7 +135,7 @@ const invalid = [
         0,
         'type'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:TaskDefinition',
         parentNode: 'ServiceTask_1',
@@ -151,7 +151,7 @@ const invalid = [
       id: 'BusinessRuleTask_1',
       message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:TaskDefinition>',
       path: [],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'BusinessRuleTask_1',
         parentNode: null,
@@ -178,7 +178,7 @@ const invalid = [
         0,
         'type'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:TaskDefinition',
         parentNode: 'BusinessRuleTask_1',
@@ -204,7 +204,7 @@ const invalid = [
         'values',
         0
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
         node: 'BusinessRuleTask_1',
         parentNode: null,
@@ -225,7 +225,7 @@ const invalid = [
       id: 'IntermediateThrowEvent_1',
       message: 'Element of type <bpmn:IntermediateThrowEvent> must have one extension element of type <zeebe:TaskDefinition>',
       path: [],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'IntermediateThrowEvent_1',
         parentNode: null,
@@ -253,7 +253,7 @@ const invalid = [
         0,
         'type'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:TaskDefinition',
         parentNode: 'IntermediateThrowEvent_1',
@@ -269,7 +269,7 @@ const invalid = [
       id: 'ServiceTask_1',
       message: 'Element of type <bpmn:ServiceTask> must have one extension element of type <zeebe:TaskDefinition>',
       path: [],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'ServiceTask_1',
         parentNode: null,
@@ -296,7 +296,7 @@ const invalid = [
         0,
         'type'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:TaskDefinition',
         parentNode: 'ServiceTask_1',
@@ -312,7 +312,7 @@ const invalid = [
       id: 'BusinessRuleTask_1',
       message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
       path: [],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'BusinessRuleTask_1',
         parentNode: null,
@@ -338,7 +338,7 @@ const invalid = [
       id: 'BusinessRuleTask_1',
       message: 'Element of type <bpmn:BusinessRuleTask> must have one extension element of type <zeebe:CalledDecision> or <zeebe:TaskDefinition>',
       path: [],
-      error: {
+      data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'BusinessRuleTask_1',
         parentNode: null,
@@ -368,7 +368,7 @@ const invalid = [
         0,
         'decisionId'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:CalledDecision',
         parentNode: 'BusinessRuleTask_1',
@@ -395,7 +395,7 @@ const invalid = [
         0,
         'resultVariable'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:CalledDecision',
         parentNode: 'BusinessRuleTask_1',
@@ -422,7 +422,7 @@ const invalid = [
         0,
         'type'
       ],
-      error: {
+      data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:TaskDefinition',
         parentNode: 'BusinessRuleTask_1',
