@@ -6,6 +6,22 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.14.0
+
+* `FEAT`: add `feel` rule to validate feel expressions ([#51](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/51))
+* `FEAT`: add `collapsed-subprocess` rule to disallow collapsed subprocess ([#52](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/52))
+* `CHORE`: `element-type` rule handles all errors using `ELEMENT_TYPE_NOT_ALLOWED` error type ([#50](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/50))
+* `CHORE`: `timer` rule handles `bpmn:FormalExpression` elements using new error types `EXPRESSION_REQUIRED` and `EXPRESSION_VALUE_NOT_ALLOWED` ([#50](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/50))
+* `CHORE`: refactor configuration of rules ([#50](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/50))
+
+### Breaking Changes
+
+* rules that need configuration (e.g. element-type) are now configured by specifying execution platform version
+* element-type rule only reports `ELEMENT_TYPE_NOT_ALLOWED` errors
+* timer rule reports new error types `EXPRESSION_REQUIRED` and `EXPRESSION_VALUE_NOT_ALLOWED`
+* `report.error` was renamed to `report.data` as it is meant to be used for any additional data
+* `ERROR_TYPES` were namespaced to avoid mistaking reports with `report.data.type` for Camunda-specific reports
+
 ## 0.13.1
 
 * `FIX`: improve time date validation ([#49](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/49))
