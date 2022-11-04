@@ -60,7 +60,7 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: 'Property <source> is not valid FEEL expression',
+      message: 'Property <source> is not a valid FEEL expression',
       path: [
         'extensionElements',
         'values',
@@ -88,7 +88,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Property <timeCycle> is not valid FEEL expression',
+      message: 'Property <timeCycle> is not a valid FEEL expression',
       path: [
         'eventDefinitions',
         0,
