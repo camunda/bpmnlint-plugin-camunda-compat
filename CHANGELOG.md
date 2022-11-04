@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.14.1
+
+* `FIX`: lint subprocesses without `isExpanded` attribute ([#55](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/55))
+* `FIX`: correct typo in `FEEL_EXPRESSION_INVALID` message ([#55](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/55))
+
 ## 0.14.0
 
 * `FEAT`: add `feel` rule to validate feel expressions ([#51](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/51))
