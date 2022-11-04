@@ -212,6 +212,25 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       ];
     }
 
+    if ('value' in propertyChecks && propertyChecks.value !== propertyValue) {
+      return [
+        ...results,
+        {
+          message: `Property <${ propertyName }> must have value of <${ propertyChecks.value }>`,
+          path: path
+            ? [ ...path, propertyName ]
+            : [ propertyName ],
+          data: {
+            type: ERROR_TYPES.PROPERTY_VALUE_REQUIRED,
+            node,
+            parentNode: parentNode == node ? null : parentNode,
+            property: propertyName,
+            requiredValue: propertyChecks.value
+          }
+        }
+      ];
+    }
+
     if (propertyChecks.allowed === false && isDefined(propertyValue) && !isNil(propertyValue)) {
       return [
         ...results,

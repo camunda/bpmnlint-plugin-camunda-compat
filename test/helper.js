@@ -14,7 +14,7 @@ module.exports.createCollaboration = function(bpmn = '', bpmndi = '') {
         ${ bpmn }
       </bpmn:participant>
     </bpmn:collaboration>
-    <bpmn:process id="Process_1" />
+    <bpmn:process id="Process_1" isExecutable="true" />
     ${ bpmndi }
   `);
 };
@@ -38,7 +38,7 @@ module.exports.createDefinitions = createDefinitions;
 
 module.exports.createProcess = function(bpmn = '', bpmndi = '') {
   return createDefinitions(`
-    <bpmn:process id="Process_1">
+    <bpmn:process id="Process_1" isExecutable="true">
       ${ bpmn }
     </bpmn:process>
     ${ bpmndi }
