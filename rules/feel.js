@@ -38,7 +38,7 @@ module.exports = function() {
 
           errors.push(
             {
-              message: `Property <${ propertyName }> is not valid FEEL expression`,
+              message: `Property <${ propertyName }> is not a valid FEEL expression`,
               path: path
                 ? [ ...path, propertyName ]
                 : [ propertyName ],
