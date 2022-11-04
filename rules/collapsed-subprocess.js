@@ -34,5 +34,5 @@ module.exports = function() {
 function isCollapsedSubProcess(di) {
   return is(di, 'bpmndi:BPMNShape') &&
          is(di.bpmnElement, 'bpmn:SubProcess') &&
-         di.get('isExpanded') === false;
+         di.get('isExpanded') !== true;
 }
