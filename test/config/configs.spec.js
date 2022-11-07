@@ -17,6 +17,7 @@ describe('configs', function() {
     'message-reference': 'error',
     'no-template': 'error',
     'no-zeebe-properties': 'error',
+    'sequence-flow-condition': 'error',
     'subscription': 'error',
     'timer': [ 'error', { version: '1.0' } ],
     'user-task-form': 'error'
@@ -36,6 +37,7 @@ describe('configs', function() {
     'message-reference': 'error',
     'no-template': 'error',
     'no-zeebe-properties': 'error',
+    'sequence-flow-condition': 'error',
     'subscription': 'error',
     'timer': [ 'error', { version: '1.1' } ],
     'user-task-form': 'error'
@@ -55,6 +57,7 @@ describe('configs', function() {
     'message-reference': 'error',
     'no-template': 'error',
     'no-zeebe-properties': 'error',
+    'sequence-flow-condition': 'error',
     'subscription': 'error',
     'timer': [ 'error', { version: '1.2' } ],
     'user-task-form': 'error'
@@ -74,6 +77,7 @@ describe('configs', function() {
     'message-reference': 'error',
     'no-template': 'error',
     'no-zeebe-properties': 'error',
+    'sequence-flow-condition': 'error',
     'subscription': 'error',
     'timer': [ 'error', { version: '1.3' } ],
     'user-task-form': 'error'
@@ -92,6 +96,7 @@ describe('configs', function() {
     'loop-characteristics': 'error',
     'message-reference': 'error',
     'no-zeebe-properties': 'error',
+    'sequence-flow-condition': 'error',
     'subscription': 'error',
     'timer': [ 'error', { version: '8.0' } ],
     'user-task-form': 'error'
@@ -110,6 +115,7 @@ describe('configs', function() {
     'inclusive-gateway': 'error',
     'loop-characteristics': 'error',
     'message-reference': 'error',
+    'sequence-flow-condition': 'error',
     'subscription': 'error',
     'timer': [ 'error', { version: '8.1' } ],
     'user-task-form': 'error'

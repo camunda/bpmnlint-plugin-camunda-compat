@@ -12,6 +12,7 @@ const camundaCloud10Rules = {
   'message-reference': 'error',
   'no-template': 'error',
   'no-zeebe-properties': 'error',
+  'sequence-flow-condition': 'error',
   'subscription': 'error',
   'timer': [ 'error', { version: '1.0' } ],
   'user-task-form': 'error',
