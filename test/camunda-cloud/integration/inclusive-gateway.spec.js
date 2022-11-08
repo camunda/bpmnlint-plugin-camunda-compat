@@ -7,7 +7,8 @@ const NodeResolver = require('bpmnlint/lib/resolver/node-resolver');
 const { readModdle } = require('../../helper');
 
 const versions = [
-  '8.1'
+  '8.1',
+  '8.2'
 ];
 
 describe('integration - inclusive-gateway', function() {
