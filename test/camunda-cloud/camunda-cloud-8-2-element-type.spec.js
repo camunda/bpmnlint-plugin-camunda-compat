@@ -14,9 +14,7 @@ const valid = [
   ...require('./camunda-cloud-8-1-element-type.spec').valid,
   {
     name: 'Task',
-    moddleElement: createModdle(createProcess(`
-      <bpmn:task id="Activity_1" />
-    `))
+    moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
   }
 ];
 
