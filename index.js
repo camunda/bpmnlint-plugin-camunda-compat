@@ -59,7 +59,6 @@ const camundaCloud82Rules = {
   ...camundaCloud81Rules,
   'called-decision-or-task-definition': [ 'error', { version: '8.2' } ],
   'element-type': [ 'error', { version: '8.2' } ],
-  'inclusive-gateway': 'error',
   'timer': [ 'error', { version: '8.2' } ]
 };
 
