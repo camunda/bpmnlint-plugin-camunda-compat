@@ -11,19 +11,17 @@ const {
 const { ERROR_TYPES } = require('../../rules/utils/element');
 
 const valid = [
-  ...require('./camunda-cloud-8-0-element-type.spec').valid,
+  ...require('./camunda-cloud-1-2-element-type.spec').valid,
   {
-    name: 'inclusive gateway',
+    name: 'data store',
     moddleElement: createModdle(createProcess(`
-      <bpmn:inclusiveGateway id="InclusiveGateway_1" />
+    <bpmn:dataStoreReference id="DataStoreReference_1" />
     `))
   },
   {
-    name: 'Terminate end event',
+    name: 'data object',
     moddleElement: createModdle(createProcess(`
-    <bpmn:endEvent id="Event_1qpo2zy">
-      <bpmn:terminateEventDefinition id="TerminateEventDefinition_0c6uql1" />
-    </bpmn:endEvent>
+    <bpmn:dataObjectReference id="DataObjectReference_1" />
     `))
   }
 ];
@@ -96,7 +94,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('camunda-cloud-8-1-element-type', rule, {
-  valid: addConfig(valid, { version: '8.1' }),
-  invalid: addConfig(invalid, { version: '8.1' })
+RuleTester.verify('camunda-cloud-8-0-element-type', rule, {
+  valid: addConfig(valid, { version: '8.0' }),
+  invalid: addConfig(invalid, { version: '8.0' })
 });
