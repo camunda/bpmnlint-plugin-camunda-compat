@@ -74,13 +74,13 @@ const invalid = [
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />')),
     report: {
       id: 'Task_1',
-      message: 'Element of type <bpmn:Task> not allowed',
+      message: 'Element of type <bpmn:Task> only allowed by Camunda Platform 8.2 or newer',
       path: null,
       data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'Task_1',
         parentNode: null,
-        allowedVersion: null
+        allowedVersion: '8.2'
       }
     }
   },
@@ -116,6 +116,40 @@ const invalid = [
         parentNode: null,
         eventDefinition: 'TerminateEventDefinition_1',
         allowedVersion: '8.1'
+      }
+    }
+  },
+  {
+    name: 'data store',
+    moddleElement: createModdle(createProcess(`
+    <bpmn:dataStoreReference id="DataStoreReference_1" />
+    `)),
+    report: {
+      id: 'DataStoreReference_1',
+      message: 'Element of type <bpmn:DataStoreReference> only allowed by Camunda Platform 8.0 or newer',
+      path: null,
+      data: {
+        type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+        node: 'DataStoreReference_1',
+        parentNode: null,
+        allowedVersion: '8.0'
+      }
+    }
+  },
+  {
+    name: 'data object',
+    moddleElement: createModdle(createProcess(`
+    <bpmn:dataObjectReference id="DataObjectReference_1" />
+    `)),
+    report: {
+      id: 'DataObjectReference_1',
+      message: 'Element of type <bpmn:DataObjectReference> only allowed by Camunda Platform 8.0 or newer',
+      path: null,
+      data: {
+        type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+        node: 'DataObjectReference_1',
+        parentNode: null,
+        allowedVersion: '8.0'
       }
     }
   }
