@@ -39,6 +39,11 @@
     <bpmn:scriptTask id="Activity_1j3irvn">
       <bpmn:incoming>Flow_0bejje3</bpmn:incoming>
       <bpmn:outgoing>Flow_1s28mu2</bpmn:outgoing>
+      <bpmn:property id="Property_0i5y4r3" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_0eckiba">
+        <bpmn:sourceRef>DataObjectReference_0e5ikew</bpmn:sourceRef>
+        <bpmn:targetRef>Property_0i5y4r3</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
     </bpmn:scriptTask>
     <bpmn:callActivity id="Activity_0f2pmcw">
       <bpmn:incoming>Flow_1s28mu2</bpmn:incoming>
@@ -126,6 +131,9 @@
     <bpmn:sequenceFlow id="Flow_00w4v7n" sourceRef="Activity_0f2pmcw" targetRef="Activity_18lrl5o" />
     <bpmn:sequenceFlow id="Flow_0fcl9ds" sourceRef="Activity_05jt1pz" targetRef="Event_1kvsony" />
     <bpmn:sequenceFlow id="Flow_1ymtwgk" sourceRef="Activity_18lrl5o" targetRef="Activity_05jt1pz" />
+    <bpmn:dataObjectReference id="DataObjectReference_0e5ikew" dataObjectRef="DataObject_12uuo5e" />
+    <bpmn:dataObject id="DataObject_12uuo5e" />
+    <bpmn:dataStoreReference id="DataStoreReference_14mwleg" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0hnpxxj">
@@ -194,6 +202,12 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0klbdgi_di" bpmnElement="Gateway_0ucgat5">
         <dc:Bounds x="1285" y="615" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_0e5ikew_di" bpmnElement="DataObjectReference_0e5ikew">
+        <dc:Bounds x="1412" y="605" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_14mwleg_di" bpmnElement="DataStoreReference_14mwleg">
+        <dc:Bounds x="1475" y="605" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0odp5sa_di" bpmnElement="Activity_18lrl5o">
         <dc:Bounds x="1720" y="400" width="100" height="80" />
@@ -275,6 +289,10 @@
       <bpmndi:BPMNShape id="Participant_1eb58xy_di" bpmnElement="Participant_1urnon6" isHorizontal="true">
         <dc:Bounds x="129" y="160" width="600" height="60" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataInputAssociation_0eckiba_di" bpmnElement="DataInputAssociation_0eckiba">
+        <di:waypoint x="1430" y="605" />
+        <di:waypoint x="1430" y="480" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Group_0ma761l_di" bpmnElement="Group_0ma761l">
         <dc:Bounds x="1380" y="380" width="300" height="300" />
       </bpmndi:BPMNShape>
