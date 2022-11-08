@@ -8,6 +8,7 @@ module.exports = {
   'bpmn:BusinessRuleTask': '1.1',
   'bpmn:CallActivity': '1.0',
   'bpmn:Collaboration': '1.0',
+  'bpmn:DataObject': '8.0',
   'bpmn:DataObjectReference': '8.0',
   'bpmn:DataStoreReference': '8.0',
   'bpmn:Definitions': '1.0',
