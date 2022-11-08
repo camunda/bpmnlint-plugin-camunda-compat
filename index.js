@@ -55,6 +55,14 @@ const camundaCloud81Rules = {
   'timer': [ 'error', { version: '8.1' } ]
 };
 
+const camundaCloud82Rules = {
+  ...camundaCloud81Rules,
+  'called-decision-or-task-definition': [ 'error', { version: '8.2' } ],
+  'element-type': [ 'error', { version: '8.2' } ],
+  'inclusive-gateway': 'error',
+  'timer': [ 'error', { version: '8.2' } ]
+};
+
 module.exports = {
   configs: {
     'camunda-cloud-1-0': {
@@ -74,6 +82,9 @@ module.exports = {
     },
     'camunda-cloud-8-1': {
       rules: camundaCloud81Rules
+    },
+    'camunda-cloud-8-2': {
+      rules: camundaCloud82Rules
     }
   }
 };

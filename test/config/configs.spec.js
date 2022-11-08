@@ -121,6 +121,25 @@ describe('configs', function() {
     'user-task-form': 'error'
   }));
 
+
+  it('camunda-cloud-8-2', expectRules(configs, 'camunda-cloud-8-2', {
+    'called-decision-or-task-definition': [ 'error', { version: '8.2' } ],
+    'called-element': 'error',
+    'collapsed-subprocess': 'error',
+    'duplicate-task-headers': 'error',
+    'element-type': [ 'error', { version: '8.2' } ],
+    'error-reference': 'error',
+    'executable-process': 'error',
+    'feel': 'error',
+    'inclusive-gateway': 'error',
+    'loop-characteristics': 'error',
+    'message-reference': 'error',
+    'sequence-flow-condition': 'error',
+    'subscription': 'error',
+    'timer': [ 'error', { version: '8.2' } ],
+    'user-task-form': 'error'
+  }));
+
 });
 
 function expectRules(configs, name, rules) {
