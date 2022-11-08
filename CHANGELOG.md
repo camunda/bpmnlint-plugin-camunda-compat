@@ -6,6 +6,13 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.15.0
+
+* `FEAT`: add `executable-process` rule ([#56](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/56))
+* `FEAT`: add `sequence-flow-condition` rule ([#58](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/58))
+* `FEAT`: add Camunda Platform 8.2 config ([#59](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/59))
+* `FEAT`: add elements supported by Camunda Platform 8.2 to `element-type` rule ([#59](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/59))
+
 ## 0.14.1
 
 * `FIX`: lint subprocesses without `isExpanded` attribute ([#55](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/55))
