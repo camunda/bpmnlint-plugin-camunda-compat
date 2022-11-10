@@ -11,23 +11,32 @@ module.exports = function() {
     }
 
     const rootElements = node.get('rootElements'),
+          collaboration = rootElements.find(rootElement => is(rootElement, 'bpmn:Collaboration')),
           processes = rootElements.filter(rootElement => is(rootElement, 'bpmn:Process'));
 
     let errors = [];
 
     for (const process of processes) {
+      const parentNode = getParentNode(process, collaboration);
+
       errors = [
         ...errors,
         ...hasProperties(process, {
           isExecutable: {
             value: true
           }
-        }, process)
+        }, parentNode)
       ];
     }
 
     if (errors.length > processes.length - 1) {
-      reportErrors(errors[ 0 ].data.node, reporter, errors[ 0 ]);
+      errors.forEach(error => {
+        const { data } = error;
+
+        const { node: process } = data;
+
+        reportErrors(getParentNode(process, collaboration), reporter, error);
+      });
     }
   }
 
@@ -35,3 +44,19 @@ module.exports = function() {
     check
   };
 };
+
+function getParentNode(process, collaboration) {
+  if (!collaboration) {
+    return process;
+  }
+
+  const participants = collaboration.get('participants');
+
+  const participant = participants.find(participant => participant.get('processRef') === process);
+
+  if (participant) {
+    return participant;
+  }
+
+  return process;
+}
