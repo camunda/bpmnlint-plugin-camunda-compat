@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.15.1
+
+* `FIX`: report process not executable for all affected flow element (containers) ([#61](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/61))
+
 ## 0.15.0
 
 * `FEAT`: add `executable-process` rule ([#56](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/56))
