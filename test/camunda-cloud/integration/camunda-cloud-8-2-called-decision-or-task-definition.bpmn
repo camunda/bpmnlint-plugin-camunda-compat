@@ -27,6 +27,9 @@
       </bpmn:extensionElements>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1puphj5" />
     </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Event_0p6pl2i">
+      <bpmn:linkEventDefinition id="LinkEventDefinition_06pkhyc" name="" />
+    </bpmn:intermediateThrowEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0h5hgi7">
@@ -44,6 +47,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_15elbnv_di" bpmnElement="Event_1hi96lx">
         <dc:Bounds x="192" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_04fdck5_di" bpmnElement="Event_0p6pl2i">
+        <dc:Bounds x="252" y="232" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
