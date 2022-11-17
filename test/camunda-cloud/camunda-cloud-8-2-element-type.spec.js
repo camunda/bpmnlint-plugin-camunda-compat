@@ -15,7 +15,23 @@ const valid = [
   {
     name: 'Task',
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
-  }
+  },
+  {
+    name: 'Link Intermediate Catch Event',
+    moddleElement: createModdle(createProcess(`
+    <bpmn:intermediateCatchEvent id="Event_1ekxmj4">
+      <bpmn:linkEventDefinition id="LinkEventDefinition_1kkrq09" name="Foobar" />
+    </bpmn:intermediateCatchEvent>
+    `))
+  },
+  {
+    name: 'Link Intermediate Throw Event',
+    moddleElement: createModdle(createProcess(`
+    <bpmn:intermediateThrowEvent id="Event_1ekxmj4">
+      <bpmn:linkEventDefinition id="LinkEventDefinition_1kkrq09" name="Foobar" />
+    </bpmn:intermediateThrowEvent>
+    `))
+  },
 ];
 
 const invalid = [
