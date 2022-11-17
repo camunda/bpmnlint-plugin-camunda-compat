@@ -76,12 +76,6 @@
         <bpmn:condition xsi:type="bpmn:tFormalExpression" />
       </bpmn:conditionalEventDefinition>
     </bpmn:intermediateCatchEvent>
-    <bpmn:intermediateCatchEvent id="Event_0s96ilr">
-      <bpmn:linkEventDefinition id="LinkEventDefinition_1ppd3yy" name="" />
-    </bpmn:intermediateCatchEvent>
-    <bpmn:intermediateThrowEvent id="Event_058pikp">
-      <bpmn:linkEventDefinition id="LinkEventDefinition_0yv4tfh" name="" />
-    </bpmn:intermediateThrowEvent>
     <bpmn:intermediateThrowEvent id="Event_143034p">
       <bpmn:compensateEventDefinition id="CompensateEventDefinition_19qzhq6" />
     </bpmn:intermediateThrowEvent>
@@ -285,12 +279,6 @@
       <bpmndi:BPMNShape id="Event_0b7z33f_di" bpmnElement="Event_1cdxynr">
         <dc:Bounds x="822" y="312" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0gxwsku_di" bpmnElement="Event_0s96ilr">
-        <dc:Bounds x="882" y="312" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_00ttebs_di" bpmnElement="Event_058pikp">
-        <dc:Bounds x="942" y="312" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1d7dyp1_di" bpmnElement="Event_143034p">
         <dc:Bounds x="1002" y="312" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -336,9 +324,6 @@
       <bpmndi:BPMNShape id="Activity_0u9hvk8_di" bpmnElement="Activity_0u9hvk8">
         <dc:Bounds x="2300" y="580" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="312" y="422" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0odp5sa_di" bpmnElement="Activity_18lrl5o">
         <dc:Bounds x="1720" y="400" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -374,6 +359,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1i575ke_di" bpmnElement="Event_0m5bm2q">
         <dc:Bounds x="872" y="622" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="312" y="422" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1pws5gv_di" bpmnElement="Event_06vp79f">
         <dc:Bounds x="2062" y="322" width="36" height="36" />
