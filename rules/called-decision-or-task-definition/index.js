@@ -2,6 +2,8 @@ const { is } = require('bpmnlint-utils');
 
 const { getPath } = require('@bpmn-io/moddle-utils');
 
+const { isString } = require('min-dash');
+
 const config = require('./config');
 
 const { greaterOrEqual } = require('../utils/version');
@@ -19,9 +21,12 @@ const { ERROR_TYPES } = require('../utils/error-types');
 
 module.exports = function({ version }) {
   function check(node, reporter) {
+    const calledDecisionConfig = config.calledDecision[ node.$type ];
+    const taskDefinitionConfig = config.taskDefinition[ node.$type ];
+
     if (
-      (!config.calledDecision[ node.$type ] || !greaterOrEqual(version, config.calledDecision[ node.$type ]))
-      && (!config.taskDefinition[ node.$type ] || !greaterOrEqual(version, config.taskDefinition[ node.$type ]))) {
+      (!calledDecisionConfig || (isString(calledDecisionConfig) && !greaterOrEqual(version, calledDecisionConfig)))
+      && (!taskDefinitionConfig || (isString(taskDefinitionConfig) && !greaterOrEqual(version, taskDefinitionConfig)))) {
       return;
     }
 
@@ -37,7 +42,7 @@ module.exports = function({ version }) {
     if (calledDecision && !taskDefinition) {
 
       if (!isCalledDecisionAllowed(node, version)) {
-        const allowedVersion = config.calledDecision[ node.$type ] || null;
+        const allowedVersion = getAllowedVersion(calledDecisionConfig, node);
 
         reportErrors(node, reporter, {
           message: allowedVersion
@@ -75,7 +80,7 @@ module.exports = function({ version }) {
     if (!calledDecision && taskDefinition) {
 
       if (!isTaskDefinitionAllowed(node, version)) {
-        const allowedVersion = config.taskDefinition[ node.$type ] || null;
+        const allowedVersion = getAllowedVersion(taskDefinitionConfig, node);
 
         reportErrors(node, reporter, {
           message: allowedVersion
@@ -112,7 +117,7 @@ module.exports = function({ version }) {
       ], node);
     } else if (isCalledDecisionAllowed(node, version)) {
       errors = hasExtensionElement(node, 'zeebe:CalledDecision', node);
-    } else {
+    } else if (isTaskDefinitionAllowed(node, version)) {
       errors = hasExtensionElement(node, 'zeebe:TaskDefinition', node);
     }
 
@@ -137,5 +142,21 @@ function isCalledDecisionAllowed(node, version) {
 function isTaskDefinitionAllowed(node, version) {
   const { taskDefinition } = config;
 
-  return taskDefinition[ node.$type ] && greaterOrEqual(version, taskDefinition[ node.$type ]);
+  const allowedVersion = getAllowedVersion(taskDefinition[ node.$type ], node);
+
+  return allowedVersion && greaterOrEqual(version, allowedVersion);
+}
+
+function getAllowedVersion(config, node) {
+  if (!config) {
+    return null;
+  }
+
+  if (isString(config)) {
+    return config;
+  }
+
+  const eventDefinition = getEventDefinition(node);
+
+  return eventDefinition && config[ eventDefinition.$type ];
 }
