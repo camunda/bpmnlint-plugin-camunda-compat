@@ -77,7 +77,8 @@ describe('utils/iso8601', function() {
       'R5/P1Y2M10DT2H30M',
       'R/P1Y2M10DT2H30M',
       'R-1/P1Y2M10DT2H30M',
-      'R0/P1Y2M10DT2H30M'
+      'R0/P1Y2M10DT2H30M',
+      'R3/P1W'
     ];
     for (const valid of VALID) {
       it(`should return 'true' for valid ISO 8601 cycle: ${valid}`, function() {
@@ -90,6 +91,7 @@ describe('utils/iso8601', function() {
     // given
     const INVALID = [
       'INVALID',
+      'R3/PT1W',
 
       // unsupported in Zeebe
       'R5/2008-03-01T13:00:00Z/P1Y2M10DT2H30M',
@@ -118,7 +120,9 @@ describe('utils/iso8601', function() {
       'P1Y2M10DT2S',
       'PT2H30M',
       'PT1S',
-      'PT1s'
+      'PT1s',
+      'P1W',
+      'P1WT2H30M'
     ];
     for (const valid of VALID) {
       it(`should return 'true' for valid ISO 8601 duration: ${valid}`, function() {
@@ -138,6 +142,7 @@ describe('utils/iso8601', function() {
       'P',
       'PT',
       'P2DT',
+      'P1W1Y',
 
       // unsupported in Zeebe
       '2007-03-01T13:00:00Z/2008-05-11T15:30:00Z',
