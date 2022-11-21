@@ -27,11 +27,11 @@ const valid = [
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
   },
   {
-    name: 'intermediate link throw event (Camunda Cloud 1.0)',
-    config: { version: '1.0' },
+    name: 'intermediate link throw event (Camunda Cloud 8.2)',
+    config: { version: '8.2' },
     moddleElement: createModdle(createProcess(`
       <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1">
-        <bpmn:linkEventDefinition id="LinkEventDefinition_1kkrq09" name="Foobar" />
+        <bpmn:linkEventDefinition id="LinkEventDefinition_1" name="foo" />
       </bpmn:intermediateThrowEvent>
     `))
   },

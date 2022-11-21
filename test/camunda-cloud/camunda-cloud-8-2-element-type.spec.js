@@ -13,25 +13,25 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 const valid = [
   ...require('./camunda-cloud-8-1-element-type.spec').valid,
   {
-    name: 'Task',
+    name: 'task',
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
   },
   {
-    name: 'Link Intermediate Catch Event',
+    name: 'link intermediate catch event',
     moddleElement: createModdle(createProcess(`
-    <bpmn:intermediateCatchEvent id="Event_1ekxmj4">
-      <bpmn:linkEventDefinition id="LinkEventDefinition_1kkrq09" name="Foobar" />
-    </bpmn:intermediateCatchEvent>
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:linkEventDefinition id="LinkEventDefinition_1" name="foo" />
+      </bpmn:intermediateCatchEvent>
     `))
   },
   {
-    name: 'Link Intermediate Throw Event',
+    name: 'link intermediate throw event',
     moddleElement: createModdle(createProcess(`
-    <bpmn:intermediateThrowEvent id="Event_1ekxmj4">
-      <bpmn:linkEventDefinition id="LinkEventDefinition_1kkrq09" name="Foobar" />
-    </bpmn:intermediateThrowEvent>
+      <bpmn:intermediateThrowEvent id="IntermediateCatchEvent_1">
+        <bpmn:linkEventDefinition id="LinkEventDefinition_1" name="foo" />
+      </bpmn:intermediateThrowEvent>
     `))
-  },
+  }
 ];
 
 const invalid = [
