@@ -93,6 +93,43 @@ const invalid = [
         allowedVersion: '8.2'
       }
     }
+  },
+  {
+    name: 'link events',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:linkEventDefinition id="LinkEventDefinition_1" name="Foobar" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1">
+        <bpmn:linkEventDefinition id="LinkEventDefinition_2" name="Foobar" />
+      </bpmn:intermediateThrowEvent>
+    `)),
+    report: [
+      {
+        id: 'IntermediateCatchEvent_1',
+        message: 'Element of type <bpmn:IntermediateCatchEvent> with event definition of type <bpmn:LinkEventDefinition> only allowed by Camunda Platform 8.2 or newer',
+        path: null,
+        data: {
+          type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+          node: 'IntermediateCatchEvent_1',
+          parentNode: null,
+          eventDefinition: 'LinkEventDefinition_1',
+          allowedVersion: '8.2'
+        }
+      },
+      {
+        id: 'IntermediateThrowEvent_1',
+        message: 'Element of type <bpmn:IntermediateThrowEvent> with event definition of type <bpmn:LinkEventDefinition> only allowed by Camunda Platform 8.2 or newer',
+        path: null,
+        data: {
+          type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+          node: 'IntermediateThrowEvent_1',
+          parentNode: null,
+          eventDefinition: 'LinkEventDefinition_2',
+          allowedVersion: '8.2'
+        }
+      }
+    ]
   }
 ];
 
