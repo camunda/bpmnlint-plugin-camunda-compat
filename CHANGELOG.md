@@ -8,7 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 0.16.0
 
-* `FEAT`: add link events to to `element-type` rule ([#63](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/63))
+* `FEAT`: add link events to `element-type` rule ([#63](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/63))
 * `DEPS`: update to `@bpmn-io/feel-lint@0.1.1`
 
 ## 0.15.2
