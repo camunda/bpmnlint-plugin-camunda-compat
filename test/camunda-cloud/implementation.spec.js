@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/called-decision-or-task-definition');
+const rule = require('../../rules/implementation');
 
 const {
   createModdle,
@@ -104,6 +104,28 @@ const valid = [
           <zeebe:taskDefinition type="foo" />
         </bpmn:extensionElements>
       </bpmn:businessRuleTask>
+    `))
+  },
+  {
+    name: 'script task (task definition) (Camunda Cloud 8.2)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:scriptTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" />
+        </bpmn:extensionElements>
+      </bpmn:scriptTask>
+    `))
+  },
+  {
+    name: 'script task (script) (Camunda Cloud 8.2)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:scriptTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:script expression="=foo()" resultVariable="bar" />
+        </bpmn:extensionElements>
+      </bpmn:scriptTask>
     `))
   }
 ];
@@ -438,10 +460,136 @@ const invalid = [
         requiredProperty: 'type'
       }
     }
-  }
+  },
+  {
+    name: 'script task (script) (Camunda Cloud 8.1)',
+    config: { version: '8.1' },
+    moddleElement: createModdle(createProcess(`
+        <bpmn:scriptTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:script />
+          </bpmn:extensionElements>
+        </bpmn:scriptTask>
+      `)),
+    report: {
+      id: 'Task_1',
+      message: 'Extension element of type <zeebe:Script> only allowed by Camunda Platform 8.2 or newer',
+      path: [
+        'extensionElements',
+        'values',
+        0
+      ],
+      data: {
+        type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
+        node: 'Task_1',
+        parentNode: null,
+        extensionElement: 'zeebe:Script',
+        allowedVersion: '8.2'
+      }
+    }
+  },
+  {
+    name: 'script task (no script or task definition) (Camunda Cloud 8.2)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createProcess('<bpmn:scriptTask id="Task_1" />')),
+    report: {
+      id: 'Task_1',
+      message: 'Element of type <bpmn:ScriptTask> must have one extension element of type <zeebe:Script> or <zeebe:TaskDefinition>',
+      path: [],
+      data: {
+        type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+        node: 'Task_1',
+        parentNode: null,
+        requiredExtensionElement: [
+          'zeebe:Script',
+          'zeebe:TaskDefinition'
+        ]
+      }
+    }
+  },
+  {
+    name: 'script task (script and task definition) (Camunda Cloud 8.2)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:scriptTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:script expression="=foo()" resultVariable="bar" />
+          <zeebe:taskDefinition />
+        </bpmn:extensionElements>
+      </bpmn:scriptTask>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Element of type <bpmn:ScriptTask> must have one extension element of type <zeebe:Script> or <zeebe:TaskDefinition>',
+      path: [],
+      data: {
+        type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+        node: 'Task_1',
+        parentNode: null,
+        requiredExtensionElement: [
+          'zeebe:Script',
+          'zeebe:TaskDefinition'
+        ]
+      }
+    }
+  },
+  {
+    name: 'script task (no expression) (Camunda Cloud 8.2)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:scriptTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:script resultVariable="foo" />
+        </bpmn:extensionElements>
+      </bpmn:scriptTask>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Element of type <zeebe:Script> must have property <expression>',
+      path: [
+        'extensionElements',
+        'values',
+        0,
+        'expression'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'zeebe:Script',
+        parentNode: 'Task_1',
+        requiredProperty: 'expression'
+      }
+    }
+  },
+  {
+    name: 'script task (no script result variable) (Camunda Cloud 8.2)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:scriptTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:script expression="=foo()" />
+        </bpmn:extensionElements>
+      </bpmn:scriptTask>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Element of type <zeebe:Script> must have property <resultVariable>',
+      path: [
+        'extensionElements',
+        'values',
+        0,
+        'resultVariable'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'zeebe:Script',
+        parentNode: 'Task_1',
+        requiredProperty: 'resultVariable'
+      }
+    }
+  },
 ];
 
-RuleTester.verify('called-decision-or-task-definition', rule, {
+RuleTester.verify('implementation', rule, {
   valid,
   invalid
 });

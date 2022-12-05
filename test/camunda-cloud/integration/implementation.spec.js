@@ -16,7 +16,7 @@ const versions = [
   '8.2'
 ];
 
-describe('integration - called-decision-or-task-definition', function() {
+describe('integration - implementation', function() {
 
   versions.forEach(function(version) {
 
@@ -39,13 +39,13 @@ describe('integration - called-decision-or-task-definition', function() {
         it('should not have errors', async function() {
 
           // given
-          const { root } = await readModdle(`test/camunda-cloud/integration/camunda-cloud-${ version.replace('.', '-') }-called-decision-or-task-definition.bpmn`);
+          const { root } = await readModdle(`test/camunda-cloud/integration/camunda-cloud-${ version.replace('.', '-') }-implementation.bpmn`);
 
           // when
           const reports = await linter.lint(root);
 
           // then
-          expect(reports[ 'camunda-compat/called-decision-or-task-definition' ]).not.to.exist;
+          expect(reports[ 'camunda-compat/implementation' ]).not.to.exist;
         });
 
       });
@@ -56,13 +56,13 @@ describe('integration - called-decision-or-task-definition', function() {
         it('should have errors', async function() {
 
           // given
-          const { root } = await readModdle(`test/camunda-cloud/integration/camunda-cloud-${ version.replace('.', '-') }-called-decision-or-task-definition-errors.bpmn`);
+          const { root } = await readModdle(`test/camunda-cloud/integration/camunda-cloud-${ version.replace('.', '-') }-implementation-errors.bpmn`);
 
           // when
           const reports = await linter.lint(root);
 
           // then
-          expect(reports[ 'camunda-compat/called-decision-or-task-definition' ]).to.exist;
+          expect(reports[ 'camunda-compat/implementation' ]).to.exist;
         });
 
       });
