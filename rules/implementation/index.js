@@ -22,10 +22,12 @@ const { ERROR_TYPES } = require('../utils/error-types');
 module.exports = function({ version }) {
   function check(node, reporter) {
     const calledDecisionConfig = config.calledDecision[ node.$type ];
+    const scriptConfig = config.script[ node.$type ];
     const taskDefinitionConfig = config.taskDefinition[ node.$type ];
 
     if (
       (!calledDecisionConfig || (isString(calledDecisionConfig) && !greaterOrEqual(version, calledDecisionConfig)))
+      && (!scriptConfig || (isString(scriptConfig) && !greaterOrEqual(version, scriptConfig)))
       && (!taskDefinitionConfig || (isString(taskDefinitionConfig) && !greaterOrEqual(version, taskDefinitionConfig)))) {
       return;
     }
@@ -37,9 +39,10 @@ module.exports = function({ version }) {
     let errors;
 
     const calledDecision = findExtensionElement(node, 'zeebe:CalledDecision'),
+          script = findExtensionElement(node, 'zeebe:Script'),
           taskDefinition = findExtensionElement(node, 'zeebe:TaskDefinition');
 
-    if (calledDecision && !taskDefinition) {
+    if (calledDecision && !script && !taskDefinition) {
 
       if (!isCalledDecisionAllowed(node, version)) {
         const allowedVersion = getAllowedVersion(calledDecisionConfig, node);
@@ -77,7 +80,45 @@ module.exports = function({ version }) {
       }
     }
 
-    if (!calledDecision && taskDefinition) {
+    if (!calledDecision && script && !taskDefinition) {
+
+      if (!isScriptAllowed(node, version)) {
+        const allowedVersion = getAllowedVersion(scriptConfig, node);
+
+        reportErrors(node, reporter, {
+          message: allowedVersion
+            ? `Extension element of type <zeebe:Script> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            : 'Extension element of type <zeebe:Script> not allowed',
+          path: getPath(script, node),
+          data: {
+            type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
+            node,
+            parentNode: null,
+            extensionElement: script,
+            allowedVersion
+          }
+        });
+
+        return;
+      }
+
+      errors = hasProperties(script, {
+        expression: {
+          required: true
+        },
+        resultVariable: {
+          required: true
+        }
+      }, node);
+
+      if (errors && errors.length) {
+        reportErrors(node, reporter, errors);
+
+        return;
+      }
+    }
+
+    if (!calledDecision && !script && taskDefinition) {
 
       if (!isTaskDefinitionAllowed(node, version)) {
         const allowedVersion = getAllowedVersion(taskDefinitionConfig, node);
@@ -110,15 +151,18 @@ module.exports = function({ version }) {
       }
     }
 
-    if (isCalledDecisionAllowed(node, version) && isTaskDefinitionAllowed(node, version)) {
-      errors = hasExtensionElement(node, [
-        'zeebe:CalledDecision',
-        'zeebe:TaskDefinition'
-      ], node);
-    } else if (isCalledDecisionAllowed(node, version)) {
-      errors = hasExtensionElement(node, 'zeebe:CalledDecision', node);
-    } else if (isTaskDefinitionAllowed(node, version)) {
-      errors = hasExtensionElement(node, 'zeebe:TaskDefinition', node);
+    const allowedTypes = [
+      isCalledDecisionAllowed(node, version) ? 'zeebe:CalledDecision' : false,
+      isScriptAllowed(node, version) ? 'zeebe:Script' : false,
+      isTaskDefinitionAllowed(node, version) ? 'zeebe:TaskDefinition' : false
+    ].filter(isAllowed => isAllowed);
+
+    if (allowedTypes.length === 0) {
+      return;
+    } else if (allowedTypes.length === 1) {
+      errors = hasExtensionElement(node, allowedTypes[0], node);
+    } else {
+      errors = hasExtensionElement(node, allowedTypes, node);
     }
 
     if (errors && errors.length) {
@@ -136,7 +180,17 @@ module.exports = function({ version }) {
 function isCalledDecisionAllowed(node, version) {
   const { calledDecision } = config;
 
-  return calledDecision[ node.$type ] && greaterOrEqual(version, calledDecision[ node.$type ]);
+  const allowedVersion = getAllowedVersion(calledDecision[ node.$type ], node);
+
+  return calledDecision[ node.$type ] && greaterOrEqual(version, allowedVersion);
+}
+
+function isScriptAllowed(node, version) {
+  const { script } = config;
+
+  const allowedVersion = getAllowedVersion(script[ node.$type ], node);
+
+  return allowedVersion && greaterOrEqual(version, allowedVersion);
 }
 
 function isTaskDefinitionAllowed(node, version) {

@@ -6,6 +6,14 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.17.0
+
+* `FEAT`: support `zeebe:Script` ([#67](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/67))
+
+### Breaking Changes
+
+* Rule `called-decision-or-task-definition` was renamed to `implementation`.
+
 ## 0.16.0
 
 * `FEAT`: add link events to `element-type` rule ([#63](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/63))
