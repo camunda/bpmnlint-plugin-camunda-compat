@@ -10,6 +10,7 @@ const camundaCloud10Rules = {
   'executable-process': 'error',
   'loop-characteristics': 'error',
   'message-reference': 'error',
+  'no-expression': [ 'error', { version: '1.0' } ],
   'no-template': 'error',
   'no-zeebe-properties': 'error',
   'sequence-flow-condition': 'error',
@@ -23,6 +24,7 @@ const camundaCloud11Rules = {
   ...camundaCloud10Rules,
   'implementation': [ 'error', { version: '1.1' } ],
   'element-type': [ 'error', { version: '1.1' } ],
+  'no-expression': [ 'error', { version: '1.1' } ],
   'timer': [ 'error', { version: '1.1' } ]
 };
 
@@ -30,6 +32,7 @@ const camundaCloud12Rules = {
   ...camundaCloud11Rules,
   'implementation': [ 'error', { version: '1.2' } ],
   'element-type': [ 'error', { version: '1.2' } ],
+  'no-expression': [ 'error', { version: '1.2' } ],
   'timer': [ 'error', { version: '1.2' } ]
 };
 
@@ -37,6 +40,7 @@ const camundaCloud13Rules = {
   ...camundaCloud12Rules,
   'implementation': [ 'error', { version: '1.3' } ],
   'element-type': [ 'error', { version: '1.3' } ],
+  'no-expression': [ 'error', { version: '1.3' } ],
   'timer': [ 'error', { version: '1.3' } ]
 };
 
@@ -44,6 +48,7 @@ const camundaCloud80Rules = {
   ...omit(camundaCloud13Rules, 'no-template'),
   'implementation': [ 'error', { version: '8.0' } ],
   'element-type': [ 'error', { version: '8.0' } ],
+  'no-expression': [ 'error', { version: '8.0' } ],
   'timer': [ 'error', { version: '8.0' } ]
 };
 
@@ -52,6 +57,7 @@ const camundaCloud81Rules = {
   'implementation': [ 'error', { version: '8.1' } ],
   'element-type': [ 'error', { version: '8.1' } ],
   'inclusive-gateway': 'error',
+  'no-expression': [ 'error', { version: '8.1' } ],
   'timer': [ 'error', { version: '8.1' } ]
 };
 
@@ -59,6 +65,7 @@ const camundaCloud82Rules = {
   ...camundaCloud81Rules,
   'implementation': [ 'error', { version: '8.2' } ],
   'element-type': [ 'error', { version: '8.2' } ],
+  'no-expression': [ 'error', { version: '8.2' } ],
   'timer': [ 'error', { version: '8.2' } ]
 };
 
