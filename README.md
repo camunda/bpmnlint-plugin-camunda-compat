@@ -16,7 +16,7 @@ Add configuration corresponding to your execution platform and version to your [
     "plugin:camunda-compat/camunda-cloud-8-0"
   ],
   "rules": {
-    "camunda-compat/timer": 0
+    "camunda-compat/timer": "off"
   }
 }
 ```
