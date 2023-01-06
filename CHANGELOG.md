@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.18.0
+
 * `FEAT`: add `no-expression` rule ([#69](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/69))
 
 ## 0.17.0
