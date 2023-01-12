@@ -31,7 +31,8 @@ const handlersMap = {
     checkErrorCode
   ],
   '8.2': [
-    checkErrorCatchEvent
+    checkErrorCatchEvent,
+    checkEscalationCatchEvent
   ]
 };
 
@@ -125,6 +126,26 @@ function checkErrorCatchEvent(node) {
   }
 
   return checkErrorCode(node);
+}
+
+function checkEscalationCatchEvent(node) {
+  if (!is(node, 'bpmn:CatchEvent')) {
+    return;
+  }
+
+  const eventDefinition = getEventDefinition(node);
+
+  if (!eventDefinition || !is(eventDefinition, 'bpmn:EscalationEventDefinition')) {
+    return;
+  }
+
+  const escalationRef = eventDefinition.get('escalationRef');
+
+  if (!escalationRef) {
+    return;
+  }
+
+  return noExpression(escalationRef, 'escalationCode', node, null);
 }
 
 function truncate(string, maxLength = 10) {

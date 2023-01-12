@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: allow escalation events in Camunda 8.2 ([#73](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/73))
+
 ## 0.18.0
 
 * `FEAT`: add `no-expression` rule ([#69](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/69))
