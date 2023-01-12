@@ -2,6 +2,7 @@ module.exports = {
   'bpmn:Association': '1.0',
   'bpmn:BoundaryEvent': {
     'bpmn:ErrorEventDefinition': '1.0',
+    'bpmn:EscalationEventDefinition': '8.2',
     'bpmn:MessageEventDefinition': '1.0',
     'bpmn:TimerEventDefinition': '1.0'
   },
@@ -15,6 +16,7 @@ module.exports = {
   'bpmn:EndEvent': {
     '_': '1.0',
     'bpmn:ErrorEventDefinition': '1.0',
+    'bpmn:EscalationEventDefinition': '8.2',
     'bpmn:MessageEventDefinition': '1.2',
     'bpmn:TerminateEventDefinition': '8.1'
   },
@@ -29,6 +31,7 @@ module.exports = {
   },
   'bpmn:IntermediateThrowEvent': {
     '_': '1.1',
+    'bpmn:EscalationEventDefinition': '8.2',
     'bpmn:MessageEventDefinition': '1.2',
     'bpmn:LinkEventDefinition': '8.2'
   },
@@ -45,6 +48,7 @@ module.exports = {
   'bpmn:StartEvent': {
     '_': '1.0',
     'bpmn:ErrorEventDefinition': '1.0',
+    'bpmn:EscalationEventDefinition': '8.2',
     'bpmn:MessageEventDefinition': '1.0',
     'bpmn:TimerEventDefinition': '1.0'
   },

@@ -31,7 +31,42 @@ const valid = [
         <bpmn:linkEventDefinition id="LinkEventDefinition_1" name="foo" />
       </bpmn:intermediateThrowEvent>
     `))
-  }
+  },
+  {
+    name: 'escalation start event',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:subProcess id="EventSubProcess" triggeredByEvent="true">
+        <bpmn:startEvent id="StartEvent">
+          <bpmn:escalationEventDefinition id="EscalationEventDefinition_1"/>
+        </bpmn:startEvent>
+      </bpmn:subProcess>
+    `))
+  },
+  {
+    name: 'escalation boundary event',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:Task id="Task_1" />
+      <bpmn:boundaryEvent id="BoundaryEvent" attachedToRef="Task_1">
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1"/>
+      </bpmn:boundaryEvent>
+    `))
+  },
+  {
+    name: 'escalation intermediate throw event',
+    moddleElement: createModdle(createProcess(`
+    <bpmn:intermediateThrowEvent id="IntermediateCatchEvent_1">
+    <bpmn:escalationEventDefinition id="EscalationEventDefinition_1"/>
+    </bpmn:intermediateThrowEvent>
+    `))
+  },
+  {
+    name: 'escalation end event',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:endEvent id="EndEvent">
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1"/>
+      </bpmn:endEvent>
+    `))
+  },
 ];
 
 const invalid = [

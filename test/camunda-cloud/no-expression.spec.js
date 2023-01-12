@@ -45,6 +45,18 @@ const valid = [
       </bpmn:process>
       <bpmn:error id="Error" name="Error" errorCode="myCode" />
     `)),
+  },
+  {
+    name: 'escalation throw event (escalation code as expression)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:endEvent id="Event">
+          <bpmn:escalationEventDefinition id="EscalationEventDefinition" escalationRef="Escalation" />
+        </bpmn:endEvent>
+      </bpmn:process>
+      <bpmn:escalation id="Escalation" name="Escalation" escalationCode="=myCode" />
+    `)),
   }
 ];
 
@@ -160,6 +172,65 @@ const invalid = [
         node: 'Error',
         parentNode: 'Event',
         property: 'errorCode',
+        allowedVersion: null
+      }
+    }
+  },
+  {
+    name: 'escalation start event (static expression-like escalation code)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:subProcess id="EventSubProcess" triggeredByEvent="true">
+          <bpmn:startEvent id="Event">
+            <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" escalationRef="Escalation"/>
+          </bpmn:startEvent>
+        </bpmn:subProcess>
+      </bpmn:process>
+      <bpmn:escalation id="Escalation" name="Escalation" escalationCode="=myCode" />
+    `)),
+    report: {
+      id: 'Event',
+      message: 'Expression statement <=myCode> not supported',
+      path: [
+        'rootElements',
+        1,
+        'escalationCode'
+      ],
+      data: {
+        type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
+        node: 'Escalation',
+        parentNode: 'Event',
+        property: 'escalationCode',
+        allowedVersion: null
+      }
+    }
+  },
+  {
+    name: 'escalation boundary event (static expression-like escalation code)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:Task id="Task_1" />
+        <bpmn:boundaryEvent id="Event" attachedToRef="Task_1">
+          <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" escalationRef="Escalation"/>
+        </bpmn:boundaryEvent>
+      </bpmn:process>
+      <bpmn:escalation id="Escalation" name="Escalation" escalationCode="=myCode" />
+    `)),
+    report: {
+      id: 'Event',
+      message: 'Expression statement <=myCode> not supported',
+      path: [
+        'rootElements',
+        1,
+        'escalationCode'
+      ],
+      data: {
+        type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
+        node: 'Escalation',
+        parentNode: 'Event',
+        property: 'escalationCode',
         allowedVersion: null
       }
     }
