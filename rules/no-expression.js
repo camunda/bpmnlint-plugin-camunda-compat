@@ -1,6 +1,5 @@
 const {
-  is,
-  isAny
+  is
 } = require('bpmnlint-utils');
 
 const { getPath } = require('@bpmn-io/moddle-utils');
@@ -31,7 +30,9 @@ const handlersMap = {
   '8.1': [
     checkErrorCode
   ],
-  '8.2': []
+  '8.2': [
+    checkErrorCatchEvent
+  ]
 };
 
 module.exports = noExpressionRule;
@@ -58,7 +59,7 @@ function checkForVersion(node, version) {
   const handlers = handlersMap[version];
 
   return handlers.reduce((errors, handler) => {
-    const handlerErrors = handler(node, version) || [];
+    const handlerErrors = handler(node) || [];
     return errors.concat(handlerErrors);
   }, []);
 }
@@ -71,8 +72,12 @@ function noExpression(node, propertyName, parentNode, allowedVersion) {
     return;
   }
 
+  const errorMessage = allowedVersion ?
+    `Expression statement <${truncate(propertyValue)}> only supported by Camunda Platform ${allowedVersion} or newer` :
+    `Expression statement <${truncate(propertyValue)}> not supported`;
+
   return {
-    message: `Expression statement <${truncate(propertyValue)}> only supported by Camunda Platform 8.2 or newer`,
+    message: errorMessage,
     path: path
       ? [ ...path, propertyName ]
       : [ propertyName ],
@@ -91,7 +96,7 @@ function isExpression(value) {
 }
 
 function checkErrorCode(node) {
-  if (!isAny(node, [ 'bpmn:CatchEvent', 'bpmn:ThrowEvent' ])) {
+  if (!is(node, 'bpmn:Event')) {
     return;
   }
 
@@ -107,7 +112,19 @@ function checkErrorCode(node) {
     return;
   }
 
-  return errorRef && noExpression(errorRef, 'errorCode', node, '8.2');
+  if (is(node, 'bpmn:CatchEvent')) {
+    return noExpression(errorRef, 'errorCode', node, null);
+  } else {
+    return noExpression(errorRef, 'errorCode', node, '8.2');
+  }
+}
+
+function checkErrorCatchEvent(node) {
+  if (!is(node, 'bpmn:CatchEvent')) {
+    return;
+  }
+
+  return checkErrorCode(node);
 }
 
 function truncate(string, maxLength = 10) {
