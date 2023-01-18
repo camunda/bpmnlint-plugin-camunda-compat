@@ -37,7 +37,7 @@ const valid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:subProcess id="EventSubProcess" triggeredByEvent="true">
         <bpmn:startEvent id="StartEvent">
-          <bpmn:escalationEventDefinition id="EscalationEventDefinition_1"/>
+          <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
         </bpmn:startEvent>
       </bpmn:subProcess>
     `))
@@ -45,25 +45,25 @@ const valid = [
   {
     name: 'escalation boundary event',
     moddleElement: createModdle(createProcess(`
-      <bpmn:Task id="Task_1" />
+      <bpmn:task id="Task_1" />
       <bpmn:boundaryEvent id="BoundaryEvent" attachedToRef="Task_1">
-        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1"/>
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
       </bpmn:boundaryEvent>
     `))
   },
   {
     name: 'escalation intermediate throw event',
     moddleElement: createModdle(createProcess(`
-    <bpmn:intermediateThrowEvent id="IntermediateCatchEvent_1">
-    <bpmn:escalationEventDefinition id="EscalationEventDefinition_1"/>
-    </bpmn:intermediateThrowEvent>
+      <bpmn:intermediateThrowEvent id="IntermediateCatchEvent_1">
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
+      </bpmn:intermediateThrowEvent>
     `))
   },
   {
     name: 'escalation end event',
     moddleElement: createModdle(createProcess(`
       <bpmn:endEvent id="EndEvent">
-        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1"/>
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
       </bpmn:endEvent>
     `))
   },

@@ -124,11 +124,11 @@ const invalid = [
       <bpmn:process id="Process_1">
         <bpmn:subProcess id="EventSubProcess" triggeredByEvent="true">
           <bpmn:startEvent id="Event">
-            <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error"/>
+            <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1"/>
           </bpmn:startEvent>
         </bpmn:subProcess>
       </bpmn:process>
-      <bpmn:error id="Error" name="Error" errorCode="=myCode" />
+      <bpmn:error id="Error_1" name="Error_1" errorCode="=myCode" />
     `)),
     report: {
       id: 'Event',
@@ -140,7 +140,7 @@ const invalid = [
       ],
       data: {
         type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
-        node: 'Error',
+        node: 'Error_1',
         parentNode: 'Event',
         property: 'errorCode',
         allowedVersion: null
@@ -154,10 +154,10 @@ const invalid = [
       <bpmn:process id="Process_1">
         <bpmn:Task id="Task_1" />
         <bpmn:boundaryEvent id="Event" attachedToRef="Task_1">
-          <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error"/>
+          <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1"/>
         </bpmn:boundaryEvent>
       </bpmn:process>
-      <bpmn:error id="Error" name="Error" errorCode="=myCode" />
+      <bpmn:error id="Error_1" name="Error_1" errorCode="=myCode" />
     `)),
     report: {
       id: 'Event',
@@ -169,7 +169,7 @@ const invalid = [
       ],
       data: {
         type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
-        node: 'Error',
+        node: 'Error_1',
         parentNode: 'Event',
         property: 'errorCode',
         allowedVersion: null
@@ -183,11 +183,11 @@ const invalid = [
       <bpmn:process id="Process_1">
         <bpmn:subProcess id="EventSubProcess" triggeredByEvent="true">
           <bpmn:startEvent id="Event">
-            <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" escalationRef="Escalation"/>
+            <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" escalationRef="Escalation_1" />
           </bpmn:startEvent>
         </bpmn:subProcess>
       </bpmn:process>
-      <bpmn:escalation id="Escalation" name="Escalation" escalationCode="=myCode" />
+      <bpmn:escalation id="Escalation_1" name="Escalation_1" escalationCode="=myCode" />
     `)),
     report: {
       id: 'Event',
@@ -199,7 +199,7 @@ const invalid = [
       ],
       data: {
         type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
-        node: 'Escalation',
+        node: 'Escalation_1',
         parentNode: 'Event',
         property: 'escalationCode',
         allowedVersion: null
@@ -211,12 +211,12 @@ const invalid = [
     config: { version: '8.2' },
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1">
-        <bpmn:Task id="Task_1" />
+        <bpmn:task id="Task_1" />
         <bpmn:boundaryEvent id="Event" attachedToRef="Task_1">
-          <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" escalationRef="Escalation"/>
+          <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" escalationRef="Escalation_1" />
         </bpmn:boundaryEvent>
       </bpmn:process>
-      <bpmn:escalation id="Escalation" name="Escalation" escalationCode="=myCode" />
+      <bpmn:escalation id="Escalation_1" name="Escalation_1" escalationCode="=myCode" />
     `)),
     report: {
       id: 'Event',
@@ -228,7 +228,7 @@ const invalid = [
       ],
       data: {
         type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
-        node: 'Escalation',
+        node: 'Escalation_1',
         parentNode: 'Event',
         property: 'escalationCode',
         allowedVersion: null
