@@ -10,6 +10,7 @@ const camundaCloud10Rules = {
   'executable-process': 'error',
   'loop-characteristics': 'error',
   'message-reference': 'error',
+  'no-candidate-users': 'error',
   'no-expression': [ 'error', { version: '1.0' } ],
   'no-template': 'error',
   'no-zeebe-properties': 'error',
@@ -62,7 +63,7 @@ const camundaCloud81Rules = {
 };
 
 const camundaCloud82Rules = {
-  ...camundaCloud81Rules,
+  ...omit(camundaCloud81Rules, 'no-candidate-users'),
   'implementation': [ 'error', { version: '8.2' } ],
   'element-type': [ 'error', { version: '8.2' } ],
   'escalation-reference': 'error',
