@@ -65,6 +65,7 @@ const camundaCloud82Rules = {
   ...camundaCloud81Rules,
   'implementation': [ 'error', { version: '8.2' } ],
   'element-type': [ 'error', { version: '8.2' } ],
+  'escalation-reference': 'error',
   'no-expression': [ 'error', { version: '8.2' } ],
   'timer': [ 'error', { version: '8.2' } ]
 };

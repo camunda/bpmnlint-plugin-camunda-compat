@@ -135,6 +135,7 @@ describe('configs', function() {
     'duplicate-task-headers': 'error',
     'element-type': [ 'error', { version: '8.2' } ],
     'error-reference': 'error',
+    'escalation-reference': 'error',
     'executable-process': 'error',
     'feel': 'error',
     'inclusive-gateway': 'error',
