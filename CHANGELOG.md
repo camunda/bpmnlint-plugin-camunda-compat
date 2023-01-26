@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.20.0
+
+* `FEAT`: add candidate users rule ([#76](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/76))
+* `FEAT`: require escalation and escalation code in Camunda 8.2
+
 ## 0.19.0
 
 * `FEAT`: allow escalation events in Camunda 8.2 ([#73](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/73))
