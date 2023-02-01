@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/loop-characteristics');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -25,6 +26,17 @@ const valid = [
   {
     name: 'end event',
     moddleElement: createModdle(createProcess('<bpmn:endEvent id="EndEvent_1" />'))
+  },
+  {
+    name: 'service task (standard loop characteristics) (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:serviceTask id="ServiceTask_1">
+          <bpmn:standardLoopCharacteristics />
+        </bpmn:serviceTask>
+      </bpmn:process>
+    `))
   }
 ];
 

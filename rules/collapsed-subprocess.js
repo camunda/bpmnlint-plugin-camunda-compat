@@ -4,7 +4,9 @@ const { ERROR_TYPES } = require('./utils/element');
 
 const { reportErrors } = require('./utils/reporter');
 
-module.exports = function() {
+const skipIfNonExecutableProcess = require('./utils/skipIfNonExecutableProcess');
+
+module.exports = skipIfNonExecutableProcess(function() {
   function check(di, reporter) {
 
     if (!isCollapsedSubProcess(di)) {
@@ -28,11 +30,10 @@ module.exports = function() {
   return {
     check
   };
-};
-
+});
 
 function isCollapsedSubProcess(di) {
   return is(di, 'bpmndi:BPMNShape') &&
-         is(di.bpmnElement, 'bpmn:SubProcess') &&
+         is(di.get('bpmnElement'), 'bpmn:SubProcess') &&
          di.get('isExpanded') !== true;
 }

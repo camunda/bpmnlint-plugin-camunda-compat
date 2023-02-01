@@ -23,7 +23,9 @@ const {
 
 const { reportErrors } = require('../utils/reporter');
 
-module.exports = function({ version }) {
+const skipIfNonExecutableProcess = require('../utils/skipIfNonExecutableProcess');
+
+module.exports = skipIfNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
     if (!is(node, 'bpmn:Event')) {
       return;
@@ -53,7 +55,7 @@ module.exports = function({ version }) {
   return {
     check
   };
-};
+});
 
 function checkTimePropertyExists(eventDefinition, event) {
   if (is(event, 'bpmn:StartEvent')) {

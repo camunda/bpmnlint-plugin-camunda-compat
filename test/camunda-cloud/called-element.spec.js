@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/called-element');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -23,6 +24,15 @@ const valid = [
   {
     name: 'task',
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
+  },
+  {
+    name: 'call activity (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+    <bpmn:process id="Process_1">
+      <bpmn:callActivity id="CallActivity_1" />
+    </bpmn:process>
+    `))
   }
 ];
 

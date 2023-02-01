@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/user-task-form');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -27,6 +28,19 @@ const valid = [
     name: 'user task',
     moddleElement: createModdle(createProcess(`
       <bpmn:userTask id="UserTask_1" />
+    `))
+  },
+  {
+    name: 'user task (no form key) (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:userTask id="UserTask_1">
+          <bpmn:extensionElements>
+            <zeebe:formDefinition />
+          </bpmn:extensionElements>
+        </bpmn:userTask>
+      </bpmn:process>
     `))
   }
 ];

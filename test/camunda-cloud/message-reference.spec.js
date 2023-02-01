@@ -46,6 +46,17 @@ const valid = [
   {
     name: 'task',
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
+  },
+  {
+    name: 'message start event (no message reference) (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:startEvent id="StartEvent_1">
+          <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
+        </bpmn:startEvent>
+      </bpmn:process>
+    `))
   }
 ];
 

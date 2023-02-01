@@ -3,7 +3,8 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/element-type');
 
 const {
-  addConfig,
+  withConfig,
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -67,6 +68,14 @@ const valid = [
       </bpmn:endEvent>
     `))
   },
+  {
+    name: 'intermediate catch event (non-executable process)',
+    moddleElement: createModdle(createDefinitions(`
+    <bpmn:process id="Process_1">
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1" />
+    </bpmn:process>
+    `))
+  }
 ];
 
 const invalid = [
@@ -121,6 +130,6 @@ const invalid = [
 ];
 
 RuleTester.verify('camunda-cloud-8-2-element-type', rule, {
-  valid: addConfig(valid, { version: '8.2' }),
-  invalid: addConfig(invalid, { version: '8.2' })
+  valid: withConfig(valid, { version: '8.2' }),
+  invalid: withConfig(invalid, { version: '8.2' })
 });

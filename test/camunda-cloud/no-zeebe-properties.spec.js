@@ -4,7 +4,8 @@ const rule = require('../../rules/no-zeebe-properties');
 
 const {
   createModdle,
-  createProcess
+  createProcess,
+  createDefinitions
 } = require('../helper');
 
 const { ERROR_TYPES } = require('../../rules/utils/element');
@@ -14,6 +15,21 @@ const valid = [
     name: 'service task',
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="ServiceTask_1" />
+    `))
+  },
+  {
+    name: 'service task (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:serviceTask id="ServiceTask_1">
+          <bpmn:extensionElements>
+            <zeebe:properties>
+              <zeebe:property name="foo" value="bar" />
+            </zeebe:properties>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:process>
     `))
   }
 ];

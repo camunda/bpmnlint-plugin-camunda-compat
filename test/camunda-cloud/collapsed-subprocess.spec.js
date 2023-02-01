@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/collapsed-subprocess');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -11,7 +12,7 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 
 const valid = [
   {
-    name: 'Expanded Subprocess',
+    name: 'expanded sub-process',
     moddleElement: createModdle(createProcess(`
       <bpmn:subProcess id="SubProcess_1" />
     `, `
@@ -23,7 +24,7 @@ const valid = [
     `))
   },
   {
-    name: 'Expanded adHocSubProcess',
+    name: 'expanded ad-hoc sub-process',
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="SubProcess_1" />
     `, `
@@ -33,12 +34,31 @@ const valid = [
           </bpmndi:BPMNShape>
       </bpmndi:BPMNPlane>
     `))
+  },
+  {
+    name: 'collapsed sub-process (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:subProcess id="SubProcess_1" />
+      </bpmn:process>
+      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+          <bpmndi:BPMNShape id="SubProcess_1_di" bpmnElement="SubProcess_1" isExpanded="false">
+            <dc:Bounds x="155" y="80" width="100" height="80" />
+          </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+      </bpmndi:BPMNDiagram>
+      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+          <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SubProcess_1" />
+      </bpmndi:BPMNDiagram>
+    `))
   }
 ];
 
 const invalid = [
   {
-    name: 'Collapsed Subprocess',
+    name: 'collapsed sub-process',
     moddleElement: createModdle(createProcess(`
       <bpmn:subProcess id="SubProcess_1" />
     `, `
@@ -49,8 +69,8 @@ const invalid = [
           </bpmndi:BPMNShape>
         </bpmndi:BPMNPlane>
       </bpmndi:BPMNDiagram>
-      <bpmndi:BPMNDiagram id="BPMNDiagram_08bzev3">
-          <bpmndi:BPMNPlane id="BPMNPlane_0brduj8" bpmnElement="SubProcess_1" />
+      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+          <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SubProcess_1" />
       </bpmndi:BPMNDiagram>
     `)),
     report: {
@@ -64,7 +84,7 @@ const invalid = [
     }
   },
   {
-    name: 'Collapsed Subprocess (no isExpanded attribute)',
+    name: 'collapsed sub-process (no isExpanded attribute)',
     moddleElement: createModdle(createProcess(`
       <bpmn:subProcess id="SubProcess_1" />
     `, `
@@ -75,8 +95,8 @@ const invalid = [
           </bpmndi:BPMNShape>
         </bpmndi:BPMNPlane>
       </bpmndi:BPMNDiagram>
-      <bpmndi:BPMNDiagram id="BPMNDiagram_08bzev3">
-          <bpmndi:BPMNPlane id="BPMNPlane_0brduj8" bpmnElement="SubProcess_1" />
+      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+          <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SubProcess_1" />
       </bpmndi:BPMNDiagram>
     `)),
     report: {
@@ -90,7 +110,7 @@ const invalid = [
     }
   },
   {
-    name: 'legacy collapsed Subprocess',
+    name: 'collapsed sub-process (legacy)',
     moddleElement: createModdle(createProcess(`
       <bpmn:subProcess id="SubProcess_1" />
     `, `
@@ -113,7 +133,7 @@ const invalid = [
     }
   },
   {
-    name: 'Collapsed adHocSubProcess',
+    name: 'collapsed ad-hoc sub-process',
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="SubProcess_1" />
     `, `
@@ -124,8 +144,8 @@ const invalid = [
         </bpmndi:BPMNShape>
       </bpmndi:BPMNPlane>
       </bpmndi:BPMNDiagram>
-      <bpmndi:BPMNDiagram id="BPMNDiagram_08bzev3">
-          <bpmndi:BPMNPlane id="BPMNPlane_0brduj8" bpmnElement="SubProcess_1" />
+      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+          <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SubProcess_1" />
       </bpmndi:BPMNDiagram>
     `)),
     report: {

@@ -8,7 +8,9 @@ const {
 
 const { reportErrors } = require('./utils/reporter');
 
-module.exports = function() {
+const skipIfNonExecutableProcess = require('./utils/skipIfNonExecutableProcess');
+
+module.exports = skipIfNonExecutableProcess(function() {
   function check(node, reporter) {
     if (!is(node, 'bpmn:UserTask')) {
       return;
@@ -54,7 +56,7 @@ module.exports = function() {
   return {
     check
   };
-};
+});
 
 // helpers //////////
 

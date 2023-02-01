@@ -19,7 +19,9 @@ const { reportErrors } = require('../utils/reporter');
 
 const { ERROR_TYPES } = require('../utils/error-types');
 
-module.exports = function({ version }) {
+const skipIfNonExecutableProcess = require('../utils/skipIfNonExecutableProcess');
+
+module.exports = skipIfNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
     const calledDecisionConfig = config.calledDecision[ node.$type ];
     const scriptConfig = config.script[ node.$type ];
@@ -175,7 +177,7 @@ module.exports = function({ version }) {
   return {
     check
   };
-};
+});
 
 function isCalledDecisionAllowed(node, version) {
   const { calledDecision } = config;

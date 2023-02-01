@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/implementation');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -126,6 +127,15 @@ const valid = [
           <zeebe:script expression="=foo()" resultVariable="bar" />
         </bpmn:extensionElements>
       </bpmn:scriptTask>
+    `))
+  },
+  {
+    name: 'service task (no task definition) (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:serviceTask id="ServiceTask_1" />
+      </bpmn:process>
     `))
   }
 ];

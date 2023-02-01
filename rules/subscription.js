@@ -12,7 +12,9 @@ const {
 
 const { reportErrors } = require('./utils/reporter');
 
-module.exports = function() {
+const skipIfNonExecutableProcess = require('./utils/skipIfNonExecutableProcess');
+
+module.exports = skipIfNonExecutableProcess(function() {
   function check(node, reporter) {
     if (!isAny(node, [ 'bpmn:CatchEvent', 'bpmn:ThrowEvent', 'bpmn:ReceiveTask' ])
       || (is(node, 'bpmn:StartEvent') && !is(node.$parent, 'bpmn:SubProcess'))) {
@@ -61,4 +63,4 @@ module.exports = function() {
   return {
     check
   };
-};
+});

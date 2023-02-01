@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/feel');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -42,6 +43,21 @@ const valid = [
         <zeebe:taskDefinition retries="5" />
       </bpmn:extensionElements>
       <bpmn:serviceTask id="Task_1" />
+    `))
+  },
+  {
+    name: 'invalid FEEL expression (string property) (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="==foo" target="OutputVariable_1" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:process>
     `))
   }
 ];
