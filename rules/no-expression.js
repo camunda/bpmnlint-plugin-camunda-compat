@@ -11,6 +11,8 @@ const {
 
 const { reportErrors } = require('./utils/reporter');
 
+const { skipInNonExecutableProcess } = require('./utils/rule');
+
 const handlersMap = {
   '1.0': [
     checkErrorCode
@@ -36,7 +38,7 @@ const handlersMap = {
   ]
 };
 
-module.exports = noExpressionRule;
+module.exports = skipInNonExecutableProcess(noExpressionRule);
 
 /**
  * Make sure that certain properties do not contain expressions in older versions.

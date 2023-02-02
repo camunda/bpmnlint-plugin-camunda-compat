@@ -3,7 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/element-type');
 
 const {
-  addConfig,
+  withConfig,
   createCollaboration,
   createDefinitions,
   createModdle,
@@ -341,6 +341,6 @@ const invalid = [
 ];
 
 RuleTester.verify('camunda-cloud-1-0-element-type', rule, {
-  valid: addConfig(valid, { version: '1.0' }),
-  invalid: addConfig(invalid, { version: '1.0' })
+  valid: withConfig(valid, { version: '1.0' }),
+  invalid: withConfig(invalid, { version: '1.0' })
 });

@@ -4,7 +4,9 @@ const { hasProperties } = require('./utils/element');
 
 const { reportErrors } = require('./utils/reporter');
 
-module.exports = function() {
+const { skipInNonExecutableProcess } = require('./utils/rule');
+
+module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     if (!isAny(node, [ 'bpmn:ExclusiveGateway', 'bpmn:InclusiveGateway' ])) {
       return;
@@ -32,4 +34,4 @@ module.exports = function() {
   return {
     check
   };
-};
+});

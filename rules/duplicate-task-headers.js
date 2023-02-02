@@ -11,7 +11,9 @@ const {
 
 const { reportErrors } = require('./utils/reporter');
 
-module.exports = function() {
+const { skipInNonExecutableProcess } = require('./utils/rule');
+
+module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     if (!is(node, 'bpmn:UserTask') && !isZeebeServiceTask(node)) {
       return;
@@ -33,7 +35,7 @@ module.exports = function() {
   return {
     check
   };
-};
+});
 
 // helpers //////////
 

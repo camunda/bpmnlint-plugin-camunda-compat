@@ -2,7 +2,9 @@ const { hasProperties } = require('./utils/element');
 
 const { reportErrors } = require('./utils/reporter');
 
-module.exports = function() {
+const { skipInNonExecutableProcess } = require('./utils/rule');
+
+module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     const errors = hasProperties(node, {
       modelerTemplate: {
@@ -19,4 +21,4 @@ module.exports = function() {
   return {
     check
   };
-};
+});

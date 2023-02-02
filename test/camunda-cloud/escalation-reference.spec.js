@@ -37,6 +37,17 @@ const valid = [
   {
     name: 'task',
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
+  },
+  {
+    name: 'escalation end event (no escalation reference) (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:endEvent id="EndEvent_1">
+          <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
+        </bpmn:endEvent>
+      </bpmn:process>
+    `))
   }
 ];
 

@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/sequence-flow-condition');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -97,6 +98,28 @@ const valid = [
   {
     name: 'task',
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
+  },
+  {
+    name: 'inclusive gateway (2 outgoing sequence flows, one without condition) (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:inclusiveGateway id="InclusiveGateway_1">
+          <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+          <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+        </bpmn:inclusiveGateway>
+        <bpmn:endEvent id="EndEvent_1">
+          <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="SequenceFlow_1" sourceRef="InclusiveGateway_1" targetRef="EndEvent_1">
+          <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=foo</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:endEvent id="EndEvent_2">
+          <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="SequenceFlow_2" sourceRef="InclusiveGateway_1" targetRef="EndEvent_2" />
+      </bpmn:process>
+    `))
   }
 ];
 

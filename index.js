@@ -1,75 +1,45 @@
 const { omit } = require('min-dash');
 
-const camundaCloud10Rules = {
-  'implementation': [ 'error', { version: '1.0' } ],
+const camundaCloud10Rules = withConfig({
+  'implementation': 'error',
   'called-element': 'error',
   'collapsed-subprocess': 'error',
   'duplicate-task-headers': 'error',
-  'element-type': [ 'error', { version: '1.0' } ],
+  'element-type': 'error',
   'error-reference': 'error',
   'executable-process': 'error',
   'loop-characteristics': 'error',
   'message-reference': 'error',
   'no-candidate-users': 'error',
-  'no-expression': [ 'error', { version: '1.0' } ],
+  'no-expression': 'error',
   'no-template': 'error',
   'no-zeebe-properties': 'error',
   'sequence-flow-condition': 'error',
   'subscription': 'error',
-  'timer': [ 'error', { version: '1.0' } ],
+  'timer': 'error',
   'user-task-form': 'error',
   'feel': 'error'
-};
+}, { version: '1.0' });
 
-const camundaCloud11Rules = {
-  ...camundaCloud10Rules,
-  'implementation': [ 'error', { version: '1.1' } ],
-  'element-type': [ 'error', { version: '1.1' } ],
-  'no-expression': [ 'error', { version: '1.1' } ],
-  'timer': [ 'error', { version: '1.1' } ]
-};
+const camundaCloud11Rules = withConfig(camundaCloud10Rules, { version: '1.1' });
 
-const camundaCloud12Rules = {
-  ...camundaCloud11Rules,
-  'implementation': [ 'error', { version: '1.2' } ],
-  'element-type': [ 'error', { version: '1.2' } ],
-  'no-expression': [ 'error', { version: '1.2' } ],
-  'timer': [ 'error', { version: '1.2' } ]
-};
+const camundaCloud12Rules = withConfig(camundaCloud11Rules, { version: '1.2' });
 
-const camundaCloud13Rules = {
-  ...camundaCloud12Rules,
-  'implementation': [ 'error', { version: '1.3' } ],
-  'element-type': [ 'error', { version: '1.3' } ],
-  'no-expression': [ 'error', { version: '1.3' } ],
-  'timer': [ 'error', { version: '1.3' } ]
-};
+const camundaCloud13Rules = withConfig(camundaCloud12Rules, { version: '1.3' });
 
-const camundaCloud80Rules = {
-  ...omit(camundaCloud13Rules, 'no-template'),
-  'implementation': [ 'error', { version: '8.0' } ],
-  'element-type': [ 'error', { version: '8.0' } ],
-  'no-expression': [ 'error', { version: '8.0' } ],
-  'timer': [ 'error', { version: '8.0' } ]
-};
+const camundaCloud80Rules = withConfig({
+  ...omit(camundaCloud13Rules, 'no-template')
+}, { version: '8.0' });
 
-const camundaCloud81Rules = {
+const camundaCloud81Rules = withConfig({
   ...omit(camundaCloud80Rules, 'no-zeebe-properties'),
-  'implementation': [ 'error', { version: '8.1' } ],
-  'element-type': [ 'error', { version: '8.1' } ],
-  'inclusive-gateway': 'error',
-  'no-expression': [ 'error', { version: '8.1' } ],
-  'timer': [ 'error', { version: '8.1' } ]
-};
+  'inclusive-gateway': 'error'
+}, { version: '8.1' });
 
-const camundaCloud82Rules = {
+const camundaCloud82Rules = withConfig({
   ...omit(camundaCloud81Rules, 'no-candidate-users'),
-  'implementation': [ 'error', { version: '8.2' } ],
-  'element-type': [ 'error', { version: '8.2' } ],
-  'escalation-reference': 'error',
-  'no-expression': [ 'error', { version: '8.2' } ],
-  'timer': [ 'error', { version: '8.2' } ]
-};
+  'escalation-reference': 'error'
+}, { version: '8.2' });
 
 module.exports = {
   configs: {
@@ -96,3 +66,13 @@ module.exports = {
     }
   }
 };
+
+function withConfig(rules, config, type = 'error') {
+  let rulesWithConfig = {};
+
+  for (let name in rules) {
+    rulesWithConfig[ name ] = [ type, config ];
+  }
+
+  return rulesWithConfig;
+}

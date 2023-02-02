@@ -4,7 +4,9 @@ const { ERROR_TYPES } = require('./utils/element');
 
 const { reportErrors } = require('./utils/reporter');
 
-module.exports = function() {
+const { skipInNonExecutableProcess } = require('./utils/rule');
+
+module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     if (!is(node, 'bpmn:InclusiveGateway')) {
       return;
@@ -31,4 +33,4 @@ module.exports = function() {
   return {
     check
   };
-};
+});

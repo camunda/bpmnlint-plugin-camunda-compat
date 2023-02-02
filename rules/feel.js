@@ -10,7 +10,9 @@ const { reportErrors } = require('./utils/reporter');
 
 const { ERROR_TYPES } = require('./utils/error-types');
 
-module.exports = function() {
+const { skipInNonExecutableProcess } = require('./utils/rule');
+
+module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     if (is(node, 'bpmn:Expression')) {
       return;
@@ -62,7 +64,7 @@ module.exports = function() {
   return {
     check
   };
-};
+});
 
 const isFeelProperty = ([ propertyName, value ]) => {
   return !isIgnoredProperty(propertyName) && isString(value) && value.startsWith('=');

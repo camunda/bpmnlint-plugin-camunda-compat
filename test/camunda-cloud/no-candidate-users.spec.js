@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/no-candidate-users');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -18,6 +19,19 @@ const valid = [
           <zeebe:assignmentDefinition candidateGroups="foo" />
         </bpmn:extensionElements>
       </bpmn:userTask>
+    `))
+  },
+  {
+    name: 'user task (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:userTask id="UserTask_1">
+          <bpmn:extensionElements>
+            <zeebe:assignmentDefinition candidateUsers="foo" />
+          </bpmn:extensionElements>
+        </bpmn:userTask>
+      </bpmn:process>
     `))
   }
 ];

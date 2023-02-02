@@ -125,6 +125,6 @@ function createElement(type, properties) {
 
 module.exports.createElement = createElement;
 
-module.exports.addConfig = function(tests, config) {
+module.exports.withConfig = function(tests, config) {
   return tests.map(test => ({ ...test, config }));
 };

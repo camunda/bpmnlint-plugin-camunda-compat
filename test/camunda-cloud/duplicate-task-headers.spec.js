@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/duplicate-task-headers');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -88,6 +89,22 @@ const valid = [
           </zeebe:taskHeaders>
         </bpmn:extensionElements>
       </bpmn:intermediateThrowEvent>
+    `))
+  },
+  {
+    name: 'service task (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:serviceTask id="ServiceTask_1">
+          <bpmn:extensionElements>
+            <zeebe:taskHeaders>
+              <zeebe:header key="foo" />
+              <zeebe:header key="foo" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:process>
     `))
   }
 ];

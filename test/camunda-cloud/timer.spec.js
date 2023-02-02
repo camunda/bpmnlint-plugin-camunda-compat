@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/timer');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -102,6 +103,17 @@ const valid = [
           <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">= today</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
+    `))
+  },
+  {
+    name: 'timer start event (no expression) (non-executable process)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:startEvent id="Event">
+          <bpmn:timerEventDefinition id="TimerEventDefinition" />
+        </bpmn:startEvent>
+      </bpmn:process>
     `))
   }
 ];
