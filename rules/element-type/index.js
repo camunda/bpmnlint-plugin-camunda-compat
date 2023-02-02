@@ -12,9 +12,9 @@ const { ERROR_TYPES } = require('../utils/error-types');
 
 const { reportErrors } = require('../utils/reporter');
 
-const skipIfNonExecutableProcess = require('../utils/skipIfNonExecutableProcess');
+const { skipInNonExecutableProcess } = require('../utils/rule');
 
-module.exports = skipIfNonExecutableProcess(function({ version }) {
+module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
     if (!isAny(node, [ 'bpmn:FlowElement', 'bpmn:FlowElementsContainer' ])) {
       return;

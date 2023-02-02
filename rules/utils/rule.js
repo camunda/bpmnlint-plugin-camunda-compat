@@ -2,9 +2,9 @@ const { is } = require('bpmnlint-utils');
 
 const { greaterOrEqual } = require('./version');
 
-module.exports = function(childRule) {
+function skipInNonExecutableProcess(ruleFactory) {
   return function(config = {}) {
-    const { check: childCheck } = childRule(config);
+    const rule = ruleFactory(config);
 
     const { version } = config;
 
@@ -13,13 +13,18 @@ module.exports = function(childRule) {
         return false;
       }
 
-      return childCheck(node, reporter);
+      return rule.check(node, reporter);
     }
 
     return {
+      ...rule,
       check
     };
   };
+}
+
+module.exports = {
+  skipInNonExecutableProcess
 };
 
 function isNonExecutableProcess(node) {

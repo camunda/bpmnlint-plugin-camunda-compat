@@ -11,7 +11,7 @@ const {
 
 const { reportErrors } = require('./utils/reporter');
 
-const skipIfNonExecutableProcess = require('./utils/skipIfNonExecutableProcess');
+const { skipInNonExecutableProcess } = require('./utils/rule');
 
 const handlersMap = {
   '1.0': [
@@ -38,7 +38,7 @@ const handlersMap = {
   ]
 };
 
-module.exports = skipIfNonExecutableProcess(noExpressionRule);
+module.exports = skipInNonExecutableProcess(noExpressionRule);
 
 /**
  * Make sure that certain properties do not contain expressions in older versions.

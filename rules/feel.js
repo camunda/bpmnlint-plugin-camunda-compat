@@ -10,9 +10,9 @@ const { reportErrors } = require('./utils/reporter');
 
 const { ERROR_TYPES } = require('./utils/error-types');
 
-const skipIfNonExecutableProcess = require('./utils/skipIfNonExecutableProcess');
+const { skipInNonExecutableProcess } = require('./utils/rule');
 
-module.exports = skipIfNonExecutableProcess(function() {
+module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     if (is(node, 'bpmn:Expression')) {
       return;
