@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 0.21.0
+
+* `FEAT`: skip non-executable process ([#80](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/80))
+
 ## 0.20.0
 
 * `FEAT`: add candidate users rule ([#76](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/76))
