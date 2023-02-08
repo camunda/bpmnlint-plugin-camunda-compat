@@ -12,9 +12,15 @@ const { reportErrors } = require('./utils/reporter');
 
 const { skipInNonExecutableProcess } = require('./utils/rule');
 
-module.exports = skipInNonExecutableProcess(function() {
+const { greaterOrEqual } = require('./utils/version');
+
+module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
     if (!isAny(node, [ 'bpmn:CatchEvent', 'bpmn:ThrowEvent' ])) {
+      return;
+    }
+
+    if (is(node, 'bpmn:CatchEvent') && greaterOrEqual(version, '8.2')) {
       return;
     }
 
@@ -26,7 +32,8 @@ module.exports = skipInNonExecutableProcess(function() {
 
     let errors = hasProperties(eventDefinition, {
       errorRef: {
-        required: true
+        required: true,
+        allowedVersion: '8.2'
       }
     }, node);
 
@@ -40,7 +47,8 @@ module.exports = skipInNonExecutableProcess(function() {
 
     errors = hasProperties(errorRef, {
       errorCode: {
-        required: true
+        required: true,
+        allowedVersion: '8.2'
       }
     }, node);
 
