@@ -309,8 +309,7 @@ describe('utils/element', function() {
             type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
             node: serviceTask,
             parentNode: null,
-            extensionElement: serviceTask.get('extensionElements').get('values')[ 0 ],
-            allowedVersion: null
+            extensionElement: serviceTask.get('extensionElements').get('values')[ 0 ]
           }
         }
       ]);
@@ -715,8 +714,7 @@ describe('utils/element', function() {
               node: serviceTask,
               parentNode: null,
               property: 'loopCharacteristics',
-              allowedPropertyType: 'bpmn:MultiInstanceLoopCharacteristics',
-              allowedVersion: null
+              allowedPropertyType: 'bpmn:MultiInstanceLoopCharacteristics'
             }
           }
         ]);
@@ -790,8 +788,7 @@ describe('utils/element', function() {
                 type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
                 node: serviceTask,
                 parentNode: null,
-                property: 'modelerTemplate',
-                allowedVersion: null
+                property: 'modelerTemplate'
               }
             }
           ]);
@@ -846,8 +843,7 @@ describe('utils/element', function() {
                 type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
                 node: serviceTask,
                 parentNode: null,
-                property: 'modelerTemplate',
-                allowedVersion: null
+                property: 'modelerTemplate'
               }
             }
           ]);
@@ -879,8 +875,7 @@ describe('utils/element', function() {
                 type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
                 node: serviceTask,
                 parentNode: null,
-                property: 'modelerTemplate',
-                allowedVersion: null
+                property: 'modelerTemplate'
               }
             }
           ]);
@@ -1017,8 +1012,7 @@ describe('utils/element', function() {
             type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
             node: endEvent.get('eventDefinitions')[ 0 ].get('timeCycle'),
             parentNode: endEvent,
-            property: 'timeCycle',
-            allowedVersion: null
+            property: 'timeCycle'
           }
         }
       ]);
