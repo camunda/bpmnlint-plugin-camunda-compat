@@ -271,8 +271,7 @@ const invalid = [
         type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'timeDuration',
-        allowedVersion: null
+        property: 'timeDuration'
       }
     }
   },
@@ -299,8 +298,7 @@ const invalid = [
         type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'timeDuration',
-        allowedVersion: null
+        property: 'timeDuration'
       }
     }
   },
@@ -327,8 +325,7 @@ const invalid = [
         type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'timeCycle',
-        allowedVersion: null
+        property: 'timeCycle'
       }
     }
   },
@@ -354,8 +351,7 @@ const invalid = [
         type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
         node: 'bpmn:FormalExpression',
         parentNode: 'Event',
-        property: 'timeDate',
-        allowedVersion: null
+        property: 'timeDate'
       }
     }
   }

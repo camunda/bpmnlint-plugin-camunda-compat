@@ -59,8 +59,7 @@ const invalid = [
         node: 'ServiceTask_1',
         parentNode: null,
         property: 'loopCharacteristics',
-        allowedPropertyType: 'bpmn:MultiInstanceLoopCharacteristics',
-        allowedVersion: null
+        allowedPropertyType: 'bpmn:MultiInstanceLoopCharacteristics'
       }
     }
   },

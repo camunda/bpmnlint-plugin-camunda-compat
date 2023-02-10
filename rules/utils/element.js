@@ -145,16 +145,18 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       return [
         ...results,
         {
-          message: `Element of type <${ node.$type }> must have property <${ propertyName }>`,
+          message: allowedVersion
+            ? `Element of type <${ node.$type }> without property <${ propertyName }> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            : `Element of type <${ node.$type }> must have property <${ propertyName }>`,
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
-          data: {
+          data: addAllowedVersion({
             type: ERROR_TYPES.PROPERTY_REQUIRED,
             node,
             parentNode: parentNode == node ? null : parentNode,
             requiredProperty: propertyName
-          }
+          }, allowedVersion)
         }
       ];
     }
@@ -200,14 +202,13 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
-          data: {
+          data: addAllowedVersion({
             type: ERROR_TYPES.PROPERTY_TYPE_NOT_ALLOWED,
             node,
             parentNode: parentNode == node ? null : parentNode,
             property: propertyName,
-            allowedPropertyType: propertyChecks.type,
-            allowedVersion
-          }
+            allowedPropertyType: propertyChecks.type
+          }, allowedVersion)
         }
       ];
     }
@@ -241,13 +242,12 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
-          data: {
+          data: addAllowedVersion({
             type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
             node,
             parentNode: parentNode == node ? null : parentNode,
-            property: propertyName,
-            allowedVersion
-          }
+            property: propertyName
+          }, allowedVersion)
         }
       ];
     }
@@ -262,13 +262,12 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           path: path
             ? [ ...path, propertyName ]
             : [ propertyName ],
-          data: {
+          data: addAllowedVersion({
             type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
             node,
             parentNode: parentNode == node ? null : parentNode,
-            property: propertyName,
-            allowedVersion
-          }
+            property: propertyName
+          }, allowedVersion)
         }
       ];
     }
@@ -344,13 +343,12 @@ module.exports.hasNoExtensionElement = function(node, type, parentNode = null, a
           ? `Extension element of type <${ type }> only allowed by Camunda Platform ${ allowedVersion }`
           : `Extension element of type <${ type }> not allowed`,
         path: getPath(extensionElement, parentNode),
-        data: {
+        data: addAllowedVersion({
           type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
           node,
           parentNode: parentNode == node ? null : parentNode,
-          extensionElement,
-          allowedVersion
-        }
+          extensionElement
+        }, allowedVersion)
       }
     ];
   }
@@ -407,13 +405,12 @@ module.exports.hasExpression = function(node, propertyName, check, parentNode = 
         path: path
           ? [ ...path, propertyName ]
           : null,
-        data: {
+        data: addAllowedVersion({
           type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
           node: expression,
           parentNode,
-          property: propertyName,
-          allowedVersion
-        }
+          property: propertyName
+        }, allowedVersion)
       }
     ];
   }
@@ -437,4 +434,15 @@ function truncate(string, maxLength = 10) {
   const stringified = `${ string }`;
 
   return stringified.length > maxLength ? `${ stringified.slice(0, maxLength) }...` : stringified;
+}
+
+function addAllowedVersion(data, allowedVersion) {
+  if (!allowedVersion) {
+    return data;
+  }
+
+  return {
+    ...data,
+    allowedVersion
+  };
 }
