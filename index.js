@@ -41,6 +41,10 @@ const camundaCloud82Rules = withConfig({
   'escalation-reference': 'error'
 }, { version: '8.2' });
 
+const camundaPlatform719Rules = withConfig({
+  'history-time-to-live': 'error'
+}, { version: '7.19' });
+
 module.exports = {
   configs: {
     'camunda-cloud-1-0': {
@@ -63,6 +67,9 @@ module.exports = {
     },
     'camunda-cloud-8-2': {
       rules: camundaCloud82Rules
+    },
+    'camunda-platform-7-19': {
+      rules: camundaPlatform719Rules
     }
   }
 };
