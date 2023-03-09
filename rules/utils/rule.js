@@ -6,10 +6,14 @@ function skipInNonExecutableProcess(ruleFactory) {
   return function(config = {}) {
     const rule = ruleFactory(config);
 
-    const { version } = config;
+    const { version, platform = 'zeebe' } = config;
 
     function check(node, reporter) {
-      if (version && greaterOrEqual(version, '8.2') && isNonExecutableProcess(node)) {
+      if (platform === 'zeebe' && version && greaterOrEqual(version, '8.2') && isNonExecutableProcess(node)) {
+        return false;
+      }
+
+      if (platform === 'platform' && isNonExecutableProcess(node)) {
         return false;
       }
 
