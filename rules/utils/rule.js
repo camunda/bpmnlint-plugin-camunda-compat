@@ -6,14 +6,14 @@ function skipInNonExecutableProcess(ruleFactory) {
   return function(config = {}) {
     const rule = ruleFactory(config);
 
-    const { version, platform = 'zeebe' } = config;
+    const { version, platform = 'camunda-cloud' } = config;
 
     function check(node, reporter) {
-      if (platform === 'zeebe' && version && greaterOrEqual(version, '8.2') && isNonExecutableProcess(node)) {
+      if (platform === 'camunda-cloud' && version && greaterOrEqual(version, '8.2') && isNonExecutableProcess(node)) {
         return false;
       }
 
-      if (platform === 'platform' && isNonExecutableProcess(node)) {
+      if (platform === 'camunda-platform' && isNonExecutableProcess(node)) {
         return false;
       }
 
