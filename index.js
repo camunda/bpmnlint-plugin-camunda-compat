@@ -12,6 +12,7 @@ const camundaCloud10Rules = withConfig({
   'message-reference': 'error',
   'no-candidate-users': 'error',
   'no-expression': 'error',
+  'no-task-schedule': 'error',
   'no-template': 'error',
   'no-zeebe-properties': 'error',
   'sequence-flow-condition': 'error',
@@ -37,8 +38,12 @@ const camundaCloud81Rules = withConfig({
 }, { version: '8.1' });
 
 const camundaCloud82Rules = withConfig({
-  ...omit(camundaCloud81Rules, 'no-candidate-users'),
-  'escalation-reference': 'error'
+  ...omit(camundaCloud81Rules, [
+    'no-candidate-users',
+    'no-task-schedule'
+  ]),
+  'escalation-reference': 'error',
+  'task-schedule': 'error'
 }, { version: '8.2' });
 
 const camundaPlatform719Rules = withConfig({

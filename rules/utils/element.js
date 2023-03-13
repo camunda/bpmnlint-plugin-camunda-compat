@@ -363,11 +363,15 @@ module.exports.hasExpression = function(node, propertyName, check, parentNode = 
     throw new Error('Expression not found');
   }
 
-  const body = expression.get('body');
+  let propertyValue = expression;
+
+  if (is(expression, 'bpmn:Expression')) {
+    propertyValue = expression.get('body');
+  }
 
   const path = getPath(node, parentNode);
 
-  if (!body) {
+  if (!propertyValue) {
     if (check.required !== false) {
       return [
         {
@@ -377,7 +381,7 @@ module.exports.hasExpression = function(node, propertyName, check, parentNode = 
             : null,
           data: {
             type: ERROR_TYPES.EXPRESSION_REQUIRED,
-            node: expression,
+            node: is(expression, 'bpmn:Expression') ? expression : node,
             parentNode,
             property: propertyName
           }
@@ -388,7 +392,7 @@ module.exports.hasExpression = function(node, propertyName, check, parentNode = 
     return [];
   }
 
-  const allowed = check.allowed(body);
+  const allowed = check.allowed(propertyValue);
 
   if (allowed !== true) {
     let allowedVersion = null;
@@ -400,14 +404,14 @@ module.exports.hasExpression = function(node, propertyName, check, parentNode = 
     return [
       {
         message: allowedVersion
-          ? `Expression value of <${ body }> only allowed by Camunda Platform ${ allowedVersion }`
-          : `Expression value of <${ body }> not allowed`,
+          ? `Expression value of <${ propertyValue }> only allowed by Camunda Platform ${ allowedVersion }`
+          : `Expression value of <${ propertyValue }> not allowed`,
         path: path
           ? [ ...path, propertyName ]
           : null,
         data: addAllowedVersion({
           type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
-          node: expression,
+          node: is(expression, 'bpmn:Expression') ? expression : node,
           parentNode,
           property: propertyName
         }, allowedVersion)
