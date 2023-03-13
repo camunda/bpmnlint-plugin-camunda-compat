@@ -87,6 +87,14 @@ async function createModdle(xml, executionPlatform = 'camunda-cloud') {
 
 module.exports.createModdle = createModdle;
 
+module.exports.createModdleCamundaCloud = function(xml) {
+  return createModdle(xml, 'camunda-cloud');
+};
+
+module.exports.createModdleCamundaPlatform = function(xml) {
+  return createModdle(xml, 'camunda-platform');
+};
+
 function createElement(type, properties) {
   const moddle = new BpmnModdle({
     modeler: modelerModdleSchema,
