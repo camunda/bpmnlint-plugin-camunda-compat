@@ -4,7 +4,7 @@ const rule = require('../../rules/history-time-to-live');
 
 const {
   createDefinitions,
-  createModdle
+  createModdleCamundaPlatform: createModdle
 } = require('../helper');
 
 const { ERROR_TYPES } = require('../../rules/utils/element');
@@ -14,14 +14,14 @@ const valid = [
     name: 'process (history time to live)',
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1" isExecutable="true" camunda:historyTimeToLive="123" />
-    `), 'platform'),
+    `)),
   },
   {
     name: 'non-executable process (history time to live)',
     config: { platform: 'camunda-platform' },
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1" />
-    `), 'platform'),
+    `)),
   }
 ];
 
@@ -30,7 +30,7 @@ const invalid = [
     name: 'process (no history time to live)',
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1" isExecutable="true" />
-    `), 'platform'),
+    `)),
     report: {
       id: 'Process_1',
       message: 'Element of type <bpmn:Process> must have property <historyTimeToLive>',
