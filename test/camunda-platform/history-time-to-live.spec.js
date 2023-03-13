@@ -13,7 +13,7 @@ const valid = [
   {
     name: 'process (history time to live)',
     moddleElement: createModdle(createDefinitions(`
-      <bpmn:process id="Process_1" isExecutable="true" camunda:historyTimeToLive="123"/>
+      <bpmn:process id="Process_1" isExecutable="true" camunda:historyTimeToLive="123" />
     `), 'platform'),
   },
   {
@@ -29,8 +29,7 @@ const invalid = [
   {
     name: 'process (no history time to live)',
     moddleElement: createModdle(createDefinitions(`
-    <bpmn:process id="Process_1" isExecutable="true">
-    </bpmn:process>
+      <bpmn:process id="Process_1" isExecutable="true" />
     `), 'platform'),
     report: {
       id: 'Process_1',
