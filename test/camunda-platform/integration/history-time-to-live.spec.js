@@ -7,7 +7,7 @@ const NodeResolver = require('bpmnlint/lib/resolver/node-resolver');
 const { readModdle } = require('../../helper');
 
 const versions = [
-  '7.19',
+  '7.19'
 ];
 
 describe('integration - history-time-to-live', function() {
