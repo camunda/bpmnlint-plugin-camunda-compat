@@ -18,7 +18,7 @@ const valid = [
   },
   {
     name: 'non-executable process (history time to live)',
-    config: { platform: 'platform' },
+    config: { platform: 'camunda-platform' },
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1" />
     `), 'platform'),

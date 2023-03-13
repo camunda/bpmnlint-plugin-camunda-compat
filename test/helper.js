@@ -2,9 +2,9 @@ const BpmnModdle = require('bpmn-moddle');
 
 const { isArray } = require('min-dash');
 
-const modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
-      zeebeModdleSchema = require('zeebe-bpmn-moddle/resources/zeebe.json'),
-      camundaModdleSchema = require('camunda-bpmn-moddle/resources/camunda.json');
+const camundaModdleSchema = require('camunda-bpmn-moddle/resources/camunda.json'),
+      modelerModdleSchema = require('modeler-moddle/resources/modeler.json'),
+      zeebeModdleSchema = require('zeebe-bpmn-moddle/resources/zeebe.json');
 
 const { readFileSync } = require('fs');
 
@@ -48,14 +48,15 @@ module.exports.createProcess = function(bpmn = '', bpmndi = '') {
 
 module.exports.readModdle = function(filePath) {
   const contents = readFileSync(filePath, 'utf8');
-  const platformSchema = filePath.includes('camunda-cloud') ? 'zeebe' : 'platform';
 
-  return createModdle(contents, platformSchema);
+  const executionPlatform = filePath.includes('camunda-cloud') ? 'camunda-cloud' : 'camunda-platform';
+
+  return createModdle(contents, executionPlatform);
 };
 
-async function createModdle(xml, platformSchema = 'zeebe') {
-  const moddleSchema = (platformSchema === 'zeebe') ?
-    { zeebe: zeebeModdleSchema }
+async function createModdle(xml, executionPlatform = 'camunda-cloud') {
+  const moddleSchema = executionPlatform === 'camunda-cloud'
+    ? { zeebe: zeebeModdleSchema }
     : { camunda: camundaModdleSchema };
 
   const moddle = new BpmnModdle({
