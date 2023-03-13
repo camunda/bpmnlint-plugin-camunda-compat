@@ -43,7 +43,7 @@ const camundaCloud82Rules = withConfig({
 
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'error'
-}, { version: '7.19' });
+}, { platform: 'camunda-platform', version: '7.19' });
 
 module.exports = {
   configs: {

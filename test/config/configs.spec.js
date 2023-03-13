@@ -154,6 +154,11 @@ describe('configs', function() {
     'user-task-form': [ 'error', { version: '8.2' } ]
   }));
 
+
+  it('camunda-platform-7-19', expectRules(configs, 'camunda-platform-7-19', {
+    'history-time-to-live': [ 'error', { platform: 'camunda-platform', version: '7.19' } ]
+  }));
+
 });
 
 function expectRules(configs, name, rules) {
