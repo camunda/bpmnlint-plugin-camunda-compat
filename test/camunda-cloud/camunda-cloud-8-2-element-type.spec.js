@@ -69,6 +69,14 @@ const valid = [
     `))
   },
   {
+    name: 'signal start event',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:startEvent id="StartEvent_1">
+        <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
+      </bpmn:startEvent>
+    `))
+  },
+  {
     name: 'intermediate catch event (non-executable process)',
     moddleElement: createModdle(createDefinitions(`
     <bpmn:process id="Process_1">
