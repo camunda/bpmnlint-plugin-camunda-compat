@@ -154,6 +154,7 @@ describe('configs', function() {
     'loop-characteristics': [ 'error', { version: '8.2' } ],
     'message-reference': [ 'error', { version: '8.2' } ],
     'no-expression': [ 'error', { version: '8.2' } ],
+    'no-signal-event-sub-process': [ 'error', { version: '8.2' } ],
     'sequence-flow-condition': [ 'error', { version: '8.2' } ],
     'subscription': [ 'error', { version: '8.2' } ],
     'task-schedule': [ 'error', { version: '8.2' } ],

@@ -43,6 +43,7 @@ const camundaCloud82Rules = withConfig({
     'no-task-schedule'
   ]),
   'escalation-reference': 'error',
+  'no-signal-event-sub-process': 'error',
   'task-schedule': 'error'
 }, { version: '8.2' });
 
