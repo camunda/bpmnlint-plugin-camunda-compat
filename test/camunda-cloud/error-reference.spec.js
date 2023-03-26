@@ -53,19 +53,6 @@ const valid = [
     `))
   },
   {
-    name: 'error boundary event (no error code) (Camunda 8.2)',
-    config: { version: '8.2' },
-    moddleElement: createModdle(createDefinitions(`
-      <bpmn:process id="Process_1">
-        <bpmn:task id="Task_1" />
-        <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="Task_1">
-          <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1" />
-        </bpmn:boundaryEvent>
-      </bpmn:process>
-      <bpmn:error id="Error_1" />
-    `))
-  },
-  {
     name: 'error end event (no error reference) (non-executable process)',
     config: { version: '8.2' },
     moddleElement: createModdle(createDefinitions(`
@@ -117,7 +104,7 @@ const invalid = [
     `)),
     report: {
       id: 'EndEvent_1',
-      message: 'Element of type <bpmn:Error> without property <errorCode> only allowed by Camunda Platform 8.2 or newer',
+      message: 'Element of type <bpmn:Error> must have property <errorCode>',
       path: [
         'rootElements',
         1,
@@ -127,8 +114,7 @@ const invalid = [
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'Error_1',
         parentNode: 'EndEvent_1',
-        requiredProperty: 'errorCode',
-        allowedVersion: '8.2'
+        requiredProperty: 'errorCode'
       }
     }
   },
@@ -172,7 +158,7 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:Error> without property <errorCode> only allowed by Camunda Platform 8.2 or newer',
+      message: 'Element of type <bpmn:Error> must have property <errorCode>',
       path: [
         'rootElements',
         1,
@@ -182,8 +168,7 @@ const invalid = [
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'Error_1',
         parentNode: 'BoundaryEvent_1',
-        requiredProperty: 'errorCode',
-        allowedVersion: '8.2'
+        requiredProperty: 'errorCode'
       }
     }
   },
