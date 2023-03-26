@@ -49,10 +49,10 @@ module.exports = skipInNonExecutableProcess(function() {
         required: true
       },
       outputCollection: {
-        dependendRequired: 'outputElement'
+        dependentRequired: 'outputElement'
       },
       outputElement: {
-        dependendRequired: 'outputCollection'
+        dependentRequired: 'outputCollection'
       }
     }, node);
 

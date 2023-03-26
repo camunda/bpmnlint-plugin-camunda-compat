@@ -8,7 +8,7 @@ module.exports.ERROR_TYPES = Object.freeze({
   EXTENSION_ELEMENT_NOT_ALLOWED: 'camunda.extensionElementNotAllowed',
   EXTENSION_ELEMENT_REQUIRED: 'camunda.extensionElementRequired',
   FEEL_EXPRESSION_INVALID: 'camunda.feelExpressionInvalid',
-  PROPERTY_DEPENDEND_REQUIRED: 'camunda.propertyDependendRequired',
+  PROPERTY_DEPENDENT_REQUIRED: 'camunda.propertyDependentRequired',
   PROPERTY_NOT_ALLOWED: 'camunda.propertyNotAllowed',
   PROPERTY_REQUIRED: 'camunda.propertyRequired',
   PROPERTY_TYPE_NOT_ALLOWED: 'camunda.propertyTypeNotAllowed',

@@ -161,23 +161,23 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
       ];
     }
 
-    if (propertyChecks.dependendRequired) {
-      const dependency = node.get(propertyChecks.dependendRequired);
+    if (propertyChecks.dependentRequired) {
+      const dependency = node.get(propertyChecks.dependentRequired);
 
       if (dependency && !propertyValue) {
         return [
           ...results,
           {
-            message: `Element of type <${ node.$type }> must have property <${ propertyName }> if it has property <${ propertyChecks.dependendRequired }>`,
+            message: `Element of type <${ node.$type }> must have property <${ propertyName }> if it has property <${ propertyChecks.dependentRequired }>`,
             path: path
               ? [ ...path, propertyName ]
               : [ propertyName ],
             data: {
-              type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
+              type: ERROR_TYPES.PROPERTY_DEPENDENT_REQUIRED,
               node,
               parentNode: parentNode == node ? null : parentNode,
-              property: propertyChecks.dependendRequired,
-              dependendRequiredProperty: propertyName
+              property: propertyChecks.dependentRequired,
+              dependentRequiredProperty: propertyName
             }
           }
         ];
