@@ -27,17 +27,27 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
       // (1) Element not allowed
       const allowedVersion = element || null;
 
-      const error = {
-        message: allowedVersion
-          ? `Element of type <${ node.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`
-          : `Element of type <${ node.$type }> not allowed`,
-        path: null,
-        data: {
-          type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
-          node,
-          parentNode: null,
+      let message = `Element of type <${ node.$type }> not allowed`;
+
+      let data = {
+        type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+        node,
+        parentNode: null
+      };
+
+      if (allowedVersion) {
+        message = `Element of type <${ node.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`;
+
+        data = {
+          ...data,
           allowedVersion
-        }
+        };
+      }
+
+      const error = {
+        message,
+        path: null,
+        data
       };
 
       reportErrors(node, reporter, error);
@@ -57,18 +67,28 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
         // (2) Element with event definition not allowed
         const allowedVersion = element[ eventDefinition.$type ] || null;
 
-        const error = {
-          message: allowedVersion
-            ? `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`
-            : `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> not allowed`,
-          path: null,
-          data: {
-            type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
-            node,
-            parentNode: null,
-            eventDefinition,
+        let message = `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> not allowed`;
+
+        let data = {
+          type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+          node,
+          parentNode: null,
+          eventDefinition
+        };
+
+        if (allowedVersion) {
+          message = `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`;
+
+          data = {
+            ...data,
             allowedVersion
-          }
+          };
+        }
+
+        const error = {
+          message,
+          path: null,
+          data
         };
 
         reportErrors(node, reporter, error);
@@ -79,18 +99,28 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
         // (3) Element without event definition not allowed
         const allowedVersion = element[ '_' ] || null;
 
-        const error = {
-          message: allowedVersion
-            ? `Element of type <${ node.$type }> with no event definition only allowed by Camunda Platform ${ allowedVersion } or newer`
-            : `Element of type <${ node.$type }> with no event definition not allowed`,
-          path: null,
-          data: {
-            type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
-            node,
-            parentNode: null,
-            eventDefinition,
+        let message = `Element of type <${ node.$type }> with no event definition not allowed`;
+
+        let data = {
+          type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+          node,
+          parentNode: null,
+          eventDefinition
+        };
+
+        if (allowedVersion) {
+          message = `Element of type <${ node.$type }> with no event definition only allowed by Camunda Platform ${ allowedVersion } or newer`;
+
+          data = {
+            ...data,
             allowedVersion
-          }
+          };
+        }
+
+        const error = {
+          message,
+          path: null,
+          data
         };
 
         reportErrors(node, reporter, error);

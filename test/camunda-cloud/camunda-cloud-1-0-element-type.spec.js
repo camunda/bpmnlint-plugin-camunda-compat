@@ -184,8 +184,7 @@ const invalid = [
       data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'BoundaryEvent_1',
-        parentNode: null,
-        allowedVersion: null
+        parentNode: null
       }
     }
   },
@@ -214,8 +213,7 @@ const invalid = [
       data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'ComplexGateway_1',
-        parentNode: null,
-        allowedVersion: null
+        parentNode: null
       }
     }
   },
@@ -229,8 +227,7 @@ const invalid = [
       data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'IntermediateCatchEvent_1',
-        parentNode: null,
-        allowedVersion: null
+        parentNode: null
       }
     }
   },
@@ -249,8 +246,7 @@ const invalid = [
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
         node: 'IntermediateCatchEvent_1',
         parentNode: null,
-        eventDefinition: 'ErrorEventDefinition_1',
-        allowedVersion: null
+        eventDefinition: 'ErrorEventDefinition_1'
       }
     }
   },
