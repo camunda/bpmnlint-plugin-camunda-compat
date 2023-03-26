@@ -610,7 +610,7 @@ describe('utils/element', function() {
     });
 
 
-    describe('dependend required', function() {
+    describe('dependent required', function() {
 
       it('should not return errors', function() {
 
@@ -623,7 +623,7 @@ describe('utils/element', function() {
         // when
         const errors = hasProperties(loopCharacteristics, {
           outputElement: {
-            dependendRequired: 'outputCollection'
+            dependentRequired: 'outputCollection'
           }
         });
 
@@ -642,7 +642,7 @@ describe('utils/element', function() {
         // when
         const errors = hasProperties(loopCharacteristics, {
           outputElement: {
-            dependendRequired: 'outputCollection'
+            dependentRequired: 'outputCollection'
           }
         });
 
@@ -654,11 +654,11 @@ describe('utils/element', function() {
               'outputElement'
             ],
             data: {
-              type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
+              type: ERROR_TYPES.PROPERTY_DEPENDENT_REQUIRED,
               node: loopCharacteristics,
               parentNode: null,
               property: 'outputCollection',
-              dependendRequiredProperty: 'outputElement'
+              dependentRequiredProperty: 'outputElement'
             }
           }
         ]);

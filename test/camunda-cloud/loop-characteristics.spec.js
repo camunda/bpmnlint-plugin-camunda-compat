@@ -135,11 +135,11 @@ const invalid = [
         'outputCollection'
       ],
       data: {
-        type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
+        type: ERROR_TYPES.PROPERTY_DEPENDENT_REQUIRED,
         node: 'zeebe:LoopCharacteristics',
         parentNode: 'ServiceTask_1',
         property: 'outputElement',
-        dependendRequiredProperty: 'outputCollection'
+        dependentRequiredProperty: 'outputCollection'
       }
     }
   },
@@ -165,11 +165,11 @@ const invalid = [
         'outputElement'
       ],
       data: {
-        type: ERROR_TYPES.PROPERTY_DEPENDEND_REQUIRED,
+        type: ERROR_TYPES.PROPERTY_DEPENDENT_REQUIRED,
         node: 'zeebe:LoopCharacteristics',
         parentNode: 'ServiceTask_1',
         property: 'outputCollection',
-        dependendRequiredProperty: 'outputElement'
+        dependentRequiredProperty: 'outputElement'
       }
     }
   }
