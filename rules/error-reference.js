@@ -47,8 +47,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 
     errors = hasProperties(errorRef, {
       errorCode: {
-        required: true,
-        allowedVersion: '8.2'
+        required: true
       }
     }, node);
 
