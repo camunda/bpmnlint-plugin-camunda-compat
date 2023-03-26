@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+# 0.25.0
+
+* `FEAT`: adjust `element-type` configuration and add `no-signal-event-sub-process` rule to allow signal start events in Camunda 8.2 ([#88](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/88))
+
 ## 0.24.0
 
 * `FEAT`: add `task-schedule` and `no-task-schedule` rules ([#86](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/86))
