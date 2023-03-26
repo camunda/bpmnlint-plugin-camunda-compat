@@ -68,29 +68,37 @@ function checkForVersion(node, version) {
 }
 
 function noExpression(node, propertyName, parentNode, allowedVersion) {
-  const propertyValue = node.get(propertyName);
-  const path = getPath(node, parentNode);
+  const path = getPath(node, parentNode),
+        propertyValue = node.get(propertyName);
 
   if (!isExpression(propertyValue)) {
     return;
   }
 
-  const errorMessage = allowedVersion ?
-    `Expression statement <${truncate(propertyValue)}> only supported by Camunda Platform ${allowedVersion} or newer` :
-    `Expression statement <${truncate(propertyValue)}> not supported`;
+  let message = `Expression statement <${truncate(propertyValue)}> not supported`;
+
+  let data = {
+    type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
+    node,
+    parentNode: parentNode == node ? null : parentNode,
+    property: propertyName
+  };
+
+  if (allowedVersion) {
+    message = `Expression statement <${truncate(propertyValue)}> only supported by Camunda Platform ${allowedVersion} or newer`;
+
+    data = {
+      ...data,
+      allowedVersion
+    };
+  }
 
   return {
-    message: errorMessage,
+    message,
     path: path
       ? [ ...path, propertyName ]
       : [ propertyName ],
-    data: {
-      type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
-      node,
-      parentNode: parentNode == node ? null : parentNode,
-      property: propertyName,
-      allowedVersion
-    }
+    data
   };
 }
 

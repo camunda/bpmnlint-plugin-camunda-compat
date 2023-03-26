@@ -156,8 +156,7 @@ const invalid = [
         type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
         node: 'Error_1',
         parentNode: 'Event',
-        property: 'errorCode',
-        allowedVersion: null
+        property: 'errorCode'
       }
     }
   },
@@ -185,8 +184,7 @@ const invalid = [
         type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
         node: 'Error_1',
         parentNode: 'Event',
-        property: 'errorCode',
-        allowedVersion: null
+        property: 'errorCode'
       }
     }
   },
@@ -215,8 +213,7 @@ const invalid = [
         type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
         node: 'Escalation_1',
         parentNode: 'Event',
-        property: 'escalationCode',
-        allowedVersion: null
+        property: 'escalationCode'
       }
     }
   },
@@ -244,8 +241,7 @@ const invalid = [
         type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
         node: 'Escalation_1',
         parentNode: 'Event',
-        property: 'escalationCode',
-        allowedVersion: null
+        property: 'escalationCode'
       }
     }
   }
