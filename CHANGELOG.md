@@ -6,6 +6,14 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+# 1.0.0
+
+* `FIX`: fix typo in error type `PROPERTY_DEPENDENT_REQUIRED` ([#90](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/90))
+
+### Breaking Changes
+
+* `PROPERTY_DEPENDEND_REQUIRED` error type renamed to `PROPERTY_DEPENDENT_REQUIRED`
+
 # 0.25.0
 
 * `FEAT`: adjust `element-type` configuration and add `no-signal-event-sub-process` rule to allow signal start events in Camunda 8.2 ([#88](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/88))
