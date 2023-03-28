@@ -92,10 +92,37 @@ const invalid = [
     }
   },
   {
-    name: 'error end event (no error code)',
+    name: 'error end event (no error code) (Camunda 8.1)',
     config: { version: '8.1' },
     moddleElement: createModdle(createDefinitions(`
-      <bpmn:process id="Process_1">
+      <bpmn:process id="Process_1" isExecutable="true">
+        <bpmn:endEvent id="EndEvent_1">
+          <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1" />
+        </bpmn:endEvent>
+      </bpmn:process>
+      <bpmn:error id="Error_1" />
+    `)),
+    report: {
+      id: 'EndEvent_1',
+      message: 'Element of type <bpmn:Error> must have property <errorCode>',
+      path: [
+        'rootElements',
+        1,
+        'errorCode'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'Error_1',
+        parentNode: 'EndEvent_1',
+        requiredProperty: 'errorCode'
+      }
+    }
+  },
+  {
+    name: 'error end event (no error code) (Camunda 8.2)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1" isExecutable="true">
         <bpmn:endEvent id="EndEvent_1">
           <bpmn:errorEventDefinition id="ErrorEventDefinition_1" errorRef="Error_1" />
         </bpmn:endEvent>
