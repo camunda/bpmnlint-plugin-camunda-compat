@@ -21,9 +21,9 @@ const valid = [
   {
     name: 'Terminate end event',
     moddleElement: createModdle(createProcess(`
-    <bpmn:endEvent id="Event_1qpo2zy">
-      <bpmn:terminateEventDefinition id="TerminateEventDefinition_0c6uql1" />
-    </bpmn:endEvent>
+      <bpmn:endEvent id="Event_1qpo2zy">
+        <bpmn:terminateEventDefinition id="TerminateEventDefinition_0c6uql1" />
+      </bpmn:endEvent>
     `))
   }
 ];

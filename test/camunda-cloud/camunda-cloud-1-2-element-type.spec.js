@@ -131,7 +131,7 @@ const invalid = [
   {
     name: 'data store',
     moddleElement: createModdle(createProcess(`
-    <bpmn:dataStoreReference id="DataStoreReference_1" />
+      <bpmn:dataStoreReference id="DataStoreReference_1" />
     `)),
     report: {
       id: 'DataStoreReference_1',
@@ -148,7 +148,7 @@ const invalid = [
   {
     name: 'data object',
     moddleElement: createModdle(createProcess(`
-    <bpmn:dataObjectReference id="DataObjectReference_1" />
+      <bpmn:dataObjectReference id="DataObjectReference_1" />
     `)),
     report: {
       id: 'DataObjectReference_1',
