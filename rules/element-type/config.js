@@ -26,14 +26,14 @@ module.exports = {
   'bpmn:InclusiveGateway': '8.1',
   'bpmn:IntermediateCatchEvent': {
     'bpmn:MessageEventDefinition': '1.0',
-    'bpmn:TimerEventDefinition': '1.0',
-    'bpmn:LinkEventDefinition': '8.2'
+    'bpmn:LinkEventDefinition': '8.2',
+    'bpmn:TimerEventDefinition': '1.0'
   },
   'bpmn:IntermediateThrowEvent': {
     '_': '1.1',
     'bpmn:EscalationEventDefinition': '8.2',
-    'bpmn:MessageEventDefinition': '1.2',
-    'bpmn:LinkEventDefinition': '8.2'
+    'bpmn:LinkEventDefinition': '8.2',
+    'bpmn:MessageEventDefinition': '1.2'
   },
   'bpmn:ManualTask': '1.1',
   'bpmn:MessageFlow': '1.0',
