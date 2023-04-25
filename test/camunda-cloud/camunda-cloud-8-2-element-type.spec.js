@@ -79,9 +79,9 @@ const valid = [
   {
     name: 'intermediate catch event (non-executable process)',
     moddleElement: createModdle(createDefinitions(`
-    <bpmn:process id="Process_1">
-      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1" />
-    </bpmn:process>
+      <bpmn:process id="Process_1">
+        <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1" />
+      </bpmn:process>
     `))
   }
 ];

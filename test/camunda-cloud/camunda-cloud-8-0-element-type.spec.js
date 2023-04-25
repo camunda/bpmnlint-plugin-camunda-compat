@@ -15,13 +15,13 @@ const valid = [
   {
     name: 'data store',
     moddleElement: createModdle(createProcess(`
-    <bpmn:dataStoreReference id="DataStoreReference_1" />
+      <bpmn:dataStoreReference id="DataStoreReference_1" />
     `))
   },
   {
     name: 'data object',
     moddleElement: createModdle(createProcess(`
-    <bpmn:dataObjectReference id="DataObjectReference_1" />
+      <bpmn:dataObjectReference id="DataObjectReference_1" />
     `))
   }
 ];
