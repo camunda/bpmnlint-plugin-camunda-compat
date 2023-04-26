@@ -333,6 +333,46 @@ const invalid = [
         allowedVersion: '8.0'
       }
     }
+  },
+  {
+    name: 'signal intermediate throw event',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_1">
+        <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
+      </bpmn:intermediateThrowEvent>
+    `)),
+    report: {
+      id: 'IntermediateThrowEvent_1',
+      message: 'Element of type <bpmn:IntermediateThrowEvent> with event definition of type <bpmn:SignalEventDefinition> only allowed by Camunda Platform 8.3 or newer',
+      path: null,
+      data: {
+        type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+        node: 'IntermediateThrowEvent_1',
+        parentNode: null,
+        eventDefinition: 'SignalEventDefinition_1',
+        allowedVersion: '8.3'
+      }
+    }
+  },
+  {
+    name: 'signal end event',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:endEvent id="EndEvent_1">
+        <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
+      </bpmn:endEvent>
+    `)),
+    report: {
+      id: 'EndEvent_1',
+      message: 'Element of type <bpmn:EndEvent> with event definition of type <bpmn:SignalEventDefinition> only allowed by Camunda Platform 8.3 or newer',
+      path: null,
+      data: {
+        type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
+        node: 'EndEvent_1',
+        parentNode: null,
+        eventDefinition: 'SignalEventDefinition_1',
+        allowedVersion: '8.3'
+      }
+    }
   }
 ];
 
