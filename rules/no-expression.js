@@ -65,6 +65,10 @@ function noExpressionRule({ version }) {
 function checkForVersion(node, version) {
   const handlers = handlersMap[version];
 
+  if (!handlers) {
+    return [];
+  }
+
   return handlers.reduce((errors, handler) => {
     const handlerErrors = handler(node) || [];
     return errors.concat(handlerErrors);

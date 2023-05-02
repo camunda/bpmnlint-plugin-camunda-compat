@@ -71,7 +71,19 @@ const valid = [
       </bpmn:process>
       <bpmn:error id="Error_1" name="Error_1" errorCode="=myCode" />
     `))
-  }
+  },
+  {
+    name: 'error throw event (unknown version)',
+    config: { version: '0.0' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1" isExecutable="true">
+        <bpmn:endEvent id="Event">
+          <bpmn:errorEventDefinition id="ErrorEventDefinition" errorRef="Error" />
+        </bpmn:endEvent>
+      </bpmn:process>
+      <bpmn:error id="Error" name="Error" errorCode="=myCode" />
+    `))
+  },
 ];
 
 const invalid = [
