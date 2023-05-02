@@ -596,7 +596,7 @@ const invalid = [
         requiredProperty: 'resultVariable'
       }
     }
-  },
+  }
 ];
 
 RuleTester.verify('implementation', rule, {
