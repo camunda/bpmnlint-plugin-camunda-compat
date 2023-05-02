@@ -179,6 +179,7 @@ describe('configs', function() {
     'no-expression': [ 'error', { version: '8.3' } ],
     'no-signal-event-sub-process': [ 'error', { version: '8.3' } ],
     'sequence-flow-condition': [ 'error', { version: '8.3' } ],
+    'signal-reference': [ 'error', { version: '8.3' } ],
     'subscription': [ 'error', { version: '8.3' } ],
     'task-schedule': [ 'error', { version: '8.3' } ],
     'timer': [ 'error', { version: '8.3' } ],
