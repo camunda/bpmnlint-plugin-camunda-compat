@@ -35,6 +35,10 @@ const handlersMap = {
   '8.2': [
     checkErrorCatchEvent,
     checkEscalationCatchEvent
+  ],
+  '8.3': [
+    checkErrorCatchEvent,
+    checkEscalationCatchEvent
   ]
 };
 

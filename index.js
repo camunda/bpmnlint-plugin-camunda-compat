@@ -47,6 +47,8 @@ const camundaCloud82Rules = withConfig({
   'task-schedule': 'error'
 }, { version: '8.2' });
 
+const camundaCloud83Rules = withConfig(camundaCloud82Rules, { version: '8.3' });
+
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'error'
 }, { platform: 'camunda-platform', version: '7.19' });
@@ -73,6 +75,9 @@ module.exports = {
     },
     'camunda-cloud-8-2': {
       rules: camundaCloud82Rules
+    },
+    'camunda-cloud-8-3': {
+      rules: camundaCloud83Rules
     },
     'camunda-platform-7-19': {
       rules: camundaPlatform719Rules
