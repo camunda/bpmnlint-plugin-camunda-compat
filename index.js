@@ -47,7 +47,10 @@ const camundaCloud82Rules = withConfig({
   'task-schedule': 'error'
 }, { version: '8.2' });
 
-const camundaCloud83Rules = withConfig(camundaCloud82Rules, { version: '8.3' });
+const camundaCloud83Rules = withConfig({
+  ...camundaCloud82Rules,
+  'signal-reference': 'error'
+}, { version: '8.3' });
 
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'error'
