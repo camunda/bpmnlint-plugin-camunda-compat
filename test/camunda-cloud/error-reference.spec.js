@@ -198,7 +198,7 @@ const invalid = [
         requiredProperty: 'errorCode'
       }
     }
-  },
+  }
 ];
 
 RuleTester.verify('error-reference', rule, {
