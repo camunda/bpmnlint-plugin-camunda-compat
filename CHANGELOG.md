@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+# 1.1.0
+
+* `FEAT`: support signal throw event in Camunda 8.3 ([#93](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/93))
+* `FEAT`: add `signal-reference` rule ([#93](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/93))
+
 # 1.0.1
 
 * `FIX`: report missing errorCode in Camunda 8.2 ([#91](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/91))
