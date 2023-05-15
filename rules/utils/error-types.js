@@ -2,6 +2,7 @@ module.exports.ERROR_TYPES = Object.freeze({
   ELEMENT_COLLAPSED_NOT_ALLOWED: 'camunda.elementCollapsedNotAllowed',
   CHILD_ELEMENT_TYPE_NOT_ALLOWED: 'camunda.childElementTypeNotAllowed',
   ELEMENT_TYPE_NOT_ALLOWED: 'camunda.elementTypeNotAllowed',
+  EVENT_BASED_GATEWAY_TARGET_NOT_ALLOWED: 'camunda.eventBasedGatewayTargetNotAllowed',
   EXPRESSION_NOT_ALLOWED: 'camunda.expressionNotAllowed',
   EXPRESSION_REQUIRED: 'camunda.expressionRequired',
   EXPRESSION_VALUE_NOT_ALLOWED: 'camunda.expressionValueNotAllowed',
