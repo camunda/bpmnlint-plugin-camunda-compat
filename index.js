@@ -7,6 +7,7 @@ const camundaCloud10Rules = withConfig({
   'duplicate-task-headers': 'error',
   'element-type': 'error',
   'error-reference': 'error',
+  'event-based-gateway-target': 'error',
   'executable-process': 'error',
   'loop-characteristics': 'error',
   'message-reference': 'error',
