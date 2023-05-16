@@ -277,6 +277,33 @@ const invalid = [
         }
       }
     ]
+  },
+  {
+    name: 'task (1 outgoing sequence flow with condition)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:task id="Task_1">
+        <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:endEvent id="EndEvent_1">
+        <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="SequenceFlow_1" sourceRef="Task_1" targetRef="EndEvent_1">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=foo</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+    `)),
+    report: {
+      id: 'SequenceFlow_1',
+      message: 'Property <conditionExpression> only allowed if source is of type <bpmn:ExclusiveGateway> or <bpmn:InclusiveGateway>',
+      path: [
+        'conditionExpression'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
+        node: 'SequenceFlow_1',
+        parentNode: null,
+        property: 'conditionExpression'
+      }
+    }
   }
 ];
 
