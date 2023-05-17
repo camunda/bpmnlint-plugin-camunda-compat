@@ -8,6 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 # 1.2.0
 
+* `FEAT`: add `event-based-gateway-target` rule ([#96](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/96))
 * `FEAT`: allow conditional flow only if source is inclusive or exclusive gateway ([#97](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/97))
 
 # 1.1.0
