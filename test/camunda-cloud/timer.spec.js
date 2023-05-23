@@ -369,7 +369,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle> or <timeDate>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeCycle> or <timeDate>',
       path: [
         'eventDefinitions',
         0
@@ -475,7 +475,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle> or <timeDate>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeCycle> or <timeDate>',
       path: [
         'eventDefinitions',
         0
@@ -505,7 +505,7 @@ const invalid = [
     `)),
     report: {
       id: 'IntermediateCatchEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
       path: [
         'eventDefinitions',
         0
@@ -558,7 +558,7 @@ const invalid = [
     `)),
     report: {
       id: 'IntermediateCatchEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
       path: [
         'eventDefinitions',
         0
@@ -585,7 +585,7 @@ const invalid = [
     `)),
     report: {
       id: 'IntermediateCatchEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
       path: [
         'eventDefinitions',
         0
@@ -641,7 +641,7 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
       path: [
         'eventDefinitions',
         0
@@ -696,7 +696,7 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
       path: [
         'eventDefinitions',
         0
@@ -724,7 +724,7 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
       path: [
         'eventDefinitions',
         0
@@ -781,7 +781,7 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle> or <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeCycle> or <timeDuration>',
       path: [
         'eventDefinitions',
         0
@@ -864,7 +864,7 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle> or <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeCycle> or <timeDuration>',
       path: [
         'eventDefinitions',
         0
@@ -923,7 +923,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeDate> or <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDate> or <timeDuration>',
       path: [
         'eventDefinitions',
         0
@@ -981,7 +981,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeDate> or <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDate> or <timeDuration>',
       path: [
         'eventDefinitions',
         0
@@ -1069,7 +1069,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle>, <timeDate> or <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeCycle>, <timeDate> or <timeDuration>',
       path: [
         'eventDefinitions',
         0

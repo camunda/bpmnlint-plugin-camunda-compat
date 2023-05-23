@@ -2,7 +2,7 @@ const { expect } = require('chai');
 
 const {
   ERROR_TYPES,
-  formatTypes,
+  formatNames,
   hasDuplicatedPropertyValues,
   hasExpression,
   hasExtensionElement,
@@ -17,7 +17,7 @@ const { createElement } = require('../helper');
 
 describe('utils/element', function() {
 
-  describe('#formatTypes', function() {
+  describe('#formatNames', function() {
 
     it('one', function() {
 
@@ -25,7 +25,7 @@ describe('utils/element', function() {
       const types = [ 'foo' ];
 
       // then
-      expect(formatTypes(types)).to.eql('<foo>');
+      expect(formatNames(types)).to.eql('<foo>');
     });
 
 
@@ -35,7 +35,7 @@ describe('utils/element', function() {
       const types = [ 'foo', 'bar' ];
 
       // then
-      expect(formatTypes(types)).to.eql('<foo> and <bar>');
+      expect(formatNames(types)).to.eql('<foo> and <bar>');
     });
 
 
@@ -45,7 +45,7 @@ describe('utils/element', function() {
       const types = [ 'foo', 'bar' ];
 
       // then
-      expect(formatTypes(types, true)).to.eql('<foo> or <bar>');
+      expect(formatNames(types, true)).to.eql('<foo> or <bar>');
     });
 
 
@@ -55,7 +55,7 @@ describe('utils/element', function() {
       const types = [ 'foo', 'bar', 'baz' ];
 
       // then
-      expect(formatTypes(types)).to.eql('<foo>, <bar> and <baz>');
+      expect(formatNames(types)).to.eql('<foo>, <bar> and <baz>');
     });
 
   });
@@ -508,7 +508,7 @@ describe('utils/element', function() {
       // then
       expect(errors).to.eql([
         {
-          message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle> or <timeDuration>',
+          message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeCycle> or <timeDuration>',
           path: null,
           data: {
             type: ERROR_TYPES.PROPERTY_REQUIRED,
@@ -538,7 +538,7 @@ describe('utils/element', function() {
       // then
       expect(errors).to.eql([
         {
-          message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeCycle> or <timeDuration>',
+          message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeCycle> or <timeDuration>',
           path: null,
           data: {
             type: ERROR_TYPES.PROPERTY_REQUIRED,
