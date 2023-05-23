@@ -89,6 +89,17 @@ const valid = [
    * Intermediate Catch Event
    */
   {
+    name: 'timer intermediate catch event with time date (ISO-8601)',
+    config: { version: '8.3' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:timerEventDefinition id="TimerEventDefinition_1">
+          <bpmn:timeDate xsi:type="bpmn:tFormalExpression">${ EXPRESSION_VALUES.ISO_8601.TIME_DATE }</bpmn:timeDate>
+        </bpmn:timerEventDefinition>
+      </bpmn:intermediateCatchEvent>
+    `))
+  },
+  {
     name: 'intermediate catch event with time duration (ISO-8601)',
     config: { version: '1.0' },
     moddleElement: createModdle(createProcess(`
@@ -103,6 +114,30 @@ const valid = [
   /**
    * Boundary Event, Interrupting
    */
+  {
+    name: 'boundary event with date (ISO-8601)',
+    config: { version: '8.3' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:task id="Task_1" />
+      <bpmn:boundaryEvent id="Event" attachedToRef="Task_1">
+        <bpmn:timerEventDefinition id="TimerEventDefinition_1">
+          <bpmn:timeDate xsi:type="bpmn:tFormalExpression">${ EXPRESSION_VALUES.ISO_8601.TIME_DATE }</bpmn:timeDate>
+        </bpmn:timerEventDefinition>
+      </bpmn:boundaryEvent>
+    `))
+  },
+  {
+    name: 'boundary event with time date (expression)',
+    config: { version: '8.3' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:task id="Task_1" />
+      <bpmn:boundaryEvent id="Event" attachedToRef="Task_1">
+        <bpmn:timerEventDefinition id="TimerEventDefinition_1">
+          <bpmn:timeDate xsi:type="bpmn:tFormalExpression">${ FEEL_EXPRESSION_VALUE }</bpmn:timeDate>
+        </bpmn:timerEventDefinition>
+      </bpmn:boundaryEvent>
+    `))
+  },
   {
     name: 'boundary event with duration (ISO-8601)',
     config: { version: '1.0' },
