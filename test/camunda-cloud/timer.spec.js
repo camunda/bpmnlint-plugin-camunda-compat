@@ -155,17 +155,18 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeDuration>',
       path: [
         'eventDefinitions',
-        0,
-        'timeDuration'
+        0
       ],
       data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'TimerEventDefinition',
         parentNode: 'Event',
-        requiredProperty: 'timeDuration'
+        requiredProperty: [
+          'timeDuration'
+        ]
       }
     }
   },
@@ -180,17 +181,18 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
+      message: 'Element of type <bpmn:TimerEventDefinition> must have one property of type <timeDuration>',
       path: [
         'eventDefinitions',
-        0,
-        'timeDuration'
+        0
       ],
       data: {
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'TimerEventDefinition',
         parentNode: 'Event',
-        requiredProperty: 'timeDuration'
+        requiredProperty: [
+          'timeDuration'
+        ]
       }
     }
   },

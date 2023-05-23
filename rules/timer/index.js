@@ -2,14 +2,16 @@ const {
   is
 } = require('bpmnlint-utils');
 
-const config = require('./config');
+const {
+  elementType: elementTypeConfig,
+  expressionType: expressionTypeConfig
+} = require('./config');
 
 const { greaterOrEqual } = require('../utils/version');
 
 const {
   getEventDefinition,
   hasExpression,
-  hasProperties,
   hasProperty
 } = require('../utils/element');
 
@@ -37,7 +39,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
       return;
     }
 
-    let errors = checkTimePropertyExists(eventDefinition, node);
+    let errors = checkTimePropertyExists(eventDefinition, node, version);
 
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);
@@ -57,20 +59,8 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
   };
 });
 
-function checkTimePropertyExists(eventDefinition, event) {
-  if (is(event, 'bpmn:StartEvent')) {
-    return hasProperty(eventDefinition, [ 'timeCycle', 'timeDate' ], event);
-  } else if (is(event, 'bpmn:IntermediateCatchEvent') || isInterruptingBoundaryEvent(event)) {
-    return hasProperties(eventDefinition, {
-      timeDuration: {
-        required: true
-      }
-    }, event);
-  } else if (is(event, 'bpmn:BoundaryEvent')) {
-    return hasProperty(eventDefinition, [ 'timeCycle', 'timeDuration' ], event);
-  }
-
-  return [];
+function checkTimePropertyExists(eventDefinition, node, version) {
+  return hasProperty(eventDefinition, getSupportedTimePropertiesForVersion(node, version), node);
 }
 
 function checkTimeProperty(eventDefinition, event, version) {
@@ -95,9 +85,19 @@ function checkTimeProperty(eventDefinition, event, version) {
 
 
 
-// helper //////////////
-function isInterruptingBoundaryEvent(event) {
-  return is(event, 'bpmn:BoundaryEvent') && event.get('cancelActivity') !== false;
+// helpers //////////
+function validateCycle(cycle, version) {
+  if (validateExpression(cycle)) {
+    return true;
+  }
+
+  if (validateISO8601Cycle(cycle)) {
+    return greaterOrEqual(version, expressionTypeConfig.iso8601);
+  }
+
+  if (validateCronExpression(cycle)) {
+    return greaterOrEqual(version, expressionTypeConfig.cron) || { allowedVersion: expressionTypeConfig.cron };
+  }
 }
 
 function validateDate(date, version) {
@@ -106,21 +106,7 @@ function validateDate(date, version) {
   }
 
   if (validateISO8601Date(date)) {
-    return greaterOrEqual(version, config.iso8601);
-  }
-}
-
-function validateCycle(cycle, version) {
-  if (validateExpression(cycle)) {
-    return true;
-  }
-
-  if (validateISO8601Cycle(cycle)) {
-    return greaterOrEqual(version, config.iso8601);
-  }
-
-  if (validateCronExpression(cycle)) {
-    return greaterOrEqual(version, config.cron) || { allowedVersion: config.cron };
+    return greaterOrEqual(version, expressionTypeConfig.iso8601);
   }
 }
 
@@ -130,7 +116,7 @@ function validateDuration(duration, version) {
   }
 
   if (validateISO8601Duration(duration)) {
-    return greaterOrEqual(version, config.iso8601);
+    return greaterOrEqual(version, expressionTypeConfig.iso8601);
   }
 }
 
@@ -138,4 +124,22 @@ function validateExpression(text) {
   if (text.startsWith('=')) {
     return true;
   }
+}
+
+function getSupportedTimePropertiesForVersion(element, version) {
+  const config = elementTypeConfig[ element.$type ];
+
+  return Object.keys(config).filter((property) => {
+    const supportedVersion = config[ property ](isInterrupting(element), element.$parent);
+
+    return supportedVersion && greaterOrEqual(version, supportedVersion);
+  });
+}
+
+function isInterrupting(element) {
+  if (is(element, 'bpmn:BoundaryEvent')) {
+    return element.get('cancelActivity') !== false;
+  }
+
+  return element.get('isInterrupting') !== false;
 }
