@@ -68,24 +68,24 @@ function findExtensionElement(node, types) {
 
 module.exports.findExtensionElement = findExtensionElement;
 
-function formatTypes(types, exclusive = false) {
-  return types.reduce((string, type, index) => {
+function formatNames(names, exclusive = false) {
+  return names.reduce((string, name, index) => {
 
     // first
     if (index === 0) {
-      return `<${ type }>`;
+      return `<${ name }>`;
     }
 
     // last
-    if (index === types.length - 1) {
-      return `${ string } ${ exclusive ? 'or' : 'and' } <${ type }>`;
+    if (index === names.length - 1) {
+      return `${ string } ${ exclusive ? 'or' : 'and' } <${ name }>`;
     }
 
-    return `${ string }, <${ type }>`;
+    return `${ string }, <${ name }>`;
   }, '');
 }
 
-module.exports.formatTypes = formatTypes;
+module.exports.formatNames = formatNames;
 
 module.exports.hasDuplicatedPropertyValues = function(node, propertiesName, propertyName, parentNode = null) {
   const properties = node.get(propertiesName);
@@ -276,21 +276,21 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
   }, []);
 };
 
-module.exports.hasProperty = function(node, types, parentNode = null) {
-  const typesArray = isArray(types) ? types : [ types ];
+module.exports.hasProperty = function(node, propertyNames, parentNode = null) {
+  propertyNames = isArray(propertyNames) ? propertyNames : [ propertyNames ];
 
-  const properties = findProperties(node, typesArray);
+  const properties = findProperties(node, propertyNames);
 
   if (properties.length !== 1) {
     return [
       {
-        message: `Element of type <${ node.$type }> must have one property of type ${ formatTypes(typesArray, true) }`,
+        message: `Element of type <${ node.$type }> must have property ${ formatNames(propertyNames, true) }`,
         path: getPath(node, parentNode),
         data: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           node,
           parentNode: parentNode == node ? null : parentNode,
-          requiredProperty: types
+          requiredProperty: propertyNames
         }
       }
     ];
@@ -299,11 +299,12 @@ module.exports.hasProperty = function(node, types, parentNode = null) {
   return [];
 };
 
-function findProperties(node, types) {
+function findProperties(node, propertyNames) {
   const properties = [];
-  for (const type of types) {
-    if (isDefined(node.get(type))) {
-      properties.push(node.get(type));
+
+  for (const propertyName of propertyNames) {
+    if (isDefined(node.get(propertyName))) {
+      properties.push(node.get(propertyName));
     }
   }
 
@@ -318,7 +319,7 @@ module.exports.hasExtensionElement = function(node, types, parentNode = null) {
   if (!extensionElements || extensionElements.length !== 1) {
     return [
       {
-        message: `Element of type <${ node.$type }> must have one extension element of type ${ formatTypes(typesArray, true) }`,
+        message: `Element of type <${ node.$type }> must have one extension element of type ${ formatNames(typesArray, true) }`,
         path: getPath(node, parentNode),
         data: {
           type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
