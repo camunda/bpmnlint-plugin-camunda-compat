@@ -13,7 +13,8 @@ const versions = [
   '1.3',
   '8.0',
   '8.1',
-  '8.2'
+  '8.2',
+  '8.3'
 ];
 
 describe('integration - timer', function() {

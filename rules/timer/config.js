@@ -31,12 +31,12 @@ module.exports = {
 
         return null;
       },
-      'timeDate': () => null,
+      'timeDate': () => '8.3',
       'timeDuration': () => '1.0'
     },
     'bpmn:IntermediateCatchEvent': {
       'timeCycle': () => null,
-      'timeDate': () => null,
+      'timeDate': () => '8.3',
       'timeDuration': () => '1.0'
     }
   }
