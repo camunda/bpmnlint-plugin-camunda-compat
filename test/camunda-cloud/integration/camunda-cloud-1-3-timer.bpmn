@@ -66,6 +66,11 @@
     <bpmn:task id="Task_3" />
     <bpmn:task id="Task_4" />
     <bpmn:subProcess id="SubProcess_CycleCron" name="SubProcess_CycleCron" triggeredByEvent="true" />
+    <bpmn:boundaryEvent id="NonInterruptingBoundaryEvent_Cycle" name="NonInterruptingBoundaryEvent_Cycle" cancelActivity="false" attachedToRef="Task_2">
+      <bpmn:timerEventDefinition id="TimerEventDefinition_NonInterruptingBoundaryEvent_Cycle">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/P1D</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
     <bpmn:group id="Group_Cycle" categoryValueRef="CategoryValue_Cycle" />
     <bpmn:group id="Group_Date" categoryValueRef="CategoryValue_Date" />
     <bpmn:group id="Group_Duration" categoryValueRef="CategoryValue_Duration" />
@@ -175,6 +180,12 @@
       <bpmndi:BPMNShape id="BPMNShape_0gooim1" bpmnElement="SubProcess_CycleCron" isExpanded="true">
         <dc:Bounds x="1880" y="190" width="350" height="200" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0hdiole_di" bpmnElement="NonInterruptingBoundaryEvent_Cycle" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="702" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="677" y="345" width="88" height="40" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Group_0oqi537_di" bpmnElement="Group_Cycle">
         <dc:Bounds x="160" y="130" width="1050" height="300" />

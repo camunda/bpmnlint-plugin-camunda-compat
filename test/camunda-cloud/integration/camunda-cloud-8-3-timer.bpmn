@@ -92,6 +92,16 @@
         </bpmn:timerEventDefinition>
       </bpmn:startEvent>
     </bpmn:subProcess>
+    <bpmn:boundaryEvent id="NonInterruptingBoundaryEvent_CycleCron" name="NonInterruptingBoundaryEvent_CycleCron" cancelActivity="false" attachedToRef="Task_4">
+      <bpmn:timerEventDefinition id="TimerEventDefinition_NonInterruptingBoundaryEvent_CycleCron">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 0 9-17 * * MON-FRI</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="NonInterruptingBoundaryEvent_Cycle" name="NonInterruptingBoundaryEvent_Cycle" cancelActivity="false" attachedToRef="Task_2">
+      <bpmn:timerEventDefinition id="TimerEventDefinition_NonInterruptingBoundaryEvent_Cycle">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/P1D</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
     <bpmn:group id="Group_Cycle" categoryValueRef="CategoryValue_Cycle" />
     <bpmn:group id="Group_Date" categoryValueRef="CategoryValue_Date" />
     <bpmn:group id="Group_Duration" categoryValueRef="CategoryValue_Duration" />
@@ -218,6 +228,18 @@
         <dc:Bounds x="2082" y="272" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="2059" y="315" width="88" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0lzenly" bpmnElement="NonInterruptingBoundaryEvent_CycleCron" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1772" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1746" y="345" width="90" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0hdiole_di" bpmnElement="NonInterruptingBoundaryEvent_Cycle" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="702" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="677" y="345" width="88" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Group_0oqi537_di" bpmnElement="Group_Cycle">

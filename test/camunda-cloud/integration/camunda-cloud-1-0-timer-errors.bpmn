@@ -359,7 +359,7 @@
           <dc:Bounds x="500" y="665" width="83" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0hdiole_di" bpmnElement="NonInterruptingBoundaryEvent_Cycle" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+      <bpmndi:BPMNShape id="Event_0hdiole_di" bpmnElement="NonInterruptingBoundaryEvent_Cycle" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
         <dc:Bounds x="702" y="302" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="677" y="345" width="88" height="40" />
