@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+# 1.3.1
+
+* `FIX`: fix non-interrupting boundary event with time cycle in integrations tests ([#99f41869](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/99f41869afbd385d22438b466a9bfc562243c3f1))
+
 # 1.3.0
 
 * `FEAT`: allow time date for timer intermediate catch and boundary event in Camunda 8.3 ([98](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/98))
