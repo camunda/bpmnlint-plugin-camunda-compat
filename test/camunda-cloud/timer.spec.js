@@ -475,19 +475,17 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeCycle> or <timeDate>',
+      message: 'Property <timeDuration> not allowed',
       path: [
         'eventDefinitions',
-        0
+        0,
+        'timeDuration'
       ],
       data: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'TimerEventDefinition_1',
         parentNode: 'StartEvent_1',
-        requiredProperty: [
-          'timeCycle',
-          'timeDate'
-        ]
+        property: 'timeDuration'
       }
     }
   },
@@ -558,18 +556,17 @@ const invalid = [
     `)),
     report: {
       id: 'IntermediateCatchEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
+      message: 'Property <timeCycle> not allowed',
       path: [
         'eventDefinitions',
-        0
+        0,
+        'timeCycle'
       ],
       data: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'TimerEventDefinition_1',
         parentNode: 'IntermediateCatchEvent_1',
-        requiredProperty: [
-          'timeDuration'
-        ]
+        property: 'timeCycle'
       }
     }
   },
@@ -585,18 +582,18 @@ const invalid = [
     `)),
     report: {
       id: 'IntermediateCatchEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
+      message: 'Property <timeDate> only allowed by Camunda Platform 8.3 or newer',
       path: [
         'eventDefinitions',
-        0
+        0,
+        'timeDate'
       ],
       data: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'TimerEventDefinition_1',
         parentNode: 'IntermediateCatchEvent_1',
-        requiredProperty: [
-          'timeDuration'
-        ]
+        property: 'timeDate',
+        allowedVersion: '8.3'
       }
     }
   },
@@ -696,18 +693,17 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
+      message: 'Property <timeCycle> not allowed',
       path: [
         'eventDefinitions',
-        0
+        0,
+        'timeCycle'
       ],
       data: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'TimerEventDefinition_1',
         parentNode: 'BoundaryEvent_1',
-        requiredProperty: [
-          'timeDuration'
-        ]
+        property: 'timeCycle'
       }
     }
   },
@@ -724,18 +720,18 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDuration>',
+      message: 'Property <timeDate> only allowed by Camunda Platform 8.3 or newer',
       path: [
         'eventDefinitions',
-        0
+        0,
+        'timeDate'
       ],
       data: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'TimerEventDefinition_1',
         parentNode: 'BoundaryEvent_1',
-        requiredProperty: [
-          'timeDuration'
-        ]
+        property: 'timeDate',
+        allowedVersion: '8.3'
       }
     }
   },
@@ -864,19 +860,18 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeCycle> or <timeDuration>',
+      message: 'Property <timeDate> only allowed by Camunda Platform 8.3 or newer',
       path: [
         'eventDefinitions',
-        0
+        0,
+        'timeDate'
       ],
       data: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'TimerEventDefinition_1',
         parentNode: 'BoundaryEvent_1',
-        requiredProperty: [
-          'timeCycle',
-          'timeDuration'
-        ]
+        property: 'timeDate',
+        allowedVersion: '8.3'
       }
     }
   },
@@ -981,19 +976,17 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Element of type <bpmn:TimerEventDefinition> must have property <timeDate> or <timeDuration>',
+      message: 'Property <timeCycle> not allowed',
       path: [
         'eventDefinitions',
-        0
+        0,
+        'timeCycle'
       ],
       data: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'TimerEventDefinition_1',
         parentNode: 'StartEvent_1',
-        requiredProperty: [
-          'timeDate',
-          'timeDuration'
-        ]
+        property: 'timeCycle'
       }
     }
   },
