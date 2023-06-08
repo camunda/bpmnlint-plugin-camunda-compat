@@ -1,3 +1,5 @@
+const { isNil } = require('min-dash');
+
 const {
   is
 } = require('bpmnlint-utils');
@@ -12,6 +14,7 @@ const { greaterOrEqual } = require('../utils/version');
 const {
   getEventDefinition,
   hasExpression,
+  hasProperties,
   hasProperty
 } = require('../utils/element');
 
@@ -60,7 +63,21 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 });
 
 function checkTimePropertyExists(eventDefinition, node, version) {
-  return hasProperty(eventDefinition, getSupportedTimePropertiesForVersion(node, version), node);
+  const timePropertyName = getTimePropertyName(eventDefinition);
+
+  if (timePropertyName) {
+    const allowedVersion = getAllowedVersionForTimeProperty(node, timePropertyName),
+          allowed = isNil(allowedVersion) ? false : greaterOrEqual(version, allowedVersion);
+
+    return hasProperties(eventDefinition, {
+      [ timePropertyName ]: {
+        allowed,
+        allowedVersion
+      }
+    }, node);
+  }
+
+  return hasProperty(eventDefinition, getAllowedTimePropertiesForVersion(node, version), node);
 }
 
 function checkTimeProperty(eventDefinition, event, version) {
@@ -126,14 +143,36 @@ function validateExpression(text) {
   }
 }
 
-function getSupportedTimePropertiesForVersion(element, version) {
+function getTimePropertyName(eventDefinition) {
+  if (eventDefinition.get('timeCycle')) {
+    return 'timeCycle';
+  }
+
+  if (eventDefinition.get('timeDate')) {
+    return 'timeDate';
+  }
+
+  if (eventDefinition.get('timeDuration')) {
+    return 'timeDuration';
+  }
+
+  return null;
+}
+
+function getAllowedTimePropertiesForVersion(element, version) {
   const config = elementTypeConfig[ element.$type ];
 
   return Object.keys(config).filter((property) => {
-    const supportedVersion = config[ property ](isInterrupting(element), element.$parent);
+    const allowedVersion = config[ property ](isInterrupting(element), element.$parent);
 
-    return supportedVersion && greaterOrEqual(version, supportedVersion);
+    return allowedVersion && greaterOrEqual(version, allowedVersion);
   });
+}
+
+function getAllowedVersionForTimeProperty(element, property) {
+  const config = elementTypeConfig[ element.$type ];
+
+  return config[ property ](isInterrupting(element), element.$parent);
 }
 
 function isInterrupting(element) {
