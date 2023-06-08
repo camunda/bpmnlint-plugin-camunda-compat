@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+# 1.3.2
+
+* `FIX`: report property not allowed error if time property not allowed ([#99](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/99))
+
 # 1.3.1
 
 * `FIX`: fix non-interrupting boundary event with time cycle in integrations tests ([#99f41869](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/99f41869afbd385d22438b466a9bfc562243c3f1))
