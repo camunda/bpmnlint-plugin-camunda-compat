@@ -6,33 +6,33 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
-# 1.3.2
+## 1.3.2
 
 * `FIX`: report property not allowed error if time property not allowed ([#99](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/99))
 
-# 1.3.1
+## 1.3.1
 
 * `FIX`: fix non-interrupting boundary event with time cycle in integrations tests ([#99f41869](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/99f41869afbd385d22438b466a9bfc562243c3f1))
 
-# 1.3.0
+## 1.3.0
 
 * `FEAT`: allow time date for timer intermediate catch and boundary event in Camunda 8.3 ([98](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/98))
 
-# 1.2.0
+## 1.2.0
 
 * `FEAT`: add `event-based-gateway-target` rule ([#96](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/96))
 * `FEAT`: allow conditional flow only if source is inclusive or exclusive gateway ([#97](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/97))
 
-# 1.1.0
+## 1.1.0
 
 * `FEAT`: support signal throw event in Camunda 8.3 ([#93](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/93))
 * `FEAT`: add `signal-reference` rule ([#93](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/93))
 
-# 1.0.1
+## 1.0.1
 
 * `FIX`: report missing errorCode in Camunda 8.2 ([#91](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/91))
 
-# 1.0.0
+## 1.0.0
 
 * `FIX`: fix typo in error type `PROPERTY_DEPENDENT_REQUIRED` ([#90](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/90))
 
@@ -40,7 +40,7 @@ ___Note:__ Yet to be released changes appear here._
 
 * `PROPERTY_DEPENDEND_REQUIRED` error type renamed to `PROPERTY_DEPENDENT_REQUIRED`
 
-# 0.25.0
+## 0.25.0
 
 * `FEAT`: adjust `element-type` configuration and add `no-signal-event-sub-process` rule to allow signal start events in Camunda 8.2 ([#88](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/88))
 * `FIX`: adjust `error-reference` rule to disallow error references without error code ([#89](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/89))
