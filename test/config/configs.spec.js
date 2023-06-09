@@ -199,6 +199,11 @@ describe('configs', function() {
     'history-time-to-live': [ 'error', { platform: 'camunda-platform', version: '7.19' } ]
   }));
 
+
+  it('camunda-platform-7-20', expectRules(configs, 'camunda-platform-7-20', {
+    'history-time-to-live': [ 'error', { platform: 'camunda-platform', version: '7.20' } ]
+  }));
+
 });
 
 function expectRules(configs, name, rules) {
