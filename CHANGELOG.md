@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 1.4.0
+
+* `FEAT`: extend Camunda 7.19 rules to Camunda 7.20 ([#101](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/101))
+
 ## 1.3.2
 
 * `FIX`: report property not allowed error if time property not allowed ([#99](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/99))
