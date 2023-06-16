@@ -13,6 +13,7 @@ const camundaCloud10Rules = withConfig({
   'message-reference': 'error',
   'no-candidate-users': 'error',
   'no-expression': 'error',
+  'no-multiple-start-events': 'error',
   'no-task-schedule': 'error',
   'no-template': 'error',
   'no-zeebe-properties': 'error',
