@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/camunda-cloud/no-multiple-start-events');
+const rule = require('../../rules/camunda-cloud/no-multiple-none-start-events');
 
 const {
   createDefinitions,
@@ -73,7 +73,7 @@ const invalid = [
   },
 ];
 
-RuleTester.verify('no-multiple-start-events', rule, {
+RuleTester.verify('no-multiple-none-start-events', rule, {
   valid,
   invalid
 });
