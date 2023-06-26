@@ -1,10 +1,12 @@
 const { is } = require('bpmnlint-utils');
 
-const { ERROR_TYPES } = require('../utils/element');
-
 const { reportErrors } = require('../utils/reporter');
 
-module.exports = function() {
+const { ERROR_TYPES } = require('../utils/element');
+
+const { skipInNonExecutableProcess } = require('../utils/rule');
+
+module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     if (!is(node, 'bpmn:Process')) {
       return;
@@ -12,21 +14,22 @@ module.exports = function() {
 
     const flowElements = node.get('flowElements') || [];
 
-    const blankStartEvents = flowElements
-      .filter(e => is(e, 'bpmn:StartEvent'))
-      .filter(e => !e.get('eventDefinitions').length);
+    const noneStartEvents = flowElements.filter(flowElement => {
+      return is(flowElement, 'bpmn:StartEvent') && !flowElement.get('eventDefinitions').length;
+    });
 
-    if (blankStartEvents.length <= 1) {
+    if (noneStartEvents.length <= 1) {
       return;
     }
 
-    blankStartEvents.forEach(startEvent => {
+    noneStartEvents.forEach(startEvent => {
       reportErrors(startEvent, reporter, {
-        message: `A <${node.$type}> only supports one blank start event.`,
+        message: 'Multiple elements of type <bpmn:StartEvent> with no event definition not allowed as children of <bpmn:Process>',
+        path: null,
         data: {
           type: ERROR_TYPES.ELEMENT_MULTIPLE_NOT_ALLOWED,
           node: startEvent,
-          parentNode: null
+          parent: null
         }
       });
     });
@@ -35,4 +38,4 @@ module.exports = function() {
   return {
     check
   };
-};
+});

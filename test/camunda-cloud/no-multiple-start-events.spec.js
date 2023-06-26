@@ -12,74 +12,68 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 
 const valid = [
   {
-    name: 'One start event',
-    moddleElement: createModdle(createDefinitions(`
-    <bpmn:process id="Process_0anhjd3" isExecutable="true">
+    name: 'single none start event',
+    moddleElement: createModdle(createProcess(`
       <bpmn:startEvent id="StartEvent_1" />
-    </bpmn:process>
     `))
   },
   {
-    name: 'Multiple event start events',
+    name: 'multiple non-none start events',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:startEvent id="StartEvent_1" />
+      <bpmn:startEvent id="StartEvent_2">
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
+      </bpmn:startEvent>
+      <bpmn:startEvent id="StartEvent_3">
+        <bpmn:timerEventDefinition id="TimerEventDefinition_1" />
+      </bpmn:startEvent>
+    `))
+  },
+  {
+    name: 'multiple none start events (non-executable process)',
+    config: { version: '8.2' },
     moddleElement: createModdle(createDefinitions(`
-    <bpmn:process id="Process_0anhjd3" isExecutable="true">
-      <bpmn:startEvent id="StartEvent_1">
-        <bpmn:messageEventDefinition id="MessageEventDefinition_0gzmqea" />
-      </bpmn:startEvent>
-      <bpmn:startEvent id="Event_0poq2qp">
-        <bpmn:timerEventDefinition id="TimerEventDefinition_1y1pwyb" />
-      </bpmn:startEvent>
-      <bpmn:startEvent id="Event_0nemfhw">
-        <bpmn:conditionalEventDefinition id="ConditionalEventDefinition_0v2atb8">
-          <bpmn:condition xsi:type="bpmn:tFormalExpression" />
-        </bpmn:conditionalEventDefinition>
-      </bpmn:startEvent>
-      <bpmn:startEvent id="Event_0wzzunu">
-        <bpmn:signalEventDefinition id="SignalEventDefinition_0oczll9" />
-      </bpmn:startEvent>
-      <bpmn:startEvent id="Event_0odl9fr" />
-    </bpmn:process>
+      <bpmn:process id="Process_1">
+        <bpmn:startEvent id="StartEvent_1" />
+        <bpmn:startEvent id="StartEvent_2" />
+      </bpmn:process>
     `))
-  },
-  {
-    name: 'task',
-    moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
   }
 ];
 
 const invalid = [
   {
-    name: 'Multiple start events',
-    moddleElement: createModdle(createDefinitions(`
-    <bpmn:process id="Process_0anhjd3" isExecutable="true">
+    name: 'multiple none start events',
+    moddleElement: createModdle(createProcess(`
       <bpmn:startEvent id="StartEvent_1" />
       <bpmn:startEvent id="StartEvent_2" />
-    </bpmn:process>
     `)),
     report: [
       {
         id: 'StartEvent_1',
-        message: 'A <bpmn:Process> only supports one blank start event.',
+        message: 'Multiple elements of type <bpmn:StartEvent> with no event definition not allowed as children of <bpmn:Process>',
+        path: null,
         data: {
           type: ERROR_TYPES.ELEMENT_MULTIPLE_NOT_ALLOWED,
-          'node': 'StartEvent_1',
-          parentNode: null
+          node: 'StartEvent_1',
+          parent: null
         }
       },
       {
         id: 'StartEvent_2',
-        message: 'A <bpmn:Process> only supports one blank start event.',
+        message: 'Multiple elements of type <bpmn:StartEvent> with no event definition not allowed as children of <bpmn:Process>',
+        path: null,
         data: {
           type: ERROR_TYPES.ELEMENT_MULTIPLE_NOT_ALLOWED,
-          'node': 'StartEvent_2',
-          parentNode: null
+          node: 'StartEvent_2',
+          parent: null
         }
       }
     ]
   },
 ];
 
-RuleTester.verify('executable-process', rule, {
+RuleTester.verify('no-multiple-start-events', rule, {
   valid,
   invalid
 });
