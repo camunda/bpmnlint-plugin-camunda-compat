@@ -9,26 +9,26 @@ const {
   expressionType: expressionTypeConfig
 } = require('./config');
 
-const { greaterOrEqual } = require('../utils/version');
+const { greaterOrEqual } = require('../../utils/version');
 
 const {
   getEventDefinition,
   hasExpression,
   hasProperties,
   hasProperty
-} = require('../utils/element');
+} = require('../../utils/element');
 
-const { validateCronExpression } = require('../utils/cron');
+const { validateCronExpression } = require('../../utils/cron');
 
 const {
   validateCycle: validateISO8601Cycle,
   validateDate: validateISO8601Date,
   validateDuration: validateISO8601Duration
-} = require('../utils/iso8601');
+} = require('../../utils/iso8601');
 
-const { reportErrors } = require('../utils/reporter');
+const { reportErrors } = require('../../utils/reporter');
 
-const { skipInNonExecutableProcess } = require('../utils/rule');
+const { skipInNonExecutableProcess } = require('../../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {

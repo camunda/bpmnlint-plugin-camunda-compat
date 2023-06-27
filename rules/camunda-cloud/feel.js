@@ -6,11 +6,11 @@ const { lintExpression } = require('@bpmn-io/feel-lint');
 
 const { getPath } = require('@bpmn-io/moddle-utils');
 
-const { reportErrors } = require('./utils/reporter');
+const { reportErrors } = require('../utils/reporter');
 
-const { ERROR_TYPES } = require('./utils/error-types');
+const { ERROR_TYPES } = require('../utils/error-types');
 
-const { skipInNonExecutableProcess } = require('./utils/rule');
+const { skipInNonExecutableProcess } = require('../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {

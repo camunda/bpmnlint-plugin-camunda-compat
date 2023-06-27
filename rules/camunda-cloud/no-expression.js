@@ -7,11 +7,11 @@ const { getPath } = require('@bpmn-io/moddle-utils');
 const {
   ERROR_TYPES,
   getEventDefinition
-} = require('./utils/element');
+} = require('../utils/element');
 
-const { reportErrors } = require('./utils/reporter');
+const { reportErrors } = require('../utils/reporter');
 
-const { skipInNonExecutableProcess } = require('./utils/rule');
+const { skipInNonExecutableProcess } = require('../utils/rule');
 
 const handlersMap = {
   '1.0': [

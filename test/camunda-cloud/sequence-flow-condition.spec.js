@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/sequence-flow-condition');
+const rule = require('../../rules/camunda-cloud/sequence-flow-condition');
 
 const {
   createDefinitions,

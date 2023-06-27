@@ -6,20 +6,20 @@ const { isString } = require('min-dash');
 
 const config = require('./config');
 
-const { greaterOrEqual } = require('../utils/version');
+const { greaterOrEqual } = require('../../utils/version');
 
 const {
   findExtensionElement,
   getEventDefinition,
   hasExtensionElement,
   hasProperties
-} = require('../utils/element');
+} = require('../../utils/element');
 
-const { reportErrors } = require('../utils/reporter');
+const { reportErrors } = require('../../utils/reporter');
 
-const { ERROR_TYPES } = require('../utils/error-types');
+const { ERROR_TYPES } = require('../../utils/error-types');
 
-const { skipInNonExecutableProcess } = require('../utils/rule');
+const { skipInNonExecutableProcess } = require('../../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {

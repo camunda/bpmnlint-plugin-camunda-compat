@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/event-based-gateway-target');
+const rule = require('../../rules/camunda-cloud/event-based-gateway-target');
 
 const {
   createDefinitions,

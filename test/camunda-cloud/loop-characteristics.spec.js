@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/loop-characteristics');
+const rule = require('../../rules/camunda-cloud/loop-characteristics');
 
 const {
   createDefinitions,

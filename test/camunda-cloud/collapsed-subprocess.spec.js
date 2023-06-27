@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/collapsed-subprocess');
+const rule = require('../../rules/camunda-cloud/collapsed-subprocess');
 
 const {
   createDefinitions,

@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/element-type');
+const rule = require('../../rules/camunda-cloud/element-type');
 
 const {
   withConfig,

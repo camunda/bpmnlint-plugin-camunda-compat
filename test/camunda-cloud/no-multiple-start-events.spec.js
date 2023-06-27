@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/no-multiple-start-events');
+const rule = require('../../rules/camunda-cloud/no-multiple-start-events');
 
 const {
   createDefinitions,

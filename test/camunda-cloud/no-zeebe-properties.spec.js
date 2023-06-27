@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/no-zeebe-properties');
+const rule = require('../../rules/camunda-cloud/no-zeebe-properties');
 
 const {
   createModdle,
