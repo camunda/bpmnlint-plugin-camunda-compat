@@ -1,12 +1,12 @@
 const { is } = require('bpmnlint-utils');
 
-const { reportErrors } = require('./utils/reporter');
+const { reportErrors } = require('../utils/reporter');
 
-const { getEventDefinition } = require('./utils/element');
+const { getEventDefinition } = require('../utils/element');
 
-const { ERROR_TYPES } = require('./utils/error-types');
+const { ERROR_TYPES } = require('../utils/error-types');
 
-const { skipInNonExecutableProcess } = require('./utils/rule');
+const { skipInNonExecutableProcess } = require('../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {

@@ -7,11 +7,11 @@ const {
   findExtensionElement,
   getMessageEventDefinition,
   hasDuplicatedPropertyValues
-} = require('./utils/element');
+} = require('../utils/element');
 
-const { reportErrors } = require('./utils/reporter');
+const { reportErrors } = require('../utils/reporter');
 
-const { skipInNonExecutableProcess } = require('./utils/rule');
+const { skipInNonExecutableProcess } = require('../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {

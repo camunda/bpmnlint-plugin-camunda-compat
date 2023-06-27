@@ -1,8 +1,8 @@
 const { is } = require('bpmnlint-utils');
 
-const { ERROR_TYPES } = require('./utils/element');
+const { ERROR_TYPES } = require('../utils/element');
 
-const { reportErrors } = require('./utils/reporter');
+const { reportErrors } = require('../utils/reporter');
 
 module.exports = function() {
   function check(node, reporter) {

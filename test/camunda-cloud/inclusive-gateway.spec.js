@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/inclusive-gateway');
+const rule = require('../../rules/camunda-cloud/inclusive-gateway');
 
 const {
   createDefinitions,

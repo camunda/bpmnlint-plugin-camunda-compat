@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/duplicate-task-headers');
+const rule = require('../../rules/camunda-cloud/duplicate-task-headers');
 
 const {
   createDefinitions,

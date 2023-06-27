@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/history-time-to-live');
+const rule = require('../../rules/camunda-platform/history-time-to-live');
 
 const {
   createDefinitions,

@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/called-element');
+const rule = require('../../rules/camunda-cloud/called-element');
 
 const {
   createDefinitions,

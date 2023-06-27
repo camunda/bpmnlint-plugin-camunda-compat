@@ -4,15 +4,15 @@ const { isAny } = require('bpmnlint-utils');
 
 const config = require('./config');
 
-const { greaterOrEqual } = require('../utils/version');
+const { greaterOrEqual } = require('../../utils/version');
 
-const { getEventDefinition } = require('../utils/element');
+const { getEventDefinition } = require('../../utils/element');
 
-const { ERROR_TYPES } = require('../utils/error-types');
+const { ERROR_TYPES } = require('../../utils/error-types');
 
-const { reportErrors } = require('../utils/reporter');
+const { reportErrors } = require('../../utils/reporter');
 
-const { skipInNonExecutableProcess } = require('../utils/rule');
+const { skipInNonExecutableProcess } = require('../../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {

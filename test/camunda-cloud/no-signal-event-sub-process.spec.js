@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/no-signal-event-sub-process');
+const rule = require('../../rules/camunda-cloud/no-signal-event-sub-process');
 
 const {
   createDefinitions,

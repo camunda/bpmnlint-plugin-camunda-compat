@@ -6,13 +6,13 @@ const {
 const {
   getEventDefinition,
   hasProperties
-} = require('./utils/element');
+} = require('../utils/element');
 
-const { reportErrors } = require('./utils/reporter');
+const { reportErrors } = require('../utils/reporter');
 
-const { skipInNonExecutableProcess } = require('./utils/rule');
+const { skipInNonExecutableProcess } = require('../utils/rule');
 
-const { greaterOrEqual } = require('./utils/version');
+const { greaterOrEqual } = require('../utils/version');
 
 const noErrorRefAllowedVersion = '8.2';
 
