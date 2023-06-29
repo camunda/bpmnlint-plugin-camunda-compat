@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `DEPS`: update `bpmnlint` to v9.0.0 ([#105](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/105))
+
 ## 1.4.0
 
 * `FEAT`: extend Camunda 7.19 rules to Camunda 7.20 ([#101](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/101))
