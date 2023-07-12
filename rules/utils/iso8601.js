@@ -8,10 +8,11 @@ const SECOND = '[0-5][0-9]';
 const ZONE_ID = '(\\[[^\\]]+\\])';
 const TIMEZONE = `(Z|([+-](0[0-9]|1[0-3]):[0-5][0-9]${ZONE_ID}?))`;
 
-const ISO_DATE_REGEX = new RegExp(`^${DATE}T${HOUR}:${MINUTE}:${SECOND}${TIMEZONE}$`);
+const ISO_DATE = `${DATE}T${HOUR}:${MINUTE}:${SECOND}${TIMEZONE}`;
+const ISO_DATE_REGEX = new RegExp(`^${ISO_DATE}$`);
 const ISO_DURATION = 'P(?!$)(\\d+(\\.\\d+)?[Yy])?(\\d+(\\.\\d+)?[Mm])?(\\d+(\\.\\d+)?[Ww])?(\\d+(\\.\\d+)?[Dd])?(T(?!$)(\\d+(\\.\\d+)?[Hh])?(\\d+(\\.\\d+)?[Mm])?(\\d+(\\.\\d+)?[Ss])?)?$';
 const ISO_DURATION_REGEX = new RegExp(`^${ISO_DURATION}$`);
-const ISO_CYCLE = `R(-1|\\d+)?/${ISO_DURATION}`;
+const ISO_CYCLE = `R(-1|\\d+)?/(${ISO_DATE}/)?${ISO_DURATION}`;
 const ISO_CYCLE_REGEX = new RegExp(`^${ISO_CYCLE}$`);
 
 module.exports = {
