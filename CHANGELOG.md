@@ -6,7 +6,16 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.0.0
+
+* `FEAT`: separate C7 and C8 rules ([#87](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/87))
+* `FEAT`: add `no-multiple-start-events` rule ([#104](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/104))
 * `DEPS`: update `bpmnlint` to v9.0.0 ([#105](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/105))
+
+### Breaking Changes
+
+* C7 rules have been moved to `rules/camunda-platform`
+* C8 rules have been moved to `rules/camunda-cloud`
 
 ## 1.4.0
 
