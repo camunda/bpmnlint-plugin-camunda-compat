@@ -212,6 +212,37 @@ describe('configs', function() {
     'history-time-to-live': [ 'error', { platform: 'camunda-platform', version: '7.20' } ]
   }));
 
+
+  it('all', expectRules(configs, 'all', {
+    'element-type': 'error',
+    'called-element': 'error',
+    'collapsed-subprocess': 'error',
+    'duplicate-task-headers': 'error',
+    'error-reference': 'error',
+    'escalation-reference': 'error',
+    'event-based-gateway-target': 'error',
+    'executable-process': 'error',
+    'feel': 'error',
+    'history-time-to-live': 'error',
+    'implementation': 'error',
+    'inclusive-gateway': 'error',
+    'loop-characteristics': 'error',
+    'message-reference': 'error',
+    'no-candidate-users': 'error',
+    'no-expression': 'error',
+    'no-multiple-none-start-events': 'error',
+    'no-signal-event-sub-process': 'error',
+    'no-task-schedule': 'error',
+    'no-template': 'error',
+    'no-zeebe-properties': 'error',
+    'sequence-flow-condition': 'error',
+    'signal-reference': 'error',
+    'subscription': 'error',
+    'task-schedule': 'error',
+    'timer': 'error',
+    'user-task-form': 'error'
+  }));
+
 });
 
 function expectRules(configs, name, rules) {

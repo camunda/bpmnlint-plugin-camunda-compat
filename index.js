@@ -66,6 +66,36 @@ const camundaPlatform720Rules = withConfig(camundaPlatform719Rules, {
   version: '7.20'
 });
 
+const rules = {
+  'element-type': './rules/camunda-cloud/element-type',
+  'called-element': './rules/camunda-cloud/called-element',
+  'collapsed-subprocess': './rules/camunda-cloud/collapsed-subprocess',
+  'duplicate-task-headers': './rules/camunda-cloud/duplicate-task-headers',
+  'error-reference': './rules/camunda-cloud/error-reference',
+  'escalation-reference': './rules/camunda-cloud/escalation-reference',
+  'event-based-gateway-target': './rules/camunda-cloud/event-based-gateway-target',
+  'executable-process': './rules/camunda-cloud/executable-process',
+  'feel': './rules/camunda-cloud/feel',
+  'history-time-to-live': './rules/camunda-platform/history-time-to-live',
+  'implementation': './rules/camunda-cloud/implementation',
+  'inclusive-gateway': './rules/camunda-cloud/inclusive-gateway',
+  'loop-characteristics': './rules/camunda-cloud/loop-characteristics',
+  'message-reference': './rules/camunda-cloud/message-reference',
+  'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
+  'no-expression': './rules/camunda-cloud/no-expression',
+  'no-multiple-none-start-events': './rules/camunda-cloud/no-multiple-none-start-events',
+  'no-signal-event-sub-process': './rules/camunda-cloud/no-signal-event-sub-process',
+  'no-task-schedule': './rules/camunda-cloud/no-task-schedule',
+  'no-template': './rules/camunda-cloud/no-template',
+  'no-zeebe-properties': './rules/camunda-cloud/no-zeebe-properties',
+  'sequence-flow-condition': './rules/camunda-cloud/sequence-flow-condition',
+  'signal-reference': './rules/camunda-cloud/signal-reference',
+  'subscription': './rules/camunda-cloud/subscription',
+  'task-schedule': './rules/camunda-cloud/task-schedule',
+  'timer': './rules/camunda-cloud/timer',
+  'user-task-form': './rules/camunda-cloud/user-task-form'
+};
+
 module.exports = {
   configs: {
     'camunda-cloud-1-0': {
@@ -97,37 +127,17 @@ module.exports = {
     },
     'camunda-platform-7-20': {
       rules: camundaPlatform720Rules
+    },
+    'all': {
+      rules: Object.keys(rules).reduce((allRules, rule) => {
+        return {
+          ...allRules,
+          [ rule ]: 'error'
+        };
+      }, {})
     }
   },
-  rules: {
-    'element-type': './rules/camunda-cloud/element-type',
-    'called-element': './rules/camunda-cloud/called-element',
-    'collapsed-subprocess': './rules/camunda-cloud/collapsed-subprocess',
-    'duplicate-task-headers': './rules/camunda-cloud/duplicate-task-headers',
-    'error-reference': './rules/camunda-cloud/error-reference',
-    'escalation-reference': './rules/camunda-cloud/escalation-reference',
-    'event-based-gateway-target': './rules/camunda-cloud/event-based-gateway-target',
-    'executable-process': './rules/camunda-cloud/executable-process',
-    'feel': './rules/camunda-cloud/feel',
-    'history-time-to-live': './rules/camunda-platform/history-time-to-live',
-    'implementation': './rules/camunda-cloud/implementation',
-    'inclusive-gateway': './rules/camunda-cloud/inclusive-gateway',
-    'loop-characteristics': './rules/camunda-cloud/loop-characteristics',
-    'message-reference': './rules/camunda-cloud/message-reference',
-    'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
-    'no-expression': './rules/camunda-cloud/no-expression',
-    'no-multiple-none-start-events': './rules/camunda-cloud/no-multiple-none-start-events',
-    'no-signal-event-sub-process': './rules/camunda-cloud/no-signal-event-sub-process',
-    'no-task-schedule': './rules/camunda-cloud/no-task-schedule',
-    'no-template': './rules/camunda-cloud/no-template',
-    'no-zeebe-properties': './rules/camunda-cloud/no-zeebe-properties',
-    'sequence-flow-condition': './rules/camunda-cloud/sequence-flow-condition',
-    'signal-reference': './rules/camunda-cloud/signal-reference',
-    'subscription': './rules/camunda-cloud/subscription',
-    'task-schedule': './rules/camunda-cloud/task-schedule',
-    'timer': './rules/camunda-cloud/timer',
-    'user-task-form': './rules/camunda-cloud/user-task-form'
-  }
+  rules
 };
 
 function withConfig(rules, config, type = 'error') {
