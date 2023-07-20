@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.1.0
+
+* `FEAT`: add `all` config ([#108](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/108))
+
 ## 2.0.0
 
 * `FEAT`: separate C7 and C8 rules ([#87](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/87))
