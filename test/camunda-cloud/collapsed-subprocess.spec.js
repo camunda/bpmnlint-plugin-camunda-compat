@@ -75,7 +75,7 @@ const invalid = [
     `)),
     report: {
       id: 'SubProcess_1',
-      message: 'A <bpmn:SubProcess> must be expanded.',
+      message: 'A <bpmn:SubProcess> must be expanded',
       data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'SubProcess_1',
@@ -101,7 +101,7 @@ const invalid = [
     `)),
     report: {
       id: 'SubProcess_1',
-      message: 'A <bpmn:SubProcess> must be expanded.',
+      message: 'A <bpmn:SubProcess> must be expanded',
       data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'SubProcess_1',
@@ -124,7 +124,7 @@ const invalid = [
     `)),
     report: {
       id: 'SubProcess_1',
-      message: 'A <bpmn:SubProcess> must be expanded.',
+      message: 'A <bpmn:SubProcess> must be expanded',
       data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'SubProcess_1',
@@ -150,7 +150,7 @@ const invalid = [
     `)),
     report: {
       id: 'SubProcess_1',
-      message: 'A <bpmn:AdHocSubProcess> must be expanded.',
+      message: 'A <bpmn:AdHocSubProcess> must be expanded',
       data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'SubProcess_1',

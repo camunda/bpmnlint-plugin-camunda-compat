@@ -16,7 +16,7 @@ module.exports = skipInNonExecutableProcess(function() {
     const node = di.bpmnElement;
 
     const error = {
-      message: `A <${ node.$type }> must be expanded.`,
+      message: `A <${ node.$type }> must be expanded`,
       data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: node,
