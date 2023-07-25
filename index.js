@@ -44,6 +44,7 @@ const camundaCloud82Rules = withConfig({
     'no-candidate-users',
     'no-task-schedule'
   ]),
+  'escalation-boundary-event-attached-to-ref': 'error',
   'escalation-reference': 'error',
   'no-signal-event-sub-process': 'error',
   'task-schedule': 'error'
@@ -72,6 +73,7 @@ const rules = {
   'collapsed-subprocess': './rules/camunda-cloud/collapsed-subprocess',
   'duplicate-task-headers': './rules/camunda-cloud/duplicate-task-headers',
   'error-reference': './rules/camunda-cloud/error-reference',
+  'escalation-boundary-event-attached-to-ref': './rules/camunda-cloud/escalation-boundary-event-attached-to-ref',
   'escalation-reference': './rules/camunda-cloud/escalation-reference',
   'event-based-gateway-target': './rules/camunda-cloud/event-based-gateway-target',
   'executable-process': './rules/camunda-cloud/executable-process',
