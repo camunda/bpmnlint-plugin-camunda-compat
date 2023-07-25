@@ -24,19 +24,27 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    let errors = hasProperties(eventDefinition, {
-      escalationRef: {
-        required: true
+    let errors = [];
+
+    if (!isNoEscalationRefAllowed(node)) {
+      errors = hasProperties(eventDefinition, {
+        escalationRef: {
+          required: true
+        }
+      }, node);
+
+      if (errors.length) {
+        reportErrors(node, reporter, errors);
+
+        return;
       }
-    }, node);
-
-    if (errors && errors.length) {
-      reportErrors(node, reporter, errors);
-
-      return;
     }
 
     const escalationRef = eventDefinition.get('escalationRef');
+
+    if (!escalationRef) {
+      return;
+    }
 
     errors = hasProperties(escalationRef, {
       escalationCode: {
@@ -44,7 +52,7 @@ module.exports = skipInNonExecutableProcess(function() {
       }
     }, node);
 
-    if (errors && errors.length) {
+    if (errors.length) {
       reportErrors(node, reporter, errors);
     }
   }
@@ -53,3 +61,7 @@ module.exports = skipInNonExecutableProcess(function() {
     check
   };
 });
+
+function isNoEscalationRefAllowed(node, version) {
+  return is(node, 'bpmn:BoundaryEvent');
+}
