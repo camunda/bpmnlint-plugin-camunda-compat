@@ -35,7 +35,7 @@ const valid = [
     `))
   },
   {
-    name: 'error boundary event (no escalation reference)',
+    name: 'escalation boundary event (no escalation reference)',
     moddleElement: createModdle(createProcess(`
       <bpmn:callActivity id="CallActivity_1" />
       <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="CallActivity_1">
