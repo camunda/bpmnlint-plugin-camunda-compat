@@ -50,7 +50,7 @@ const camundaCloud82Rules = withConfig({
 }, { version: '8.2' });
 
 const camundaCloud83Rules = withConfig({
-  ...camundaCloud82Rules,
+  ...omit(camundaCloud82Rules, 'inclusive-gateway'),
   'signal-reference': 'error'
 }, { version: '8.3' });
 
