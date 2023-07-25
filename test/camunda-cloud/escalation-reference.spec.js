@@ -23,6 +23,27 @@ const valid = [
     `))
   },
   {
+    name: 'escalation boundary event',
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:callActivity id="CallActivity_1" />
+        <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="CallActivity_1">
+          <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" escalationRef="Escalation_1" />
+        </bpmn:boundaryEvent>
+      </bpmn:process>
+      <bpmn:escalation id="Escalation_1" escalationCode="foo" />
+    `))
+  },
+  {
+    name: 'error boundary event (no escalation reference)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:callActivity id="CallActivity_1" />
+      <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="CallActivity_1">
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
+      </bpmn:boundaryEvent>
+    `))
+  },
+  {
     name: 'end event (message)',
     moddleElement: createModdle(createProcess(`
       <bpmn:endEvent id="EndEvent_1">
