@@ -190,6 +190,7 @@ describe('configs', function() {
     'event-based-gateway-target': [ 'error', { version: '8.3' } ],
     'executable-process': [ 'error', { version: '8.3' } ],
     'feel': [ 'error', { version: '8.3' } ],
+    'inclusive-gateway': [ 'error', { version: '8.3' } ],
     'loop-characteristics': [ 'error', { version: '8.3' } ],
     'message-reference': [ 'error', { version: '8.3' } ],
     'no-expression': [ 'error', { version: '8.3' } ],

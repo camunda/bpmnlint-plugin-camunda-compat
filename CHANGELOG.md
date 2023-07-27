@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: remove support converging inclusive gateway in Camunda 8.3
+
 ## 2.2.0
 
 * `FEAT`: support converging inclusive gateway in Camunda 8.3 ([#111](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/111))
