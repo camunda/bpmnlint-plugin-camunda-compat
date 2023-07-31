@@ -24,6 +24,7 @@ describe('configs', function() {
     'no-zeebe-properties': [ 'error', { version: '1.0' } ],
     'sequence-flow-condition': [ 'error', { version: '1.0' } ],
     'subscription': [ 'error', { version: '1.0' } ],
+    'start-form': [ 'error', { version: '1.0' } ],
     'timer': [ 'error', { version: '1.0' } ],
     'user-task-form': [ 'error', { version: '1.0' } ]
   }));
@@ -49,6 +50,7 @@ describe('configs', function() {
     'no-zeebe-properties': [ 'error', { version: '1.1' } ],
     'sequence-flow-condition': [ 'error', { version: '1.1' } ],
     'subscription': [ 'error', { version: '1.1' } ],
+    'start-form': [ 'error', { version: '1.1' } ],
     'timer': [ 'error', { version: '1.1' } ],
     'user-task-form': [ 'error', { version: '1.1' } ]
   }));
@@ -74,6 +76,7 @@ describe('configs', function() {
     'no-zeebe-properties': [ 'error', { version: '1.2' } ],
     'sequence-flow-condition': [ 'error', { version: '1.2' } ],
     'subscription': [ 'error', { version: '1.2' } ],
+    'start-form': [ 'error', { version: '1.2' } ],
     'timer': [ 'error', { version: '1.2' } ],
     'user-task-form': [ 'error', { version: '1.2' } ]
   }));
@@ -99,6 +102,7 @@ describe('configs', function() {
     'no-zeebe-properties': [ 'error', { version: '1.3' } ],
     'sequence-flow-condition': [ 'error', { version: '1.3' } ],
     'subscription': [ 'error', { version: '1.3' } ],
+    'start-form': [ 'error', { version: '1.3' } ],
     'timer': [ 'error', { version: '1.3' } ],
     'user-task-form': [ 'error', { version: '1.3' } ]
   }));
@@ -123,6 +127,7 @@ describe('configs', function() {
     'no-zeebe-properties': [ 'error', { version: '8.0' } ],
     'sequence-flow-condition': [ 'error', { version: '8.0' } ],
     'subscription': [ 'error', { version: '8.0' } ],
+    'start-form': [ 'error', { version: '8.0' } ],
     'timer': [ 'error', { version: '8.0' } ],
     'user-task-form': [ 'error', { version: '8.0' } ]
   }));
@@ -147,6 +152,7 @@ describe('configs', function() {
     'no-task-schedule': [ 'error', { version: '8.1' } ],
     'sequence-flow-condition': [ 'error', { version: '8.1' } ],
     'subscription': [ 'error', { version: '8.1' } ],
+    'start-form': [ 'error', { version: '8.1' } ],
     'timer': [ 'error', { version: '8.1' } ],
     'user-task-form': [ 'error', { version: '8.1' } ]
   }));
@@ -172,6 +178,7 @@ describe('configs', function() {
     'no-signal-event-sub-process': [ 'error', { version: '8.2' } ],
     'sequence-flow-condition': [ 'error', { version: '8.2' } ],
     'subscription': [ 'error', { version: '8.2' } ],
+    'start-form': [ 'error', { version: '8.2' } ],
     'task-schedule': [ 'error', { version: '8.2' } ],
     'timer': [ 'error', { version: '8.2' } ],
     'user-task-form': [ 'error', { version: '8.2' } ]
@@ -241,6 +248,7 @@ describe('configs', function() {
     'sequence-flow-condition': 'error',
     'signal-reference': 'error',
     'subscription': 'error',
+    'start-form': 'error',
     'task-schedule': 'error',
     'timer': 'error',
     'user-task-form': 'error'
