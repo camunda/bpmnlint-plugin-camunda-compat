@@ -18,6 +18,7 @@ const camundaCloud10Rules = withConfig({
   'no-template': 'error',
   'no-zeebe-properties': 'error',
   'sequence-flow-condition': 'error',
+  'start-form': 'error',
   'subscription': 'error',
   'timer': 'error',
   'user-task-form': 'error',
@@ -51,7 +52,9 @@ const camundaCloud82Rules = withConfig({
 }, { version: '8.2' });
 
 const camundaCloud83Rules = withConfig({
-  ...camundaCloud82Rules,
+  ...omit(camundaCloud82Rules, [
+    'start-form'
+  ]),
   'signal-reference': 'error'
 }, { version: '8.3' });
 
@@ -92,6 +95,7 @@ const rules = {
   'no-zeebe-properties': './rules/camunda-cloud/no-zeebe-properties',
   'sequence-flow-condition': './rules/camunda-cloud/sequence-flow-condition',
   'signal-reference': './rules/camunda-cloud/signal-reference',
+  'start-form': './rules/camunda-cloud/start-form',
   'subscription': './rules/camunda-cloud/subscription',
   'task-schedule': './rules/camunda-cloud/task-schedule',
   'timer': './rules/camunda-cloud/timer',

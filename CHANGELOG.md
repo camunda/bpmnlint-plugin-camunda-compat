@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: add `start-form` rule ([#106](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/106))
+
 ## 2.3.0
 
 * `FEAT`: add `escalation-boundary-event-attached-to-ref` rule ([#110](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/110))
