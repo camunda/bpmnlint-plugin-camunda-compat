@@ -128,6 +128,7 @@ describe('configs', function() {
     'sequence-flow-condition': [ 'error', { version: '8.0' } ],
     'subscription': [ 'error', { version: '8.0' } ],
     'start-form': [ 'error', { version: '8.0' } ],
+    'secrets': [ 'error', { version: '8.0' } ],
     'timer': [ 'error', { version: '8.0' } ],
     'user-task-form': [ 'error', { version: '8.0' } ]
   }));
@@ -153,6 +154,7 @@ describe('configs', function() {
     'sequence-flow-condition': [ 'error', { version: '8.1' } ],
     'subscription': [ 'error', { version: '8.1' } ],
     'start-form': [ 'error', { version: '8.1' } ],
+    'secrets': [ 'error', { version: '8.1' } ],
     'timer': [ 'error', { version: '8.1' } ],
     'user-task-form': [ 'error', { version: '8.1' } ]
   }));
@@ -179,6 +181,7 @@ describe('configs', function() {
     'sequence-flow-condition': [ 'error', { version: '8.2' } ],
     'subscription': [ 'error', { version: '8.2' } ],
     'start-form': [ 'error', { version: '8.2' } ],
+    'secrets': [ 'error', { version: '8.2' } ],
     'task-schedule': [ 'error', { version: '8.2' } ],
     'timer': [ 'error', { version: '8.2' } ],
     'user-task-form': [ 'error', { version: '8.2' } ]
@@ -204,6 +207,7 @@ describe('configs', function() {
     'no-multiple-none-start-events' : [ 'error', { version: '8.3' } ],
     'no-signal-event-sub-process': [ 'error', { version: '8.3' } ],
     'sequence-flow-condition': [ 'error', { version: '8.3' } ],
+    'secrets': [ 'error', { version: '8.3' } ],
     'signal-reference': [ 'error', { version: '8.3' } ],
     'subscription': [ 'error', { version: '8.3' } ],
     'task-schedule': [ 'error', { version: '8.3' } ],
@@ -249,6 +253,7 @@ describe('configs', function() {
     'signal-reference': 'error',
     'subscription': 'error',
     'start-form': 'error',
+    'secrets': 'error',
     'task-schedule': 'error',
     'timer': 'error',
     'user-task-form': 'error'
