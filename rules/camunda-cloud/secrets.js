@@ -1,81 +1,115 @@
 const { isString } = require('min-dash');
-const { reportErrors } = require('../utils/reporter');
+
+const { is } = require('bpmnlint-utils');
+
+const { getPath } = require('@bpmn-io/moddle-utils');
+
+const {
+  findExtensionElement,
+  getEventDefinition
+} = require('../utils/element');
+
 const { ERROR_TYPES } = require('../utils/error-types');
+
+const { reportErrors } = require('../utils/reporter');
+
 const { skipInNonExecutableProcess } = require('../utils/rule');
-const { findExtensionElement } = require('../utils/element');
 
-module.exports = skipInNonExecutableProcess(checkNodeForErrors);
-
-function checkNodeForErrors() {
+module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
-    const errors = validateZeebeProperties(node);
-    reportIfErrorsExist(node, reporter, errors);
+    const errors = [
+      validateIoMapping,
+      validateProperties,
+      validateSubscription
+    ].reduce((errors, validationFunction) => {
+      return [
+        ...errors,
+        ...validationFunction(node)
+      ];
+    }, []);
+
+    if (errors.length) {
+      reportErrors(node, reporter, errors);
+    }
   }
 
   return {
     check
   };
-}
+});
 
-function reportIfErrorsExist(node, reporter, errors) {
-  if (errors && errors.length) {
-    reportErrors(node, reporter, errors);
+function validateIoMapping(node) {
+  const ioMapping = findExtensionElement(node, 'zeebe:IoMapping');
+
+  if (!ioMapping) {
+    return [];
   }
+
+  return ioMapping.get('inputParameters')
+    .filter(inputParameter => !isValidSecret(inputParameter.get('source')))
+    .map(inputParameter => getReport('source', inputParameter, node));
 }
 
-function validateSubscription(subscription, node) {
-  const correlationKey = subscription.get('correlationKey');
-  return containInvalidSecret(correlationKey) ?
-    [ createErrorForInvalidSecret('correlationKey', subscription, node) ] :
-    [];
+function validateProperties(node) {
+  const properties = findExtensionElement(node, 'zeebe:Properties');
+
+  if (!properties) {
+    return [];
+  }
+
+  return (properties.get('properties'))
+    .filter(property => !isValidSecret(property.get('value')))
+    .map(property => getReport('value', property, node));
 }
 
-function validateIoMapping(ioMapping, node) {
-  return (ioMapping.inputParameters || ioMapping.$children)
-    .filter(parameter => containInvalidSecret(parameter.source))
-    .map(parameter => createErrorForInvalidSecret(parameter.target, parameter, node));
-}
+function validateSubscription(node) {
+  let message;
 
-function validateProperties(properties, node) {
-  return (properties.properties || properties.$children)
-    .filter(parameter => containInvalidSecret(parameter.value))
-    .map(parameter => createErrorForInvalidSecret(parameter.name, parameter, node));
-}
+  if (is(node, 'bpmn:ReceiveTask')) {
+    message = node.get('messageRef');
+  } else {
+    const messageEventDefinition = getEventDefinition(node, 'bpmn:MessageEventDefinition');
 
-function validateZeebeProperties(node) {
-  const errors = [];
-  const extensionElements = {
-    'zeebe:subscription': validateSubscription,
-    'zeebe:Subscription': validateSubscription,
-    'zeebe:ioMapping': validateIoMapping,
-    'zeebe:IoMapping': validateIoMapping,
-    'zeebe:properties': validateProperties,
-    'zeebe:Properties': validateProperties
-  };
-
-  for (const [ type, validationFunction ] of Object.entries(extensionElements)) {
-    const element = findExtensionElement(node, type);
-    if (element) {
-      errors.push(...validationFunction(element, node));
+    if (!messageEventDefinition) {
+      return [];
     }
+
+    message = messageEventDefinition.get('messageRef');
   }
 
-  return errors;
+  if (!message) {
+    return [];
+  }
+
+  const subscription = findExtensionElement(message, 'zeebe:Subscription');
+
+  if (!subscription) {
+    return [];
+  }
+
+  const correlationKey = subscription.get('correlationKey');
+
+  return isValidSecret(correlationKey)
+    ? []
+    : [ getReport('correlationKey', subscription, node) ];
 }
 
-function createErrorForInvalidSecret(propertyName, node, parentNode) {
+function getReport(propertyName, node, parentNode) {
   return {
-    message: `Element of type <${node.$type}> contains an invalid secret format in property '${propertyName}'. Must be {{secrets.YOUR_SECRET}}`,
-    path: null,
+    message: `Property <${ propertyName }> is not a valid secret`,
+    path: [ ...getPath(node, parentNode), propertyName ],
     data: {
-      type: ERROR_TYPES.INVALID_SECRET_FORMAT,
+      type: ERROR_TYPES.SECRET_EXPRESSION_INVALID,
       node,
       parentNode: parentNode,
-      invalidProperty: propertyName
+      property: propertyName
     }
   };
 }
 
-function containInvalidSecret(value) {
-  return isString(value) && value.includes('secrets.') && !/{{secrets\.[a-zA-Z0-9_]+}}/.test(value);
+function isValidSecret(value) {
+  return !value
+    || !isString(value)
+    || !value.includes('secrets.')
+    || /{{secrets\.[a-zA-Z0-9_]+}}/.test(value);
 }
