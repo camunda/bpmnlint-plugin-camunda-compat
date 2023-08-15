@@ -18,5 +18,5 @@ module.exports.ERROR_TYPES = Object.freeze({
   PROPERTY_VALUE_DUPLICATED: 'camunda.propertyValueDuplicated',
   PROPERTY_VALUE_NOT_ALLOWED: 'camunda.propertyValueNotAllowed',
   PROPERTY_VALUE_REQUIRED: 'camunda.propertyValueRequired',
-  INVALID_SECRET_FORMAT: 'camunda.invalidSecretFormat'
+  SECRET_EXPRESSION_INVALID: 'camunda.secretExpressionInvalid'
 });
