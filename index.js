@@ -32,7 +32,10 @@ const camundaCloud12Rules = withConfig(camundaCloud11Rules, { version: '1.2' });
 const camundaCloud13Rules = withConfig(camundaCloud12Rules, { version: '1.3' });
 
 const camundaCloud80Rules = withConfig({
-  ...omit(camundaCloud13Rules, 'no-template'),
+  ...omit(camundaCloud13Rules, [
+    'no-template',
+    'secrets'
+  ]),
   'secrets': 'error'
 }, { version: '8.0' });
 
