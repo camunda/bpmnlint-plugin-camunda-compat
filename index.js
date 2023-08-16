@@ -32,11 +32,7 @@ const camundaCloud12Rules = withConfig(camundaCloud11Rules, { version: '1.2' });
 const camundaCloud13Rules = withConfig(camundaCloud12Rules, { version: '1.3' });
 
 const camundaCloud80Rules = withConfig({
-  ...omit(camundaCloud13Rules, [
-    'no-template',
-    'secrets'
-  ]),
-  'secrets': 'error'
+  ...omit(camundaCloud13Rules, 'no-template')
 }, { version: '8.0' });
 
 const camundaCloud81Rules = withConfig({
@@ -97,7 +93,6 @@ const rules = {
   'no-task-schedule': './rules/camunda-cloud/no-task-schedule',
   'no-template': './rules/camunda-cloud/no-template',
   'no-zeebe-properties': './rules/camunda-cloud/no-zeebe-properties',
-  'secrets': './rules/camunda-cloud/secrets',
   'sequence-flow-condition': './rules/camunda-cloud/sequence-flow-condition',
   'signal-reference': './rules/camunda-cloud/signal-reference',
   'start-form': './rules/camunda-cloud/start-form',
