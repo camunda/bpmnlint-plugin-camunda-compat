@@ -50,6 +50,7 @@ const camundaCloud82Rules = withConfig({
   ]),
   'escalation-boundary-event-attached-to-ref': 'error',
   'escalation-reference': 'error',
+  'link-event': 'error',
   'no-signal-event-sub-process': 'error',
   'task-schedule': 'error'
 }, { version: '8.2' });
@@ -87,6 +88,7 @@ const rules = {
   'history-time-to-live': './rules/camunda-platform/history-time-to-live',
   'implementation': './rules/camunda-cloud/implementation',
   'inclusive-gateway': './rules/camunda-cloud/inclusive-gateway',
+  'link-event': './rules/camunda-cloud/link-event',
   'loop-characteristics': './rules/camunda-cloud/loop-characteristics',
   'message-reference': './rules/camunda-cloud/message-reference',
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
