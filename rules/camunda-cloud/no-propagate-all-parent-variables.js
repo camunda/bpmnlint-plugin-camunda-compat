@@ -23,7 +23,13 @@ module.exports = skipInNonExecutableProcess(function() {
 
     const errors = hasProperties(calledElement, {
       propagateAllParentVariables: {
-        allowed: false,
+        allowed: function(value) {
+
+          // `propergateAllParentVariables` is not recognized by Camunda 8.1 and older
+          // setting it to `true` is therefore allowed for all versions
+          // setting it to `false` is only allowed for Camunda 8.2 and newer
+          return value;
+        },
         allowedVersion: '8.2'
       }
     }, node);
