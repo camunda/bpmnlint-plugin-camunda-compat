@@ -22,6 +22,16 @@ const valid = [
     `))
   },
   {
+    name: 'call activity (propertgateAllParentVariables = true)',
+    moddleElement: createModdle(createProcess(`
+        <bpmn:callActivity id="CallActivity_1">
+          <bpmn:extensionElements>
+            <zeebe:calledElement processId="foo" propagateAllParentVariables="true" />
+          </bpmn:extensionElements>
+        </bpmn:callActivity>
+    `))
+  },
+  {
     name: 'call activity (non-executable process)',
     config: { version: '8.2' },
     moddleElement: createModdle(createDefinitions(`
@@ -38,17 +48,17 @@ const valid = [
 
 const invalid = [
   {
-    name: 'call activity',
+    name: 'call activity (propertgateAllParentVariables = false)',
     moddleElement: createModdle(createProcess(`
-        <bpmn:callActivity id="CallActivity_1">
-          <bpmn:extensionElements>
-            <zeebe:calledElement processId="foo" propagateAllParentVariables="false" />
-          </bpmn:extensionElements>
-        </bpmn:callActivity>
+      <bpmn:callActivity id="CallActivity_1">
+        <bpmn:extensionElements>
+          <zeebe:calledElement processId="foo" propagateAllParentVariables="false" />
+        </bpmn:extensionElements>
+      </bpmn:callActivity>
     `)),
     report: {
       id: 'CallActivity_1',
-      message: 'Property <propagateAllParentVariables> only allowed by Camunda Platform 8.2 or newer',
+      message: 'Property value of <false> only allowed by Camunda Platform 8.2 or newer',
       path:  [
         'extensionElements',
         'values',
@@ -56,7 +66,7 @@ const invalid = [
         'propagateAllParentVariables'
       ],
       data: {
-        type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
+        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
         node: 'zeebe:CalledElement',
         parentNode: 'CallActivity_1',
         property: 'propagateAllParentVariables',
