@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.5.0
+
+* `FEAT`: add `no-propagate-all-parent-variables` ([#124](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/124))
+* `FEAT`: add `secrets` rule ([#116](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/116))
+
 ## 2.4.0
 
 * `FEAT`: add `start-form` rule ([#106](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/106))
