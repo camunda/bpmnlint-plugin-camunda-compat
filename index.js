@@ -14,6 +14,7 @@ const camundaCloud10Rules = withConfig({
   'no-candidate-users': 'error',
   'no-expression': 'error',
   'no-multiple-none-start-events': 'error',
+  'no-propagate-all-parent-variables': 'error',
   'no-task-schedule': 'error',
   'no-template': 'error',
   'no-zeebe-properties': 'error',
@@ -44,6 +45,7 @@ const camundaCloud81Rules = withConfig({
 const camundaCloud82Rules = withConfig({
   ...omit(camundaCloud81Rules, [
     'no-candidate-users',
+    'no-propagate-all-parent-variables',
     'no-task-schedule'
   ]),
   'escalation-boundary-event-attached-to-ref': 'error',
@@ -90,6 +92,7 @@ const rules = {
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
   'no-expression': './rules/camunda-cloud/no-expression',
   'no-multiple-none-start-events': './rules/camunda-cloud/no-multiple-none-start-events',
+  'no-propagate-all-parent-variables': './rules/camunda-cloud/no-propagate-all-parent-variables',
   'no-signal-event-sub-process': './rules/camunda-cloud/no-signal-event-sub-process',
   'no-task-schedule': './rules/camunda-cloud/no-task-schedule',
   'no-template': './rules/camunda-cloud/no-template',
