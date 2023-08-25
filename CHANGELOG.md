@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.6.0
+
+* `FEAT`: add `link-event` rule ([#122](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/122))
+
 ## 2.5.1
 
 * `FIX`: `no-propagate-all-parent-variables` only disallows `false` ([#125](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/125))
