@@ -28,17 +28,17 @@ module.exports = skipInNonExecutableProcess(function() {
 
         const name = linkEventDefinition.get('name');
 
+        names = [
+          ...names,
+          name
+        ];
+
         if (!name) {
           return {
             duplicateNames,
             names
           };
         }
-
-        names = [
-          ...names,
-          name
-        ];
 
         if (names.indexOf(name) !== index && !duplicateNames.includes(name)) {
           duplicateNames = [

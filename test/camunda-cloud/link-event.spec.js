@@ -175,6 +175,32 @@ const invalid = [
         requiredProperty: 'name'
       },
     }
+  },
+  {
+    name: 'link catch events (missing name, no duplicate name)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:linkEventDefinition id="LinkEventDefinition_1" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_2">
+        <bpmn:linkEventDefinition id="LinkEventDefinition_2" name="foo" />
+      </bpmn:intermediateCatchEvent>
+    `)),
+    report: {
+      id: 'IntermediateCatchEvent_1',
+      message: 'Element of type <bpmn:LinkEventDefinition> must have property <name>',
+      path: [
+        'eventDefinitions',
+        0,
+        'name'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'LinkEventDefinition_1',
+        parentNode: 'IntermediateCatchEvent_1',
+        requiredProperty: 'name'
+      },
+    }
   }
 ];
 
