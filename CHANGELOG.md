@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.6.2
+
+* `DEPS`: update to `@bpmn-io/feel-lint@1.0.0`
+
 ## 2.6.1
 
 * `FIX`: `link-event` rule doesn't report false positives ([`b069da74`](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/b069da74afc622d202573e569f11bf8a0cd09321))
