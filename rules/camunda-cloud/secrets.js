@@ -95,9 +95,13 @@ function validateSubscription(node) {
 }
 
 function getReport(propertyName, node, parentNode) {
+  const path = getPath(node, parentNode);
+
   return {
     message: `Property <${ propertyName }> is not a valid secret`,
-    path: [ ...getPath(node, parentNode), propertyName ],
+    path: path
+      ? [ ...getPath(node, parentNode), propertyName ]
+      : [ propertyName ],
     data: {
       type: ERROR_TYPES.SECRET_EXPRESSION_INVALID,
       node,
