@@ -6,7 +6,7 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
-# 2.6.3
+## 2.6.3
 
 * `FIX`: `secrets` rule is more forgiving when getting path ([`102936b7`](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/102936b749f12a12d11a9d8d6b13aafe5897abac))
 
