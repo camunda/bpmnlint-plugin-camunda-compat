@@ -67,6 +67,33 @@ const valid = [
     `))
   },
   {
+    name: 'call activity',
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1" isExecutable="true">
+        <bpmn:startEvent id="StartEvent_1">
+          <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:manualTask id="ManualTask_1">
+          <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+          <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+        </bpmn:manualTask>
+        <bpmn:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="ManualTask_1" />
+        <bpmn:sequenceFlow id="SequenceFlow_2" sourceRef="ManualTask_1" targetRef="CallActivity_1" />
+        <bpmn:endEvent id="EndEvent_1">
+          <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="SequenceFlow_3" sourceRef="CallActivity_1" targetRef="EndEvent_1" />
+        <bpmn:callActivity id="CallActivity_1">
+          <bpmn:extensionElements>
+            <zeebe:calledElement processId="Process_2" propagateAllChildVariables="false" />
+          </bpmn:extensionElements>
+          <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+          <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
+        </bpmn:callActivity>
+      </bpmn:process>
+    `))
+  },
+  {
     name: 'simple loop (non-executable process)',
     config: { version: '8.2' },
     moddleElement: createModdle(createDefinitions(`
@@ -203,6 +230,48 @@ const invalid = [
           'Task_1',
           'EndEvent_2',
           'ExclusiveGateway_2'
+        ]
+      }
+    }
+  },
+  {
+    name: 'call activity loop',
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1" isExecutable="true">
+        <bpmn:startEvent id="StartEvent_1">
+          <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:manualTask id="ManualTask_1">
+          <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+          <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+        </bpmn:manualTask>
+        <bpmn:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="ManualTask_1" />
+        <bpmn:sequenceFlow id="SequenceFlow_2" sourceRef="ManualTask_1" targetRef="CallActivity_1" />
+        <bpmn:endEvent id="EndEvent_1">
+          <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="SequenceFlow_3" sourceRef="CallActivity_1" targetRef="EndEvent_1" />
+        <bpmn:callActivity id="CallActivity_1">
+          <bpmn:extensionElements>
+            <zeebe:calledElement processId="Process_1" propagateAllChildVariables="false" />
+          </bpmn:extensionElements>
+          <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+          <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
+        </bpmn:callActivity>
+      </bpmn:process>
+    `)),
+    report: {
+      id: 'Process_1',
+      message: 'Loop detected: StartEvent_1 -> ManualTask_1 -> CallActivity_1 -> StartEvent_1',
+      path: null,
+      data: {
+        type: ERROR_TYPES.LOOP_NOT_ALLOWED,
+        node: 'Process_1',
+        parentNode: null,
+        elements: [
+          'StartEvent_1',
+          'ManualTask_1',
+          'CallActivity_1'
         ]
       }
     }

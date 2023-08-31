@@ -1,6 +1,12 @@
+const { isString } = require('min-dash');
+
 const { is } = require('bpmnlint-utils');
 
-const { isAnyExactly } = require('../utils/element');
+const {
+  findExtensionElement,
+  findParent,
+  isAnyExactly
+} = require('../utils/element');
 
 const { reportErrors } = require('../utils/reporter');
 
@@ -32,7 +38,7 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    const error = node.get('flowElements')
+    const error = getFlowElements(node)
       .filter(flowElement => {
         return isAnyExactly(flowElement, LOOP_ELEMENT_TYPES);
       })
@@ -91,8 +97,32 @@ function findLoop(flowElement, parentElement, visitedFlowElements = []) {
   };
 }
 
+function getFlowElements(node) {
+  return node.get('flowElements').reduce((flowElements, flowElement) => {
+    if (is(flowElement, 'bpmn:FlowElementsContainer')) {
+      return [ ...flowElements, ...getFlowElements(flowElement) ];
+    }
+
+    return [ ...flowElements, flowElement ];
+  }, []);
+}
+
 function getNextFlowElements(flowElement) {
-  if (is(flowElement, 'bpmn:SubProcess')) {
+  if (is(flowElement, 'bpmn:CallActivity')) {
+    const calledElement = findExtensionElement(flowElement, 'zeebe:CalledElement');
+
+    if (calledElement) {
+      const processId = calledElement.get('processId');
+
+      if (isString(processId) && !isFeel(processId)) {
+        const process = findParent(flowElement, 'bpmn:Process');
+
+        if (process && process.get('id') === processId) {
+          return process.get('flowElements').filter(flowElement => is(flowElement, 'bpmn:StartEvent'));
+        }
+      }
+    }
+  } else if (is(flowElement, 'bpmn:SubProcess')) {
     return flowElement
       .get('flowElements').filter(flowElement => is(flowElement, 'bpmn:StartEvent'));
   } else if (is(flowElement, 'bpmn:EndEvent')) {
@@ -109,4 +139,8 @@ function getNextFlowElements(flowElement) {
 
 function isIgnoredLoop(elements) {
   return !elements.some(element => isAnyExactly(element, LOOP_REQUIRED_ELEMENT_TYPES));
+}
+
+function isFeel(value) {
+  return isString(value) && value.startsWith('=');
 }
