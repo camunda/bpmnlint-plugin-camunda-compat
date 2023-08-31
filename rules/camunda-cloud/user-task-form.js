@@ -3,6 +3,7 @@ const { is } = require('bpmnlint-utils');
 const {
   findExtensionElement,
   findExtensionElements,
+  findParent,
   hasProperties
 } = require('../utils/element');
 
@@ -76,22 +77,4 @@ function findUserTaskForm(node, formKey) {
       return `camunda-forms:bpmn:${ id }` === formKey;
     });
   }
-}
-
-function findParent(node, type) {
-  if (!node) {
-    return null;
-  }
-
-  const parent = node.$parent;
-
-  if (!parent) {
-    return node;
-  }
-
-  if (is(parent, type)) {
-    return parent;
-  }
-
-  return findParent(parent, type);
 }
