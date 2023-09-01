@@ -89,7 +89,7 @@ module.exports = skipInNonExecutableProcess(function() {
 
     // check for missing link catch & throw event names
     if (isLinkEvent(node)) {
-      const linkEventDefinition = getEventDefinition(node, 'bpmn:LinkEventDefinition');
+      const linkEventDefinition = getEventDefinition(node);
 
       const errors = hasProperties(linkEventDefinition, {
         name: {
@@ -109,15 +109,19 @@ module.exports = skipInNonExecutableProcess(function() {
 });
 
 function isLinkEvent(element) {
+  const eventDefinition = getEventDefinition(element);
+
   return isAny(element, [
     'bpmn:IntermediateCatchEvent',
     'bpmn:IntermediateThrowEvent'
-  ]) && getEventDefinition(element, 'bpmn:LinkEventDefinition');
+  ]) && eventDefinition && is(eventDefinition, 'bpmn:LinkEventDefinition');
 }
 
 function isLinkCatchEvent(element) {
+  const eventDefinition = getEventDefinition(element);
+
   return is(element, 'bpmn:IntermediateCatchEvent')
-    && getEventDefinition(element, 'bpmn:LinkEventDefinition');
+    && eventDefinition && is(eventDefinition, 'bpmn:LinkEventDefinition');
 }
 
 function getLinkCatchEvents(flowElementsContainer) {
