@@ -12,6 +12,14 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 
 const valid = [
   {
+    name: 'escalation event',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
+      </bpmn:intermediateCatchEvent>
+    `))
+  },
+  {
     name: 'link catch events',
     moddleElement: createModdle(createProcess(`
       <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
