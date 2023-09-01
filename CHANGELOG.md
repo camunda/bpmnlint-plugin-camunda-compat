@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.7.0
+
+* `FEAT`: add `no-loop` rule ([#102](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/102))
+* `FIX`: `link-event` rule only checks link events ([`#131`](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/131))
+
 ## 2.6.3
 
 * `FIX`: `secrets` rule is more forgiving when getting path ([`102936b7`](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/102936b749f12a12d11a9d8d6b13aafe5897abac))
