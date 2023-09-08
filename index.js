@@ -33,10 +33,7 @@ const camundaCloud12Rules = [ ...camundaCloud11Rules ];
 
 const camundaCloud13Rules = [ ...camundaCloud12Rules ];
 
-const camundaCloud80Rules = [
-  ...without(camundaCloud13Rules, 'no-template'),
-  'secrets'
-];
+const camundaCloud80Rules = without(camundaCloud13Rules, 'no-template');
 
 const camundaCloud81Rules = [
   ...without(camundaCloud80Rules, 'no-zeebe-properties'),
@@ -95,7 +92,6 @@ const categories = {
   'no-task-schedule': 'error',
   'no-template': 'error',
   'no-zeebe-properties': 'error',
-  'secrets': 'warn',
   'sequence-flow-condition': 'error',
   'signal-reference': 'error',
   'start-form': 'error',
@@ -131,7 +127,6 @@ const rules = {
   'no-task-schedule': './rules/camunda-cloud/no-task-schedule',
   'no-template': './rules/camunda-cloud/no-template',
   'no-zeebe-properties': './rules/camunda-cloud/no-zeebe-properties',
-  'secrets': './rules/camunda-cloud/secrets',
   'sequence-flow-condition': './rules/camunda-cloud/sequence-flow-condition',
   'signal-reference': './rules/camunda-cloud/signal-reference',
   'start-form': './rules/camunda-cloud/start-form',

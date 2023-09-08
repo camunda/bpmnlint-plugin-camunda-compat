@@ -12,7 +12,7 @@ const versions = [
   '8.2'
 ];
 
-describe('integration - secrets', function() {
+describe.skip('integration - secrets', function() {
 
   versions.forEach(function(version) {
 
