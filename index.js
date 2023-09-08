@@ -155,11 +155,11 @@ module.exports = {
   rules
 };
 
-function withConfig(rules, config, type = 'error') {
+function withConfig(rules, config) {
   let rulesWithConfig = {};
 
   for (let name in rules) {
-    rulesWithConfig[ name ] = [ type, config ];
+    rulesWithConfig[ name ] = [ rules[ name ], config ];
   }
 
   return rulesWithConfig;
