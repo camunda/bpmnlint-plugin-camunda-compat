@@ -34,8 +34,7 @@ const camundaCloud12Rules = withConfig(camundaCloud11Rules, { version: '1.2' });
 const camundaCloud13Rules = withConfig(camundaCloud12Rules, { version: '1.3' });
 
 const camundaCloud80Rules = withConfig({
-  ...omit(camundaCloud13Rules, 'no-template'),
-  'secrets': 'error'
+  ...omit(camundaCloud13Rules, 'no-template')
 }, { version: '8.0' });
 
 const camundaCloud81Rules = withConfig({
@@ -159,7 +158,8 @@ function withConfig(rules, config) {
   let rulesWithConfig = {};
 
   for (let name in rules) {
-    rulesWithConfig[ name ] = [ rules[ name ], config ];
+    const type = Array.isArray(rules[ name ]) ? rules[ name ][0] : rules[ name ];
+    rulesWithConfig[ name ] = [ type, config ];
   }
 
   return rulesWithConfig;
