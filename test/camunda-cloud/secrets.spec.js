@@ -74,7 +74,7 @@ const invalid = [
     report: [
       {
         id: 'StartEvent_1',
-        message: 'Property <correlationKey> is not a valid secret',
+        message: 'Property <correlationKey> uses deprecated secret expression format',
         path: [
           'rootElements',
           1,
@@ -84,7 +84,7 @@ const invalid = [
           'correlationKey'
         ],
         data: {
-          type: ERROR_TYPES.SECRET_EXPRESSION_INVALID,
+          type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Subscription',
           parentNode: 'StartEvent_1',
           property: 'correlationKey'
@@ -106,7 +106,7 @@ const invalid = [
     report: [
       {
         id: 'ServiceTask_1',
-        message: 'Property <source> is not a valid secret',
+        message: 'Property <source> uses deprecated secret expression format',
         path: [
           'extensionElements',
           'values',
@@ -116,7 +116,7 @@ const invalid = [
           'source'
         ],
         data: {
-          type: ERROR_TYPES.SECRET_EXPRESSION_INVALID,
+          type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Input',
           parentNode: 'ServiceTask_1',
           property: 'source'
@@ -138,7 +138,7 @@ const invalid = [
     report: [
       {
         id: 'IntermediateCatchEvent_1',
-        message: 'Property <value> is not a valid secret',
+        message: 'Property <value> uses deprecated secret expression format',
         path: [
           'extensionElements',
           'values',
@@ -148,7 +148,7 @@ const invalid = [
           'value'
         ],
         data: {
-          type: ERROR_TYPES.SECRET_EXPRESSION_INVALID,
+          type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Property',
           parentNode: 'IntermediateCatchEvent_1',
           property: 'value'
