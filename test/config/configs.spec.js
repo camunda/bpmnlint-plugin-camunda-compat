@@ -264,6 +264,7 @@ describe('configs', function() {
     'no-task-schedule': 'error',
     'no-template': 'error',
     'no-zeebe-properties': 'error',
+    'secrets': 'error',
     'sequence-flow-condition': 'error',
     'signal-reference': 'error',
     'subscription': 'error',

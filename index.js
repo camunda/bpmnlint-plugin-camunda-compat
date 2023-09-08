@@ -1,86 +1,14 @@
-const { without } = require('min-dash');
+const { omit } = require('min-dash');
 
-const camundaCloud10Rules = [
-  'implementation',
-  'called-element',
-  'collapsed-subprocess',
-  'duplicate-task-headers',
-  'element-type',
-  'error-reference',
-  'event-based-gateway-target',
-  'executable-process',
-  'loop-characteristics',
-  'message-reference',
-  'no-candidate-users',
-  'no-expression',
-  'no-loop',
-  'no-multiple-none-start-events',
-  'no-propagate-all-parent-variables',
-  'no-task-schedule',
-  'no-template',
-  'no-zeebe-properties',
-  'sequence-flow-condition',
-  'start-form',
-  'subscription',
-  'timer',
-  'user-task-form',
-  'feel'
-];
-
-const camundaCloud11Rules = [ ...camundaCloud10Rules ];
-
-const camundaCloud12Rules = [ ...camundaCloud11Rules ];
-
-const camundaCloud13Rules = [ ...camundaCloud12Rules ];
-
-const camundaCloud80Rules = without(camundaCloud13Rules, 'no-template');
-
-const camundaCloud81Rules = [
-  ...without(camundaCloud80Rules, 'no-zeebe-properties'),
-  'inclusive-gateway'
-];
-
-const camundaCloud82Rules = [
-  ...without(camundaCloud81Rules, rule => {
-    return [
-      'no-candidate-users',
-      'no-propagate-all-parent-variables',
-      'no-task-schedule'
-    ].includes(rule);
-  }),
-  'escalation-boundary-event-attached-to-ref',
-  'escalation-reference',
-  'link-event',
-  'no-signal-event-sub-process',
-  'task-schedule'
-];
-
-const camundaCloud83Rules = [
-  ...without(camundaCloud82Rules, 'start-form'),
-  'signal-reference'
-];
-
-const camundaPlatform719Rules = [
-  'history-time-to-live'
-];
-
-const camundaPlatform720Rules = [ ...camundaPlatform719Rules ];
-
-const categories = {
-  'element-type': 'error',
+const camundaCloud10Rules = withConfig({
+  'implementation': 'error',
   'called-element': 'error',
   'collapsed-subprocess': 'error',
   'duplicate-task-headers': 'error',
+  'element-type': 'error',
   'error-reference': 'error',
-  'escalation-boundary-event-attached-to-ref': 'error',
-  'escalation-reference': 'error',
   'event-based-gateway-target': 'error',
   'executable-process': 'error',
-  'feel': 'error',
-  'history-time-to-live': 'error',
-  'implementation': 'error',
-  'inclusive-gateway': 'error',
-  'link-event': 'error',
   'loop-characteristics': 'error',
   'message-reference': 'error',
   'no-candidate-users': 'error',
@@ -88,18 +16,63 @@ const categories = {
   'no-loop': 'error',
   'no-multiple-none-start-events': 'error',
   'no-propagate-all-parent-variables': 'error',
-  'no-signal-event-sub-process': 'error',
   'no-task-schedule': 'error',
   'no-template': 'error',
   'no-zeebe-properties': 'error',
   'sequence-flow-condition': 'error',
-  'signal-reference': 'error',
   'start-form': 'error',
   'subscription': 'error',
-  'task-schedule': 'error',
   'timer': 'error',
-  'user-task-form': 'error'
-};
+  'user-task-form': 'error',
+  'feel': 'error'
+}, { version: '1.0' });
+
+const camundaCloud11Rules = withConfig(camundaCloud10Rules, { version: '1.1' });
+
+const camundaCloud12Rules = withConfig(camundaCloud11Rules, { version: '1.2' });
+
+const camundaCloud13Rules = withConfig(camundaCloud12Rules, { version: '1.3' });
+
+const camundaCloud80Rules = withConfig({
+  ...omit(camundaCloud13Rules, 'no-template')
+}, { version: '8.0' });
+
+const camundaCloud81Rules = withConfig({
+  ...omit(camundaCloud80Rules, 'no-zeebe-properties'),
+  'inclusive-gateway': 'error'
+}, { version: '8.1' });
+
+const camundaCloud82Rules = withConfig({
+  ...omit(camundaCloud81Rules, [
+    'no-candidate-users',
+    'no-propagate-all-parent-variables',
+    'no-task-schedule'
+  ]),
+  'escalation-boundary-event-attached-to-ref': 'error',
+  'escalation-reference': 'error',
+  'link-event': 'error',
+  'no-signal-event-sub-process': 'error',
+  'task-schedule': 'error'
+}, { version: '8.2' });
+
+const camundaCloud83Rules = withConfig({
+  ...omit(camundaCloud82Rules, [
+    'start-form'
+  ]),
+  'signal-reference': 'error'
+}, { version: '8.3' });
+
+const camundaPlatform719Rules = withConfig({
+  'history-time-to-live': 'error'
+}, {
+  platform: 'camunda-platform',
+  version: '7.19'
+});
+
+const camundaPlatform720Rules = withConfig(camundaPlatform719Rules, {
+  platform: 'camunda-platform',
+  version: '7.20'
+});
 
 const rules = {
   'element-type': './rules/camunda-cloud/element-type',
@@ -127,6 +100,7 @@ const rules = {
   'no-task-schedule': './rules/camunda-cloud/no-task-schedule',
   'no-template': './rules/camunda-cloud/no-template',
   'no-zeebe-properties': './rules/camunda-cloud/no-zeebe-properties',
+  'secrets': './rules/camunda-cloud/secrets',
   'sequence-flow-condition': './rules/camunda-cloud/sequence-flow-condition',
   'signal-reference': './rules/camunda-cloud/signal-reference',
   'start-form': './rules/camunda-cloud/start-form',
@@ -139,40 +113,40 @@ const rules = {
 module.exports = {
   configs: {
     'camunda-cloud-1-0': {
-      rules: withConfig(camundaCloud10Rules, { version: '1.0' })
+      rules: camundaCloud10Rules
     },
     'camunda-cloud-1-1': {
-      rules: withConfig(camundaCloud11Rules, { version: '1.1' })
+      rules: camundaCloud11Rules
     },
     'camunda-cloud-1-2': {
-      rules: withConfig(camundaCloud12Rules, { version: '1.2' })
+      rules: camundaCloud12Rules
     },
     'camunda-cloud-1-3': {
-      rules: withConfig(camundaCloud13Rules, { version: '1.3' })
+      rules: camundaCloud13Rules
     },
     'camunda-cloud-8-0': {
-      rules: withConfig(camundaCloud80Rules, { version: '8.0' })
+      rules: camundaCloud80Rules
     },
     'camunda-cloud-8-1': {
-      rules: withConfig(camundaCloud81Rules, { version: '8.1' })
+      rules: camundaCloud81Rules
     },
     'camunda-cloud-8-2': {
-      rules: withConfig(camundaCloud82Rules, { version: '8.2' })
+      rules: camundaCloud82Rules
     },
     'camunda-cloud-8-3': {
-      rules: withConfig(camundaCloud83Rules, { version: '8.3' })
+      rules: camundaCloud83Rules
     },
     'camunda-platform-7-19': {
-      rules: withConfig(camundaPlatform719Rules, { platform: 'camunda-platform', version: '7.19' })
+      rules: camundaPlatform719Rules
     },
     'camunda-platform-7-20': {
-      rules: withConfig(camundaPlatform720Rules, { platform: 'camunda-platform', version: '7.20' })
+      rules: camundaPlatform720Rules
     },
     'all': {
       rules: Object.keys(rules).reduce((allRules, rule) => {
         return {
           ...allRules,
-          [ rule ]: categories[ rule ]
+          [ rule ]: 'error'
         };
       }, {})
     }
@@ -181,11 +155,12 @@ module.exports = {
 };
 
 function withConfig(rules, config) {
-  return rules.reduce((rulesWithConfig, rule) => {
-    return {
-      ...rulesWithConfig,
-      [ rule ]: [ categories[ rule ], config ]
-    };
-  }, {});
+  let rulesWithConfig = {};
 
+  for (let name in rules) {
+    const type = Array.isArray(rules[ name ]) ? rules[ name ][0] : rules[ name ];
+    rulesWithConfig[ name ] = [ type, config ];
+  }
+
+  return rulesWithConfig;
 }
