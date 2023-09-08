@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.7.1
+
+* `FIX`: `secrets` reports warning instead of error ([#133](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/133))
+* `CHORE`: disable `secrets` rule ([#133](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/133))
+
 ## 2.7.0
 
 * `FEAT`: add `no-loop` rule ([#102](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/102))
