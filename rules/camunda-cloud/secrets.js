@@ -98,12 +98,12 @@ function getReport(propertyName, node, parentNode) {
   const path = getPath(node, parentNode);
 
   return {
-    message: `Property <${ propertyName }> is not a valid secret`,
+    message: `Property <${ propertyName }> uses deprecated secret expression format`,
     path: path
       ? [ ...getPath(node, parentNode), propertyName ]
       : [ propertyName ],
     data: {
-      type: ERROR_TYPES.SECRET_EXPRESSION_INVALID,
+      type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
       node,
       parentNode: parentNode,
       property: propertyName
