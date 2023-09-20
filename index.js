@@ -57,7 +57,8 @@ const camundaCloud82Rules = withConfig({
 
 const camundaCloud83Rules = withConfig({
   ...omit(camundaCloud82Rules, [
-    'start-form'
+    'start-form',
+    'no-signal-event-sub-process'
   ]),
   'signal-reference': 'error'
 }, { version: '8.3' });

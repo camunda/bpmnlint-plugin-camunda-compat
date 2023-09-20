@@ -53,7 +53,8 @@ const invalid = [
         node: 'StartEvent_1',
         parentNode: null,
         eventDefinition: 'SignalEventDefinition_1',
-        parent: 'SubProcess_1'
+        parent: 'SubProcess_1',
+        allowedVersion: '8.3'
       }
     }
   }
