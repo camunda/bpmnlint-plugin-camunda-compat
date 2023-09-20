@@ -31,7 +31,8 @@ module.exports = skipInNonExecutableProcess(function() {
           node,
           parentNode: null,
           eventDefinition,
-          parent
+          parent,
+          allowedVersion: '8.3'
         }
       };
 
