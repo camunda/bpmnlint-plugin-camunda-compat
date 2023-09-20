@@ -99,6 +99,15 @@ const valid = [
         <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
       </bpmn:endEvent>
     `))
+  },
+  {
+    name: 'signal boundary event',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:task id="Task_1" />
+      <bpmn:boundaryEvent id="BoundaryEvent" attachedToRef="Task_1">
+        <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
+      </bpmn:boundaryEvent>
+    `))
   }
 ];
 

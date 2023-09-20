@@ -4,7 +4,8 @@ module.exports = {
     'bpmn:ErrorEventDefinition': '1.0',
     'bpmn:EscalationEventDefinition': '8.2',
     'bpmn:MessageEventDefinition': '1.0',
-    'bpmn:TimerEventDefinition': '1.0'
+    'bpmn:TimerEventDefinition': '1.0',
+    'bpmn:SignalEventDefinition': '8.3',
   },
   'bpmn:BusinessRuleTask': '1.1',
   'bpmn:CallActivity': '1.0',
