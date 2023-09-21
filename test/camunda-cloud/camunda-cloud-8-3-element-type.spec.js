@@ -108,6 +108,14 @@ const valid = [
         <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
       </bpmn:boundaryEvent>
     `))
+  },
+  {
+    name: 'signal intermediate catch event',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="BoundaryEvent">
+        <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
+      </bpmn:intermediateCatchEvent>
+    `))
   }
 ];
 
