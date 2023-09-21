@@ -29,7 +29,8 @@ module.exports = {
   'bpmn:IntermediateCatchEvent': {
     'bpmn:MessageEventDefinition': '1.0',
     'bpmn:LinkEventDefinition': '8.2',
-    'bpmn:TimerEventDefinition': '1.0'
+    'bpmn:TimerEventDefinition': '1.0',
+    'bpmn:SignalEventDefinition': '8.3'
   },
   'bpmn:IntermediateThrowEvent': {
     '_': '1.1',
