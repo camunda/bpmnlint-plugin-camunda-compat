@@ -104,7 +104,7 @@ const valid = [
     name: 'signal boundary event',
     moddleElement: createModdle(createProcess(`
       <bpmn:task id="Task_1" />
-      <bpmn:boundaryEvent id="BoundaryEvent" attachedToRef="Task_1">
+      <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="Task_1">
         <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
       </bpmn:boundaryEvent>
     `))
@@ -112,7 +112,7 @@ const valid = [
   {
     name: 'signal intermediate catch event',
     moddleElement: createModdle(createProcess(`
-      <bpmn:intermediateCatchEvent id="BoundaryEvent">
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
         <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
       </bpmn:intermediateCatchEvent>
     `))
