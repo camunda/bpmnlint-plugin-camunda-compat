@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.8.0
+
+* `FEAT`: allow signal boundary, intermediate catch, and signal start events in sub-processes ([`#135`](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/135))
+* `FEAT`: enable `secrets` rule for Camunda 8.3 ([`#137`](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/137))
+
 ## 2.7.1
 
 * `FIX`: `secrets` reports warning instead of error ([#133](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/133))
