@@ -34,7 +34,7 @@ const camundaCloud12Rules = withConfig(camundaCloud11Rules, { version: '1.2' });
 const camundaCloud13Rules = withConfig(camundaCloud12Rules, { version: '1.3' });
 
 const camundaCloud80Rules = withConfig({
-  ...omit(camundaCloud13Rules, 'no-template')
+  ...omit(camundaCloud13Rules, 'no-template'),
 }, { version: '8.0' });
 
 const camundaCloud81Rules = withConfig({
@@ -60,6 +60,7 @@ const camundaCloud83Rules = withConfig({
     'start-form',
     'no-signal-event-sub-process'
   ]),
+  'secrets': 'warn',
   'signal-reference': 'error'
 }, { version: '8.3' });
 
