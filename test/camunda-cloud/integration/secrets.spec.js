@@ -7,12 +7,10 @@ const NodeResolver = require('bpmnlint/lib/resolver/node-resolver');
 const { readModdle } = require('../../helper');
 
 const versions = [
-  '8.0',
-  '8.1',
-  '8.2'
+  '8.3'
 ];
 
-describe.skip('integration - secrets', function() {
+describe('integration - secrets', function() {
 
   versions.forEach(function(version) {
 

@@ -218,6 +218,7 @@ describe('configs', function() {
     'no-expression': [ 'error', { version: '8.3' } ],
     'no-loop': [ 'error', { version: '8.3' } ],
     'no-multiple-none-start-events' : [ 'error', { version: '8.3' } ],
+    'secrets': [ 'warn', { version: '8.3' } ],
     'sequence-flow-condition': [ 'error', { version: '8.3' } ],
     'signal-reference': [ 'error', { version: '8.3' } ],
     'subscription': [ 'error', { version: '8.3' } ],
