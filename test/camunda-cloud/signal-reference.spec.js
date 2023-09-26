@@ -58,6 +58,29 @@ const valid = [
         </bpmn:intermediateThrowEvent>
       </bpmn:process>
     `))
+  },
+  {
+    name: 'intermediate catch event (signal)',
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1" isExecutable="true">
+        <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+          <bpmn:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_1" />
+        </bpmn:intermediateCatchEvent>
+      </bpmn:process>
+      <bpmn:signal id="Signal_1" name="foo" />
+    `))
+  },
+  {
+    name: 'boundary event (signal)',
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1" isExecutable="true">
+        <bpmn:task id="Activity_1t7z418" />
+        <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="Activity_1t7z418">
+          <bpmn:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_1"/>
+        </bpmn:boundaryEvent>
+      </bpmn:process>
+      <bpmn:signal id="Signal_1" name="foo" />
+    `))
   }
 ];
 
@@ -206,6 +229,57 @@ const invalid = [
         node: 'Signal_1',
         parentNode: 'EndEvent_1',
         requiredProperty: 'name'
+      }
+    }
+  },
+  {
+    name: 'intermediate catch event (no signal reference)',
+    moddleElement: createModdle(createDefinitions(`
+        <bpmn:process id="Process_1" isExecutable="true">
+          <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+            <bpmn:signalEventDefinition id="SignalEventDefinition_1" />
+          </bpmn:intermediateCatchEvent>
+        </bpmn:process>
+      `)),
+    report: {
+      id: 'IntermediateCatchEvent_1',
+      message: 'Element of type <bpmn:SignalEventDefinition> must have property <signalRef>',
+      path: [
+        'eventDefinitions',
+        0,
+        'signalRef'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'SignalEventDefinition_1',
+        parentNode: 'IntermediateCatchEvent_1',
+        requiredProperty: 'signalRef'
+      }
+    }
+  },
+  {
+    name: 'boundary event (signal)',
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1" isExecutable="true">
+        <bpmn:task id="Activity_1t7z418" />
+        <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="Activity_1t7z418">
+          <bpmn:signalEventDefinition id="SignalEventDefinition_1"/>
+        </bpmn:boundaryEvent>
+      </bpmn:process>
+    `)),
+    report: {
+      id: 'BoundaryEvent_1',
+      message: 'Element of type <bpmn:SignalEventDefinition> must have property <signalRef>',
+      path: [
+        'eventDefinitions',
+        0,
+        'signalRef'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'SignalEventDefinition_1',
+        parentNode: 'BoundaryEvent_1',
+        requiredProperty: 'signalRef'
       }
     }
   }
