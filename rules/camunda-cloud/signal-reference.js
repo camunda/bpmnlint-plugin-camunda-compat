@@ -14,7 +14,13 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
-    if (!isAny(node, [ 'bpmn:StartEvent', 'bpmn:IntermediateThrowEvent', 'bpmn:EndEvent' ])) {
+    if (!isAny(node, [
+      'bpmn:StartEvent',
+      'bpmn:IntermediateThrowEvent',
+      'bpmn:IntermediateCatchEvent',
+      'bpmn:EndEvent',
+      'bpmn:BoundaryEvent'
+    ])) {
       return;
     }
 
