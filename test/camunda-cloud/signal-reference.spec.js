@@ -74,8 +74,8 @@ const valid = [
     name: 'boundary event (signal)',
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1" isExecutable="true">
-        <bpmn:task id="Activity_1t7z418" />
-        <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="Activity_1t7z418">
+        <bpmn:task id="Task_1" />
+        <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="Task_1">
           <bpmn:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_1"/>
         </bpmn:boundaryEvent>
       </bpmn:process>
