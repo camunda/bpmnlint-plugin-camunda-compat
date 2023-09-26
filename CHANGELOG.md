@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.8.1
+
+* `FIX`: enable `signal-reference` rule for signal boundary events and signal intermediate catch events ([#138](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/138))
+
 ## 2.8.0
 
 * `FEAT`: allow signal boundary, intermediate catch, and signal start events in sub-processes ([`#135`](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/135))
