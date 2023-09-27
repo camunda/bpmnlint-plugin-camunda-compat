@@ -83,7 +83,7 @@ function noExpression(node, propertyName, parentNode, allowedVersion) {
     return;
   }
 
-  let message = `Expression statement <${truncate(propertyValue)}> not supported`;
+  let message = `Expression statement <${ truncate(propertyValue) }> not supported`;
 
   let data = {
     type: ERROR_TYPES.EXPRESSION_NOT_ALLOWED,
@@ -93,7 +93,7 @@ function noExpression(node, propertyName, parentNode, allowedVersion) {
   };
 
   if (allowedVersion) {
-    message = `Expression statement <${truncate(propertyValue)}> only supported by Camunda Platform ${allowedVersion} or newer`;
+    message = `Expression statement <${ truncate(propertyValue) }> only supported by Camunda Platform ${allowedVersion} or newer`;
 
     data = {
       ...data,
