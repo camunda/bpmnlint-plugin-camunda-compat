@@ -582,7 +582,7 @@ const invalid = [
     `)),
     report: {
       id: 'IntermediateCatchEvent_1',
-      message: 'Property <timeDate> only allowed by Camunda Platform 8.3 or newer',
+      message: 'Property <timeDate> only allowed by Camunda 8.3 or newer',
       path: [
         'eventDefinitions',
         0,
@@ -720,7 +720,7 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Property <timeDate> only allowed by Camunda Platform 8.3 or newer',
+      message: 'Property <timeDate> only allowed by Camunda 8.3 or newer',
       path: [
         'eventDefinitions',
         0,
@@ -860,7 +860,7 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Property <timeDate> only allowed by Camunda Platform 8.3 or newer',
+      message: 'Property <timeDate> only allowed by Camunda 8.3 or newer',
       path: [
         'eventDefinitions',
         0,
@@ -1207,7 +1207,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Expression value of <0 0 9-17 * * MON-FRI> only allowed by Camunda Platform 8.1',
+      message: 'Expression value of <0 0 9-17 * * MON-FRI> only allowed by Camunda 8.1',
       path: [
         'eventDefinitions',
         0,
@@ -1224,7 +1224,7 @@ const invalid = [
   }
 ];
 
-// TODO: validate CRON in Camunda Platform < 8.1 fails
+// TODO: validate CRON in Camunda < 8.1 fails
 
 RuleTester.verify('timer', rule, {
   valid,

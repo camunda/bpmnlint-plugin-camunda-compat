@@ -44,7 +44,7 @@ const invalid = [
     `)),
     report: {
       id: 'UserTask_1',
-      message: 'Extension element of type <zeebe:TaskSchedule> only allowed by Camunda Platform 8.2',
+      message: 'Extension element of type <zeebe:TaskSchedule> only allowed by Camunda 8.2',
       path: [
         'extensionElements',
         'values',

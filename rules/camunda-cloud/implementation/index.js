@@ -51,7 +51,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 
         reportErrors(node, reporter, {
           message: allowedVersion
-            ? `Extension element of type <zeebe:CalledDecision> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            ? `Extension element of type <zeebe:CalledDecision> only allowed by Camunda ${ allowedVersion } or newer`
             : 'Extension element of type <zeebe:CalledDecision> not allowed',
           path: getPath(calledDecision, node),
           data: {
@@ -89,7 +89,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 
         reportErrors(node, reporter, {
           message: allowedVersion
-            ? `Extension element of type <zeebe:Script> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            ? `Extension element of type <zeebe:Script> only allowed by Camunda ${ allowedVersion } or newer`
             : 'Extension element of type <zeebe:Script> not allowed',
           path: getPath(script, node),
           data: {
@@ -127,7 +127,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 
         reportErrors(node, reporter, {
           message: allowedVersion
-            ? `Extension element of type <zeebe:TaskDefinition> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            ? `Extension element of type <zeebe:TaskDefinition> only allowed by Camunda ${ allowedVersion } or newer`
             : 'Extension element of type <zeebe:TaskDefinition> not allowed',
           path: getPath(taskDefinition, node),
           data: {

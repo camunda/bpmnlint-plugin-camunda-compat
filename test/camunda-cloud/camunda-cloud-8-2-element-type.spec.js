@@ -143,7 +143,7 @@ const invalid = [
     `)),
     report: {
       id: 'IntermediateThrowEvent_1',
-      message: 'Element of type <bpmn:IntermediateThrowEvent> with event definition of type <bpmn:SignalEventDefinition> only allowed by Camunda Platform 8.3 or newer',
+      message: 'Element of type <bpmn:IntermediateThrowEvent> with event definition of type <bpmn:SignalEventDefinition> only allowed by Camunda 8.3 or newer',
       path: null,
       data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,
@@ -163,7 +163,7 @@ const invalid = [
     `)),
     report: {
       id: 'EndEvent_1',
-      message: 'Element of type <bpmn:EndEvent> with event definition of type <bpmn:SignalEventDefinition> only allowed by Camunda Platform 8.3 or newer',
+      message: 'Element of type <bpmn:EndEvent> with event definition of type <bpmn:SignalEventDefinition> only allowed by Camunda 8.3 or newer',
       path: null,
       data: {
         type: ERROR_TYPES.ELEMENT_TYPE_NOT_ALLOWED,

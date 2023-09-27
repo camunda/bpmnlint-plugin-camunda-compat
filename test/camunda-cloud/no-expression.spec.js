@@ -100,7 +100,7 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Expression statement <=myCode> only supported by Camunda Platform 8.2 or newer',
+      message: 'Expression statement <=myCode> only supported by Camunda 8.2 or newer',
       path: [
         'rootElements',
         1,
@@ -128,7 +128,7 @@ const invalid = [
     `)),
     report: {
       id: 'Event',
-      message: 'Expression statement <=very very...> only supported by Camunda Platform 8.2 or newer',
+      message: 'Expression statement <=very very...> only supported by Camunda 8.2 or newer',
       path: [
         'rootElements',
         1,

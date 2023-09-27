@@ -239,7 +239,7 @@ const invalid = [
       `)),
     report: {
       id: 'BusinessRuleTask_1',
-      message: 'Extension element of type <zeebe:CalledDecision> only allowed by Camunda Platform 1.3 or newer',
+      message: 'Extension element of type <zeebe:CalledDecision> only allowed by Camunda 1.3 or newer',
       path: [
         'extensionElements',
         'values',
@@ -483,7 +483,7 @@ const invalid = [
       `)),
     report: {
       id: 'Task_1',
-      message: 'Extension element of type <zeebe:Script> only allowed by Camunda Platform 8.2 or newer',
+      message: 'Extension element of type <zeebe:Script> only allowed by Camunda 8.2 or newer',
       path: [
         'extensionElements',
         'values',

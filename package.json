@@ -1,7 +1,7 @@
 {
   "name": "bpmnlint-plugin-camunda-compat",
   "version": "2.8.1",
-  "description": "A bpmnlint plug-in for Camunda Platform compatibility",
+  "description": "A bpmnlint plug-in for Camunda compatibility",
   "main": "index.js",
   "scripts": {
     "all": "npm run lint && npm test",
