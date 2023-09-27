@@ -146,7 +146,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
         ...results,
         {
           message: allowedVersion
-            ? `Element of type <${ node.$type }> without property <${ propertyName }> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            ? `Element of type <${ node.$type }> without property <${ propertyName }> only allowed by Camunda ${ allowedVersion } or newer`
             : `Element of type <${ node.$type }> must have property <${ propertyName }>`,
           path: path
             ? [ ...path, propertyName ]
@@ -197,7 +197,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
         ...results,
         {
           message: allowedVersion
-            ? `Property <${ propertyName }> of type <${ propertyValue.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            ? `Property <${ propertyName }> of type <${ propertyValue.$type }> only allowed by Camunda ${ allowedVersion } or newer`
             : `Property <${ propertyName }> of type <${ propertyValue.$type }> not allowed`,
           path: path
             ? [ ...path, propertyName ]
@@ -237,7 +237,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
         ...results,
         {
           message: allowedVersion
-            ? `Property <${ propertyName }> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            ? `Property <${ propertyName }> only allowed by Camunda ${ allowedVersion } or newer`
             : `Property <${ propertyName }> not allowed`,
           path: path
             ? [ ...path, propertyName ]
@@ -257,7 +257,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
         ...results,
         {
           message: allowedVersion
-            ? `Property value of <${ truncate(propertyValue) }> only allowed by Camunda Platform ${ allowedVersion } or newer`
+            ? `Property value of <${ truncate(propertyValue) }> only allowed by Camunda ${ allowedVersion } or newer`
             : `Property value of <${ truncate(propertyValue) }> not allowed`,
           path: path
             ? [ ...path, propertyName ]
@@ -341,7 +341,7 @@ module.exports.hasNoExtensionElement = function(node, type, parentNode = null, a
     return [
       {
         message: allowedVersion
-          ? `Extension element of type <${ type }> only allowed by Camunda Platform ${ allowedVersion }`
+          ? `Extension element of type <${ type }> only allowed by Camunda ${ allowedVersion }`
           : `Extension element of type <${ type }> not allowed`,
         path: getPath(extensionElement, parentNode),
         data: addAllowedVersion({
@@ -405,7 +405,7 @@ module.exports.hasExpression = function(node, propertyName, check, parentNode = 
     return [
       {
         message: allowedVersion
-          ? `Expression value of <${ propertyValue }> only allowed by Camunda Platform ${ allowedVersion }`
+          ? `Expression value of <${ propertyValue }> only allowed by Camunda ${ allowedVersion }`
           : `Expression value of <${ propertyValue }> not allowed`,
         path: path
           ? [ ...path, propertyName ]

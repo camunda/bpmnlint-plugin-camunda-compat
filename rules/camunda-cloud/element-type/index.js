@@ -36,7 +36,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
       };
 
       if (allowedVersion) {
-        message = `Element of type <${ node.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`;
+        message = `Element of type <${ node.$type }> only allowed by Camunda ${ allowedVersion } or newer`;
 
         data = {
           ...data,
@@ -77,7 +77,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
         };
 
         if (allowedVersion) {
-          message = `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> only allowed by Camunda Platform ${ allowedVersion } or newer`;
+          message = `Element of type <${ node.$type }> with event definition of type <${ eventDefinition.$type }> only allowed by Camunda ${ allowedVersion } or newer`;
 
           data = {
             ...data,
@@ -109,7 +109,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
         };
 
         if (allowedVersion) {
-          message = `Element of type <${ node.$type }> with no event definition only allowed by Camunda Platform ${ allowedVersion } or newer`;
+          message = `Element of type <${ node.$type }> with no event definition only allowed by Camunda ${ allowedVersion } or newer`;
 
           data = {
             ...data,

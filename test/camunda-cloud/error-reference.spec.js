@@ -76,7 +76,7 @@ const invalid = [
     `)),
     report: {
       id: 'EndEvent_1',
-      message: 'Element of type <bpmn:ErrorEventDefinition> without property <errorRef> only allowed by Camunda Platform 8.2 or newer',
+      message: 'Element of type <bpmn:ErrorEventDefinition> without property <errorRef> only allowed by Camunda 8.2 or newer',
       path: [
         'eventDefinitions',
         0,
@@ -156,7 +156,7 @@ const invalid = [
     `)),
     report: {
       id: 'BoundaryEvent_1',
-      message: 'Element of type <bpmn:ErrorEventDefinition> without property <errorRef> only allowed by Camunda Platform 8.2 or newer',
+      message: 'Element of type <bpmn:ErrorEventDefinition> without property <errorRef> only allowed by Camunda 8.2 or newer',
       path: [
         'eventDefinitions',
         0,

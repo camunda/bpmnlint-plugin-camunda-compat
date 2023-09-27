@@ -48,7 +48,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Extension element of type <zeebe:Properties> only allowed by Camunda Platform 8.1',
+      message: 'Extension element of type <zeebe:Properties> only allowed by Camunda 8.1',
       path: [
         'extensionElements',
         'values',

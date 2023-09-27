@@ -1044,7 +1044,7 @@ describe('utils/element', function() {
       // then
       expect(errors).to.eql([
         {
-          message: 'Expression value of <foo> only allowed by Camunda Platform 1.0',
+          message: 'Expression value of <foo> only allowed by Camunda 1.0',
           path: [
             'eventDefinitions',
             0,

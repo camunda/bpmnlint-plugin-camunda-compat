@@ -43,7 +43,7 @@ const invalid = [
     `)),
     report: {
       id: 'StartEvent_1',
-      message: 'Extension element of type <zeebe:FormDefinition> only allowed by Camunda Platform 8.3',
+      message: 'Extension element of type <zeebe:FormDefinition> only allowed by Camunda 8.3',
       path: [
         'extensionElements',
         'values',

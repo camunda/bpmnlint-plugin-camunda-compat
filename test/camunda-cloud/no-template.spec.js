@@ -36,7 +36,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Property <modelerTemplate> only allowed by Camunda Platform 8.0 or newer',
+      message: 'Property <modelerTemplate> only allowed by Camunda 8.0 or newer',
       path: [
         'modelerTemplate'
       ],
@@ -56,7 +56,7 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Property <modelerTemplate> only allowed by Camunda Platform 8.0 or newer',
+      message: 'Property <modelerTemplate> only allowed by Camunda 8.0 or newer',
       path: [
         'modelerTemplate'
       ],

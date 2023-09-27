@@ -58,7 +58,7 @@ const invalid = [
     `)),
     report: {
       id: 'CallActivity_1',
-      message: 'Property value of <false> only allowed by Camunda Platform 8.2 or newer',
+      message: 'Property value of <false> only allowed by Camunda 8.2 or newer',
       path:  [
         'extensionElements',
         'values',
