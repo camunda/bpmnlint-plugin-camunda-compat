@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.9.0
+
+* `FEAT`: rename `Camunda Platform 8` to `Camunda 8` ([#140](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/140))
+
 ## 2.8.1
 
 * `FIX`: enable `signal-reference` rule for signal boundary events and signal intermediate catch events ([#138](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/138))
