@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.10.0
+
+* `FIX`: make `camunda-bpmn-moddle` a development dependency ([#142](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/142))
+* `DEPS`: update dependencies ([#142](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/142))
+
 ## 2.9.1
 
 * `FIX`: allow spaces and `-`  in secret names (`camunda-cloud/secrets`)
