@@ -115,5 +115,5 @@ function isValidSecret(value) {
   return !value
     || !isString(value)
     || !value.includes('secrets.')
-    || /{{secrets\.[a-zA-Z0-9_]+}}/.test(value);
+    || /{{\s*secrets\.[\w-]+\s*}}/.test(value);
 }

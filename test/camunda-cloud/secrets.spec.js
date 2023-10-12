@@ -51,6 +51,30 @@ const valid = [
         </bpmn:extensionElements>
       </bpmn:intermediateCatchEvent>
     `))
+  },
+  {
+    name: 'property with valid value with dashes',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="{{secrets.FOO-BAR}}" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `))
+  },
+  {
+    name: 'property with valid value with spaces',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="{{  secrets.FOO_BAR   }}" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `))
   }
 ];
 
@@ -131,6 +155,38 @@ const invalid = [
         <bpmn:extensionElements>
           <zeebe:properties>
             <zeebe:property name="bar" value="secrets.FOO" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `)),
+    report: [
+      {
+        id: 'IntermediateCatchEvent_1',
+        message: 'Property <value> uses deprecated secret expression format',
+        path: [
+          'extensionElements',
+          'values',
+          0,
+          'properties',
+          0,
+          'value'
+        ],
+        data: {
+          type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
+          node: 'zeebe:Property',
+          parentNode: 'IntermediateCatchEvent_1',
+          property: 'value'
+        }
+      }
+    ]
+  },
+  {
+    name: 'property with invalid value with space',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="{{secrets.FOO FOO}}" />
           </zeebe:properties>
         </bpmn:extensionElements>
       </bpmn:intermediateCatchEvent>
