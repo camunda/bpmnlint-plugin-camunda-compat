@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.9.1
+
+* `FIX`: allow spaces and `-`  in secret names (`camunda-cloud/secrets`)
+
 ## 2.9.0
 
 * `FEAT`: rename `Camunda Platform 8` to `Camunda 8` ([#140](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/140))
