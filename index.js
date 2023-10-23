@@ -64,6 +64,10 @@ const camundaCloud83Rules = withConfig({
   'signal-reference': 'error'
 }, { version: '8.3' });
 
+const camundaCloud84Rules = withConfig({
+  ...camundaCloud83Rules
+}, { version: '8.4' });
+
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'error'
 }, {
@@ -137,6 +141,9 @@ module.exports = {
     },
     'camunda-cloud-8-3': {
       rules: camundaCloud83Rules
+    },
+    'camunda-cloud-8-4': {
+      rules: camundaCloud84Rules
     },
     'camunda-platform-7-19': {
       rules: camundaPlatform719Rules
