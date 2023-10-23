@@ -228,6 +228,35 @@ describe('configs', function() {
   }));
 
 
+  it('camunda-cloud-8-4', expectRules(configs, 'camunda-cloud-8-4', {
+    'implementation': [ 'error', { version: '8.4' } ],
+    'called-element': [ 'error', { version: '8.4' } ],
+    'collapsed-subprocess': [ 'error', { version: '8.4' } ],
+    'duplicate-task-headers': [ 'error', { version: '8.4' } ],
+    'element-type': [ 'error', { version: '8.4' } ],
+    'error-reference': [ 'error', { version: '8.4' } ],
+    'escalation-boundary-event-attached-to-ref': [ 'error', { version: '8.4' } ],
+    'escalation-reference': [ 'error', { version: '8.4' } ],
+    'event-based-gateway-target': [ 'error', { version: '8.4' } ],
+    'executable-process': [ 'error', { version: '8.4' } ],
+    'feel': [ 'error', { version: '8.4' } ],
+    'inclusive-gateway': [ 'error', { version: '8.4' } ],
+    'link-event': [ 'error', { version: '8.4' } ],
+    'loop-characteristics': [ 'error', { version: '8.4' } ],
+    'message-reference': [ 'error', { version: '8.4' } ],
+    'no-expression': [ 'error', { version: '8.4' } ],
+    'no-loop': [ 'error', { version: '8.4' } ],
+    'no-multiple-none-start-events' : [ 'error', { version: '8.4' } ],
+    'secrets': [ 'warn', { version: '8.4' } ],
+    'sequence-flow-condition': [ 'error', { version: '8.4' } ],
+    'signal-reference': [ 'error', { version: '8.4' } ],
+    'subscription': [ 'error', { version: '8.4' } ],
+    'task-schedule': [ 'error', { version: '8.4' } ],
+    'timer': [ 'error', { version: '8.4' } ],
+    'user-task-form': [ 'error', { version: '8.4' } ]
+  }));
+
+
   it('camunda-platform-7-19', expectRules(configs, 'camunda-platform-7-19', {
     'history-time-to-live': [ 'error', { platform: 'camunda-platform', version: '7.19' } ]
   }));
