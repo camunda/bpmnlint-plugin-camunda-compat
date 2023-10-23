@@ -80,6 +80,11 @@ const camundaPlatform720Rules = withConfig(camundaPlatform719Rules, {
   version: '7.20'
 });
 
+const camundaPlatform721Rules = withConfig(camundaPlatform720Rules, {
+  platform: 'camunda-platform',
+  version: '7.21'
+});
+
 const rules = {
   'element-type': './rules/camunda-cloud/element-type',
   'called-element': './rules/camunda-cloud/called-element',
@@ -150,6 +155,9 @@ module.exports = {
     },
     'camunda-platform-7-20': {
       rules: camundaPlatform720Rules
+    },
+    'camunda-platform-7-21': {
+      rules: camundaPlatform721Rules
     },
     'all': {
       rules: Object.keys(rules).reduce((allRules, rule) => {

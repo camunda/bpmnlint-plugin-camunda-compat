@@ -266,6 +266,10 @@ describe('configs', function() {
     'history-time-to-live': [ 'error', { platform: 'camunda-platform', version: '7.20' } ]
   }));
 
+  it('camunda-platform-7-21', expectRules(configs, 'camunda-platform-7-21', {
+    'history-time-to-live': [ 'error', { platform: 'camunda-platform', version: '7.21' } ]
+  }));
+
 
   it('all', expectRules(configs, 'all', {
     'element-type': 'error',
