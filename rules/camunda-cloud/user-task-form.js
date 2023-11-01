@@ -4,14 +4,19 @@ const {
   findExtensionElement,
   findExtensionElements,
   findParent,
-  hasProperties
+  hasProperties,
+  hasProperty
 } = require('../utils/element');
 
 const { reportErrors } = require('../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
-module.exports = skipInNonExecutableProcess(function() {
+const { greaterOrEqual } = require('../utils/version');
+
+const formIdAllowedVersion = '8.3';
+
+module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
     if (!is(node, 'bpmn:UserTask')) {
       return;
@@ -23,13 +28,39 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    let errors = hasProperties(formDefinition, {
-      formKey: {
-        required: true
-      }
-    }, node);
+    let errors = [];
 
-    if (errors && errors.length) {
+    if (isFormIdAllowed(version)) {
+
+      // Camunda 8.3 and newer
+      errors = hasProperty(formDefinition, [
+        'formKey',
+        'formId'
+      ], node);
+    } else {
+
+      // Camunda 8.2 and older
+      errors = hasProperties(formDefinition, {
+        formId: {
+          allowed: false,
+          allowedVersion: formIdAllowedVersion
+        }
+      }, node);
+
+      if (errors.length) {
+        reportErrors(node, reporter, errors);
+
+        return;
+      }
+
+      errors = hasProperties(formDefinition, {
+        formKey: {
+          required: true
+        }
+      }, node);
+    }
+
+    if (errors.length) {
       reportErrors(node, reporter, errors);
 
       return;
@@ -49,7 +80,7 @@ module.exports = skipInNonExecutableProcess(function() {
       }
     }, node);
 
-    if (errors && errors.length) {
+    if (errors.length) {
       reportErrors(node, reporter, errors);
     }
   }
@@ -77,4 +108,8 @@ function findUserTaskForm(node, formKey) {
       return `camunda-forms:bpmn:${ id }` === formKey;
     });
   }
+}
+
+function isFormIdAllowed(version) {
+  return greaterOrEqual(version, formIdAllowedVersion);
 }
