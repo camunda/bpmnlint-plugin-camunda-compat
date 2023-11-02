@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.11.0
+
+* `FEAT`: add 8.4 and 7.21 config ([#143](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/143))
+* `FEAT`: validate `formId` with Camunda 8.3 and newer ([#144](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/144))
+
 ## 2.10.0
 
 * `FIX`: make `camunda-bpmn-moddle` a development dependency ([#142](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/142))
