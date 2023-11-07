@@ -4,6 +4,8 @@ const {
   isFunction,
   isNil,
   isObject,
+  isString,
+  isUndefined,
   some
 } = require('min-dash');
 
@@ -141,7 +143,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
 
     const propertyValue = node.get(propertyName);
 
-    if (propertyChecks.required && !propertyValue) {
+    if (propertyChecks.required && isEmptyValue(propertyValue)) {
       return [
         ...results,
         {
@@ -164,7 +166,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
     if (propertyChecks.dependentRequired) {
       const dependency = node.get(propertyChecks.dependentRequired);
 
-      if (dependency && !propertyValue) {
+      if (dependency && isEmptyValue(propertyValue)) {
         return [
           ...results,
           {
@@ -303,7 +305,9 @@ function findProperties(node, propertyNames) {
   const properties = [];
 
   for (const propertyName of propertyNames) {
-    if (isDefined(node.get(propertyName))) {
+    const propertyValue = node.get(propertyName);
+
+    if (!isEmptyValue(propertyValue)) {
       properties.push(node.get(propertyName));
     }
   }
@@ -471,3 +475,11 @@ function findParent(node, type) {
 }
 
 module.exports.findParent = findParent;
+
+function isEmptyString(value) {
+  return isString(value) && value.trim() === '';
+}
+
+function isEmptyValue(value) {
+  return isUndefined(value) || isNil(value) || isEmptyString(value);
+}

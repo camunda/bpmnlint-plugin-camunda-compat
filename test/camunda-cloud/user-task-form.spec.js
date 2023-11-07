@@ -49,7 +49,7 @@ const valid = [
 
 const invalid = [
   {
-    name: 'user task (no form key)',
+    name: 'user task (no form key) (Camunda 8.2)',
     config: { version: '8.2' },
     moddleElement: createModdle(createProcess(`
       <bpmn:userTask id="UserTask_1">
@@ -76,7 +76,34 @@ const invalid = [
     }
   },
   {
-    name: 'user task (no form key or form ID)',
+    name: 'user task (empty form key) (Camunda 8.2)',
+    config: { version: '8.2' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:formDefinition formKey="" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `)),
+    report: {
+      id: 'UserTask_1',
+      message: 'Element of type <zeebe:FormDefinition> must have property <formKey>',
+      path: [
+        'extensionElements',
+        'values',
+        0,
+        'formKey'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'zeebe:FormDefinition',
+        parentNode: 'UserTask_1',
+        requiredProperty: 'formKey'
+      }
+    }
+  },
+  {
+    name: 'user task (no form key or form ID) (Camunda 8.3)',
     config: { version: '8.3' },
     moddleElement: createModdle(createProcess(`
       <bpmn:userTask id="UserTask_1">
@@ -105,7 +132,65 @@ const invalid = [
     }
   },
   {
-    name: 'user task (form ID with Camunda 8.2)',
+    name: 'user task (empty form key) (Camunda 8.3)',
+    config: { version: '8.3' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:formDefinition formKey="" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `)),
+    report: {
+      id: 'UserTask_1',
+      message: 'Element of type <zeebe:FormDefinition> must have property <formKey> or <formId>',
+      path: [
+        'extensionElements',
+        'values',
+        0
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'zeebe:FormDefinition',
+        parentNode: 'UserTask_1',
+        requiredProperty: [
+          'formKey',
+          'formId'
+        ]
+      }
+    }
+  },
+  {
+    name: 'user task (empty form ID) (Camunda 8.3)',
+    config: { version: '8.3' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:formDefinition formId="" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `)),
+    report: {
+      id: 'UserTask_1',
+      message: 'Element of type <zeebe:FormDefinition> must have property <formKey> or <formId>',
+      path: [
+        'extensionElements',
+        'values',
+        0
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'zeebe:FormDefinition',
+        parentNode: 'UserTask_1',
+        requiredProperty: [
+          'formKey',
+          'formId'
+        ]
+      }
+    }
+  },
+  {
+    name: 'user task (form ID) (Camunda 8.2)',
     config: { version: '8.2' },
     moddleElement: createModdle(createProcess(`
       <bpmn:userTask id="UserTask_1">
@@ -133,7 +218,7 @@ const invalid = [
     }
   },
   {
-    name: 'user task (form key and form ID)',
+    name: 'user task (form key and form ID) (Camunda 8.3)',
     config: { version: '8.3' },
     moddleElement: createModdle(createProcess(`
       <bpmn:userTask id="UserTask_1">
@@ -162,7 +247,7 @@ const invalid = [
     }
   },
   {
-    name: 'user task (empty user task form)',
+    name: 'user task (empty user task form) (Camunda 8.2)',
     config: { version: '8.2' },
     moddleElement: createModdle(createProcess(`
       <bpmn:extensionElements>
