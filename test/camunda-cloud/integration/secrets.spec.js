@@ -56,7 +56,6 @@ describe('integration - secrets', function() {
           const reports = await linter.lint(root);
 
           // then
-          console.log('mylog', reports[ 'camunda-compat/secrets' ]);
           expect(reports[ 'camunda-compat/secrets' ]).to.exist;
         });
 
