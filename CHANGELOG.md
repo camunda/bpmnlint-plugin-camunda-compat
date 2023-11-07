@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.11.1
+
+* `FIX`: treat empty strings as errors (previously only undefined was treated as error) ([#148](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/148))
+* `FIX`: change supported version for `zeebe:formId` to Camunda 8.4 ([#148](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/148))
+
 ## 2.11.0
 
 * `FEAT`: add 8.4 and 7.21 config ([#143](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/143))
