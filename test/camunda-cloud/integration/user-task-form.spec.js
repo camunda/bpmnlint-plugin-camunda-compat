@@ -6,19 +6,19 @@ const NodeResolver = require('bpmnlint/lib/resolver/node-resolver');
 
 const { readModdle } = require('../../helper');
 
-const versions = [
-  '1.0',
-  '1.1',
-  '1.2',
-  '1.3',
-  '8.0',
-  '8.1',
-  '8.2'
-];
-
 describe('integration - user-task-form', function() {
 
-  versions.forEach(function(version) {
+  [
+    '1.0',
+    '1.1',
+    '1.2',
+    '1.3',
+    '8.0',
+    '8.1',
+    '8.2',
+    '8.3',
+    '8.4'
+  ].forEach(function(version) {
 
     let linter;
 
@@ -32,14 +32,14 @@ describe('integration - user-task-form', function() {
     });
 
 
-    describe(`Camunda Cloud ${ version }`, function() {
+    describe(`Camunda Cloud ${ version } (form key)`, function() {
 
       describe('no errors', function() {
 
         it('should not have errors', async function() {
 
           // given
-          const { root } = await readModdle('test/camunda-cloud/integration/user-task-form.bpmn');
+          const { root } = await readModdle('test/camunda-cloud/integration/user-task-form-form-key.bpmn');
 
           // when
           const reports = await linter.lint(root);
@@ -56,7 +56,63 @@ describe('integration - user-task-form', function() {
         it('should have errors', async function() {
 
           // given
-          const { root } = await readModdle('test/camunda-cloud/integration/user-task-form-errors.bpmn');
+          const { root } = await readModdle('test/camunda-cloud/integration/user-task-form-form-key-errors.bpmn');
+
+          // when
+          const reports = await linter.lint(root);
+
+          // then
+          expect(reports[ 'camunda-compat/user-task-form' ]).to.exist;
+        });
+
+      });
+
+    });
+
+  });
+
+
+  [
+    '8.4'
+  ].forEach(function(version) {
+
+    let linter;
+
+    beforeEach(function() {
+      linter = new Linter({
+        config: {
+          extends: `plugin:camunda-compat/camunda-cloud-${ version.replace('.', '-') }`
+        },
+        resolver: new NodeResolver()
+      });
+    });
+
+
+    describe(`Camunda Cloud ${ version } (form ID)`, function() {
+
+      describe('no errors', function() {
+
+        it('should not have errors', async function() {
+
+          // given
+          const { root } = await readModdle('test/camunda-cloud/integration/user-task-form-form-id.bpmn');
+
+          // when
+          const reports = await linter.lint(root);
+
+          // then
+          expect(reports[ 'camunda-compat/user-task-form' ]).not.to.exist;
+        });
+
+      });
+
+
+      describe('errors', function() {
+
+        it('should have errors', async function() {
+
+          // given
+          const { root } = await readModdle('test/camunda-cloud/integration/user-task-form-form-id-errors.bpmn');
 
           // when
           const reports = await linter.lint(root);

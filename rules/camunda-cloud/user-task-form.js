@@ -14,7 +14,7 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 
 const { greaterOrEqual } = require('../utils/version');
 
-const formIdAllowedVersion = '8.3';
+const formIdAllowedVersion = '8.4';
 
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
