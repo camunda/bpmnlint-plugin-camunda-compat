@@ -552,6 +552,36 @@ describe('utils/element', function() {
         }
       ]);
     });
+
+
+    it('should return errors (property is empty string)', function() {
+
+      // given
+      const formDefinition = createElement('zeebe:FormDefinition', {
+        formKey: ''
+      });
+
+      // when
+      const errors = hasProperty(formDefinition, [ 'formKey', 'formId' ]);
+
+      // then
+      expect(errors).to.eql([
+        {
+          message: 'Element of type <zeebe:FormDefinition> must have property <formKey> or <formId>',
+          path: null,
+          data: {
+            type: ERROR_TYPES.PROPERTY_REQUIRED,
+            node: formDefinition,
+            parentNode: null,
+            requiredProperty: [
+              'formKey',
+              'formId'
+            ]
+          }
+        }
+      ]);
+    });
+
   });
 
 
@@ -578,10 +608,42 @@ describe('utils/element', function() {
       });
 
 
-      it('should return errors', function() {
+      it('should return errors (undefined)', function() {
 
         // given
         const taskDefinition = createElement('zeebe:TaskDefinition');
+
+        // when
+        const errors = hasProperties(taskDefinition, {
+          type: {
+            required: true
+          }
+        });
+
+        // then
+        expect(errors).eql([
+          {
+            message: 'Element of type <zeebe:TaskDefinition> must have property <type>',
+            path: [
+              'type'
+            ],
+            data: {
+              type: ERROR_TYPES.PROPERTY_REQUIRED,
+              node: taskDefinition,
+              parentNode: null,
+              requiredProperty: 'type'
+            }
+          }
+        ]);
+      });
+
+
+      it('should return errors (empty string)', function() {
+
+        // given
+        const taskDefinition = createElement('zeebe:TaskDefinition', {
+          type: ''
+        });
 
         // when
         const errors = hasProperties(taskDefinition, {
@@ -632,11 +694,45 @@ describe('utils/element', function() {
       });
 
 
-      it('should return errors', function() {
+      it('should return errors (undefined)', function() {
 
         // given
         const loopCharacteristics = createElement('zeebe:LoopCharacteristics', {
           outputCollection: 'foo'
+        });
+
+        // when
+        const errors = hasProperties(loopCharacteristics, {
+          outputElement: {
+            dependentRequired: 'outputCollection'
+          }
+        });
+
+        // then
+        expect(errors).eql([
+          {
+            message: 'Element of type <zeebe:LoopCharacteristics> must have property <outputElement> if it has property <outputCollection>',
+            path: [
+              'outputElement'
+            ],
+            data: {
+              type: ERROR_TYPES.PROPERTY_DEPENDENT_REQUIRED,
+              node: loopCharacteristics,
+              parentNode: null,
+              property: 'outputCollection',
+              dependentRequiredProperty: 'outputElement'
+            }
+          }
+        ]);
+      });
+
+
+      it('should return errors (empty string)', function() {
+
+        // given
+        const loopCharacteristics = createElement('zeebe:LoopCharacteristics', {
+          outputCollection: 'foo',
+          outputElement: ''
         });
 
         // when
