@@ -14,9 +14,12 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 
 const { greaterOrEqual } = require('../utils/version');
 
-const formIdAllowedVersion = '8.4';
+const formIdAllowedVersions = {
+  desktop: '8.4',
+  web: '8.0'
+};
 
-module.exports = skipInNonExecutableProcess(function({ version }) {
+module.exports = skipInNonExecutableProcess(function({ modeler = 'desktop', version }) {
   function check(node, reporter) {
     if (!is(node, 'bpmn:UserTask')) {
       return;
@@ -30,16 +33,14 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 
     let errors = [];
 
-    if (isFormIdAllowed(version)) {
+    const formIdAllowedVersion = formIdAllowedVersions[ modeler ];
 
-      // Camunda 8.3 and newer
+    if (isFormIdAllowed(version, formIdAllowedVersion)) {
       errors = hasProperty(formDefinition, [
         'formKey',
         'formId'
       ], node);
     } else {
-
-      // Camunda 8.2 and older
       errors = hasProperties(formDefinition, {
         formId: {
           allowed: false,
@@ -110,6 +111,6 @@ function findUserTaskForm(node, formKey) {
   }
 }
 
-function isFormIdAllowed(version) {
+function isFormIdAllowed(version, formIdAllowedVersion) {
   return greaterOrEqual(version, formIdAllowedVersion);
 }

@@ -12,8 +12,8 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 
 const valid = [
   {
-    name: 'user task (user task form)',
-    config: { version: '8.3' },
+    name: 'user task (form key) (Camunda 8.0)',
+    config: { version: '8.0' },
     moddleElement: createModdle(createProcess(`
       <bpmn:extensionElements>
         <zeebe:userTaskForm id="userTaskForm_1">{}</zeebe:userTaskForm>
@@ -21,6 +21,42 @@ const valid = [
       <bpmn:userTask id="UserTask_1">
         <bpmn:extensionElements>
           <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_1" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `))
+  },
+  {
+    name: 'user task (form key) (Camunda 8.0) (Web Modeler)',
+    config: { modeler: 'web', version: '8.0' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:extensionElements>
+        <zeebe:userTaskForm id="userTaskForm_1">{}</zeebe:userTaskForm>
+      </bpmn:extensionElements>
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_1" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `))
+  },
+  {
+    name: 'user task (form ID) (Camunda 8.4)',
+    config: { version: '8.4' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:formDefinition formId="foo" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `))
+  },
+  {
+    name: 'user task (form ID) (Camunda 8.0) (Web Modeler)',
+    config: { modeler: 'web', version: '8.0' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:formDefinition formId="foo" />
         </bpmn:extensionElements>
       </bpmn:userTask>
     `))
