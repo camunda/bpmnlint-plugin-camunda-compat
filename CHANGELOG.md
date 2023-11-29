@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.12.0
+
+* `FEAT`: allow `formKey` and `formId` starting with v8.3 when linting start event forms ([#149](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/149))
+* `FIX`: differentiate between desktop and web modeler when linting user task forms ([#149](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/149))
+
 ## 2.11.1
 
 * `FIX`: treat empty strings as errors (previously only undefined was treated as error) ([#148](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/148))
