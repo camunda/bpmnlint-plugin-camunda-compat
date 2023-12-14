@@ -20,7 +20,8 @@ module.exports = skipInNonExecutableProcess(function() {
       data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: node,
-        parentNode: null
+        parentNode: null,
+        allowedVersion: '8.4'
       }
     };
 

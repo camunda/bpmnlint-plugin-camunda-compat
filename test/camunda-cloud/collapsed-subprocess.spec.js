@@ -79,7 +79,8 @@ const invalid = [
       data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'SubProcess_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: '8.4'
       }
     }
   },
@@ -105,7 +106,8 @@ const invalid = [
       data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'SubProcess_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: '8.4'
       }
     }
   },
@@ -128,7 +130,8 @@ const invalid = [
       data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'SubProcess_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: '8.4'
       }
     }
   },
@@ -154,7 +157,8 @@ const invalid = [
       data: {
         type: ERROR_TYPES.ELEMENT_COLLAPSED_NOT_ALLOWED,
         node: 'SubProcess_1',
-        parentNode: null
+        parentNode: null,
+        allowedVersion: '8.4'
       }
     }
   }

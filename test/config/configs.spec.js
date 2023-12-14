@@ -232,7 +232,6 @@ describe('configs', function() {
   it('camunda-cloud-8-4', expectRules(configs, 'camunda-cloud-8-4', {
     'implementation': [ 'error', { version: '8.4' } ],
     'called-element': [ 'error', { version: '8.4' } ],
-    'collapsed-subprocess': [ 'error', { version: '8.4' } ],
     'duplicate-task-headers': [ 'error', { version: '8.4' } ],
     'element-type': [ 'error', { version: '8.4' } ],
     'error-reference': [ 'error', { version: '8.4' } ],
