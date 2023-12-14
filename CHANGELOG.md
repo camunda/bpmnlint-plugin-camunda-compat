@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.13.0
+
+* `FEAT`: allow collapsed subprocess starting with v8.4 ([#150](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/150))
+
 ## 2.12.0
 
 * `FEAT`: allow `formKey` and `formId` starting with v8.3 when linting start event forms ([#149](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/149))
