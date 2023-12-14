@@ -61,7 +61,8 @@ const camundaCloud83Rules = withConfig({
   'signal-reference': 'error'
 }, { version: '8.3' });
 
-const camundaCloud84Rules = withConfig(camundaCloud83Rules, { version: '8.4' });
+const camundaCloud84Rules = withConfig(
+  omit(camundaCloud83Rules, 'collapsed-subprocess'), { version: '8.4' });
 
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'error'
