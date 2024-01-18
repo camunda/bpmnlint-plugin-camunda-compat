@@ -5,7 +5,8 @@ const {
   findExtensionElements,
   findParent,
   hasProperties,
-  hasProperty
+  hasProperty,
+  hasExtensionElement
 } = require('../utils/element');
 
 const { reportErrors } = require('../utils/reporter');
@@ -25,13 +26,17 @@ module.exports = skipInNonExecutableProcess(function({ modeler = 'desktop', vers
       return;
     }
 
-    const formDefinition = findExtensionElement(node, 'zeebe:FormDefinition');
+    let errors = hasExtensionElement(node, 'zeebe:FormDefinition', node);
 
-    if (!formDefinition) {
+    if (errors && errors.length) {
+      reportErrors(node, reporter, errors);
+
       return;
     }
 
-    let errors = [];
+    const formDefinition = findExtensionElement(node, 'zeebe:FormDefinition');
+
+    errors = [];
 
     const formIdAllowedVersion = formIdAllowedVersions[ modeler ];
 

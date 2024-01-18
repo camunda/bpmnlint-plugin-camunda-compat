@@ -62,13 +62,6 @@ const valid = [
     `))
   },
   {
-    name: 'user task',
-    config: { version: '8.3' },
-    moddleElement: createModdle(createProcess(`
-      <bpmn:userTask id="UserTask_1" />
-    `))
-  },
-  {
     name: 'user task (no form key) (non-executable process)',
     config: { version: '8.3' },
     moddleElement: createModdle(createDefinitions(`
@@ -313,7 +306,25 @@ const invalid = [
         requiredProperty: 'body'
       }
     }
-  }
+  },
+  {
+    name: 'user task (no form)',
+    config: { version: '8.3' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1" />
+    `)),
+    report: {
+      id: 'UserTask_1',
+      message: 'Element of type <bpmn:UserTask> must have one extension element of type <zeebe:FormDefinition>',
+      path: [],
+      data: {
+        type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+        node: 'UserTask_1',
+        parentNode: null,
+        requiredExtensionElement: 'zeebe:FormDefinition'
+      }
+    }
+  },
 ];
 
 RuleTester.verify('user-task-form', rule, {
