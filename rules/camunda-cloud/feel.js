@@ -35,7 +35,7 @@ module.exports = skipInNonExecutableProcess(function() {
         const lintErrors = lintExpression(propertyValue.substring(1));
 
         // syntax error
-        if (lintErrors.find(({ type }) => type === 'syntaxError')) {
+        if (lintErrors.find(({ type }) => type === 'Syntax Error')) {
           const path = getPath(node, parentNode);
 
           errors.push(

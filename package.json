@@ -37,7 +37,7 @@
     "zeebe-bpmn-moddle": "^1.0.0"
   },
   "dependencies": {
-    "@bpmn-io/feel-lint": "^1.0.0",
+    "@bpmn-io/feel-lint": "^1.2.0",
     "@bpmn-io/moddle-utils": "^0.2.1",
     "bpmnlint-utils": "^1.0.2",
     "min-dash": "^4.1.1",
