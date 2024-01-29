@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.15.0
+
+* `DEPS`: update to `@bpmn-io/feel-lint@1.2.0` ([#153](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/153))
+
 ## 2.14.0
 
 * `FEAT`: ensure user tasks have a `formDefinition` ([#151](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/151))
