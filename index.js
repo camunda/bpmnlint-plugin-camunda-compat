@@ -65,7 +65,6 @@ const camundaCloud84Rules = withConfig(
   omit(camundaCloud83Rules, 'collapsed-subprocess'), { version: '8.4' });
 
 const camundaPlatform719Rules = withConfig({
-  'history-time-to-live': 'error'
 }, {
   platform: 'camunda-platform',
   version: '7.19'
@@ -92,7 +91,6 @@ const rules = {
   'event-based-gateway-target': './rules/camunda-cloud/event-based-gateway-target',
   'executable-process': './rules/camunda-cloud/executable-process',
   'feel': './rules/camunda-cloud/feel',
-  'history-time-to-live': './rules/camunda-platform/history-time-to-live',
   'implementation': './rules/camunda-cloud/implementation',
   'inclusive-gateway': './rules/camunda-cloud/inclusive-gateway',
   'link-event': './rules/camunda-cloud/link-event',

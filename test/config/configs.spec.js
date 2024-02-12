@@ -257,21 +257,6 @@ describe('configs', function() {
     'user-task-form': [ 'error', { version: '8.4' } ]
   }));
 
-
-  it('camunda-platform-7-19', expectRules(configs, 'camunda-platform-7-19', {
-    'history-time-to-live': [ 'error', { platform: 'camunda-platform', version: '7.19' } ]
-  }));
-
-
-  it('camunda-platform-7-20', expectRules(configs, 'camunda-platform-7-20', {
-    'history-time-to-live': [ 'error', { platform: 'camunda-platform', version: '7.20' } ]
-  }));
-
-  it('camunda-platform-7-21', expectRules(configs, 'camunda-platform-7-21', {
-    'history-time-to-live': [ 'error', { platform: 'camunda-platform', version: '7.21' } ]
-  }));
-
-
   it('all', expectRules(configs, 'all', {
     'element-type': 'error',
     'called-element': 'error',
@@ -283,7 +268,6 @@ describe('configs', function() {
     'event-based-gateway-target': 'error',
     'executable-process': 'error',
     'feel': 'error',
-    'history-time-to-live': 'error',
     'implementation': 'error',
     'inclusive-gateway': 'error',
     'link-event': 'error',
