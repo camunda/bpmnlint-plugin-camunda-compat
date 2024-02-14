@@ -122,6 +122,8 @@ function getNextFlowElements(flowElement) {
         }
       }
     }
+
+    return [];
   } else if (is(flowElement, 'bpmn:SubProcess')) {
     return flowElement
       .get('flowElements').filter(flowElement => is(flowElement, 'bpmn:StartEvent'));

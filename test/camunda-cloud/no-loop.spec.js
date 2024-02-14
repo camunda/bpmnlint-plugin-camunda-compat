@@ -73,23 +73,26 @@ const valid = [
         <bpmn:startEvent id="StartEvent_1">
           <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
         </bpmn:startEvent>
-        <bpmn:manualTask id="ManualTask_1">
-          <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
-          <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
-        </bpmn:manualTask>
-        <bpmn:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="ManualTask_1" />
-        <bpmn:sequenceFlow id="SequenceFlow_2" sourceRef="ManualTask_1" targetRef="CallActivity_1" />
-        <bpmn:endEvent id="EndEvent_1">
-          <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
-        </bpmn:endEvent>
-        <bpmn:sequenceFlow id="SequenceFlow_3" sourceRef="CallActivity_1" targetRef="EndEvent_1" />
         <bpmn:callActivity id="CallActivity_1">
           <bpmn:extensionElements>
             <zeebe:calledElement processId="Process_2" propagateAllChildVariables="false" />
           </bpmn:extensionElements>
+          <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+          <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
+          <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+        </bpmn:callActivity>
+        <bpmn:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="CallActivity_1" />
+        <bpmn:exclusiveGateway id="ExclusiveGateway_1">
           <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
           <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
-        </bpmn:callActivity>
+          <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+        <bpmn:sequenceFlow id="SequenceFlow_2" sourceRef="CallActivity_1" targetRef="ExclusiveGateway_1" />
+        <bpmn:endEvent id="EndEvent_1">
+          <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="SequenceFlow_3" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_1" />
+        <bpmn:sequenceFlow id="SequenceFlow_4" sourceRef="ExclusiveGateway_1" targetRef="CallActivity_1" />
       </bpmn:process>
     `))
   },
