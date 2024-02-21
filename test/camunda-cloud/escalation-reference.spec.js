@@ -12,7 +12,17 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 
 const valid = [
   {
-    name: 'end event (escalation)',
+    name: 'escalation start event (no escalation reference)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:subProcess id="SubProcess_1" triggeredByEvent="true">
+        <bpmn:startEvent id="StartEvent_1">
+          <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
+        </bpmn:startEvent>
+      </bpmn:subProcess>
+    `))
+  },
+  {
+    name: 'escalation end event',
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1">
         <bpmn:endEvent id="EndEvent_1">
@@ -73,29 +83,6 @@ const valid = [
 ];
 
 const invalid = [
-  {
-    name: 'escalation end event (no escalation reference)',
-    moddleElement: createModdle(createProcess(`
-      <bpmn:endEvent id="EndEvent_1">
-        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
-      </bpmn:endEvent>
-    `)),
-    report: {
-      id: 'EndEvent_1',
-      message: 'Element of type <bpmn:EscalationEventDefinition> must have property <escalationRef>',
-      path: [
-        'eventDefinitions',
-        0,
-        'escalationRef'
-      ],
-      data: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
-        node: 'EscalationEventDefinition_1',
-        parentNode: 'EndEvent_1',
-        requiredProperty: 'escalationRef'
-      }
-    }
-  },
   {
     name: 'escalation end event (no escalation code)',
     moddleElement: createModdle(createDefinitions(`
