@@ -23,6 +23,7 @@ const camundaCloud10Rules = withConfig({
   'start-event-form': 'error',
   'subscription': 'error',
   'timer': 'error',
+  'user-task-definition': 'warn',
   'user-task-form': 'error',
   'feel': 'error'
 }, { version: '1.0' });
@@ -114,52 +115,67 @@ const rules = {
   'subscription': './rules/camunda-cloud/subscription',
   'task-schedule': './rules/camunda-cloud/task-schedule',
   'timer': './rules/camunda-cloud/timer',
+  'user-task-definition': './rules/camunda-cloud/user-task-definition',
   'user-task-form': './rules/camunda-cloud/user-task-form'
+};
+
+const configs = {
+  'camunda-cloud-1-0': {
+    rules: camundaCloud10Rules
+  },
+  'camunda-cloud-1-1': {
+    rules: camundaCloud11Rules
+  },
+  'camunda-cloud-1-2': {
+    rules: camundaCloud12Rules
+  },
+  'camunda-cloud-1-3': {
+    rules: camundaCloud13Rules
+  },
+  'camunda-cloud-8-0': {
+    rules: camundaCloud80Rules
+  },
+  'camunda-cloud-8-1': {
+    rules: camundaCloud81Rules
+  },
+  'camunda-cloud-8-2': {
+    rules: camundaCloud82Rules
+  },
+  'camunda-cloud-8-3': {
+    rules: camundaCloud83Rules
+  },
+  'camunda-cloud-8-4': {
+    rules: camundaCloud84Rules
+  },
+  'camunda-platform-7-19': {
+    rules: camundaPlatform719Rules
+  },
+  'camunda-platform-7-20': {
+    rules: camundaPlatform720Rules
+  },
+  'camunda-platform-7-21': {
+    rules: camundaPlatform721Rules
+  }
 };
 
 module.exports = {
   configs: {
-    'camunda-cloud-1-0': {
-      rules: camundaCloud10Rules
-    },
-    'camunda-cloud-1-1': {
-      rules: camundaCloud11Rules
-    },
-    'camunda-cloud-1-2': {
-      rules: camundaCloud12Rules
-    },
-    'camunda-cloud-1-3': {
-      rules: camundaCloud13Rules
-    },
-    'camunda-cloud-8-0': {
-      rules: camundaCloud80Rules
-    },
-    'camunda-cloud-8-1': {
-      rules: camundaCloud81Rules
-    },
-    'camunda-cloud-8-2': {
-      rules: camundaCloud82Rules
-    },
-    'camunda-cloud-8-3': {
-      rules: camundaCloud83Rules
-    },
-    'camunda-cloud-8-4': {
-      rules: camundaCloud84Rules
-    },
-    'camunda-platform-7-19': {
-      rules: camundaPlatform719Rules
-    },
-    'camunda-platform-7-20': {
-      rules: camundaPlatform720Rules
-    },
-    'camunda-platform-7-21': {
-      rules: camundaPlatform721Rules
-    },
+    ...configs,
     'all': {
       rules: Object.keys(rules).reduce((allRules, rule) => {
         return {
           ...allRules,
-          [ rule ]: 'error'
+          [ rule ]: Object.values(configs).reduce((type, { rules }) => {
+            if (type) {
+              return type;
+            }
+
+            if (rules[ rule ]) {
+              return Array.isArray(rules[ rule ]) ? rules[ rule ][0] : rules[ rule ];
+            }
+
+            return type;
+          }, null)
         };
       }, {})
     }
