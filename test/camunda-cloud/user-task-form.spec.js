@@ -78,24 +78,6 @@ const valid = [
 
 const invalid = [
   {
-    name: 'user task (no form definition)',
-    config: { version: '8.3' },
-    moddleElement: createModdle(createProcess(`
-      <bpmn:userTask id="UserTask_1" />
-    `)),
-    report: {
-      id: 'UserTask_1',
-      message: 'Element of type <bpmn:UserTask> must have one extension element of type <zeebe:FormDefinition>',
-      path: [],
-      data: {
-        type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
-        node: 'UserTask_1',
-        parentNode: null,
-        requiredExtensionElement: 'zeebe:FormDefinition'
-      }
-    }
-  },
-  {
     name: 'user task (no form key) (Camunda 8.3)',
     config: { version: '8.3' },
     moddleElement: createModdle(createProcess(`
