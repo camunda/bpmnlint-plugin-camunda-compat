@@ -28,9 +28,9 @@ describe('integration - secrets', function() {
 
     describe(`Camunda Cloud ${ version }`, function() {
 
-      describe('no errors', function() {
+      describe('no warnings', function() {
 
-        it('should not have errors', async function() {
+        it('should not have warnings', async function() {
 
           // given
           const { root } = await readModdle('test/camunda-cloud/integration/secrets.bpmn');
@@ -45,9 +45,9 @@ describe('integration - secrets', function() {
       });
 
 
-      describe('errors', function() {
+      describe('warnings', function() {
 
-        it('should have errors', async function() {
+        it('should have warnings', async function() {
 
           // given
           const { root } = await readModdle('test/camunda-cloud/integration/secrets-errors.bpmn');
