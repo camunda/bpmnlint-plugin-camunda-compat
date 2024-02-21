@@ -62,6 +62,6 @@ module.exports = skipInNonExecutableProcess(function() {
   };
 });
 
-function isNoEscalationRefAllowed(node, version) {
-  return is(node, 'bpmn:BoundaryEvent');
+function isNoEscalationRefAllowed(node) {
+  return isAny(node, [ 'bpmn:CatchEvent', 'bpmn:BoundaryEvent' ]);
 }
