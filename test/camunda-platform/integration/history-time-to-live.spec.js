@@ -8,7 +8,8 @@ const { readModdle } = require('../../helper');
 
 const versions = [
   '7.19',
-  '7.20'
+  '7.20',
+  '7.21'
 ];
 
 describe('integration - history-time-to-live', function() {
@@ -46,9 +47,9 @@ describe('integration - history-time-to-live', function() {
       });
 
 
-      describe('errors', function() {
+      describe('info', function() {
 
-        it('should have errors', async function() {
+        it('should have informative message', async function() {
 
           // given
           const { root } = await readModdle('test/camunda-platform/integration/history-time-to-live-errors.bpmn');

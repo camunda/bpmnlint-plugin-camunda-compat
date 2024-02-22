@@ -1,9 +1,5 @@
 const { is } = require('bpmnlint-utils');
 
-const { hasProperties } = require('../utils/element');
-
-const { reportErrors } = require('../utils/reporter');
-
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function() {
@@ -13,16 +9,9 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    let errors = hasProperties(node, {
-      'historyTimeToLive': {
-        required: true
-      }
-    }, node);
-
-    if (errors) {
-      reportErrors(node, reporter, errors);
+    if (!node.get('camunda:historyTimeToLive')) {
+      reporter.report(node.id, 'Property <historyTimeToLive> should be configured on <bpmn:Process> or engine level.', [ 'historyTimeToLive' ]);
     }
-    return;
   }
 
   return {
