@@ -66,7 +66,7 @@ const camundaCloud84Rules = withConfig(
   omit(camundaCloud83Rules, 'collapsed-subprocess'), { version: '8.4' });
 
 const camundaPlatform719Rules = withConfig({
-  'history-time-to-live': 'error'
+  'history-time-to-live': 'info'
 }, {
   platform: 'camunda-platform',
   version: '7.19'

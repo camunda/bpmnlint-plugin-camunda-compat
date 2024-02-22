@@ -7,8 +7,6 @@ const {
   createModdleCamundaPlatform: createModdle
 } = require('../helper');
 
-const { ERROR_TYPES } = require('../../rules/utils/element');
-
 const valid = [
   {
     name: 'process (history time to live)',
@@ -33,16 +31,10 @@ const invalid = [
     `)),
     report: {
       id: 'Process_1',
-      message: 'Element of type <bpmn:Process> must have property <historyTimeToLive>',
+      message: 'Property <historyTimeToLive> should be configured on <bpmn:Process> or engine level.',
       path: [
         'historyTimeToLive'
-      ],
-      data: {
-        type: ERROR_TYPES.PROPERTY_REQUIRED,
-        node: 'Process_1',
-        parentNode: null,
-        requiredProperty: 'historyTimeToLive'
-      }
+      ]
     }
   }
 ];
