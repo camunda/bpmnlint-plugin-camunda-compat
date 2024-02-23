@@ -6,6 +6,13 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.16.0
+
+* `FEAT`: make `history-time-to-live` an informative hint ([#160](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/160))
+* `FEAT`: report missing form definition as warning, not error ([#154](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/154), [#157](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/157))
+* `FIX`: correct `escalation-reference` to allow start event without `escalationRef` ([#158](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/158))
+* `FIX`: report `secrets` as `warn`, not `error` ([#157](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/157))
+
 ## 2.15.0
 
 * `DEPS`: update to `@bpmn-io/feel-lint@1.2.0` ([#153](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/153))
