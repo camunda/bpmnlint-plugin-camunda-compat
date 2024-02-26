@@ -19,6 +19,7 @@ const camundaCloud10Rules = withConfig({
   'no-task-schedule': 'error',
   'no-template': 'error',
   'no-zeebe-properties': 'error',
+  'no-zeebe-user-task': 'error',
   'sequence-flow-condition': 'error',
   'start-event-form': 'error',
   'subscription': 'error',
@@ -65,6 +66,12 @@ const camundaCloud83Rules = withConfig({
 const camundaCloud84Rules = withConfig(
   omit(camundaCloud83Rules, 'collapsed-subprocess'), { version: '8.4' });
 
+const camundaCloud85Rules = withConfig(
+  omit(camundaCloud83Rules, [
+    'collapsed-subprocess',
+    'no-zeebe-user-task'
+  ]), { version: '8.5' });
+
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'info'
 }, {
@@ -108,6 +115,7 @@ const rules = {
   'no-task-schedule': './rules/camunda-cloud/no-task-schedule',
   'no-template': './rules/camunda-cloud/no-template',
   'no-zeebe-properties': './rules/camunda-cloud/no-zeebe-properties',
+  'no-zeebe-user-task': './rules/camunda-cloud/no-zeebe-user-task',
   'secrets': './rules/camunda-cloud/secrets',
   'sequence-flow-condition': './rules/camunda-cloud/sequence-flow-condition',
   'signal-reference': './rules/camunda-cloud/signal-reference',
@@ -146,6 +154,9 @@ const configs = {
   },
   'camunda-cloud-8-4': {
     rules: camundaCloud84Rules
+  },
+  'camunda-cloud-8-5': {
+    rules: camundaCloud85Rules
   },
   'camunda-platform-7-19': {
     rules: camundaPlatform719Rules
