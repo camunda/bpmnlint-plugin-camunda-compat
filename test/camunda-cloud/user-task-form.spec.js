@@ -73,6 +73,42 @@ const valid = [
         </bpmn:userTask>
       </bpmn:process>
     `))
+  },
+  {
+    name: 'zeebe user task (form id)',
+    config: { version: '8.5' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:userTask />
+          <zeebe:formDefinition formId="customForm" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `))
+  },
+  {
+    name: 'zeebe user task (external reference)',
+    config: { version: '8.5' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:userTask />
+          <zeebe:formDefinition externalReference="customForm" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `))
+  },
+  {
+    name: 'zeebe user task (prior to 8.5)',
+    config: { version: '8.4' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:userTask />
+          <zeebe:formDefinition />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `))
   }
 ];
 
@@ -304,6 +340,96 @@ const invalid = [
         node: 'zeebe:UserTaskForm',
         parentNode: 'UserTask_1',
         requiredProperty: 'body'
+      }
+    }
+  },
+  {
+    name: 'zeebe user task (external reference and form ID) (Camunda 8.5)',
+    config: { version: '8.5' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:userTask />
+          <zeebe:formDefinition />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `)),
+    report: {
+      id: 'UserTask_1',
+      message: 'Element of type <zeebe:FormDefinition> must have property <externalReference> or <formId>',
+      path: [
+        'extensionElements',
+        'values',
+        1
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'zeebe:FormDefinition',
+        parentNode: 'UserTask_1',
+        requiredProperty: [
+          'externalReference',
+          'formId'
+        ]
+      }
+    }
+  },
+  {
+    name: 'zeebe user task (empty external reference) (Camunda 8.5)',
+    config: { version: '8.5' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:userTask />
+          <zeebe:formDefinition externalReference="" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `)),
+    report: {
+      id: 'UserTask_1',
+      message: 'Element of type <zeebe:FormDefinition> must have property <externalReference> or <formId>',
+      path: [
+        'extensionElements',
+        'values',
+        1
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'zeebe:FormDefinition',
+        parentNode: 'UserTask_1',
+        requiredProperty: [
+          'externalReference',
+          'formId'
+        ]
+      }
+    }
+  },
+  {
+    name: 'zeebe user task (empty form ID) (Camunda 8.5)',
+    config: { version: '8.5' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:userTask />
+          <zeebe:formDefinition formId="" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `)),
+    report: {
+      id: 'UserTask_1',
+      message: 'Element of type <zeebe:FormDefinition> must have property <externalReference> or <formId>',
+      path: [
+        'extensionElements',
+        'values',
+        1
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'zeebe:FormDefinition',
+        parentNode: 'UserTask_1',
+        requiredProperty: [
+          'externalReference',
+          'formId'
+        ]
       }
     }
   }
