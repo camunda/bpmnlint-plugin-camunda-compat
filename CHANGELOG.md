@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.17.0
+
+* `FEAT`: add `no-zeebe-user-task` rule ([#161](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/161))
+
 ## 2.16.0
 
 * `FEAT`: make `history-time-to-live` an informative hint ([#160](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/160))
