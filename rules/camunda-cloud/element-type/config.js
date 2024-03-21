@@ -1,6 +1,7 @@
 module.exports = {
   'bpmn:Association': '1.0',
   'bpmn:BoundaryEvent': {
+    'bpmn:CompensateEventDefinition': '8.5',
     'bpmn:ErrorEventDefinition': '1.0',
     'bpmn:EscalationEventDefinition': '8.2',
     'bpmn:MessageEventDefinition': '1.0',
@@ -16,6 +17,7 @@ module.exports = {
   'bpmn:Definitions': '1.0',
   'bpmn:EndEvent': {
     '_': '1.0',
+    'bpmn:CompensateEventDefinition': '8.5',
     'bpmn:ErrorEventDefinition': '1.0',
     'bpmn:EscalationEventDefinition': '8.2',
     'bpmn:MessageEventDefinition': '1.2',
@@ -34,6 +36,7 @@ module.exports = {
   },
   'bpmn:IntermediateThrowEvent': {
     '_': '1.1',
+    'bpmn:CompensateEventDefinition': '8.5',
     'bpmn:EscalationEventDefinition': '8.2',
     'bpmn:LinkEventDefinition': '8.2',
     'bpmn:MessageEventDefinition': '1.2',
