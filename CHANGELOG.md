@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.18.0
+
+* `FEAT`: add `wait-for-completion` rule ([#162](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/162))
+* `FEAT`: add supported compensation events to element-type ([#162](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/162))
+
 ## 2.17.0
 
 * `FEAT`: add `no-zeebe-user-task` rule ([#161](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/161))
