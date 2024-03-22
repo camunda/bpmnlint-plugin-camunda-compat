@@ -66,11 +66,13 @@ const camundaCloud83Rules = withConfig({
 const camundaCloud84Rules = withConfig(
   omit(camundaCloud83Rules, 'collapsed-subprocess'), { version: '8.4' });
 
-const camundaCloud85Rules = withConfig(
-  omit(camundaCloud83Rules, [
+const camundaCloud85Rules = withConfig({
+  ...omit(camundaCloud83Rules, [
     'collapsed-subprocess',
     'no-zeebe-user-task'
-  ]), { version: '8.5' });
+  ]),
+  'wait-for-completion': 'error'
+}, { version: '8.5' });
 
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'info'
@@ -124,7 +126,8 @@ const rules = {
   'task-schedule': './rules/camunda-cloud/task-schedule',
   'timer': './rules/camunda-cloud/timer',
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
-  'user-task-form': './rules/camunda-cloud/user-task-form'
+  'user-task-form': './rules/camunda-cloud/user-task-form',
+  'wait-for-completion': './rules/camunda-cloud/wait-for-completion'
 };
 
 const configs = {

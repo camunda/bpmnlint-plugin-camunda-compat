@@ -302,7 +302,8 @@ describe('configs', function() {
     'task-schedule': [ 'error', { version: '8.5' } ],
     'timer': [ 'error', { version: '8.5' } ],
     'user-task-definition': [ 'warn', { version: '8.5' } ],
-    'user-task-form': [ 'error', { version: '8.5' } ]
+    'user-task-form': [ 'error', { version: '8.5' } ],
+    'wait-for-completion': [ 'error', { version: '8.5' } ]
   }));
 
 
@@ -355,7 +356,8 @@ describe('configs', function() {
     'task-schedule': 'error',
     'timer': 'error',
     'user-task-definition': 'warn',
-    'user-task-form': 'error'
+    'user-task-form': 'error',
+    'wait-for-completion': 'error'
   }));
 
 });
