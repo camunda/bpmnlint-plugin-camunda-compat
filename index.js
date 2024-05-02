@@ -37,6 +37,7 @@ const camundaCloud13Rules = withConfig(camundaCloud12Rules, { version: '1.3' });
 
 const camundaCloud80Rules = withConfig({
   ...omit(camundaCloud13Rules, 'no-template'),
+  'version-compatibility-validator': 'warn'
 }, { version: '8.0' });
 
 const camundaCloud81Rules = withConfig({
@@ -134,6 +135,7 @@ const rules = {
   'timer': './rules/camunda-cloud/timer',
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
   'user-task-form': './rules/camunda-cloud/user-task-form',
+  'version-compatibility-validator': './rules/camunda-cloud/version-compatibility-validator',
   'wait-for-completion': './rules/camunda-cloud/wait-for-completion'
 };
 
