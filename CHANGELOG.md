@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.19.0
+
+* `FEAT`: add 8.6 and 7.22 config ([#164](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/164))
+
 ## 2.18.0
 
 * `FEAT`: add `wait-for-completion` rule ([#162](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/162))
