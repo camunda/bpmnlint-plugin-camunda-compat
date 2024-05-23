@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.20.0
+
+* `FEAT`: add `connector-properties` rule ([#163](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/163))
+
 ## 2.19.0
 
 * `FEAT`: add 8.6 and 7.22 config ([#164](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/164))
