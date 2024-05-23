@@ -125,15 +125,16 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-0', expectRules(configs, 'camunda-cloud-8-0', {
-    'implementation': [ 'error', { version: '8.0' } ],
     'called-element': [ 'error', { version: '8.0' } ],
     'collapsed-subprocess': [ 'error', { version: '8.0' } ],
+    'connector-properties': [ 'warn', { version: '8.0' } ],
     'duplicate-task-headers': [ 'error', { version: '8.0' } ],
     'element-type': [ 'error', { version: '8.0' } ],
     'error-reference': [ 'error', { version: '8.0' } ],
     'event-based-gateway-target': [ 'error', { version: '8.0' } ],
     'executable-process': [ 'error', { version: '8.0' } ],
     'feel': [ 'error', { version: '8.0' } ],
+    'implementation': [ 'error', { version: '8.0' } ],
     'loop-characteristics': [ 'error', { version: '8.0' } ],
     'message-reference': [ 'error', { version: '8.0' } ],
     'no-candidate-users': [ 'error', { version: '8.0' } ],
@@ -149,21 +150,21 @@ describe('configs', function() {
     'start-event-form': [ 'error', { version: '8.0' } ],
     'timer': [ 'error', { version: '8.0' } ],
     'user-task-definition': [ 'warn', { version: '8.0' } ],
-    'user-task-form': [ 'error', { version: '8.0' } ],
-    'version-compatibility-validator': [ 'warn', { version: '8.0' } ]
+    'user-task-form': [ 'error', { version: '8.0' } ]
   }));
 
 
   it('camunda-cloud-8-1', expectRules(configs, 'camunda-cloud-8-1', {
-    'implementation': [ 'error', { version: '8.1' } ],
     'called-element': [ 'error', { version: '8.1' } ],
     'collapsed-subprocess': [ 'error', { version: '8.1' } ],
+    'connector-properties': [ 'warn', { version: '8.1' } ],
     'duplicate-task-headers': [ 'error', { version: '8.1' } ],
     'element-type': [ 'error', { version: '8.1' } ],
     'error-reference': [ 'error', { version: '8.1' } ],
     'event-based-gateway-target': [ 'error', { version: '8.1' } ],
     'executable-process': [ 'error', { version: '8.1' } ],
     'feel': [ 'error', { version: '8.1' } ],
+    'implementation': [ 'error', { version: '8.1' } ],
     'inclusive-gateway': [ 'error', { version: '8.1' } ],
     'loop-characteristics': [ 'error', { version: '8.1' } ],
     'message-reference': [ 'error', { version: '8.1' } ],
@@ -179,15 +180,14 @@ describe('configs', function() {
     'start-event-form': [ 'error', { version: '8.1' } ],
     'timer': [ 'error', { version: '8.1' } ],
     'user-task-definition': [ 'warn', { version: '8.1' } ],
-    'user-task-form': [ 'error', { version: '8.1' } ],
-    'version-compatibility-validator': [ 'warn', { version: '8.1' } ]
+    'user-task-form': [ 'error', { version: '8.1' } ]
   }));
 
 
   it('camunda-cloud-8-2', expectRules(configs, 'camunda-cloud-8-2', {
-    'implementation': [ 'error', { version: '8.2' } ],
     'called-element': [ 'error', { version: '8.2' } ],
     'collapsed-subprocess': [ 'error', { version: '8.2' } ],
+    'connector-properties': [ 'warn', { version: '8.2' } ],
     'duplicate-task-headers': [ 'error', { version: '8.2' } ],
     'element-type': [ 'error', { version: '8.2' } ],
     'error-reference': [ 'error', { version: '8.2' } ],
@@ -196,6 +196,7 @@ describe('configs', function() {
     'event-based-gateway-target': [ 'error', { version: '8.2' } ],
     'executable-process': [ 'error', { version: '8.2' } ],
     'feel': [ 'error', { version: '8.2' } ],
+    'implementation': [ 'error', { version: '8.2' } ],
     'inclusive-gateway': [ 'error', { version: '8.2' } ],
     'link-event': [ 'error', { version: '8.2' } ],
     'loop-characteristics': [ 'error', { version: '8.2' } ],
@@ -211,15 +212,14 @@ describe('configs', function() {
     'task-schedule': [ 'error', { version: '8.2' } ],
     'timer': [ 'error', { version: '8.2' } ],
     'user-task-definition': [ 'warn', { version: '8.2' } ],
-    'user-task-form': [ 'error', { version: '8.2' } ],
-    'version-compatibility-validator': [ 'warn', { version: '8.2' } ]
+    'user-task-form': [ 'error', { version: '8.2' } ]
   }));
 
 
   it('camunda-cloud-8-3', expectRules(configs, 'camunda-cloud-8-3', {
-    'implementation': [ 'error', { version: '8.3' } ],
     'called-element': [ 'error', { version: '8.3' } ],
     'collapsed-subprocess': [ 'error', { version: '8.3' } ],
+    'connector-properties': [ 'warn', { version: '8.3' } ],
     'duplicate-task-headers': [ 'error', { version: '8.3' } ],
     'element-type': [ 'error', { version: '8.3' } ],
     'error-reference': [ 'error', { version: '8.3' } ],
@@ -228,6 +228,7 @@ describe('configs', function() {
     'event-based-gateway-target': [ 'error', { version: '8.3' } ],
     'executable-process': [ 'error', { version: '8.3' } ],
     'feel': [ 'error', { version: '8.3' } ],
+    'implementation': [ 'error', { version: '8.3' } ],
     'inclusive-gateway': [ 'error', { version: '8.3' } ],
     'link-event': [ 'error', { version: '8.3' } ],
     'loop-characteristics': [ 'error', { version: '8.3' } ],
@@ -244,14 +245,13 @@ describe('configs', function() {
     'task-schedule': [ 'error', { version: '8.3' } ],
     'timer': [ 'error', { version: '8.3' } ],
     'user-task-definition': [ 'warn', { version: '8.3' } ],
-    'user-task-form': [ 'error', { version: '8.3' } ],
-    'version-compatibility-validator': [ 'warn', { version: '8.3' } ]
+    'user-task-form': [ 'error', { version: '8.3' } ]
   }));
 
 
   it('camunda-cloud-8-4', expectRules(configs, 'camunda-cloud-8-4', {
-    'implementation': [ 'error', { version: '8.4' } ],
     'called-element': [ 'error', { version: '8.4' } ],
+    'connector-properties': [ 'warn', { version: '8.4' } ],
     'duplicate-task-headers': [ 'error', { version: '8.4' } ],
     'element-type': [ 'error', { version: '8.4' } ],
     'error-reference': [ 'error', { version: '8.4' } ],
@@ -260,6 +260,7 @@ describe('configs', function() {
     'event-based-gateway-target': [ 'error', { version: '8.4' } ],
     'executable-process': [ 'error', { version: '8.4' } ],
     'feel': [ 'error', { version: '8.4' } ],
+    'implementation': [ 'error', { version: '8.4' } ],
     'inclusive-gateway': [ 'error', { version: '8.4' } ],
     'link-event': [ 'error', { version: '8.4' } ],
     'loop-characteristics': [ 'error', { version: '8.4' } ],
@@ -276,14 +277,13 @@ describe('configs', function() {
     'task-schedule': [ 'error', { version: '8.4' } ],
     'timer': [ 'error', { version: '8.4' } ],
     'user-task-definition': [ 'warn', { version: '8.4' } ],
-    'user-task-form': [ 'error', { version: '8.4' } ],
-    'version-compatibility-validator': [ 'warn', { version: '8.4' } ]
+    'user-task-form': [ 'error', { version: '8.4' } ]
   }));
 
 
   it('camunda-cloud-8-5', expectRules(configs, 'camunda-cloud-8-5', {
-    'implementation': [ 'error', { version: '8.5' } ],
     'called-element': [ 'error', { version: '8.5' } ],
+    'connector-properties': [ 'warn', { version: '8.5' } ],
     'duplicate-task-headers': [ 'error', { version: '8.5' } ],
     'element-type': [ 'error', { version: '8.5' } ],
     'error-reference': [ 'error', { version: '8.5' } ],
@@ -292,6 +292,7 @@ describe('configs', function() {
     'event-based-gateway-target': [ 'error', { version: '8.5' } ],
     'executable-process': [ 'error', { version: '8.5' } ],
     'feel': [ 'error', { version: '8.5' } ],
+    'implementation': [ 'error', { version: '8.5' } ],
     'inclusive-gateway': [ 'error', { version: '8.5' } ],
     'link-event': [ 'error', { version: '8.5' } ],
     'loop-characteristics': [ 'error', { version: '8.5' } ],
@@ -308,14 +309,13 @@ describe('configs', function() {
     'timer': [ 'error', { version: '8.5' } ],
     'user-task-definition': [ 'warn', { version: '8.5' } ],
     'user-task-form': [ 'error', { version: '8.5' } ],
-    'version-compatibility-validator': [ 'warn', { version: '8.5' } ],
     'wait-for-completion': [ 'error', { version: '8.5' } ]
   }));
 
 
   it('camunda-cloud-8-6', expectRules(configs, 'camunda-cloud-8-6', {
-    'implementation': [ 'error', { version: '8.6' } ],
     'called-element': [ 'error', { version: '8.6' } ],
+    'connector-properties': [ 'warn', { version: '8.6' } ],
     'duplicate-task-headers': [ 'error', { version: '8.6' } ],
     'element-type': [ 'error', { version: '8.6' } ],
     'error-reference': [ 'error', { version: '8.6' } ],
@@ -324,6 +324,7 @@ describe('configs', function() {
     'event-based-gateway-target': [ 'error', { version: '8.6' } ],
     'executable-process': [ 'error', { version: '8.6' } ],
     'feel': [ 'error', { version: '8.6' } ],
+    'implementation': [ 'error', { version: '8.6' } ],
     'inclusive-gateway': [ 'error', { version: '8.6' } ],
     'link-event': [ 'error', { version: '8.6' } ],
     'loop-characteristics': [ 'error', { version: '8.6' } ],
@@ -340,7 +341,6 @@ describe('configs', function() {
     'timer': [ 'error', { version: '8.6' } ],
     'user-task-definition': [ 'warn', { version: '8.6' } ],
     'user-task-form': [ 'error', { version: '8.6' } ],
-    'version-compatibility-validator': [ 'warn', { version: '8.6' } ],
     'wait-for-completion': [ 'error', { version: '8.6' } ]
   }));
 
@@ -368,6 +368,7 @@ describe('configs', function() {
     'element-type': 'error',
     'called-element': 'error',
     'collapsed-subprocess': 'error',
+    'connector-properties': 'warn',
     'duplicate-task-headers': 'error',
     'error-reference': 'error',
     'escalation-boundary-event-attached-to-ref': 'error',
@@ -400,7 +401,6 @@ describe('configs', function() {
     'timer': 'error',
     'user-task-definition': 'warn',
     'user-task-form': 'error',
-    'version-compatibility-validator': 'warn',
     'wait-for-completion': 'error'
   }));
 
