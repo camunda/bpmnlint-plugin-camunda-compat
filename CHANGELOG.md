@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.20.1
+
+* `FIX`: `connector-properties` rule reports allowed version ([08d9ae1c](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/08d9ae1ccad1218419d1ff4641344231ab28b7e8))
+
 ## 2.20.0
 
 * `FEAT`: add `connector-properties` rule ([#163](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/163))
@@ -64,7 +68,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 2.9.1
 
-* `FIX`: allow spaces and `-`  in secret names (`camunda-cloud/secrets`)
+* `FIX`: allow spaces and `-` in secret names (`camunda-cloud/secrets`)
 
 ## 2.9.0
 
