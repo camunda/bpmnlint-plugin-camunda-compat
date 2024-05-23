@@ -37,7 +37,7 @@ const camundaCloud13Rules = withConfig(camundaCloud12Rules, { version: '1.3' });
 
 const camundaCloud80Rules = withConfig({
   ...omit(camundaCloud13Rules, 'no-template'),
-  'version-compatibility-validator': 'warn'
+  'connector-properties': 'warn'
 }, { version: '8.0' });
 
 const camundaCloud81Rules = withConfig({
@@ -103,6 +103,7 @@ const rules = {
   'element-type': './rules/camunda-cloud/element-type',
   'called-element': './rules/camunda-cloud/called-element',
   'collapsed-subprocess': './rules/camunda-cloud/collapsed-subprocess',
+  'connector-properties': './rules/camunda-cloud/connector-properties',
   'duplicate-task-headers': './rules/camunda-cloud/duplicate-task-headers',
   'error-reference': './rules/camunda-cloud/error-reference',
   'escalation-boundary-event-attached-to-ref': './rules/camunda-cloud/escalation-boundary-event-attached-to-ref',
@@ -135,7 +136,6 @@ const rules = {
   'timer': './rules/camunda-cloud/timer',
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
   'user-task-form': './rules/camunda-cloud/user-task-form',
-  'version-compatibility-validator': './rules/camunda-cloud/version-compatibility-validator',
   'wait-for-completion': './rules/camunda-cloud/wait-for-completion'
 };
 

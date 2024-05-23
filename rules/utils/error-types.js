@@ -1,5 +1,6 @@
 module.exports.ERROR_TYPES = Object.freeze({
   CHILD_ELEMENT_TYPE_NOT_ALLOWED: 'camunda.childElementTypeNotAllowed',
+  CONNECTORS_PROPERTY_VALUE_NOT_ALLOWED: 'camunda.connectors.propertyValueNotAllowed',
   ELEMENT_COLLAPSED_NOT_ALLOWED: 'camunda.elementCollapsedNotAllowed',
   ELEMENT_MULTIPLE_NOT_ALLOWED: 'camunda.elementMultipleNotAllowed',
   ELEMENT_TYPE_NOT_ALLOWED: 'camunda.elementTypeNotAllowed',
@@ -20,6 +21,5 @@ module.exports.ERROR_TYPES = Object.freeze({
   PROPERTY_VALUE_DUPLICATED: 'camunda.propertyValueDuplicated',
   PROPERTY_VALUE_NOT_ALLOWED: 'camunda.propertyValueNotAllowed',
   PROPERTY_VALUE_REQUIRED: 'camunda.propertyValueRequired',
-  SECRET_EXPRESSION_FORMAT_DEPRECATED: 'camunda.secretExpressionFormatDeprecated',
-  VERSION_INCOMPATIBILITY: 'camunda.versionIncompatibility'
+  SECRET_EXPRESSION_FORMAT_DEPRECATED: 'camunda.secretExpressionFormatDeprecated'
 });
