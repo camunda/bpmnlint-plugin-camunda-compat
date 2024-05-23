@@ -74,6 +74,7 @@ const invalid = [
         node: 'zeebe:Property',
         parentNode: 'StartEvent_1',
         property: 'name',
+        allowedVersion: '8.6',
         connectorProperty: {
           type: 'zeebe:Property',
           properties: {
@@ -113,6 +114,7 @@ const invalid = [
         node: 'zeebe:Property',
         parentNode: 'StartEvent_1',
         property: 'name',
+        allowedVersion: '8.6',
         connectorProperty: {
           type: 'zeebe:Property',
           properties: {
@@ -152,6 +154,7 @@ const invalid = [
         node: 'zeebe:Property',
         parentNode: 'StartEvent_1',
         property: 'name',
+        allowedVersion: '8.6',
         connectorProperty: {
           type: 'zeebe:Property',
           properties: {

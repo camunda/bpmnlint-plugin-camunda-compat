@@ -81,6 +81,7 @@ function getInboundConnectorError(node, propertyName, allowedVersion) {
       node: property,
       parentNode: node,
       property: 'name',
+      allowedVersion,
       connectorProperty: {
         type: connectorProperty,
         properties: {
