@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.20.2
+
+* `FIX`: fix connector property naming for `connector-properties` rule ([ba130360](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/ba130360d93d694591a3a6ff6faf493f3d393d36))
+
 ## 2.20.1
 
 * `FIX`: `connector-properties` rule reports allowed version ([08d9ae1c](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/08d9ae1ccad1218419d1ff4641344231ab28b7e8))
