@@ -76,11 +76,8 @@ const invalid = [
         property: 'name',
         allowedVersion: '8.6',
         connectorProperty: {
-          type: 'zeebe:Property',
-          properties: {
-            name: 'inbound.type',
-            value: 'io.camunda:connector-rabbitmq-inbound:1'
-          }
+          node: 'zeebe:Property',
+          properties: [ 'name', 'value' ]
         }
       }
     }
@@ -116,11 +113,8 @@ const invalid = [
         property: 'name',
         allowedVersion: '8.6',
         connectorProperty: {
-          type: 'zeebe:Property',
-          properties: {
-            name: 'inbound.type',
-            value: 'io.camunda:connector-rabbitmq-inbound:1'
-          }
+          node: 'zeebe:Property',
+          properties: [ 'name', 'value' ]
         }
       }
     }
@@ -156,11 +150,8 @@ const invalid = [
         property: 'name',
         allowedVersion: '8.6',
         connectorProperty: {
-          type: 'zeebe:Property',
-          properties: {
-            name: 'inbound.type',
-            value: 'io.camunda:connector-rabbitmq-inbound:1'
-          }
+          node: 'zeebe:Property',
+          properties: [ 'name', 'value' ]
         }
       }
     }

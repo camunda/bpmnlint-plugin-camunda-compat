@@ -83,11 +83,8 @@ function getInboundConnectorError(node, propertyName, allowedVersion) {
       property: 'name',
       allowedVersion,
       connectorProperty: {
-        type: connectorProperty,
-        properties: {
-          name: connectorProperty.get('name'),
-          value: connectorProperty.get('value')
-        }
+        node: connectorProperty,
+        properties: [ 'name', 'value' ]
       }
     }
   };
