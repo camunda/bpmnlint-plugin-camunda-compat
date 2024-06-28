@@ -38,16 +38,17 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    const error = getFlowElements(node)
+    // Create subgrapg of nodes that can be part of an infinite loop
+    const relevantNodes = getFlowElements(node)
       .filter(flowElement => {
         return isAnyExactly(flowElement, LOOP_ELEMENT_TYPES);
-      })
-      .reduce((error, flowElement) => {
-        return error || findLoop(flowElement, node);
-      }, null);
+      });
 
-    if (error) {
-      reportErrors(node, reporter, error);
+    // Use BFS to find loops
+    const errors = findLoops(relevantNodes, node);
+
+    if (errors) {
+      reportErrors(node, reporter, errors);
     }
   }
 
@@ -56,51 +57,84 @@ module.exports = skipInNonExecutableProcess(function() {
   };
 });
 
-function findLoop(flowElement, parentElement, visitedFlowElements = []) {
+function findLoops(flowElements, root) {
+  const allFlowElements = new Set(flowElements);
+  const unvisitedFlowElements = new Set(flowElements);
 
-  // (1.1) is not a loop
-  if (!isAnyExactly(flowElement, LOOP_ELEMENT_TYPES)) {
+  const errors = [];
+
+  // Use BFS until we visited all nodes
+  while (unvisitedFlowElements.size) {
+    const firstElement = unvisitedFlowElements.values().next().value;
+    unvisitedFlowElements.delete(firstElement);
+
+    // We can have multiple separate graphs, use first remaining node if we exhausted the current graph
+    const elementsToVisit = [ {
+      currentNode: firstElement,
+      path: [ ]
+    } ];
+
+    while (elementsToVisit.length) {
+      const { currentNode, path } = elementsToVisit.shift();
+      const newPath = [ ...path, currentNode ];
+
+      const nextFlowElements = getNextNodes(currentNode, allFlowElements);
+
+      nextFlowElements.forEach(nextNode => {
+        if (unvisitedFlowElements.has(nextNode))
+        {
+          unvisitedFlowElements.delete(nextNode);
+          elementsToVisit.push({
+            currentNode: nextNode,
+            path: newPath
+          });
+        }
+
+        // We already visited this node, we found a loop
+        else if (newPath.includes(nextNode)) {
+          errors.push(handleLoop(newPath, nextNode, root));
+        }
+      });
+
+    }
+  }
+
+  return errors.filter(Boolean);
+}
+
+const handleLoop = (path, currentNode, root) => {
+  const loop = path.slice(path.indexOf(currentNode));
+
+  if (isIgnoredLoop(loop)) {
     return null;
   }
 
-  const nextFlowElements = getNextFlowElements(flowElement);
-
-  // (1.2) is not a loop
-  if (!nextFlowElements.length) {
-    return null;
-  }
-
-  // (2) may be a loop
-  if (!visitedFlowElements.includes(flowElement)) {
-    return nextFlowElements.reduce((error, nextFlowElement) => {
-      return error || findLoop(nextFlowElement, parentElement, [ ...visitedFlowElements, flowElement ]);
-    }, null);
-  }
-
-  // (3) is a loop but ignored
-  if (isIgnoredLoop(visitedFlowElements)) {
-    return null;
-  }
-
-  const elements = visitedFlowElements.slice(visitedFlowElements.indexOf(flowElement));
-
-  // (4) is a loop
   return {
-    message: `Loop detected: ${ elements.map(({ id }) => id).join(' -> ') } -> ${ flowElement.id }`,
+    message: `Loop detected: ${ loop.map(({ id }) => id).join(' -> ') } -> ${ currentNode.id }`,
     path: null,
     data: {
       type: ERROR_TYPES.LOOP_NOT_ALLOWED,
-      node: parentElement,
+      node: root,
       parentNode: null,
-      elements: elements.map(({ id }) => id)
+      elements: loop.map(({ id }) => id)
     }
   };
-}
+};
+
+const getNextNodes = (node, validNodes) => {
+
+  // Get all outgoing nodes
+  const allOutgoing = getNextFlowElements(node);
+
+  // Filter out nodes that can't be part of an infinite loop
+  return allOutgoing.filter(outgoing => validNodes.has(outgoing));
+};
+
 
 function getFlowElements(node) {
   return node.get('flowElements').reduce((flowElements, flowElement) => {
     if (is(flowElement, 'bpmn:FlowElementsContainer')) {
-      return [ ...flowElements, ...getFlowElements(flowElement) ];
+      return [ ...flowElements, flowElement, ...getFlowElements(flowElement) ];
     }
 
     return [ ...flowElements, flowElement ];
