@@ -75,7 +75,8 @@ const camundaCloud85Rules = withConfig({
   'wait-for-completion': 'error'
 }, { version: '8.5' });
 
-const camundaCloud86Rules = withConfig(camundaCloud85Rules, { version: '8.6' });
+const camundaCloud86Rules = withConfig(
+  omit(camundaCloud85Rules, 'inclusive-gateway'), { version: '8.6' });
 
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'info'
