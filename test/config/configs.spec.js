@@ -325,7 +325,6 @@ describe('configs', function() {
     'executable-process': [ 'error', { version: '8.6' } ],
     'feel': [ 'error', { version: '8.6' } ],
     'implementation': [ 'error', { version: '8.6' } ],
-    'inclusive-gateway': [ 'error', { version: '8.6' } ],
     'link-event': [ 'error', { version: '8.6' } ],
     'loop-characteristics': [ 'error', { version: '8.6' } ],
     'message-reference': [ 'error', { version: '8.6' } ],
