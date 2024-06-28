@@ -38,7 +38,7 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    // Create subgrapg of nodes that can be part of an infinite loop
+    // Create subgraph of nodes that can be part of an infinite loop
     const relevantNodes = getFlowElements(node)
       .filter(flowElement => {
         return isAnyExactly(flowElement, LOOP_ELEMENT_TYPES);
