@@ -53,7 +53,7 @@ module.exports = skipInNonExecutableProcess(function() {
     // Any loop found within the simplified graph is a valid loop, as all Vertices in the graph are `LOOP_REQUIRED_ELEMENT_TYPES`.
     const minimalGraph = simplifyGraph(relevantNodes);
 
-    // 3. Use BFS to find loops in the simplified Graph.
+    // 3. Use breadth-first search to find loops in the simplified Graph.
     const errors = findLoops(minimalGraph, node);
 
     if (errors) {
@@ -75,7 +75,7 @@ module.exports = skipInNonExecutableProcess(function() {
 
 /**
  * Simplifies the graph by removing all non-`LOOP_REQUIRED_ELEMENT_TYPES` elements and connecting incoming and outgoing nodes directly.
- * Annotates the edges with the original path. Uses BFS to find paths.
+ * Annotates the edges with the original path. Uses breadth-first search to find paths.
  *
  * @param {Array<ModdleElement>} flowElements
  * @returns {Map<ModdleElement, GraphNode>}
@@ -85,7 +85,7 @@ function simplifyGraph(flowElements) {
   // Transform Array<ModdleElement> into Map<ModdleElement, GraphNode>
   const graph = elementsToGraph(flowElements);
 
-  BFS(graph, (node) => {
+  breadthFirstSearch(graph, (node) => {
     const { element, outgoing } = node;
 
     // Remove non-required element and connect incoming and outgoing nodes directly
@@ -116,7 +116,7 @@ function simplifyGraph(flowElements) {
 
 
 /**
- * Uses BFS to find loops in the graph and generate errors.
+ * Uses breadth-first search to find loops in the graph and generate errors.
  *
  * @param {Map<ModdleElement, GraphNode>} graph The simplified graph containing only required elements
  * @param {ModdleElement} root used for reporting the errors
@@ -125,8 +125,8 @@ function simplifyGraph(flowElements) {
 function findLoops(graph, root) {
   const errors = [];
 
-  // Traverse graph using BFS, remembering the path. If we find a loop, report it.
-  BFS(graph, (node) => {
+  // Traverse graph using breadth-first search, remembering the path. If we find a loop, report it.
+  breadthFirstSearch(graph, (node) => {
     const { element, outgoing, path = [] } = node;
 
     const nextElements = [ ];
@@ -285,12 +285,12 @@ function connectNodes(graph, node) {
 }
 
 /**
- * Iterates over all nodes in the graph using BFS.
+ * Iterates over all nodes in the graph using breadth-first search.
  *
  * @param {Map<ModdleElement, GraphNode>} graph
  * @param {Function} iterationCallback
  */
-function BFS(graph, iterationCallback) {
+function breadthFirstSearch(graph, iterationCallback) {
   const unvisited = new Set(graph.values());
 
   while (unvisited.size) {
