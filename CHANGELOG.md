@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.21.0
+
 * `FEAT`: allow converging inclusive gateway in 8.6 ([#166](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/166))
 
 ## 2.20.2
