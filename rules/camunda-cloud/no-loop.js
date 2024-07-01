@@ -93,7 +93,7 @@ function simplifyGraph(flowElements) {
       connectNodes(graph, node);
     }
 
-    return [ ...outgoing.keys() ].map(key => graph.get(key));
+    return Array.from(outgoing.keys(), key => graph.get(key));
   });
 
   // Clean up all references to removed elements
