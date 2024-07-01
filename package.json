@@ -1,6 +1,6 @@
 {
   "name": "bpmnlint-plugin-camunda-compat",
-  "version": "2.21.0",
+  "version": "2.21.1",
   "description": "A bpmnlint plug-in for Camunda compatibility",
   "main": "index.js",
   "scripts": {
