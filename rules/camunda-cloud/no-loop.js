@@ -14,6 +14,10 @@ const { ERROR_TYPES } = require('../utils/error-types');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
+/**
+ * @typedef {import('bpmn-moddle').BaseElement} ModdleElement
+ **/
+
 const LOOP_REQUIRED_ELEMENT_TYPES = [
   'bpmn:CallActivity',
   'bpmn:ManualTask',
@@ -38,14 +42,19 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    // Create subgraph of nodes that can be part of an infinite loop
+    // 1. Remove all elements that can be part of an infinite loop
     const relevantNodes = getFlowElements(node)
       .filter(flowElement => {
         return isAnyExactly(flowElement, LOOP_ELEMENT_TYPES);
       });
 
-    // Use BFS to find loops
-    const errors = findLoops(relevantNodes, node);
+    // 2. Remove all non-required elements. This produces a graph that only contains the required elements,
+    // with annotated edges that preserve the original path.
+    // Any loop found within the simplified graph is a valid loop, as all Vertices in the graph are `LOOP_REQUIRED_ELEMENT_TYPES`.
+    const minimalGraph = simplifyGraph(relevantNodes);
+
+    // 3. Use BFS to find loops in the simplified Graph.
+    const errors = findLoops(minimalGraph, node);
 
     if (errors) {
       reportErrors(node, reporter, errors);
@@ -57,47 +66,85 @@ module.exports = skipInNonExecutableProcess(function() {
   };
 });
 
-function findLoops(flowElements, root) {
-  const allFlowElements = new Set(flowElements);
-  const unvisitedFlowElements = new Set(flowElements);
+/**
+ * @typedef {Object} GraphNode
+ * @property {ModdleElement} element the bpmn element this node represents
+ * @property {Map<ModdleElement, Array<ModdleElement>>} incoming Maps the target node with the shortest path to it
+ * @property {Map<ModdleElement, Array<ModdleElement>>} outgoing Maps the source node with the shortest path to it
+ */
 
+/**
+ * Simplifies the graph by removing all non-`LOOP_REQUIRED_ELEMENT_TYPES` elements and connecting incoming and outgoing nodes directly.
+ * Annotates the edges with the original path. Uses BFS to find paths.
+ *
+ * @param {Array<ModdleElement>} flowElements
+ * @returns {Map<ModdleElement, GraphNode>}
+ */
+function simplifyGraph(flowElements) {
+
+  // Transform Array<ModdleElement> into Map<ModdleElement, GraphNode>
+  const graph = elementsToGraph(flowElements);
+
+  BFS(graph, (node) => {
+    const { element, outgoing } = node;
+
+    // Remove non-required element and connect incoming and outgoing nodes directly
+    if (!isAnyExactly(element, LOOP_REQUIRED_ELEMENT_TYPES)) {
+      connectNodes(graph, node);
+    }
+
+    return [ ...outgoing.keys() ].map(key => graph.get(key));
+  });
+
+  // Clean up all references to removed elements
+  graph.forEach(({ incoming, outgoing }) => {
+    incoming.forEach((_, key) => {
+      if (!graph.has(key)) {
+        incoming.delete(key);
+      }
+    });
+
+    outgoing.forEach((_, key) => {
+      if (!graph.has(key)) {
+        outgoing.delete(key);
+      }
+    });
+  });
+
+  return graph;
+}
+
+
+/**
+ * Uses BFS to find loops in the graph and generate errors.
+ *
+ * @param {Map<ModdleElement, GraphNode>} graph The simplified graph containing only required elements
+ * @param {ModdleElement} root used for reporting the errors
+ * @returns {Array<Object>} errors
+ */
+function findLoops(graph, root) {
   const errors = [];
 
-  // Use BFS until we visited all nodes
-  while (unvisitedFlowElements.size) {
-    const firstElement = unvisitedFlowElements.values().next().value;
-    unvisitedFlowElements.delete(firstElement);
+  // Traverse graph using BFS, remembering the path. If we find a loop, report it.
+  BFS(graph, (node) => {
+    const { element, outgoing, path = [] } = node;
 
-    // We can have multiple separate graphs, use first remaining node if we exhausted the current graph
-    const elementsToVisit = [ {
-      currentNode: firstElement,
-      path: [ ]
-    } ];
+    const nextElements = [ ];
+    outgoing.forEach((connectionPath, nextElement) => {
+      const newPath = [ ...path, element, ...connectionPath ];
 
-    while (elementsToVisit.length) {
-      const { currentNode, path } = elementsToVisit.shift();
-      const newPath = [ ...path, currentNode ];
+      // We already visited this node, we found a loop
+      if (newPath.includes(nextElement)) {
+        errors.push(handleLoop(newPath, nextElement, root));
+      } else {
+        const nextNode = graph.get(nextElement);
+        nextNode.path = nextNode.path || newPath;
+        nextElements.push(nextNode);
+      }
+    });
 
-      const nextFlowElements = getNextNodes(currentNode, allFlowElements);
-
-      nextFlowElements.forEach(nextNode => {
-        if (unvisitedFlowElements.has(nextNode))
-        {
-          unvisitedFlowElements.delete(nextNode);
-          elementsToVisit.push({
-            currentNode: nextNode,
-            path: newPath
-          });
-        }
-
-        // We already visited this node, we found a loop
-        else if (newPath.includes(nextNode)) {
-          errors.push(handleLoop(newPath, nextNode, root));
-        }
-      });
-
-    }
-  }
+    return nextElements;
+  });
 
   return errors.filter(Boolean);
 }
@@ -120,16 +167,6 @@ const handleLoop = (path, currentNode, root) => {
     }
   };
 };
-
-const getNextNodes = (node, validNodes) => {
-
-  // Get all outgoing nodes
-  const allOutgoing = getNextFlowElements(node);
-
-  // Filter out nodes that can't be part of an infinite loop
-  return allOutgoing.filter(outgoing => validNodes.has(outgoing));
-};
-
 
 function getFlowElements(node) {
   return node.get('flowElements').reduce((flowElements, flowElement) => {
@@ -177,4 +214,104 @@ function isIgnoredLoop(elements) {
 
 function isFeel(value) {
   return isString(value) && value.startsWith('=');
+}
+
+const getOrSet = (map, key, defaultValue) => {
+  if (!map.has(key)) {
+    map.set(key, defaultValue);
+  }
+
+  return map.get(key);
+};
+
+const setIfAbsent = (map, key, value) => {
+  map.has(key) || map.set(key, value);
+};
+
+/**
+ * Transform Array of flow elements into a Graph structure, adding implicit connections (e.g. SubProcess -> StartEvent)
+ * via `getNextFlowElements`.
+ *
+ * @param {Array<ModdleElement>} flowElements
+ * @returns Map<ModdleElement, GraphNode>
+ */
+function elementsToGraph(flowElements) {
+  return flowElements.reduce((currentMap, element) => {
+    const currentNode = getOrSet(currentMap, element, {
+      element,
+      incoming: new Map(),
+      outgoing: new Map(),
+    });
+
+    const nextFlowElements = getNextFlowElements(element);
+
+    nextFlowElements.forEach(nextElement => {
+      const nextNode = getOrSet(currentMap, nextElement, {
+        element: nextElement,
+        incoming: new Map(),
+        outgoing: new Map(),
+      });
+
+      nextNode.incoming.set(element, []);
+      currentNode.outgoing.set(nextElement, []);
+    });
+
+    return currentMap;
+  }, new Map());
+}
+
+/**
+ * Connects incoming and outgoing nodes directly, add current node to the path and remove node from graph.
+ */
+function connectNodes(graph, node) {
+  const { element, incoming, outgoing } = node;
+
+  incoming.forEach((fromPath, fromKey) => {
+    outgoing.forEach((toPath, toKey) => {
+      const fromNode = graph.get(fromKey);
+      const toNode = graph.get(toKey);
+
+      if (!fromNode || !toNode) {
+        return;
+      }
+
+      // We only care about the shortest path, so we don't need to update the path if it's already set
+      setIfAbsent(fromNode.outgoing, toKey, [ ...fromPath, element, ...toPath ]);
+      setIfAbsent(toNode.incoming, fromKey, [ ...fromPath, element, ...toPath ]);
+    });
+  });
+
+  graph.delete(element);
+}
+
+/**
+ * Iterates over all nodes in the graph using BFS.
+ *
+ * @param {Map<ModdleElement, GraphNode>} graph
+ * @param {Function} iterationCallback
+ */
+function BFS(graph, iterationCallback) {
+  const unvisited = new Set(graph.values());
+
+  while (unvisited.size) {
+    let firstElement = unvisited.values().next().value;
+    unvisited.delete(firstElement);
+
+    const elementsToVisit = [ firstElement ];
+
+    while (elementsToVisit.length) {
+      const node = elementsToVisit.shift();
+
+      const nextElements = iterationCallback(node);
+
+      nextElements.forEach(nextElement => {
+        if (!unvisited.has(nextElement)) {
+          return;
+        }
+
+        unvisited.delete(nextElement);
+        elementsToVisit.push(nextElement);
+      });
+    }
+  }
 }
