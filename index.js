@@ -12,6 +12,7 @@ const camundaCloud10Rules = withConfig({
   'loop-characteristics': 'error',
   'message-reference': 'error',
   'no-candidate-users': 'error',
+  'no-execution-listeners': 'error',
   'no-expression': 'error',
   'no-loop': 'error',
   'no-multiple-none-start-events': 'error',
@@ -75,8 +76,11 @@ const camundaCloud85Rules = withConfig({
   'wait-for-completion': 'error'
 }, { version: '8.5' });
 
-const camundaCloud86Rules = withConfig(
-  omit(camundaCloud85Rules, 'inclusive-gateway'), { version: '8.6' });
+const camundaCloud86Rules = withConfig({
+  ...omit(camundaCloud85Rules, [ 'inclusive-gateway', 'no-execution-listeners' ]),
+  'duplicate-execution-listeners': 'error',
+  'execution-listener': 'error'
+}, { version: '8.6' });
 
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'info'
@@ -105,12 +109,14 @@ const rules = {
   'called-element': './rules/camunda-cloud/called-element',
   'collapsed-subprocess': './rules/camunda-cloud/collapsed-subprocess',
   'connector-properties': './rules/camunda-cloud/connector-properties',
+  'duplicate-execution-listeners': './rules/camunda-cloud/duplicate-execution-listeners',
   'duplicate-task-headers': './rules/camunda-cloud/duplicate-task-headers',
   'error-reference': './rules/camunda-cloud/error-reference',
   'escalation-boundary-event-attached-to-ref': './rules/camunda-cloud/escalation-boundary-event-attached-to-ref',
   'escalation-reference': './rules/camunda-cloud/escalation-reference',
   'event-based-gateway-target': './rules/camunda-cloud/event-based-gateway-target',
   'executable-process': './rules/camunda-cloud/executable-process',
+  'execution-listener': './rules/camunda-cloud/execution-listener',
   'feel': './rules/camunda-cloud/feel',
   'history-time-to-live': './rules/camunda-platform/history-time-to-live',
   'implementation': './rules/camunda-cloud/implementation',
@@ -119,6 +125,7 @@ const rules = {
   'loop-characteristics': './rules/camunda-cloud/loop-characteristics',
   'message-reference': './rules/camunda-cloud/message-reference',
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
+  'no-execution-listeners': './rules/camunda-cloud/no-execution-listeners',
   'no-expression': './rules/camunda-cloud/no-expression',
   'no-loop': './rules/camunda-cloud/no-loop',
   'no-multiple-none-start-events': './rules/camunda-cloud/no-multiple-none-start-events',
