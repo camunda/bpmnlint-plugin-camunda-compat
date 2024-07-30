@@ -126,14 +126,16 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Duplicate execution listener with event type <start> and job type <duplicate>',
+      message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <duplicate>',
       path: null,
       data: {
-        type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+        type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
         node: 'zeebe:ExecutionListeners',
         parentNode: 'ServiceTask_1',
-        duplicatedProperty: 'type',
-        duplicatedPropertyValue: 'duplicate',
+        'duplicatedProperties': {
+          'eventType': 'start',
+          'type': 'duplicate'
+        },
         properties: [
           'zeebe:ExecutionListener',
           'zeebe:ExecutionListener'
@@ -158,14 +160,16 @@ const invalid = [
     report: [
       {
         id: 'ServiceTask_1',
-        message: 'Duplicate execution listener with event type <start> and job type <duplicate>',
+        message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <duplicate>',
         path: null,
         data: {
-          type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+          type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
           node: 'zeebe:ExecutionListeners',
           parentNode: 'ServiceTask_1',
-          duplicatedProperty: 'type',
-          duplicatedPropertyValue: 'duplicate',
+          'duplicatedProperties': {
+            'eventType': 'start',
+            'type': 'duplicate'
+          },
           properties: [
             'zeebe:ExecutionListener',
             'zeebe:ExecutionListener',
@@ -176,14 +180,16 @@ const invalid = [
       },
       {
         id: 'ServiceTask_1',
-        message: 'Duplicate execution listener with event type <start> and job type <duplicate>',
+        message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <duplicate>',
         path: null,
         data: {
-          type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+          type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
           node: 'zeebe:ExecutionListeners',
           parentNode: 'ServiceTask_1',
-          duplicatedProperty: 'type',
-          duplicatedPropertyValue: 'duplicate',
+          'duplicatedProperties': {
+            'eventType': 'start',
+            'type': 'duplicate'
+          },
           properties: [
             'zeebe:ExecutionListener',
             'zeebe:ExecutionListener',
@@ -211,14 +217,16 @@ const invalid = [
     report: [
       {
         id: 'ServiceTask_1',
-        message: 'Duplicate execution listener with event type <start> and job type <duplicate>',
+        message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <duplicate>',
         path: null,
         data: {
-          type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+          type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
           node: 'zeebe:ExecutionListeners',
           parentNode: 'ServiceTask_1',
-          duplicatedProperty: 'type',
-          duplicatedPropertyValue: 'duplicate',
+          'duplicatedProperties': {
+            'eventType': 'start',
+            'type': 'duplicate'
+          },
           properties: [
             'zeebe:ExecutionListener',
             'zeebe:ExecutionListener'
@@ -228,14 +236,16 @@ const invalid = [
       },
       {
         id: 'ServiceTask_1',
-        message: 'Duplicate execution listener with event type <start> and job type <duplicate_2>',
+        message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <duplicate_2>',
         path: null,
         data: {
-          type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+          type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
           node: 'zeebe:ExecutionListeners',
           parentNode: 'ServiceTask_1',
-          duplicatedProperty: 'type',
-          duplicatedPropertyValue: 'duplicate_2',
+          'duplicatedProperties': {
+            'eventType': 'start',
+            'type': 'duplicate_2'
+          },
           properties: [
             'zeebe:ExecutionListener',
             'zeebe:ExecutionListener'
@@ -259,14 +269,16 @@ const invalid = [
     `)),
     report: {
       id: 'ServiceTask_1',
-      message: 'Duplicate execution listener with event type <start> and job type <>',
+      message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <>',
       path: null,
       data: {
-        type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
+        type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
         node: 'zeebe:ExecutionListeners',
         parentNode: 'ServiceTask_1',
-        duplicatedProperty: 'type',
-        duplicatedPropertyValue: '',
+        'duplicatedProperties': {
+          'eventType': 'start',
+          'type': ''
+        },
         properties: [
           'zeebe:ExecutionListener',
           'zeebe:ExecutionListener'

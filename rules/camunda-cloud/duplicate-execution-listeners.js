@@ -1,6 +1,6 @@
 const {
-  ERROR_TYPES,
-  findExtensionElement
+  findExtensionElement,
+  hasDuplicatedPropertiesValues
 } = require('../utils/element');
 
 const { reportErrors } = require('../utils/reporter');
@@ -29,53 +29,5 @@ module.exports = skipInNonExecutableProcess(function() {
 
 // helpers //////////
 function hasDuplicatedExecutionListeners(executionListeners, parentNode = null) {
-  const listeners = executionListeners.get('listeners');
-
-  // (1) find duplicates
-  const duplicates = [];
-  const events = new Map();
-  for (const listener of listeners) {
-    const eventName = listener.get('eventType'),
-          type = listener.get('type');
-
-    if (!events.has(eventName)) {
-      events.set(eventName, new Set([ type ]));
-      continue;
-    }
-
-    const types = events.get(eventName);
-    if (types.has(type)) {
-      duplicates.push(listener);
-    } else {
-      types.add(type);
-    }
-  }
-
-  // (2) report error for each duplicate
-  if (duplicates.length) {
-    return duplicates.map(duplicate => {
-      const eventName = duplicate.get('eventType'),
-            type = duplicate.get('type');
-
-      // (3) find properties with duplicate
-      const duplicateProperties = listeners.filter(listener => listener.get('eventType') === eventName && listener.get('type') === type);
-
-      // (4) report error
-      return {
-        message: `Duplicate execution listener with event type <${eventName}> and job type <${type}>`,
-        path: null,
-        data: {
-          type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
-          node: executionListeners,
-          parentNode: parentNode === executionListeners ? null : parentNode,
-          duplicatedProperty: 'type',
-          duplicatedPropertyValue: type,
-          properties: duplicateProperties,
-          propertiesName: 'listeners'
-        }
-      };
-    });
-  }
-
-  return [];
+  return hasDuplicatedPropertiesValues(executionListeners, 'listeners', [ 'eventType', 'type' ], parentNode);
 }
