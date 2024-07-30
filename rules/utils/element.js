@@ -1,4 +1,5 @@
 const {
+  filter,
   isArray,
   isDefined,
   isFunction,
@@ -6,6 +7,7 @@ const {
   isObject,
   isString,
   isUndefined,
+  matchPattern,
   some
 } = require('min-dash');
 
@@ -125,6 +127,53 @@ module.exports.hasDuplicatedPropertyValues = function(node, propertiesName, prop
           duplicatedPropertyValue: duplicate,
           properties: duplicateProperties,
           propertiesName
+        }
+      };
+    });
+  }
+
+  return [];
+};
+
+// @TODO(@barmac): use tree algorithm to reduce complexity
+module.exports.hasDuplicatedPropertiesValues = function(node, containerPropertyName, propertiesNames, parentNode = null) {
+  const properties = node.get(containerPropertyName);
+
+  // (1) find duplicates
+  const duplicates = properties.reduce((foundDuplicates, property, index) => {
+    const previous = properties.slice(0, index);
+    const isDuplicate = previous.find(p => propertiesNames.every(propertyName => p.get(propertyName) === property.get(propertyName)));
+
+    if (isDuplicate) {
+      return foundDuplicates.concat(property);
+    }
+
+    return foundDuplicates;
+  }, []);
+
+  // (2) report error for each duplicate
+  if (duplicates.length) {
+    return duplicates.map(duplicate => {
+      const propertiesMap = {};
+      for (const property of propertiesNames) {
+        propertiesMap[property] = duplicate.get(property);
+      }
+
+      // (3) find properties with duplicate
+      const duplicateProperties = filter(properties, matchPattern(propertiesMap));
+      const duplicatesSummary = propertiesNames.map(propertyName => `<${ propertyName }> with value of <${ propertiesMap[propertyName] }>`).join(', ');
+
+      // (4) report error
+      return {
+        message: `Properties of type <${ duplicate.$type }> have duplicates: ${ duplicatesSummary }`,
+        path: null,
+        data: {
+          type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
+          node,
+          parentNode: parentNode == node ? null : parentNode,
+          duplicatedProperties: propertiesMap,
+          properties: duplicateProperties,
+          propertiesName: containerPropertyName
         }
       };
     });

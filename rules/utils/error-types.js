@@ -19,6 +19,7 @@ module.exports.ERROR_TYPES = Object.freeze({
   PROPERTY_REQUIRED: 'camunda.propertyRequired',
   PROPERTY_TYPE_NOT_ALLOWED: 'camunda.propertyTypeNotAllowed',
   PROPERTY_VALUE_DUPLICATED: 'camunda.propertyValueDuplicated',
+  PROPERTY_VALUES_DUPLICATED: 'camunda.propertiesValuesDuplicated',
   PROPERTY_VALUE_NOT_ALLOWED: 'camunda.propertyValueNotAllowed',
   PROPERTY_VALUE_REQUIRED: 'camunda.propertyValueRequired',
   SECRET_EXPRESSION_FORMAT_DEPRECATED: 'camunda.secretExpressionFormatDeprecated'
