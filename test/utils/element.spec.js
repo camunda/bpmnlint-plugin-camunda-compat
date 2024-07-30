@@ -4,6 +4,7 @@ const {
   ERROR_TYPES,
   formatNames,
   hasDuplicatedPropertyValues,
+  hasDuplicatedPropertiesValues,
   hasExpression,
   hasExtensionElement,
   hasNoExtensionElement,
@@ -443,6 +444,156 @@ describe('utils/element', function() {
           duplicatedPropertyValue: 'bar',
           properties: taskHeaders.get('values').filter(header => header.get('key') === 'bar'),
           propertiesName: 'values'
+        }
+      });
+    });
+
+  });
+
+
+  describe('#hasDuplicatedPropertiesValues', function() {
+
+    it('should not return errors', function() {
+
+      // given
+      const executionListeners = createElement('zeebe:ExecutionListeners', {
+        listeners: [
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'foo'
+          }),
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'bar'
+          }),
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'baz'
+          })
+        ]
+      });
+
+      // when
+      const errors = hasDuplicatedPropertiesValues(executionListeners, 'listeners', [ 'eventType', 'type' ]);
+
+      // then
+      expect(errors).to.be.empty;
+    });
+
+
+    it('should return error', function() {
+
+      // given
+      const executionListeners = createElement('zeebe:ExecutionListeners', {
+        listeners: [
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'foo'
+          }),
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'foo'
+          }),
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'bar'
+          }),
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'baz'
+          })
+        ]
+      });
+
+      // when
+      const errors = hasDuplicatedPropertiesValues(executionListeners, 'listeners', [ 'eventType', 'type' ]);
+
+      // then
+      expect(errors).to.exist;
+      expect(errors).to.have.length(1);
+
+      expect(errors[ 0 ]).eql({
+        message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <foo>',
+        path: null,
+        data: {
+          type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
+          node: executionListeners,
+          parentNode: null,
+          duplicatedProperties: {
+            eventType: 'start',
+            type: 'foo'
+          },
+          properties: executionListeners.get('listeners').filter(listener => listener.get('type') === 'foo'),
+          propertiesName: 'listeners'
+        }
+      });
+    });
+
+
+    it('should return errors', function() {
+
+      // given
+      const executionListeners = createElement('zeebe:ExecutionListeners', {
+        listeners: [
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'foo'
+          }),
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'foo'
+          }),
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'bar'
+          }),
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'bar'
+          }),
+          createElement('zeebe:ExecutionListener', {
+            eventType: 'start',
+            type: 'baz'
+          })
+        ]
+      });
+
+      // when
+      const errors = hasDuplicatedPropertiesValues(executionListeners, 'listeners', [ 'eventType', 'type' ]);
+
+      // then
+      expect(errors).to.exist;
+      expect(errors).to.have.length(2);
+
+      expect(errors[ 0 ]).eql({
+        message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <foo>',
+        path: null,
+        data: {
+          type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
+          node: executionListeners,
+          parentNode: null,
+          duplicatedProperties: {
+            eventType: 'start',
+            type: 'foo'
+          },
+          properties: executionListeners.get('listeners').filter(listener => listener.get('type') === 'foo'),
+          propertiesName: 'listeners'
+        }
+      });
+
+      expect(errors[ 1 ]).eql({
+        message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <bar>',
+        path: null,
+        data: {
+          type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
+          node: executionListeners,
+          parentNode: null,
+          duplicatedProperties: {
+            eventType: 'start',
+            type: 'bar'
+          },
+          properties: executionListeners.get('listeners').filter(listener => listener.get('type') === 'bar'),
+          propertiesName: 'listeners'
         }
       });
     });
