@@ -161,11 +161,11 @@ module.exports.hasDuplicatedPropertiesValues = function(node, containerPropertyN
 
       // (3) find properties with duplicate
       const duplicateProperties = filter(properties, matchPattern(propertiesMap));
-      const duplicatesSummary = propertiesNames.map(propertyName => `<${ propertyName }> with value of <${ propertiesMap[propertyName] }>`).join(', ');
+      const duplicatesSummary = propertiesNames.map(propertyName => `property <${ propertyName }> with duplicate value of <${ propertiesMap[propertyName] }>`).join(', ');
 
       // (4) report error
       return {
-        message: `Properties of type <${ duplicate.$type }> have duplicates: ${ duplicatesSummary }`,
+        message: `Properties of type <${ duplicate.$type }> have properties with duplicate values (${ duplicatesSummary })`,
         path: null,
         data: {
           type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
