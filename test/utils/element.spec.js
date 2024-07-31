@@ -513,7 +513,7 @@ describe('utils/element', function() {
       expect(errors).to.have.length(1);
 
       expect(errors[ 0 ]).eql({
-        message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <foo>',
+        message: 'Properties of type <zeebe:ExecutionListener> have properties with duplicate values (property <eventType> with duplicate value of <start>, property <type> with duplicate value of <foo>)',
         path: null,
         data: {
           type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
@@ -566,7 +566,7 @@ describe('utils/element', function() {
       expect(errors).to.have.length(2);
 
       expect(errors[ 0 ]).eql({
-        message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <foo>',
+        message: 'Properties of type <zeebe:ExecutionListener> have properties with duplicate values (property <eventType> with duplicate value of <start>, property <type> with duplicate value of <foo>)',
         path: null,
         data: {
           type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
@@ -582,7 +582,7 @@ describe('utils/element', function() {
       });
 
       expect(errors[ 1 ]).eql({
-        message: 'Properties of type <zeebe:ExecutionListener> have duplicates: <eventType> with value of <start>, <type> with value of <bar>',
+        message: 'Properties of type <zeebe:ExecutionListener> have properties with duplicate values (property <eventType> with duplicate value of <start>, property <type> with duplicate value of <bar>)',
         path: null,
         data: {
           type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
