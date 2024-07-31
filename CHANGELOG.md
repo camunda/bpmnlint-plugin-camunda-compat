@@ -6,6 +6,13 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.22.0
+
+* `FEAT`: support execution listeners ([#168](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/168))
+* `FEAT`: add `no-duplicate-execution-listeners` rule
+* `FEAT`: add `no-execution-listeners` rule
+* `FEAT`: add `execution-listener` rule
+
 ## 2.21.1
 
 * `FIX`: improve `no-loop` performance ([#165](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/165))
