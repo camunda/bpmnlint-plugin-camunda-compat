@@ -11,6 +11,7 @@ const camundaCloud10Rules = withConfig({
   'executable-process': 'error',
   'loop-characteristics': 'error',
   'message-reference': 'error',
+  'no-binding-type': 'error',
   'no-candidate-users': 'error',
   'no-execution-listeners': 'error',
   'no-expression': 'error',
@@ -77,7 +78,11 @@ const camundaCloud85Rules = withConfig({
 }, { version: '8.5' });
 
 const camundaCloud86Rules = withConfig({
-  ...omit(camundaCloud85Rules, [ 'inclusive-gateway', 'no-execution-listeners' ]),
+  ...omit(camundaCloud85Rules, [
+    'inclusive-gateway',
+    'no-binding-type',
+    'no-execution-listeners'
+  ]),
   'duplicate-execution-listeners': 'error',
   'execution-listener': 'error'
 }, { version: '8.6' });
@@ -124,6 +129,7 @@ const rules = {
   'link-event': './rules/camunda-cloud/link-event',
   'loop-characteristics': './rules/camunda-cloud/loop-characteristics',
   'message-reference': './rules/camunda-cloud/message-reference',
+  'no-binding-type': './rules/camunda-cloud/no-binding-type',
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
   'no-execution-listeners': './rules/camunda-cloud/no-execution-listeners',
   'no-expression': './rules/camunda-cloud/no-expression',
