@@ -17,6 +17,7 @@ const camundaCloud10Rules = withConfig({
   'no-expression': 'error',
   'no-loop': 'error',
   'no-multiple-none-start-events': 'error',
+  'no-priority-definition': 'error',
   'no-propagate-all-parent-variables': 'error',
   'no-task-schedule': 'error',
   'no-template': 'error',
@@ -81,10 +82,12 @@ const camundaCloud86Rules = withConfig({
   ...omit(camundaCloud85Rules, [
     'inclusive-gateway',
     'no-binding-type',
-    'no-execution-listeners'
+    'no-execution-listeners',
+    'no-priority-definition'
   ]),
   'duplicate-execution-listeners': 'error',
-  'execution-listener': 'error'
+  'execution-listener': 'error',
+  'priority-definition': 'error'
 }, { version: '8.6' });
 
 const camundaPlatform719Rules = withConfig({
@@ -135,12 +138,14 @@ const rules = {
   'no-expression': './rules/camunda-cloud/no-expression',
   'no-loop': './rules/camunda-cloud/no-loop',
   'no-multiple-none-start-events': './rules/camunda-cloud/no-multiple-none-start-events',
+  'no-priority-definition': './rules/camunda-cloud/no-priority-definition',
   'no-propagate-all-parent-variables': './rules/camunda-cloud/no-propagate-all-parent-variables',
   'no-signal-event-sub-process': './rules/camunda-cloud/no-signal-event-sub-process',
   'no-task-schedule': './rules/camunda-cloud/no-task-schedule',
   'no-template': './rules/camunda-cloud/no-template',
   'no-zeebe-properties': './rules/camunda-cloud/no-zeebe-properties',
   'no-zeebe-user-task': './rules/camunda-cloud/no-zeebe-user-task',
+  'priority-definition': './rules/camunda-cloud/priority-definition',
   'secrets': './rules/camunda-cloud/secrets',
   'sequence-flow-condition': './rules/camunda-cloud/sequence-flow-condition',
   'signal-reference': './rules/camunda-cloud/signal-reference',
