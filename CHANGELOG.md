@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.24.0
+
+* `FEAT`: add `no-priority-definition` and `priority-definition` rules ([#170](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/170))
+* `DEPS`: bump zeebe-bpmn-moddle@1.5.1
+
 ## 2.23.0
 
 * `FEAT`: add `no-binding-type` rule ([#169](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/169))
