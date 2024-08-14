@@ -7,7 +7,7 @@ const NodeResolver = require('bpmnlint/lib/resolver/node-resolver');
 const { readModdle } = require('../../helper');
 
 const versions = [
-  '8.2'
+  '8.6'
 ];
 
 describe('integration - priority definition', function() {
