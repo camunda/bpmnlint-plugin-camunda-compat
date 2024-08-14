@@ -10,7 +10,7 @@ const versions = [
   '8.2'
 ];
 
-describe('integration - task schedule', function() {
+describe('integration - priority definition', function() {
 
   versions.forEach(function(version) {
 
@@ -33,13 +33,13 @@ describe('integration - task schedule', function() {
         it('should not have errors', async function() {
 
           // given
-          const { root } = await readModdle('test/camunda-cloud/integration/task-schedule.bpmn');
+          const { root } = await readModdle('test/camunda-cloud/integration/priority-definition.bpmn');
 
           // when
           const reports = await linter.lint(root);
 
           // then
-          expect(reports[ 'camunda-compat/task-schedule' ]).not.to.exist;
+          expect(reports[ 'camunda-compat/priority-definition' ]).not.to.exist;
         });
 
       });
@@ -50,13 +50,13 @@ describe('integration - task schedule', function() {
         it('should have errors', async function() {
 
           // given
-          const { root } = await readModdle('test/camunda-cloud/integration/task-schedule-errors.bpmn');
+          const { root } = await readModdle('test/camunda-cloud/integration/priority-definition-errors.bpmn');
 
           // when
           const reports = await linter.lint(root);
 
           // then
-          expect(reports[ 'camunda-compat/task-schedule' ]).to.exist;
+          expect(reports[ 'camunda-compat/priority-definition' ]).to.exist;
         });
 
       });
