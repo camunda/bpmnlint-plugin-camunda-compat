@@ -118,7 +118,7 @@ const invalid = [
     }
   },
   {
-    name: 'business rule task (binding type)',
+    name: 'business rule task (version tag)',
     config: { version: '8.5' },
     moddleElement: createModdle(createProcess(`
       <bpmn:businessRuleTask id="BusinessRuleTask_1">
@@ -129,34 +129,6 @@ const invalid = [
     `)),
     report: {
       id: 'BusinessRuleTask_1',
-      message: 'Property value of <versionTag> only allowed by Camunda 8.6 or newer',
-      path: [
-        'extensionElements',
-        'values',
-        0,
-        'bindingType'
-      ],
-      data: {
-        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
-        node: 'zeebe:CalledDecision',
-        parentNode: 'BusinessRuleTask_1',
-        property: 'bindingType',
-        allowedVersion: '8.6'
-      }
-    }
-  },
-  {
-    name: 'business rule task (version tag)',
-    config: { version: '8.5' },
-    moddleElement: createModdle(createProcess(`
-      <bpmn:businessRuleTask id="BusinessRuleTask_1">
-        <bpmn:extensionElements>
-          <zeebe:calledDecision versionTag="v1.0.0" />
-        </bpmn:extensionElements>
-      </bpmn:businessRuleTask>
-    `)),
-    report: {
-      id: 'BusinessRuleTask_1',
       message: 'Property <versionTag> only allowed by Camunda 8.6 or newer',
       path: [
         'extensionElements',
@@ -169,34 +141,6 @@ const invalid = [
         node: 'zeebe:CalledDecision',
         parentNode: 'BusinessRuleTask_1',
         property: 'versionTag',
-        allowedVersion: '8.6'
-      }
-    }
-  },
-  {
-    name: 'call activity (binding type)',
-    config: { version: '8.5' },
-    moddleElement: createModdle(createProcess(`
-      <bpmn:callActivity id="CallActivity_1">
-        <bpmn:extensionElements>
-          <zeebe:calledElement bindingType="versionTag" versionTag="v1.0.0" />
-        </bpmn:extensionElements>
-      </bpmn:callActivity>
-    `)),
-    report: {
-      id: 'CallActivity_1',
-      message: 'Property value of <versionTag> only allowed by Camunda 8.6 or newer',
-      path: [
-        'extensionElements',
-        'values',
-        0,
-        'bindingType'
-      ],
-      data: {
-        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
-        node: 'zeebe:CalledElement',
-        parentNode: 'CallActivity_1',
-        property: 'bindingType',
         allowedVersion: '8.6'
       }
     }
@@ -207,7 +151,7 @@ const invalid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:callActivity id="CallActivity_1">
         <bpmn:extensionElements>
-          <zeebe:calledElement versionTag="v1.0.0" />
+          <zeebe:calledElement bindingType="versionTag" versionTag="v1.0.0" />
         </bpmn:extensionElements>
       </bpmn:callActivity>
     `)),
@@ -230,40 +174,12 @@ const invalid = [
     }
   },
   {
-    name: 'user task (binding type)',
-    config: { version: '8.5' },
-    moddleElement: createModdle(createProcess(`
-      <bpmn:userTask id="UserTask_1">
-        <bpmn:extensionElements>
-          <zeebe:formDefinition bindingType="versionTag" versionTag="v1.0.0" />
-        </bpmn:extensionElements>
-      </bpmn:userTask>
-    `)),
-    report: {
-      id: 'UserTask_1',
-      message: 'Property value of <versionTag> only allowed by Camunda 8.6 or newer',
-      path: [
-        'extensionElements',
-        'values',
-        0,
-        'bindingType'
-      ],
-      data: {
-        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
-        node: 'zeebe:FormDefinition',
-        parentNode: 'UserTask_1',
-        property: 'bindingType',
-        allowedVersion: '8.6'
-      }
-    }
-  },
-  {
     name: 'user task (version tag)',
     config: { version: '8.5' },
     moddleElement: createModdle(createProcess(`
       <bpmn:userTask id="UserTask_1">
         <bpmn:extensionElements>
-          <zeebe:formDefinition versionTag="v1.0.0" />
+          <zeebe:formDefinition bindingType="versionTag" versionTag="v1.0.0" />
         </bpmn:extensionElements>
       </bpmn:userTask>
     `)),
