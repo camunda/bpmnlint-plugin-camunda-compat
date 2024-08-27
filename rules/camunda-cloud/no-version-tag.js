@@ -31,20 +31,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     if (extensionElement) {
-      let errors = hasProperties(extensionElement, {
-        bindingType: {
-          allowed: (value) => value !== 'versionTag',
-          allowedVersion
-        }
-      }, node);
-
-      if (errors && errors.length) {
-        reportErrors(node, reporter, errors);
-
-        return;
-      }
-
-      errors = hasProperties(extensionElement, {
+      const errors = hasProperties(extensionElement, {
         versionTag: {
           allowed: false,
           allowedVersion
