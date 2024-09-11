@@ -383,6 +383,7 @@ describe('configs', function() {
     'timer': [ 'error', { version: '8.6' } ],
     'user-task-definition': [ 'warn', { version: '8.6' } ],
     'user-task-form': [ 'error', { version: '8.6' } ],
+    'version-tag': [ 'error', { version: '8.6' } ],
     'wait-for-completion': [ 'error', { version: '8.6' } ]
   }));
 
@@ -450,6 +451,7 @@ describe('configs', function() {
     'timer': 'error',
     'user-task-definition': 'warn',
     'user-task-form': 'error',
+    'version-tag': 'error',
     'wait-for-completion': 'error'
   }));
 
