@@ -89,7 +89,8 @@ const camundaCloud86Rules = withConfig({
   ]),
   'duplicate-execution-listeners': 'error',
   'execution-listener': 'error',
-  'priority-definition': 'error'
+  'priority-definition': 'error',
+  'version-tag': 'error'
 }, { version: '8.6' });
 
 const camundaPlatform719Rules = withConfig({
@@ -158,6 +159,7 @@ const rules = {
   'timer': './rules/camunda-cloud/timer',
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
   'user-task-form': './rules/camunda-cloud/user-task-form',
+  'version-tag': './rules/camunda-cloud/version-tag',
   'wait-for-completion': './rules/camunda-cloud/wait-for-completion'
 };
 
