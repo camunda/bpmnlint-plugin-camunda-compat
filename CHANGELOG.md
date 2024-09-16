@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.26.0
+
+* `FEAT`: introduce `version-tag` rule ([#174](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/174))
+* `FIX`: do not double validate version tag field ([#174](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/174))
+
 ## 2.25.0
 
 * `FEAT`: add `no-version-tag` rule ([#172](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/172))
