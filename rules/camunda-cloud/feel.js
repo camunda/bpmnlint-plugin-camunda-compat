@@ -1,6 +1,9 @@
 const { isString } = require('min-dash');
 
-const { is } = require('bpmnlint-utils');
+const {
+  is,
+  isAny
+} = require('bpmnlint-utils');
 
 const { lintExpression } = require('@bpmn-io/feel-lint');
 
@@ -18,7 +21,7 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    const parentNode = findFlowElement(node);
+    const parentNode = findParentNode(node);
 
     if (!parentNode) {
       return;
@@ -74,8 +77,8 @@ const isIgnoredProperty = propertyName => {
   return propertyName.startsWith('$');
 };
 
-const findFlowElement = node => {
-  while (node && !is(node, 'bpmn:FlowElement')) {
+const findParentNode = node => {
+  while (node && !isAny(node, [ 'bpmn:FlowElement', 'bpmn:FlowElementsContainer' ])) {
     node = node.$parent;
   }
 

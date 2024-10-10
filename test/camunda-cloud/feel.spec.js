@@ -64,7 +64,7 @@ const valid = [
 
 const invalid = [
   {
-    name: 'invalid FEEL expression (string property)',
+    name: 'invalid FEEL expression (string property) (task)',
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="Task_1">
         <bpmn:extensionElements>
@@ -94,7 +94,7 @@ const invalid = [
     }
   },
   {
-    name: 'invalid FEEL expression (bpmn:Expression property)',
+    name: 'invalid FEEL expression (bpmn:Expression property) (start event)',
     moddleElement: createModdle(createProcess(`
       <bpmn:startEvent id="StartEvent_1">
         <bpmn:timerEventDefinition id="TimerEventDefinition_1">
@@ -115,6 +115,35 @@ const invalid = [
         node: 'TimerEventDefinition_1',
         parentNode: 'StartEvent_1',
         property: 'timeCycle'
+      }
+    }
+  },
+  {
+    it: it.only,
+    name: 'invalid FEEL expression (string property) (process)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:extensionElements>
+        <zeebe:executionListeners>
+          <zeebe:executionListener eventType="start" type="=1 >" />
+        </zeebe:executionListeners>
+      </bpmn:extensionElements>
+    `)),
+    report: {
+      id: 'Process_1',
+      message: 'Property <type> is not a valid FEEL expression',
+      path: [
+        'extensionElements',
+        'values',
+        0,
+        'listeners',
+        0,
+        'type'
+      ],
+      data: {
+        type: ERROR_TYPES.FEEL_EXPRESSION_INVALID,
+        node: 'zeebe:ExecutionListener',
+        parentNode: 'Process_1',
+        property: 'type'
       }
     }
   }
