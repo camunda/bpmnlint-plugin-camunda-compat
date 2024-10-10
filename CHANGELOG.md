@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.26.1
+
+* `FIX`: report FEEL errors for processes ([#175](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/175))
+
 ## 2.26.0
 
 * `FEAT`: introduce `version-tag` rule ([#174](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/174))
