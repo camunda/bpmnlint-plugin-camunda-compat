@@ -119,7 +119,6 @@ const invalid = [
     }
   },
   {
-    it: it.only,
     name: 'invalid FEEL expression (string property) (process)',
     moddleElement: createModdle(createProcess(`
       <bpmn:extensionElements>
