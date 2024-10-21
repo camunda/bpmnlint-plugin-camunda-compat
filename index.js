@@ -93,6 +93,12 @@ const camundaCloud86Rules = withConfig({
   'version-tag': 'error'
 }, { version: '8.6' });
 
+
+const camundaCloud87Rules = withConfig({
+  ...camundaCloud86Rules
+}, { version: '8.7' });
+
+
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'info'
 }, {
@@ -113,6 +119,11 @@ const camundaPlatform721Rules = withConfig(camundaPlatform720Rules, {
 const camundaPlatform722Rules = withConfig(camundaPlatform721Rules, {
   platform: 'camunda-platform',
   version: '7.22'
+});
+
+const camundaPlatform723Rules = withConfig(camundaPlatform721Rules, {
+  platform: 'camunda-platform',
+  version: '7.23'
 });
 
 const rules = {
@@ -197,6 +208,9 @@ const configs = {
   'camunda-cloud-8-6': {
     rules: camundaCloud86Rules
   },
+  'camunda-cloud-8-7': {
+    rules: camundaCloud87Rules
+  },
   'camunda-platform-7-19': {
     rules: camundaPlatform719Rules
   },
@@ -208,6 +222,9 @@ const configs = {
   },
   'camunda-platform-7-22': {
     rules: camundaPlatform722Rules
+  },
+  'camunda-platform-7-23': {
+    rules: camundaPlatform723Rules
   }
 };
 
