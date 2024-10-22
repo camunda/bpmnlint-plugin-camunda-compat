@@ -93,11 +93,10 @@ const camundaCloud86Rules = withConfig({
   'version-tag': 'error'
 }, { version: '8.6' });
 
-
 const camundaCloud87Rules = withConfig({
-  ...camundaCloud86Rules
+  ...camundaCloud86Rules,
+  'no-job-worker-user-task': 'error'
 }, { version: '8.7' });
-
 
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'info'
@@ -150,6 +149,7 @@ const rules = {
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
   'no-execution-listeners': './rules/camunda-cloud/no-execution-listeners',
   'no-expression': './rules/camunda-cloud/no-expression',
+  'no-job-worker-user-task': './rules/camunda-cloud/no-job-worker-user-task',
   'no-loop': './rules/camunda-cloud/no-loop',
   'no-multiple-none-start-events': './rules/camunda-cloud/no-multiple-none-start-events',
   'no-priority-definition': './rules/camunda-cloud/no-priority-definition',
