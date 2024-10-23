@@ -7,6 +7,9 @@ module.exports = {
     'bpmn:IntermediateThrowEvent': {
       'bpmn:MessageEventDefinition': '1.2'
     },
+    'bpmn:EndEvent': {
+      'bpmn:MessageEventDefinition': '1.2'
+    },
     'bpmn:ScriptTask': '1.1',
     'bpmn:SendTask': '1.1',
     'bpmn:ServiceTask': '1.0'
