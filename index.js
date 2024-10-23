@@ -95,7 +95,7 @@ const camundaCloud86Rules = withConfig({
 
 const camundaCloud87Rules = withConfig({
   ...camundaCloud86Rules,
-  'no-job-worker-user-task': 'error'
+  'zeebe-user-task': 'error'
 }, { version: '8.7' });
 
 const camundaPlatform719Rules = withConfig({
@@ -149,7 +149,6 @@ const rules = {
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
   'no-execution-listeners': './rules/camunda-cloud/no-execution-listeners',
   'no-expression': './rules/camunda-cloud/no-expression',
-  'no-job-worker-user-task': './rules/camunda-cloud/no-job-worker-user-task',
   'no-loop': './rules/camunda-cloud/no-loop',
   'no-multiple-none-start-events': './rules/camunda-cloud/no-multiple-none-start-events',
   'no-priority-definition': './rules/camunda-cloud/no-priority-definition',
@@ -171,7 +170,8 @@ const rules = {
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
   'user-task-form': './rules/camunda-cloud/user-task-form',
   'version-tag': './rules/camunda-cloud/version-tag',
-  'wait-for-completion': './rules/camunda-cloud/wait-for-completion'
+  'wait-for-completion': './rules/camunda-cloud/wait-for-completion',
+  'zeebe-user-task': './rules/camunda-cloud/zeebe-user-task'
 };
 
 const configs = {

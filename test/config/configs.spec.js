@@ -406,7 +406,6 @@ describe('configs', function() {
     'loop-characteristics': [ 'error', { version: '8.7' } ],
     'message-reference': [ 'error', { version: '8.7' } ],
     'no-expression': [ 'error', { version: '8.7' } ],
-    'no-job-worker-user-task': [ 'error', { version: '8.7' } ],
     'no-loop': [ 'error', { version: '8.7' } ],
     'no-multiple-none-start-events' : [ 'error', { version: '8.7' } ],
     'priority-definition': [ 'error', { version: '8.7' } ],
@@ -420,7 +419,8 @@ describe('configs', function() {
     'user-task-definition': [ 'warn', { version: '8.7' } ],
     'user-task-form': [ 'error', { version: '8.7' } ],
     'version-tag': [ 'error', { version: '8.7' } ],
-    'wait-for-completion': [ 'error', { version: '8.7' } ]
+    'wait-for-completion': [ 'error', { version: '8.7' } ],
+    'zeebe-user-task': [ 'error', { version: '8.7' } ]
   }));
 
 
@@ -472,7 +472,6 @@ describe('configs', function() {
     'no-candidate-users': 'error',
     'no-execution-listeners': 'error',
     'no-expression': 'error',
-    'no-job-worker-user-task': 'error',
     'no-loop': 'error',
     'no-multiple-none-start-events': 'error',
     'no-priority-definition': 'error',
@@ -494,7 +493,8 @@ describe('configs', function() {
     'user-task-definition': 'warn',
     'user-task-form': 'error',
     'version-tag': 'error',
-    'wait-for-completion': 'error'
+    'wait-for-completion': 'error',
+    'zeebe-user-task': 'error'
   }));
 
 });
