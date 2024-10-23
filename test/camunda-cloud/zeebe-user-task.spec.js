@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/camunda-cloud/no-job-worker-user-task');
+const rule = require('../../rules/camunda-cloud/zeebe-user-task');
 
 const {
   createModdle,
@@ -44,7 +44,7 @@ const invalid = [
   }
 ];
 
-RuleTester.verify('no-zeebe-user-task', rule, {
+RuleTester.verify('zeebe-user-task', rule, {
   valid,
   invalid
 });
