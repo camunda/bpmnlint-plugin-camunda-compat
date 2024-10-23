@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+# 2.27.0
+
+* `FEAT`: add `zeebe-user-task` rule ([#179](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/179))
+* `FEAT`: add Camunda 8.7 and 7.23 configurations ([#176](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/176))
+
 ## 2.26.1
 
 * `FIX`: report FEEL errors for processes ([#175](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/175))
