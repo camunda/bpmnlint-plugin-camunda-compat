@@ -65,6 +65,18 @@ const valid = [
     `))
   },
   {
+    name: 'message end event (Camunda Cloud 1.2)',
+    config: { version: '1.2' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:endEvent id="EndEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" />
+        </bpmn:extensionElements>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
+      </bpmn:endEvent>
+    `))
+  },
+  {
     name: 'task (Camunda Cloud 1.2)',
     config: { version: '1.2' },
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
@@ -298,6 +310,54 @@ const invalid = [
         type: ERROR_TYPES.PROPERTY_REQUIRED,
         node: 'zeebe:TaskDefinition',
         parentNode: 'IntermediateThrowEvent_1',
+        requiredProperty: 'type'
+      }
+    }
+  },
+  {
+    name: 'message end event (no task definition) (Camunda Cloud 1.2)',
+    config: { version: '1.2' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:endEvent id="EndEvent_1">
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
+      </bpmn:endEvent>
+    `)),
+    report: {
+      id: 'EndEvent_1',
+      message: 'Element of type <bpmn:EndEvent> must have one extension element of type <zeebe:TaskDefinition>',
+      path: [],
+      data: {
+        type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+        node: 'EndEvent_1',
+        parentNode: null,
+        requiredExtensionElement: 'zeebe:TaskDefinition'
+      }
+    }
+  },
+  {
+    name: 'message end event (no task definition type) (Camunda Cloud 1.2)',
+    config: { version: '1.2' },
+    moddleElement: createModdle(createProcess(`
+        <bpmn:endEvent id="EndEvent_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition />
+          </bpmn:extensionElements>
+          <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
+        </bpmn:endEvent>
+      `)),
+    report: {
+      id: 'EndEvent_1',
+      message: 'Element of type <zeebe:TaskDefinition> must have property <type>',
+      path: [
+        'extensionElements',
+        'values',
+        0,
+        'type'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'zeebe:TaskDefinition',
+        parentNode: 'EndEvent_1',
         requiredProperty: 'type'
       }
     }
