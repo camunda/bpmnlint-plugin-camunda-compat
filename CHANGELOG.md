@@ -10,6 +10,7 @@ ___Note:__ Yet to be released changes appear here._
 
 * `FEAT`: add `zeebe-user-task` rule ([#179](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/179))
 * `FEAT`: add Camunda 8.7 and 7.23 configurations ([#176](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/176))
+* `FIX`: lint message end events for task definition ([#180](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/180))
 
 ## 2.26.1
 
