@@ -21,6 +21,7 @@ const camundaCloud10Rules = withConfig({
   'no-propagate-all-parent-variables': 'error',
   'no-task-schedule': 'error',
   'no-template': 'error',
+  'no-task-listeners': 'error',
   'no-version-tag': 'error',
   'no-zeebe-properties': 'error',
   'no-zeebe-user-task': 'error',
@@ -94,8 +95,10 @@ const camundaCloud86Rules = withConfig({
 }, { version: '8.6' });
 
 const camundaCloud87Rules = withConfig({
-  ...camundaCloud86Rules,
-  'zeebe-user-task': 'error'
+  ...omit(camundaCloud86Rules, [ 'no-task-listeners' ]),
+  'zeebe-user-task': 'error',
+  'duplicate-task-listeners': 'error',
+  'task-listener': 'error'
 }, { version: '8.7' });
 
 const camundaPlatform719Rules = withConfig({
@@ -132,6 +135,7 @@ const rules = {
   'connector-properties': './rules/camunda-cloud/connector-properties',
   'duplicate-execution-listeners': './rules/camunda-cloud/duplicate-execution-listeners',
   'duplicate-task-headers': './rules/camunda-cloud/duplicate-task-headers',
+  'duplicate-task-listeners': './rules/camunda-cloud/duplicate-task-listeners',
   'error-reference': './rules/camunda-cloud/error-reference',
   'escalation-boundary-event-attached-to-ref': './rules/camunda-cloud/escalation-boundary-event-attached-to-ref',
   'escalation-reference': './rules/camunda-cloud/escalation-reference',
@@ -155,6 +159,7 @@ const rules = {
   'no-propagate-all-parent-variables': './rules/camunda-cloud/no-propagate-all-parent-variables',
   'no-signal-event-sub-process': './rules/camunda-cloud/no-signal-event-sub-process',
   'no-task-schedule': './rules/camunda-cloud/no-task-schedule',
+  'no-task-listeners': './rules/camunda-cloud/no-task-listeners',
   'no-template': './rules/camunda-cloud/no-template',
   'no-version-tag': './rules/camunda-cloud/no-version-tag',
   'no-zeebe-properties': './rules/camunda-cloud/no-zeebe-properties',
@@ -165,6 +170,7 @@ const rules = {
   'signal-reference': './rules/camunda-cloud/signal-reference',
   'start-event-form': './rules/camunda-cloud/start-event-form',
   'subscription': './rules/camunda-cloud/subscription',
+  'task-listener': './rules/camunda-cloud/task-listener',
   'task-schedule': './rules/camunda-cloud/task-schedule',
   'timer': './rules/camunda-cloud/timer',
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
