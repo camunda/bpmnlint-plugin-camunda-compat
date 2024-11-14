@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `DEPS`: bump `zeebe-bpmn-moddle@1.7.0`
+* `FEAT`: support task listeners ([#181](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/181))
+* `FEAT`: add `no-task-listeners` rule
+* `FEAT`: add `task-listener` rule
+
 # 2.27.0
 
 * `FEAT`: add `zeebe-user-task` rule ([#179](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/179))
