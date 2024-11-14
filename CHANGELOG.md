@@ -8,7 +8,6 @@ ___Note:__ Yet to be released changes appear here._
 
 * `DEPS`: bump `zeebe-bpmn-moddle@1.7.0`
 * `FEAT`: support task listeners ([#181](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/181))
-* `FEAT`: add `no-duplicate-task-listeners` rule
 * `FEAT`: add `no-task-listeners` rule
 * `FEAT`: add `task-listener` rule
 

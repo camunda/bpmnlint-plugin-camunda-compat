@@ -19,9 +19,9 @@ const camundaCloud10Rules = withConfig({
   'no-multiple-none-start-events': 'error',
   'no-priority-definition': 'error',
   'no-propagate-all-parent-variables': 'error',
+  'no-task-listeners': 'error',
   'no-task-schedule': 'error',
   'no-template': 'error',
-  'no-task-listeners': 'error',
   'no-version-tag': 'error',
   'no-zeebe-properties': 'error',
   'no-zeebe-user-task': 'error',
@@ -97,7 +97,6 @@ const camundaCloud86Rules = withConfig({
 const camundaCloud87Rules = withConfig({
   ...omit(camundaCloud86Rules, [ 'no-task-listeners' ]),
   'zeebe-user-task': 'error',
-  'duplicate-task-listeners': 'error',
   'task-listener': 'error'
 }, { version: '8.7' });
 
@@ -135,7 +134,6 @@ const rules = {
   'connector-properties': './rules/camunda-cloud/connector-properties',
   'duplicate-execution-listeners': './rules/camunda-cloud/duplicate-execution-listeners',
   'duplicate-task-headers': './rules/camunda-cloud/duplicate-task-headers',
-  'duplicate-task-listeners': './rules/camunda-cloud/duplicate-task-listeners',
   'error-reference': './rules/camunda-cloud/error-reference',
   'escalation-boundary-event-attached-to-ref': './rules/camunda-cloud/escalation-boundary-event-attached-to-ref',
   'escalation-reference': './rules/camunda-cloud/escalation-reference',
