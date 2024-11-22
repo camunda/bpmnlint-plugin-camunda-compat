@@ -6,6 +6,12 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.28.1
+
+* `FIX`: relax `task-listener` to not check implementation type ([#182](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/182))
+* `FIX`: do not mark job worker user task as incorrect
+* `FIX`: remove `zeebe-user-task` rule
+
 ## 2.28.0
 
 * `DEPS`: bump `zeebe-bpmn-moddle@1.7.0`
