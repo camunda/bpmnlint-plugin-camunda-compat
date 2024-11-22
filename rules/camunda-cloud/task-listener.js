@@ -17,16 +17,16 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    let errors = hasExtensionElement(node, 'zeebe:UserTask', node);
-
-    if (errors && errors.length) {
-      reportErrors(node, reporter, errors);
-    }
-
     const taskListeners = findExtensionElement(node, 'zeebe:TaskListeners');
 
     if (!taskListeners) {
       return;
+    }
+
+    let errors = hasExtensionElement(node, 'zeebe:UserTask');
+
+    if (errors && errors.length) {
+      reportErrors(node, reporter, errors);
     }
 
     const listeners = taskListeners.get('listeners');
