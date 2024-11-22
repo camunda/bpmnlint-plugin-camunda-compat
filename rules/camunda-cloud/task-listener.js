@@ -2,8 +2,7 @@ const { is } = require('bpmnlint-utils');
 
 const {
   findExtensionElement,
-  hasProperties,
-  hasExtensionElement
+  hasProperties
 } = require('../utils/element');
 
 const { reportErrors } = require('../utils/reporter');
@@ -23,14 +22,8 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    let errors = hasExtensionElement(node, 'zeebe:UserTask');
-
-    if (errors && errors.length) {
-      reportErrors(node, reporter, errors);
-    }
-
     const listeners = taskListeners.get('listeners');
-    errors = listeners.flatMap(listener => hasProperties(listener, {
+    const errors = listeners.flatMap(listener => hasProperties(listener, {
       type: {
         required: true
       }

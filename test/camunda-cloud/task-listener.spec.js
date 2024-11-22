@@ -35,35 +35,6 @@ const valid = [
 
 const invalid = [
   {
-    name: 'task listener not in zeebe:UserTask',
-    config: { version: '8.7' },
-    moddleElement: createModdle(createProcess(`
-      <bpmn:userTask id="UserTask_1">
-        <bpmn:extensionElements>
-          <zeebe:taskListeners>
-            <zeebe:taskListener eventType="complete" type="complete_listener" />
-          </zeebe:taskListeners>
-        </bpmn:extensionElements>
-      </bpmn:userTask>
-    `)),
-    report: {
-      id: 'UserTask_1',
-      message: 'Element of type <bpmn:UserTask> must have one extension element of type <zeebe:UserTask>',
-      path: [
-        'rootElements',
-        0,
-        'flowElements',
-        0
-      ],
-      data: {
-        type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
-        node: 'UserTask_1',
-        parentNode: null,
-        requiredExtensionElement: 'zeebe:UserTask'
-      }
-    }
-  },
-  {
     name: 'task listener with empty type',
     config: { version: '8.7' },
     moddleElement: createModdle(createProcess(`
