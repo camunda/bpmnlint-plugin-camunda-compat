@@ -23,6 +23,13 @@ const valid = [
         </bpmn:extensionElements>
       </bpmn:userTask>
     `))
+  },
+  {
+    name: 'job worker user task without tasklisteners',
+    config: { version: '8.7' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1"/>
+    `))
   }
 ];
 
@@ -42,7 +49,12 @@ const invalid = [
     report: {
       id: 'UserTask_1',
       message: 'Element of type <bpmn:UserTask> must have one extension element of type <zeebe:UserTask>',
-      path: [],
+      path: [
+        'rootElements',
+        0,
+        'flowElements',
+        0
+      ],
       data: {
         type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
         node: 'UserTask_1',
