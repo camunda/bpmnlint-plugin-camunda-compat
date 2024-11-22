@@ -96,7 +96,6 @@ const camundaCloud86Rules = withConfig({
 
 const camundaCloud87Rules = withConfig({
   ...omit(camundaCloud86Rules, [ 'no-task-listeners' ]),
-  'zeebe-user-task': 'error',
   'task-listener': 'error'
 }, { version: '8.7' });
 
@@ -174,8 +173,7 @@ const rules = {
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
   'user-task-form': './rules/camunda-cloud/user-task-form',
   'version-tag': './rules/camunda-cloud/version-tag',
-  'wait-for-completion': './rules/camunda-cloud/wait-for-completion',
-  'zeebe-user-task': './rules/camunda-cloud/zeebe-user-task'
+  'wait-for-completion': './rules/camunda-cloud/wait-for-completion'
 };
 
 const configs = {

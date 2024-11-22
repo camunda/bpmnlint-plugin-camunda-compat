@@ -431,8 +431,7 @@ describe('configs', function() {
     'user-task-definition': [ 'warn', { version: '8.7' } ],
     'user-task-form': [ 'error', { version: '8.7' } ],
     'version-tag': [ 'error', { version: '8.7' } ],
-    'wait-for-completion': [ 'error', { version: '8.7' } ],
-    'zeebe-user-task': [ 'error', { version: '8.7' } ]
+    'wait-for-completion': [ 'error', { version: '8.7' } ]
   }));
 
 
@@ -507,8 +506,7 @@ describe('configs', function() {
     'user-task-definition': 'warn',
     'user-task-form': 'error',
     'version-tag': 'error',
-    'wait-for-completion': 'error',
-    'zeebe-user-task': 'error'
+    'wait-for-completion': 'error'
   }));
 
 });
