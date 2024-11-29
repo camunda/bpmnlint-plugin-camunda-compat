@@ -11,6 +11,7 @@ module.exports.ERROR_TYPES = Object.freeze({
   EXPRESSION_VALUE_NOT_ALLOWED: 'camunda.expressionValueNotAllowed',
   EXTENSION_ELEMENT_NOT_ALLOWED: 'camunda.extensionElementNotAllowed',
   EXTENSION_ELEMENT_REQUIRED: 'camunda.extensionElementRequired',
+  EXTENSION_ELEMENT_RECOMMENDED: 'camunda.extensionElementRecommended',
   FEEL_EXPRESSION_INVALID: 'camunda.feelExpressionInvalid',
   LOOP_NOT_ALLOWED: 'camunda.loopNotAllowed',
   ATTACHED_TO_REF_ELEMENT_TYPE_NOT_ALLOWED: 'camunda.attachedToRefElementTypeNotAllowed',

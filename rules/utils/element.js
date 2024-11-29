@@ -364,7 +364,8 @@ function findProperties(node, propertyNames) {
   return properties;
 }
 
-module.exports.hasExtensionElement = function(node, types, parentNode = null) {
+module.exports.hasExtensionElement = function(node, types, parentNode = null, options = {}) {
+  const { optional = false } = options;
   const typesArray = isArray(types) ? types : [ types ];
 
   const extensionElements = findExtensionElements(node, typesArray);
@@ -372,10 +373,10 @@ module.exports.hasExtensionElement = function(node, types, parentNode = null) {
   if (!extensionElements || extensionElements.length !== 1) {
     return [
       {
-        message: `Element of type <${ node.$type }> must have one extension element of type ${ formatNames(typesArray, true) }`,
+        message: `Element of type <${ node.$type }> ${ optional ? 'is recommended to' : 'must' } have one extension element of type ${ formatNames(typesArray, true) }`,
         path: getPath(node, parentNode),
         data: {
-          type: ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
+          type: optional ? ERROR_TYPES.EXTENSION_ELEMENT_RECOMMENDED : ERROR_TYPES.EXTENSION_ELEMENT_REQUIRED,
           node,
           parentNode: parentNode == node ? null : parentNode,
           requiredExtensionElement: types
