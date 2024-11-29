@@ -364,7 +364,7 @@ function findProperties(node, propertyNames) {
   return properties;
 }
 
-module.exports.hasExtensionElement = function(node, types, parentNode = null) {
+module.exports.hasExtensionElement = function(node, types, parentNode = null, options = {}) {
   const typesArray = isArray(types) ? types : [ types ];
 
   const extensionElements = findExtensionElements(node, typesArray);
