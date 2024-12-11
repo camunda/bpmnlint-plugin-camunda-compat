@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.29.0
+
+* `FEAT`: re-add `zeebe-user-task` rule as a warning due to deprecation ([#183](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/183))
+
 ## 2.28.1
 
 * `FIX`: relax `task-listener` to not check implementation type ([#182](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/182))
