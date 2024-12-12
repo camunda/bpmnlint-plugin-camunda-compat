@@ -17,6 +17,20 @@ const valid = [
       <bpmn:userTask id="UserTask_1">
         <bpmn:extensionElements>
           <zeebe:taskListeners>
+            <zeebe:taskListener eventType="assigning" type="com.example.AssignmentListener" />
+          </zeebe:taskListeners>
+          <zeebe:userTask />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `))
+  },
+  {
+    name: 'task listener with outdated event type',
+    config: { version: '8.7' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:taskListeners>
             <zeebe:taskListener eventType="assignment" type="com.example.AssignmentListener" />
           </zeebe:taskListeners>
           <zeebe:userTask />
