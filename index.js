@@ -96,8 +96,7 @@ const camundaCloud86Rules = withConfig({
 }, { version: '8.6' });
 
 const camundaCloud87Rules = withConfig({
-  ...omit(camundaCloud86Rules, [ 'no-task-listeners' ]),
-  'task-listener': 'error'
+  ...camundaCloud86Rules
 }, { version: '8.7' });
 
 const camundaPlatform719Rules = withConfig({

@@ -4,7 +4,7 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 
 const { hasNoExtensionElement } = require('../utils/element');
 
-const ALLOWED_VERSION = '8.7';
+const ALLOWED_VERSION = '8.8';
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
