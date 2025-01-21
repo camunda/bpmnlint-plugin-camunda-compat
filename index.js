@@ -99,6 +99,11 @@ const camundaCloud87Rules = withConfig({
   ...camundaCloud86Rules
 }, { version: '8.7' });
 
+const camundaCloud88Rules = withConfig({
+  ...omit(camundaCloud87Rules, [ 'no-task-listeners' ]),
+  'task-listener': 'error'
+}, { version: '8.8' });
+
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'info'
 }, {
@@ -213,6 +218,9 @@ const configs = {
   },
   'camunda-cloud-8-7': {
     rules: camundaCloud87Rules
+  },
+  'camunda-cloud-8-8': {
+    rules: camundaCloud88Rules
   },
   'camunda-platform-7-19': {
     rules: camundaPlatform719Rules
