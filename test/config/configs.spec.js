@@ -437,6 +437,43 @@ describe('configs', function() {
   }));
 
 
+  it('camunda-cloud-8-8', expectRules(configs, 'camunda-cloud-8-8', {
+    'called-element': [ 'error', { version: '8.8' } ],
+    'connector-properties': [ 'warn', { version: '8.8' } ],
+    'duplicate-execution-listeners': [ 'error', { version: '8.8' } ],
+    'duplicate-task-headers': [ 'error', { version: '8.8' } ],
+    'element-type': [ 'error', { version: '8.8' } ],
+    'error-reference': [ 'error', { version: '8.8' } ],
+    'escalation-boundary-event-attached-to-ref': [ 'error', { version: '8.8' } ],
+    'escalation-reference': [ 'error', { version: '8.8' } ],
+    'event-based-gateway-target': [ 'error', { version: '8.8' } ],
+    'executable-process': [ 'error', { version: '8.8' } ],
+    'execution-listener': [ 'error', { version: '8.8' } ],
+    'feel': [ 'error', { version: '8.8' } ],
+    'implementation': [ 'error', { version: '8.8' } ],
+    'link-event': [ 'error', { version: '8.8' } ],
+    'loop-characteristics': [ 'error', { version: '8.8' } ],
+    'message-reference': [ 'error', { version: '8.8' } ],
+    'no-expression': [ 'error', { version: '8.8' } ],
+    'no-loop': [ 'error', { version: '8.8' } ],
+    'no-multiple-none-start-events' : [ 'error', { version: '8.8' } ],
+    'priority-definition': [ 'error', { version: '8.8' } ],
+    'zeebe-user-task': [ 'warn', { version: '8.8' } ],
+    'secrets': [ 'warn', { version: '8.8' } ],
+    'sequence-flow-condition': [ 'error', { version: '8.8' } ],
+    'signal-reference': [ 'error', { version: '8.8' } ],
+    'start-event-form': [ 'error', { version: '8.8' } ],
+    'subscription': [ 'error', { version: '8.8' } ],
+    'task-schedule': [ 'error', { version: '8.8' } ],
+    'task-listener': [ 'error', { version: '8.8' } ],
+    'timer': [ 'error', { version: '8.8' } ],
+    'user-task-definition': [ 'warn', { version: '8.8' } ],
+    'user-task-form': [ 'error', { version: '8.8' } ],
+    'version-tag': [ 'error', { version: '8.8' } ],
+    'wait-for-completion': [ 'error', { version: '8.8' } ]
+  }));
+
+
   it('camunda-platform-7-19', expectRules(configs, 'camunda-platform-7-19', {
     'history-time-to-live': [ 'info', { platform: 'camunda-platform', version: '7.19' } ]
   }));

@@ -9,6 +9,7 @@ ___Note:__ Yet to be released changes appear here._
 ## 2.30.0
 
 * `FEAT`: disallow task listeners in Camunda 8.7 config
+* `FEAT`: add Camunda 8.8 config
 
 ## 2.29.0
 
