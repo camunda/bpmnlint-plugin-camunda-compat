@@ -63,5 +63,6 @@ module.exports = {
   'bpmn:SubProcess': '1.0',
   'bpmn:Task': '8.2',
   'bpmn:TextAnnotation': '1.0',
-  'bpmn:UserTask': '1.0'
+  'bpmn:UserTask': '1.0',
+  'bpmn:AdHocSubProcess': '8.7',
 };

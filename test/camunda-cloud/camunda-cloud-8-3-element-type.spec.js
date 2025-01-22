@@ -119,6 +119,8 @@ const valid = [
   }
 ];
 
+module.exports.valid = valid;
+
 const invalid = [
   {
     name: 'boundary event (no event definition)',
