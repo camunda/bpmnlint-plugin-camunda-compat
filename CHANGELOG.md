@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.31.0
+
+* `FEAT`: support `bpmn:AdHocSubProcess` for Camunda 8.7 and newer ([#187](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/187))
+* `DEPS`: update to `zeebe-bpmn-moddle@1.9.0`
+
 ## 2.30.0
 
 * `FEAT`: disallow task listeners in Camunda 8.7 config ([#185](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/185))
