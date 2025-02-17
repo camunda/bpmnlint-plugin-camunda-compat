@@ -48,6 +48,6 @@
     "index.js"
   ],
   "engines": {
-    "node": "*"
+    "node": ">= 20"
   }
 }
