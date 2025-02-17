@@ -401,6 +401,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-7', expectRules(configs, 'camunda-cloud-8-7', {
+    'ad-hoc-sub-process-activity': [ 'error', { version: '8.7' } ],
     'called-element': [ 'error', { version: '8.7' } ],
     'connector-properties': [ 'warn', { version: '8.7' } ],
     'duplicate-execution-listeners': [ 'error', { version: '8.7' } ],
@@ -438,6 +439,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-8', expectRules(configs, 'camunda-cloud-8-8', {
+    'ad-hoc-sub-process-activity': [ 'error', { version: '8.8' } ],
     'called-element': [ 'error', { version: '8.8' } ],
     'connector-properties': [ 'warn', { version: '8.8' } ],
     'duplicate-execution-listeners': [ 'error', { version: '8.8' } ],
@@ -499,6 +501,7 @@ describe('configs', function() {
 
 
   it('all', expectRules(configs, 'all', {
+    'ad-hoc-sub-process-activity': 'error',
     'element-type': 'error',
     'called-element': 'error',
     'collapsed-subprocess': 'error',
