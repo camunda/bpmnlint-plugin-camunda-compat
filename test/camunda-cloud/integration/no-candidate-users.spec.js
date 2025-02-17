@@ -102,7 +102,7 @@ describe('integration - no-candidate-users', function() {
         });
 
 
-        it('should not have errors', async function() {
+        it(`should not have errors on ${version}`, async function() {
 
           // given
           const { root } = await readModdle('test/camunda-cloud/integration/no-candidate-users-errors.bpmn');
