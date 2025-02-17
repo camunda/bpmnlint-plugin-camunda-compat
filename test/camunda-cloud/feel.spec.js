@@ -53,7 +53,7 @@ const valid = [
         <bpmn:serviceTask id="Task_1">
           <bpmn:extensionElements>
             <zeebe:ioMapping>
-              <zeebe:output source="==foo" target="OutputVariable_1" />
+              <zeebe:output source="==..." target="OutputVariable_1" />
             </zeebe:ioMapping>
           </bpmn:extensionElements>
         </bpmn:serviceTask>
@@ -69,7 +69,7 @@ const invalid = [
       <bpmn:serviceTask id="Task_1">
         <bpmn:extensionElements>
           <zeebe:ioMapping>
-            <zeebe:output source="==foo" target="OutputVariable_1" />
+            <zeebe:output source="==..." target="OutputVariable_1" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
       </bpmn:serviceTask>
