@@ -97,7 +97,7 @@ const camundaCloud86Rules = withConfig({
 
 const camundaCloud87Rules = withConfig({
   ...camundaCloud86Rules,
-  'ad-hoc-sub-process-activity': 'error',
+  'ad-hoc-sub-process': 'error',
 }, { version: '8.7' });
 
 const camundaCloud88Rules = withConfig({
@@ -133,7 +133,7 @@ const camundaPlatform723Rules = withConfig(camundaPlatform721Rules, {
 });
 
 const rules = {
-  'ad-hoc-sub-process-activity': './rules/camunda-cloud/ad-hoc-sub-process-activity',
+  'ad-hoc-sub-process': './rules/camunda-cloud/ad-hoc-sub-process',
   'element-type': './rules/camunda-cloud/element-type',
   'called-element': './rules/camunda-cloud/called-element',
   'collapsed-subprocess': './rules/camunda-cloud/collapsed-subprocess',

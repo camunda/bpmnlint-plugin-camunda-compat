@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/camunda-cloud/ad-hoc-sub-process-activity');
+const rule = require('../../rules/camunda-cloud/ad-hoc-sub-process');
 
 const {
   createModdle,

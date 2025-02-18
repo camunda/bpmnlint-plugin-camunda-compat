@@ -11,7 +11,7 @@ const versions = [
   '8.8',
 ];
 
-describe('integration - ad-hoc-sub-process-activity', function() {
+describe('integration - ad-hoc-sub-process', function() {
 
   let linter;
 
@@ -33,13 +33,13 @@ describe('integration - ad-hoc-sub-process-activity', function() {
         it('should not have errors', async function() {
 
           // given
-          const { root } = await readModdle('test/camunda-cloud/integration/ad-hoc-sub-process-activity.bpmn');
+          const { root } = await readModdle('test/camunda-cloud/integration/ad-hoc-sub-process.bpmn');
 
           // when
           const reports = await linter.lint(root);
 
           // then
-          expect(reports[ 'camunda-compat/ad-hoc-sub-process-activity' ]).not.to.exist;
+          expect(reports[ 'camunda-compat/ad-hoc-sub-process' ]).not.to.exist;
         });
 
       });
@@ -50,13 +50,13 @@ describe('integration - ad-hoc-sub-process-activity', function() {
         it('should have errors', async function() {
 
           // given
-          const { root } = await readModdle('test/camunda-cloud/integration/ad-hoc-sub-process-activity-errors.bpmn');
+          const { root } = await readModdle('test/camunda-cloud/integration/ad-hoc-sub-process-errors.bpmn');
 
           // when
           const reports = await linter.lint(root);
 
           // then
-          expect(reports[ 'camunda-compat/ad-hoc-sub-process-activity' ]).to.exist;
+          expect(reports[ 'camunda-compat/ad-hoc-sub-process' ]).to.exist;
         });
 
       });
