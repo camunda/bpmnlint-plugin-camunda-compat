@@ -14,6 +14,7 @@ const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
+const { annotateRule } = require('../helper');
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
@@ -64,9 +65,9 @@ module.exports = skipInNonExecutableProcess(function() {
     }
   }
 
-  return {
+  return annotateRule('feel', {
     check
-  };
+  });
 });
 
 const isFeelProperty = ([ propertyName, value ]) => {

@@ -13,6 +13,7 @@ const { reportErrors } = require('../utils/reporter');
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
 const { greaterOrEqual } = require('../utils/version');
+const { annotateRule } = require('../helper');
 
 const noErrorRefAllowedVersion = '8.2';
 
@@ -62,9 +63,9 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
     }
   }
 
-  return {
+  return annotateRule('error-reference', {
     check
-  };
+  });
 });
 
 function isNoErrorRefAllowed(node, version) {

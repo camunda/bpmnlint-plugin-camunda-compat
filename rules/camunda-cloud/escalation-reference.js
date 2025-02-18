@@ -11,6 +11,7 @@ const {
 const { reportErrors } = require('../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
+const { annotateRule } = require('../helper');
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
@@ -57,9 +58,9 @@ module.exports = skipInNonExecutableProcess(function() {
     }
   }
 
-  return {
+  return annotateRule('escalation-reference', {
     check
-  };
+  });
 });
 
 function isNoEscalationRefAllowed(node) {
