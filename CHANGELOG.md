@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.32.0
+
+* `FEAT`: add `ad-hoc-sub-process` rule ([#189](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/189), [#190](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/190))
+
 ## 2.31.0
 
 * `FEAT`: support `bpmn:AdHocSubProcess` for Camunda 8.7 and newer ([#187](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/187))
