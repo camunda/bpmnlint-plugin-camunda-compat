@@ -6,6 +6,8 @@ const {
   hasProperties
 } = require('../utils/element');
 
+const { annotateRule } = require('../helper');
+
 const { reportErrors } = require('../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -37,7 +39,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
   }
 
-  return {
+  return annotateRule('called-element', {
     check
-  };
+  });
 });

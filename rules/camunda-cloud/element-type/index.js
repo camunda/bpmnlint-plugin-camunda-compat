@@ -14,6 +14,8 @@ const { reportErrors } = require('../../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../../utils/rule');
 
+const { annotateRule } = require('../../helper');
+
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
     if (!isAny(node, [ 'bpmn:FlowElement', 'bpmn:FlowElementsContainer' ])) {
@@ -128,7 +130,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
     }
   }
 
-  return {
+  return annotateRule('element-type', {
     check
-  };
+  });
 });

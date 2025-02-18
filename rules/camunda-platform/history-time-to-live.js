@@ -1,5 +1,7 @@
 const { is } = require('bpmnlint-utils');
 
+const { annotateRule } = require('../helper');
+
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function() {
@@ -14,7 +16,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
   }
 
-  return {
+  return annotateRule('history-time-to-live', {
     check
-  };
+  });
 });
