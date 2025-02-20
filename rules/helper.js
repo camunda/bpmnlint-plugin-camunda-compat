@@ -22,7 +22,7 @@ function annotateRule(ruleName, options) {
     ...restOptions
   } = options;
 
-  const documentationUrl = `${modelingGuidanceBaseUrl}/${ruleName}.md`;
+  const documentationUrl = `${modelingGuidanceBaseUrl}/${ruleName}/`;
 
   return {
     meta: {
