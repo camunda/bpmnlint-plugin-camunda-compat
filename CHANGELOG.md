@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.33.0
+
+* `FEAT`: add documentation links to rules ([#193](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/193))
+
 ## 2.32.0
 
 * `FEAT`: add `ad-hoc-sub-process` rule ([#189](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/189), [#190](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/190))
