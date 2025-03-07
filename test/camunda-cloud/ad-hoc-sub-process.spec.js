@@ -20,6 +20,24 @@ const valid = [
     `))
   },
   {
+    name: 'ad hoc sub process (with subprocess)',
+    config: { version: '8.7' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="Subprocess_1">
+        <bpmn:subProcess id="SubProcess" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'ad hoc sub process (with call activity)',
+    config: { version: '8.7' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="Subprocess_1">
+        <bpmn:callActivity id="CallActivity" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
     name: 'ad hoc sub process (with completionCondition)',
     config: { version: '8.8' },
     moddleElement: createModdle(createProcess(`

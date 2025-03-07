@@ -1,4 +1,4 @@
-const { is, isAny } = require('bpmnlint-utils');
+const { is } = require('bpmnlint-utils');
 
 const { hasProperties } = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
@@ -51,5 +51,5 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 });
 
 function isActivity(element) {
-  return isAny(element, [ 'bpmn:Task', 'bpmn:SubProcess' ]);
+  return is(element, 'bpmn:Activity');
 }
