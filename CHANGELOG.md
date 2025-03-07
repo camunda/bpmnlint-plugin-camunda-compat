@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: allow call activity in ad-hoc subprocess
+
 ## 2.33.1
 
 * `FIX`: correct documentation URL ([#194](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/194))
