@@ -94,10 +94,16 @@ const invalid = [
     `)),
     report: {
       id: 'Subprocess_1',
-      message: 'Element of type <bpmn:completionCondition> within <bpmn:AdHocSubProcess> only allowed by Camunda 8.8 or newer',
+      message: 'Property <completionCondition> only allowed by Camunda 8.8 or newer',
+      path: [
+        'completionCondition'
+      ],
       data: {
+        type: 'camunda.propertyNotAllowed',
         node: 'Subprocess_1',
-        parentNode: null
+        parentNode: null,
+        property: 'completionCondition',
+        allowedVersion: '8.8'
       }
     }
   },
@@ -111,10 +117,16 @@ const invalid = [
     `)),
     report: {
       id: 'Subprocess_1',
-      message: 'Element of type <bpmn:AdHocSubProcess> with property <cancelRemainingInstances> only allowed by Camunda 8.8 or newer',
+      message: 'Property value of <false> only allowed by Camunda 8.8 or newer',
+      path: [
+        'cancelRemainingInstances'
+      ],
       data: {
+        type: 'camunda.propertyValueNotAllowed',
         node: 'Subprocess_1',
-        parentNode: null
+        parentNode: null,
+        property: 'cancelRemainingInstances',
+        allowedVersion: '8.8'
       }
     }
   },

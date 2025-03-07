@@ -1,5 +1,6 @@
 const { is, isAny } = require('bpmnlint-utils');
 
+const { hasProperties } = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -25,30 +26,21 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
     }
 
     if (!greaterOrEqual(version, COMPLETION_ATTRIBUTES_SUPPORT_VERSION)) {
-      if (node.get('completionCondition')) {
-        reportErrors(node, reporter, [
-          {
-            message:  'Element of type <bpmn:completionCondition> within <bpmn:AdHocSubProcess> only allowed by Camunda 8.8 or newer',
-            data: {
-              node,
-              parentNode: null
-            }
-          }
-        ]);
-      }
+      reportErrors(node, reporter, hasProperties(node, {
+        completionCondition: {
+          allowed: false,
+          allowedVersion: COMPLETION_ATTRIBUTES_SUPPORT_VERSION
+        },
+        cancelRemainingInstances: {
+          allowed: () => {
 
-      // check for property existence here as the attributes defaults to true and a value will always be present
-      if (Object.prototype.hasOwnProperty.call(node, 'cancelRemainingInstances')) {
-        reportErrors(node, reporter, [
-          {
-            message:  'Element of type <bpmn:AdHocSubProcess> with property <cancelRemainingInstances> only allowed by Camunda 8.8 or newer',
-            data: {
-              node,
-              parentNode: null
-            }
-          }
-        ]);
-      }
+            // check for property existence here as the attribute defaults
+            // to true and a value will always be present
+            return !Object.prototype.hasOwnProperty.call(node, 'cancelRemainingInstances');
+          },
+          allowedVersion: COMPLETION_ATTRIBUTES_SUPPORT_VERSION
+        }
+      }, node));
     }
   }
 
