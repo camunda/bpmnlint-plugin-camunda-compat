@@ -7,6 +7,8 @@ const {
   createProcess
 } = require('../helper');
 
+const { ERROR_TYPES } = require('../../rules/utils/element');
+
 const valid = [
   {
     name: 'ad hoc sub process (with task)',
@@ -99,7 +101,7 @@ const invalid = [
         'completionCondition'
       ],
       data: {
-        type: 'camunda.propertyNotAllowed',
+        type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
         node: 'Subprocess_1',
         parentNode: null,
         property: 'completionCondition',
@@ -122,7 +124,7 @@ const invalid = [
         'cancelRemainingInstances'
       ],
       data: {
-        type: 'camunda.propertyValueNotAllowed',
+        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
         node: 'Subprocess_1',
         parentNode: null,
         property: 'cancelRemainingInstances',

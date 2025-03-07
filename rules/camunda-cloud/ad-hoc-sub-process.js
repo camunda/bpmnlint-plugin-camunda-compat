@@ -14,9 +14,11 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
       return;
     }
 
+    const errors = [];
+
     // Ad-Hoc Sub-Process must contain at least one activity
     if (!node.get('flowElements').some(isActivity)) {
-      reportErrors(node, reporter, {
+      errors.push({
         message: 'Element of type <bpmn:AdHocSubProcess> must contain at least one activity',
         data: {
           node,
@@ -26,21 +28,20 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
     }
 
     if (!greaterOrEqual(version, COMPLETION_ATTRIBUTES_SUPPORT_VERSION)) {
-      reportErrors(node, reporter, hasProperties(node, {
+      errors.push(...hasProperties(node, {
         completionCondition: {
           allowed: false,
           allowedVersion: COMPLETION_ATTRIBUTES_SUPPORT_VERSION
         },
         cancelRemainingInstances: {
-          allowed: () => {
-
-            // check for property existence here as the attribute defaults
-            // to true and a value will always be present
-            return !Object.prototype.hasOwnProperty.call(node, 'cancelRemainingInstances');
-          },
+          allowed: value => value !== false, // only allow true which is default value
           allowedVersion: COMPLETION_ATTRIBUTES_SUPPORT_VERSION
         }
       }, node));
+    }
+
+    if (errors.length) {
+      reportErrors(node, reporter, errors);
     }
   }
 
