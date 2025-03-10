@@ -16,7 +16,7 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 
 const { greaterOrEqual } = require('../utils/version');
 
-const allowedVersion = '8.3';
+const ALLOWED_VERSION = '8.3';
 
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
@@ -25,8 +25,8 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
     }
 
     // Camunda 8.2 and older
-    if (!greaterOrEqual(version, allowedVersion)) {
-      let errors = hasNoExtensionElement(node, 'zeebe:FormDefinition', node, allowedVersion);
+    if (!greaterOrEqual(version, ALLOWED_VERSION)) {
+      let errors = hasNoExtensionElement(node, 'zeebe:FormDefinition', node, ALLOWED_VERSION);
 
       if (errors.length) {
         reportErrors(node, reporter, errors);

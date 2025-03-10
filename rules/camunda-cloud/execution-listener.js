@@ -7,7 +7,6 @@ const { reportErrors } = require('../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
-
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     const executionListeners = findExtensionElement(node, 'zeebe:ExecutionListeners');

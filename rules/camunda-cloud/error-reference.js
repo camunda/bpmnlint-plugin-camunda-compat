@@ -15,7 +15,7 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 const { greaterOrEqual } = require('../utils/version');
 const { annotateRule } = require('../helper');
 
-const noErrorRefAllowedVersion = '8.2';
+const NO_ERROR_REF_ALLOWED_VERSION = '8.2';
 
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
@@ -69,5 +69,5 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 });
 
 function isNoErrorRefAllowed(node, version) {
-  return is(node, 'bpmn:CatchEvent') && greaterOrEqual(version, noErrorRefAllowedVersion);
+  return is(node, 'bpmn:CatchEvent') && greaterOrEqual(version, NO_ERROR_REF_ALLOWED_VERSION);
 }
