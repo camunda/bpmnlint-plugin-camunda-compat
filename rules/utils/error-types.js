@@ -1,4 +1,5 @@
 module.exports.ERROR_TYPES = Object.freeze({
+  CHILD_ELEMENT_OF_TYPE_REQUIRED: 'camunda.childElementOfTypeRequired',
   CHILD_ELEMENT_TYPE_NOT_ALLOWED: 'camunda.childElementTypeNotAllowed',
   CONNECTORS_PROPERTY_VALUE_NOT_ALLOWED: 'camunda.connectors.propertyValueNotAllowed',
   ELEMENT_COLLAPSED_NOT_ALLOWED: 'camunda.elementCollapsedNotAllowed',

@@ -80,8 +80,10 @@ const invalid = [
       id: 'Subprocess_1',
       message: 'Element of type <bpmn:AdHocSubProcess> must contain at least one activity',
       data: {
+        type: ERROR_TYPES.CHILD_ELEMENT_OF_TYPE_REQUIRED,
         node: 'Subprocess_1',
-        parentNode: null
+        parentNode: null,
+        requiredType: 'bpmn:Activity'
       }
     }
   },
@@ -98,8 +100,10 @@ const invalid = [
       id: 'Subprocess_1',
       message: 'Element of type <bpmn:AdHocSubProcess> must contain at least one activity',
       data: {
+        type: ERROR_TYPES.CHILD_ELEMENT_OF_TYPE_REQUIRED,
         node: 'Subprocess_1',
-        parentNode: null
+        parentNode: null,
+        requiredType: 'bpmn:Activity'
       }
     }
   },
