@@ -1,6 +1,9 @@
 const { is } = require('bpmnlint-utils');
 
-const { hasProperties } = require('../utils/element');
+const {
+  ERROR_TYPES,
+  hasProperties
+} = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -21,8 +24,10 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
       errors.push({
         message: 'Element of type <bpmn:AdHocSubProcess> must contain at least one activity',
         data: {
+          type: ERROR_TYPES.CHILD_ELEMENT_OF_TYPE_REQUIRED,
           node,
-          parentNode: null
+          parentNode: null,
+          requiredType: 'bpmn:Activity'
         }
       });
     }
