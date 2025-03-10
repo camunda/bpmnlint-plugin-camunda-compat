@@ -14,7 +14,7 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 
 const { greaterOrEqual } = require('../utils/version');
 
-const formIdAllowedVersions = {
+const FORM_ID_ALLOWED_VERSIONS = {
   desktop: '8.4',
   web: '8.0'
 };
@@ -55,7 +55,7 @@ module.exports = skipInNonExecutableProcess(function({ modeler = 'desktop', vers
 
     let errors;
 
-    const formIdAllowedVersion = formIdAllowedVersions[ modeler ];
+    const formIdAllowedVersion = FORM_ID_ALLOWED_VERSIONS[ modeler ];
 
     if (isFormIdAllowed(version, formIdAllowedVersion)) {
       errors = hasProperty(formDefinition, [

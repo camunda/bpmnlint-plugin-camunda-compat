@@ -9,7 +9,7 @@ const { reportErrors } = require('../utils/reporter');
 const { skipInNonExecutableProcess } = require('../utils/rule');
 const { greaterOrEqual } = require('../utils/version');
 
-const COMPLETION_ATTRIBUTES_SUPPORT_VERSION = '8.8';
+const COMPLETION_ALLOWED_VERSION = '8.8';
 
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
@@ -19,7 +19,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 
     const errors = [];
 
-    // Ad-Hoc Sub-Process must contain at least one activity
+    // ad-hoc sub-process must contain at least one activity
     if (!node.get('flowElements').some(isActivity)) {
       errors.push({
         message: 'Element of type <bpmn:AdHocSubProcess> must contain at least one activity',
@@ -32,15 +32,15 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
       });
     }
 
-    if (!greaterOrEqual(version, COMPLETION_ATTRIBUTES_SUPPORT_VERSION)) {
+    if (!greaterOrEqual(version, COMPLETION_ALLOWED_VERSION)) {
       errors.push(...hasProperties(node, {
         completionCondition: {
           allowed: false,
-          allowedVersion: COMPLETION_ATTRIBUTES_SUPPORT_VERSION
+          allowedVersion: COMPLETION_ALLOWED_VERSION
         },
         cancelRemainingInstances: {
           allowed: value => value !== false, // only allow true which is default value
-          allowedVersion: COMPLETION_ATTRIBUTES_SUPPORT_VERSION
+          allowedVersion: COMPLETION_ALLOWED_VERSION
         }
       }, node));
     }

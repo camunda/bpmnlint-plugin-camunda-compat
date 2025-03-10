@@ -9,7 +9,6 @@ const { reportErrors } = require('../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
-
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     if (!is(node, 'bpmn:UserTask')) {
