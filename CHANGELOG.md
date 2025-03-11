@@ -6,7 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
-* `FIX`: allow call activity in ad-hoc subprocess
+## 2.34.0
+
+* `FEAT`: add rules for ad-hoc subprocess configuration ([#196](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/196))
+* `FIX`: allow call activity in ad-hoc subprocess ([#197](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/197))
 
 ## 2.33.1
 
