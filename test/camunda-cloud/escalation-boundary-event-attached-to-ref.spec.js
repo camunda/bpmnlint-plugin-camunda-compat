@@ -21,6 +21,15 @@ const valid = [
   `))
   },
   {
+    name: 'escalation boundary event (attached to ad-hoc sub process)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AdHocSubProcess_1" />
+      <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="AdHocSubProcess_1">
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
+      </bpmn:boundaryEvent>
+  `))
+  },
+  {
     name: 'escalation boundary event (attached to sub process)',
     moddleElement: createModdle(createProcess(`
       <bpmn:subProcess id="SubProcess_1" />
