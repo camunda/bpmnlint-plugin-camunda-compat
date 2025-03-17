@@ -5,7 +5,6 @@ const {
 
 const {
   getEventDefinition,
-  isAnyExactly
 } = require('../utils/element');
 
 const { ERROR_TYPES } = require('../utils/error-types');
@@ -28,7 +27,7 @@ module.exports = skipInNonExecutableProcess(function() {
 
     const attachedToRef = node.get('attachedToRef');
 
-    if (attachedToRef && !isAnyExactly(attachedToRef, [ 'bpmn:CallActivity', 'bpmn:SubProcess' ])) {
+    if (attachedToRef && is(attachedToRef, 'bpmn:Task')) {
       reportErrors(node, reporter, {
         message: `Element of type <bpmn:BoundaryEvent> with event definition of type <bpmn:EscalationEventDefinition> is not allowed to be attached to element of type <${ attachedToRef.$type }>`,
         path: null,
