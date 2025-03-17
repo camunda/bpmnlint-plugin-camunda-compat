@@ -5,7 +5,6 @@ const {
 
 const {
   getEventDefinition,
-  isAnyExactly
 } = require('../utils/element');
 
 const { ERROR_TYPES } = require('../utils/error-types');

@@ -39,6 +39,15 @@ const valid = [
   `))
   },
   {
+    name: 'escalation boundary event (attached to transaction)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:transaction id="Transaction_1" />
+      <bpmn:boundaryEvent id="BoundaryEvent_1" attachedToRef="Transaction_1">
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_1" />
+      </bpmn:boundaryEvent>
+  `))
+  },
+  {
     name: 'task',
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
   },
