@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.34.1
+
+* `FIX`: allow escalation boundary event attached to ad-hoc sub-process ([#198](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/198))
+
 ## 2.34.0
 
 * `FEAT`: add rules for ad-hoc subprocess configuration ([#196](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/196))
