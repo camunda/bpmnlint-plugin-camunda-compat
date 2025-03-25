@@ -22,7 +22,7 @@ module.exports = skipInNonExecutableProcess(function() {
   return {
     meta: {
       documentation: {
-        url: 'https://docs.camunda.io/docs/next/apis-tools/migration-manuals/migrate-to-zeebe-user-tasks'
+        url: 'https://docs.camunda.io/docs/next/apis-tools/migration-manuals/migrate-to-camunda-user-tasks'
       }
     },
     check
