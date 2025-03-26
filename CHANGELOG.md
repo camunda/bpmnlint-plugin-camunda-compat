@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.34.2
+
+* `FIX`: correct `zeebe-user-task` documentation URL ([#199](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/199))
+
 ## 2.34.1
 
 * `FIX`: allow escalation boundary event attached to ad-hoc sub-process ([#198](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/198))
