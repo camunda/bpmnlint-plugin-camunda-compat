@@ -132,6 +132,11 @@ const camundaPlatform723Rules = withConfig(camundaPlatform721Rules, {
   version: '7.23'
 });
 
+const camundaPlatform724Rules = withConfig(camundaPlatform723Rules, {
+  platform: 'camunda-platform',
+  version: '7.24'
+});
+
 const rules = {
   'ad-hoc-sub-process': './rules/camunda-cloud/ad-hoc-sub-process',
   'element-type': './rules/camunda-cloud/element-type',
@@ -238,6 +243,9 @@ const configs = {
   },
   'camunda-platform-7-23': {
     rules: camundaPlatform723Rules
+  },
+  'camunda-platform-7-24': {
+    rules: camundaPlatform724Rules
   }
 };
 

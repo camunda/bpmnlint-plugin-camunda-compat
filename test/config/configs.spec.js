@@ -500,6 +500,11 @@ describe('configs', function() {
   }));
 
 
+  it('camunda-platform-7-24', expectRules(configs, 'camunda-platform-7-24', {
+    'history-time-to-live': [ 'info', { platform: 'camunda-platform', version: '7.24' } ]
+  }));
+
+
   it('all', expectRules(configs, 'all', {
     'ad-hoc-sub-process': 'error',
     'element-type': 'error',
