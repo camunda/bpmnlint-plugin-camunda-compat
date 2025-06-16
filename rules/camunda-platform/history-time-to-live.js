@@ -1,7 +1,5 @@
 const { is } = require('bpmnlint-utils');
 
-const { annotateRule } = require('../helper');
-
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function() {
@@ -16,7 +14,12 @@ module.exports = skipInNonExecutableProcess(function() {
     }
   }
 
-  return annotateRule('history-time-to-live', {
+  return {
+    meta: {
+      documentation: {
+        url: 'https://docs.camunda.org/manual/latest/modeler/history-time-to-live/'
+      }
+    },
     check
-  });
+  };
 });
