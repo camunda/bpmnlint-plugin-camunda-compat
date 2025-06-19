@@ -8,7 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 2.36.0
 
-* `DEPS`: update `bpmnlint@11.4.3`
+* `DEPS`: update `bpmnlint@11.6.0`
 
 ## 2.35.0
 
