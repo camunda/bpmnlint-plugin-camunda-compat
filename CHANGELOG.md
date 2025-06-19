@@ -8,6 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 2.36.0
 
+* `CHORE`: update documentation link for C7 HTTL ([#202](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/202))
 * `DEPS`: update `bpmnlint@11.6.0`
 
 ## 2.35.0
