@@ -46,6 +46,18 @@ const valid = [
     `))
   },
   {
+    name: 'backticks',
+    moddleElement: createModdle(createProcess(`
+     <bpmn:serviceTask id="Task_1">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="=\`backticks\`" target="InputVariable_1" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    `))
+  },
+  {
     name: 'invalid FEEL expression (string property) (non-executable process)',
     config: { version: '8.2' },
     moddleElement: createModdle(createDefinitions(`

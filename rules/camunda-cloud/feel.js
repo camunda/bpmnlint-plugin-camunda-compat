@@ -36,7 +36,9 @@ module.exports = skipInNonExecutableProcess(function() {
       }
 
       if (isFeelProperty([ propertyName, propertyValue ])) {
-        const lintErrors = lintExpression(propertyValue.substring(1));
+        const lintErrors = lintExpression(propertyValue.substring(1), {
+          parserDialect: 'camunda'
+        });
 
         // syntax error
         if (lintErrors.find(({ type }) => type === 'Syntax Error')) {
