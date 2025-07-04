@@ -56,7 +56,7 @@ Extend your configuration so bpmnlint picks-up the extension when parsing a BPMN
  {
    "extends": [
      "bpmnlint:recommended",
-     "plugin:camunda-compat/camunda-cloud-8-0"
+     "plugin:camunda-compat/camunda-cloud-8-7"
    ],
    "rules": {
      "camunda-compat/timer": "off"
