@@ -37,8 +37,9 @@
     "zeebe-bpmn-moddle": "^1.9.0"
   },
   "dependencies": {
-    "@bpmn-io/feel-lint": "^1.4.0",
+    "@bpmn-io/feel-lint": "^2.0.0",
     "@bpmn-io/moddle-utils": "^0.2.1",
+    "@camunda/feel-builtins": "^0.2.0",
     "bpmnlint-utils": "^1.1.1",
     "min-dash": "^4.1.1",
     "semver-compare": "^1.0.0"

@@ -15,6 +15,7 @@ const { ERROR_TYPES } = require('../utils/error-types');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
 const { annotateRule } = require('../helper');
+const { camundaBuiltins } = require('@camunda/feel-builtins');
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
@@ -37,7 +38,8 @@ module.exports = skipInNonExecutableProcess(function() {
 
       if (isFeelProperty([ propertyName, propertyValue ])) {
         const lintErrors = lintExpression(propertyValue.substring(1), {
-          parserDialect: 'camunda'
+          parserDialect: 'camunda',
+          builtins: camundaBuiltins
         });
 
         // syntax error
