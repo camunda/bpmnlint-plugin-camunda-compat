@@ -504,6 +504,7 @@ function addAllowedVersion(data, allowedVersion) {
     allowedVersion
   };
 }
+module.exports.addAllowedVersion = addAllowedVersion;
 
 function findParent(node, type) {
   if (!node) {
