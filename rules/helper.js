@@ -12,7 +12,7 @@ const modelingGuidanceBaseUrl = 'https://docs.camunda.io/docs/next/components/mo
  *
  * @return { RuleDefinition }
  */
-function annotateRule(ruleName, options) {
+function annotateRule(ruleName, options, customUrl) {
 
   const {
     meta: {
@@ -22,7 +22,7 @@ function annotateRule(ruleName, options) {
     ...restOptions
   } = options;
 
-  const documentationUrl = `${modelingGuidanceBaseUrl}/${ruleName}/`;
+  const documentationUrl = customUrl ? customUrl : `${modelingGuidanceBaseUrl}/${ruleName}/`;
 
   return {
     meta: {

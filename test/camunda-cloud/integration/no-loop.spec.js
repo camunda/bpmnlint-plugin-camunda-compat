@@ -64,6 +64,19 @@ describe('integration - no-loop', function() {
           expect(reports[ 'camunda-compat/no-loop' ]).to.exist;
         });
 
+
+        it('should have documentation link', async function() {
+
+          // given
+          const { root } = await readModdle('test/camunda-cloud/integration/no-loop-errors.bpmn');
+
+          // when
+          const reports = await linter.lint(root);
+
+          // then
+          expect(reports[ 'camunda-compat/no-loop' ][0].meta.documentation.url).to.exist;
+        });
+
       });
 
     });
