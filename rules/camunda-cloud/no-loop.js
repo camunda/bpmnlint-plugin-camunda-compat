@@ -13,6 +13,7 @@ const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
+const { annotateRule } = require('../helper');
 
 /**
  * @typedef {import('bpmn-moddle').BaseElement} ModdleElement
@@ -61,9 +62,9 @@ module.exports = skipInNonExecutableProcess(function() {
     }
   }
 
-  return {
+  return annotateRule('no-loop', {
     check
-  };
+  });
 });
 
 /**
