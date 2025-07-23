@@ -1,4 +1,4 @@
-const modelingGuidanceBaseUrl = 'https://docs.camunda.io/docs/next/components/modeler/reference/modeling-guidance/rules';
+const modelingGuidanceBaseUrl = 'https://docs.camunda.io/docs/components/modeler/reference/modeling-guidance/rules';
 
 /**
  * @typedef { any } RuleDefinition
