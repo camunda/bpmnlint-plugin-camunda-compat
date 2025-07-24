@@ -32,7 +32,8 @@ const camundaCloud10Rules = withConfig({
   'timer': 'error',
   'user-task-definition': 'warn',
   'user-task-form': 'error',
-  'feel': 'error'
+  'feel': 'error',
+  'bpmnlint/start-event-required': 'error',
 }, { version: '1.0' });
 
 const camundaCloud11Rules = withConfig(camundaCloud10Rules, { version: '1.1' });
@@ -138,6 +139,10 @@ const camundaPlatform724Rules = withConfig(camundaPlatform723Rules, {
   version: '7.24'
 });
 
+const bpmnlintRules = [
+  'bpmnlint/start-event-required'
+];
+
 const rules = {
   'ad-hoc-sub-process': './rules/camunda-cloud/ad-hoc-sub-process',
   'element-type': './rules/camunda-cloud/element-type',
@@ -188,7 +193,11 @@ const rules = {
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
   'user-task-form': './rules/camunda-cloud/user-task-form',
   'version-tag': './rules/camunda-cloud/version-tag',
-  'wait-for-completion': './rules/camunda-cloud/wait-for-completion'
+  'wait-for-completion': './rules/camunda-cloud/wait-for-completion',
+  ...bpmnlintRules.reduce((rules, rule) => {
+    rules[ rule ] = rule ;
+    return rules;
+  }, {}),
 };
 
 const configs = {
