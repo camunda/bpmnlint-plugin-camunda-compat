@@ -5,6 +5,7 @@ const { configs } = require('../..');
 describe('configs', function() {
 
   it('camunda-cloud-1-0', expectRules(configs, 'camunda-cloud-1-0', {
+    'bpmnlint/start-event-required': [ 'error', { version: '1.0' } ],
     'implementation': [ 'error', { version: '1.0' } ],
     'called-element': [ 'error', { version: '1.0' } ],
     'collapsed-subprocess': [ 'error', { version: '1.0' } ],
@@ -41,6 +42,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-1-1', expectRules(configs, 'camunda-cloud-1-1', {
+    'bpmnlint/start-event-required': [ 'error', { version: '1.1' } ],
     'implementation': [ 'error', { version: '1.1' } ],
     'called-element': [ 'error', { version: '1.1' } ],
     'collapsed-subprocess': [ 'error', { version: '1.1' } ],
@@ -77,6 +79,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-1-2', expectRules(configs, 'camunda-cloud-1-2', {
+    'bpmnlint/start-event-required': [ 'error', { version: '1.2' } ],
     'implementation': [ 'error', { version: '1.2' } ],
     'called-element': [ 'error', { version: '1.2' } ],
     'collapsed-subprocess': [ 'error', { version: '1.2' } ],
@@ -113,6 +116,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-1-3', expectRules(configs, 'camunda-cloud-1-3', {
+    'bpmnlint/start-event-required': [ 'error', { version: '1.3' } ],
     'implementation': [ 'error', { version: '1.3' } ],
     'called-element': [ 'error', { version: '1.3' } ],
     'collapsed-subprocess': [ 'error', { version: '1.3' } ],
@@ -149,6 +153,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-0', expectRules(configs, 'camunda-cloud-8-0', {
+    'bpmnlint/start-event-required': [ 'error', { version: '8.0' } ],
     'called-element': [ 'error', { version: '8.0' } ],
     'collapsed-subprocess': [ 'error', { version: '8.0' } ],
     'connector-properties': [ 'warn', { version: '8.0' } ],
@@ -185,6 +190,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-1', expectRules(configs, 'camunda-cloud-8-1', {
+    'bpmnlint/start-event-required': [ 'error', { version: '8.1' } ],
     'called-element': [ 'error', { version: '8.1' } ],
     'collapsed-subprocess': [ 'error', { version: '8.1' } ],
     'connector-properties': [ 'warn', { version: '8.1' } ],
@@ -221,6 +227,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-2', expectRules(configs, 'camunda-cloud-8-2', {
+    'bpmnlint/start-event-required': [ 'error', { version: '8.2' } ],
     'called-element': [ 'error', { version: '8.2' } ],
     'collapsed-subprocess': [ 'error', { version: '8.2' } ],
     'connector-properties': [ 'warn', { version: '8.2' } ],
@@ -259,6 +266,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-3', expectRules(configs, 'camunda-cloud-8-3', {
+    'bpmnlint/start-event-required': [ 'error', { version: '8.3' } ],
     'called-element': [ 'error', { version: '8.3' } ],
     'collapsed-subprocess': [ 'error', { version: '8.3' } ],
     'connector-properties': [ 'warn', { version: '8.3' } ],
@@ -298,6 +306,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-4', expectRules(configs, 'camunda-cloud-8-4', {
+    'bpmnlint/start-event-required': [ 'error', { version: '8.4' } ],
     'called-element': [ 'error', { version: '8.4' } ],
     'connector-properties': [ 'warn', { version: '8.4' } ],
     'duplicate-task-headers': [ 'error', { version: '8.4' } ],
@@ -336,6 +345,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-5', expectRules(configs, 'camunda-cloud-8-5', {
+    'bpmnlint/start-event-required': [ 'error', { version: '8.5' } ],
     'called-element': [ 'error', { version: '8.5' } ],
     'connector-properties': [ 'warn', { version: '8.5' } ],
     'duplicate-task-headers': [ 'error', { version: '8.5' } ],
@@ -374,6 +384,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-6', expectRules(configs, 'camunda-cloud-8-6', {
+    'bpmnlint/start-event-required': [ 'error', { version: '8.6' } ],
     'called-element': [ 'error', { version: '8.6' } ],
     'connector-properties': [ 'warn', { version: '8.6' } ],
     'duplicate-execution-listeners': [ 'error', { version: '8.6' } ],
@@ -412,6 +423,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-7', expectRules(configs, 'camunda-cloud-8-7', {
+    'bpmnlint/start-event-required': [ 'error', { version: '8.7' } ],
     'ad-hoc-sub-process': [ 'error', { version: '8.7' } ],
     'called-element': [ 'error', { version: '8.7' } ],
     'connector-properties': [ 'warn', { version: '8.7' } ],
@@ -451,6 +463,7 @@ describe('configs', function() {
 
 
   it('camunda-cloud-8-8', expectRules(configs, 'camunda-cloud-8-8', {
+    'bpmnlint/start-event-required': [ 'error', { version: '8.8' } ],
     'ad-hoc-sub-process': [ 'error', { version: '8.8' } ],
     'called-element': [ 'error', { version: '8.8' } ],
     'connector-properties': [ 'warn', { version: '8.8' } ],
@@ -519,6 +532,7 @@ describe('configs', function() {
 
 
   it('all', expectRules(configs, 'all', {
+    'bpmnlint/start-event-required': 'error',
     'ad-hoc-sub-process': 'error',
     'element-type': 'error',
     'called-element': 'error',
