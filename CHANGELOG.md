@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.38.1
+
+* `FIX`: adjust minimum allowed version for `io-mapping` rule without input source to `8.8` ([#211](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/211))
+
 ## 2.38.0
 
 * `FEAT`: use Camunda builtins in `feel` rule ([#206](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/206))
