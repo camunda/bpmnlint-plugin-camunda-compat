@@ -9,7 +9,7 @@ const rule = require('../../rules/camunda-cloud/io-mapping');
 const valid = [
   {
     name: 'complete io mapping',
-    config: { version: '8.6' },
+    config: { version: '8.7' },
     moddleElement: createModdle(
       createProcess(`
       <bpmn:serviceTask id="ServiceTask">
@@ -25,8 +25,8 @@ const valid = [
     ),
   },
   {
-    name: 'missing input source (allowed by Camunda >= 8.7)',
-    config: { version: '8.7' },
+    name: 'missing input source (allowed by Camunda >= 8.8)',
+    config: { version: '8.8' },
     moddleElement: createModdle(
       createProcess(`
       <bpmn:serviceTask id="ServiceTask">
@@ -46,7 +46,7 @@ const valid = [
 const invalid = [
   {
     name: 'missing all io mapping properties',
-    config: { version: '8.6' },
+    config: { version: '8.7' },
     moddleElement: createModdle(
       createProcess(`
        <bpmn:serviceTask id="ServiceTask">
@@ -63,14 +63,14 @@ const invalid = [
     report: [
       {
         id: 'ServiceTask',
-        message: 'Element of type <zeebe:Input> without property <source> only allowed by Camunda 8.7 or newer',
+        message: 'Element of type <zeebe:Input> without property <source> only allowed by Camunda 8.8 or newer',
         path: [ 'extensionElements', 'values', 1, 'inputParameters', 0, 'source' ],
         data: {
           type: ERROR_TYPES.PROPERTY_REQUIRED,
           node: 'zeebe:Input',
           parentNode: 'ServiceTask',
           requiredProperty: 'source',
-          allowedVersion: '8.7',
+          allowedVersion: '8.8',
         },
         category: 'error',
       },

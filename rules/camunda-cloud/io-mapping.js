@@ -3,7 +3,7 @@ const { reportErrors } = require('../utils/reporter');
 const { skipInNonExecutableProcess } = require('../utils/rule');
 const { greaterOrEqual } = require('../utils/version');
 
-const ALLOWED_VERSION_NO_INPUT_SOURCE = '8.7';
+const ALLOWED_VERSION_NO_INPUT_SOURCE = '8.8';
 
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
