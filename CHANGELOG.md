@@ -6,6 +6,12 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.38.0
+
+* `FEAT`: use Camunda builtins in `feel` rule ([#206](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/206))
+* `FEAT`: add `io-mapping` rule ([#207](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/207))
+* `FEAT`: add documentation link for `no-loop` rule ([#208](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/208))
+
 ## 2.37.0
 
 * `FEAT`: use parserDialect `camunda` for `feel` rule ([#205](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/205))
