@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.39.0
+
+* `FEAT`: include [`start-event-required`](https://github.com/bpmn-io/bpmnlint/blob/main/docs/rules/start-event-required.md) rule ([#210](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/210))
+* `DEPS`: mark `bpmlint` peerDependency ([#210](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/210))
+
 ## 2.38.1
 
 * `FIX`: adjust minimum allowed version for `io-mapping` rule without input source to `8.8` ([#211](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/211))
