@@ -66,6 +66,18 @@ const valid = [
       </bpmn:adHocSubProcess>
     `))
   },
+  {
+    name: 'ad hoc sub process (with output collection and output element attributes)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="Subprocess_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc outputCollection="myCollection" outputElement="=myElement" />
+        </bpmn:extensionElements>
+        <bpmn:task id="Task_1" />
+      </bpmn:adHocSubProcess>
+    `))
+  }
 ];
 
 const invalid = [
@@ -154,6 +166,100 @@ const invalid = [
       }
     }
   },
+  {
+    name: 'ad hoc sub process (with output collection and output element attributes)',
+    config: { version: '8.7' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="Subprocess_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc outputCollection="myCollection" outputElement="=myElement" />
+        </bpmn:extensionElements>
+        <bpmn:task id="Task_1" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: [
+      {
+        id: 'Subprocess_1',
+        message: 'Property <outputCollection> only allowed by Camunda 8.8 or newer',
+        path: [
+          'outputCollection'
+        ],
+        data: {
+          type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
+          node: 'zeebe:AdHoc',
+          parentNode: null,
+          property: 'outputCollection',
+          allowedVersion: '8.8'
+        }
+      },
+      {
+        id: 'Subprocess_1',
+        message: 'Property <outputElement> only allowed by Camunda 8.8 or newer',
+        path: [
+          'outputElement'
+        ],
+        data: {
+          type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
+          node: 'zeebe:AdHoc',
+          parentNode: null,
+          property: 'outputElement',
+          allowedVersion: '8.8'
+        }
+      }
+    ]
+  },
+  {
+    name: 'ad hoc sub process (with output collection, without output element)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="Subprocess_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc outputCollection="myCollection" />
+        </bpmn:extensionElements>
+        <bpmn:task id="Task_1" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Subprocess_1',
+      message: 'Element of type <zeebe:AdHoc> must have property <outputElement> if it has property <outputCollection>',
+      path: [
+        'outputElement'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_DEPENDENT_REQUIRED,
+        node: 'zeebe:AdHoc',
+        parentNode: null,
+        property: 'outputCollection',
+        dependentRequiredProperty: 'outputElement'
+      }
+    }
+  },
+  {
+    name: 'ad hoc sub process (with output element, without output collection)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="Subprocess_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc outputElement="=myElement" />
+        </bpmn:extensionElements>
+        <bpmn:task id="Task_1" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Subprocess_1',
+      message: 'Element of type <zeebe:AdHoc> must have property <outputCollection> if it has property <outputElement>',
+      path: [
+        'outputCollection'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_DEPENDENT_REQUIRED,
+        node: 'zeebe:AdHoc',
+        parentNode: null,
+        property: 'outputElement',
+        dependentRequiredProperty: 'outputCollection'
+      }
+    }
+  }
 ];
 
 RuleTester.verify('ad-hoc-sub-process', rule, {
