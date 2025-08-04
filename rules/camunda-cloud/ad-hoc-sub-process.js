@@ -2,7 +2,8 @@ const { is } = require('bpmnlint-utils');
 
 const {
   ERROR_TYPES,
-  hasProperties
+  hasProperties,
+  findExtensionElement
 } = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
 
@@ -10,6 +11,7 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 const { greaterOrEqual } = require('../utils/version');
 
 const COMPLETION_ALLOWED_VERSION = '8.8';
+const OUTPUT_COLLECTION_ALLOWED_VERSION = '8.8';
 
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
@@ -43,6 +45,23 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
           allowedVersion: COMPLETION_ALLOWED_VERSION
         }
       }, node));
+    }
+
+    const adHoc = findExtensionElement(node, 'zeebe:AdHoc');
+    if (adHoc) {
+      const allowed = greaterOrEqual(version, OUTPUT_COLLECTION_ALLOWED_VERSION);
+      errors.push(...hasProperties(adHoc, {
+        outputCollection: {
+          allowed,
+          allowedVersion: OUTPUT_COLLECTION_ALLOWED_VERSION,
+          dependentRequired: 'outputElement'
+        },
+        outputElement: {
+          allowed,
+          allowedVersion: OUTPUT_COLLECTION_ALLOWED_VERSION,
+          dependentRequired: 'outputCollection'
+        }
+      }, adHoc));
     }
 
     if (errors.length) {
