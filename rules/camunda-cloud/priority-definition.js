@@ -30,7 +30,9 @@ module.exports = skipInNonExecutableProcess(function() {
       errors = [
         ...errors,
         ...hasExpression(priorityDefinition, 'priority', {
-          allowed: value => isValidPriority(value)
+
+          // convert to string for validation, cf. https://github.com/camunda/camunda-modeler/issues/5199
+          allowed: value => isValidPriority(`${value}`)
         }, node)
       ];
     }
