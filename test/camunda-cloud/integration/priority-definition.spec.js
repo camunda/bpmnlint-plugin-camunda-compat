@@ -42,6 +42,21 @@ describe('integration - priority definition', function() {
           expect(reports[ 'camunda-compat/priority-definition' ]).not.to.exist;
         });
 
+
+        it('should not have errors for number type', async function() {
+
+          // given
+          const { root } = await readModdle('test/camunda-cloud/integration/priority-definition.bpmn');
+
+          root.rootElements[0].flowElements[0].extensionElements.values[0].priority = 40;
+
+          // when
+          const reports = await linter.lint(root);
+
+          // then
+          expect(reports[ 'camunda-compat/priority-definition' ]).not.to.exist;
+        });
+
       });
 
 
@@ -51,6 +66,21 @@ describe('integration - priority definition', function() {
 
           // given
           const { root } = await readModdle('test/camunda-cloud/integration/priority-definition-errors.bpmn');
+
+          // when
+          const reports = await linter.lint(root);
+
+          // then
+          expect(reports[ 'camunda-compat/priority-definition' ]).to.exist;
+        });
+
+
+        it('should not have errors for number type', async function() {
+
+          // given
+          const { root } = await readModdle('test/camunda-cloud/integration/priority-definition.bpmn');
+
+          root.rootElements[0].flowElements[0].extensionElements.values[0].priority = -40;
 
           // when
           const reports = await linter.lint(root);
