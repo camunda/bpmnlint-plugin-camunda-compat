@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.41.0
+
+* `FEAT`: validate `bpmn:AdHocSubProcess` implementation ([#214](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/214))
+
 ## 2.40.0
 
 * `FEAT`: lint `zeebe:outputCollection` and `zeebe:outputElement` of `zeebe:adHoc` elements ([#212](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/212))

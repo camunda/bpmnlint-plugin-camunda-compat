@@ -3,6 +3,7 @@ module.exports = {
     'bpmn:BusinessRuleTask': '1.3'
   },
   taskDefinition: {
+    'bpmn:AdHocSubProcess': '8.8',
     'bpmn:BusinessRuleTask': '1.1',
     'bpmn:IntermediateThrowEvent': {
       'bpmn:MessageEventDefinition': '1.2'
