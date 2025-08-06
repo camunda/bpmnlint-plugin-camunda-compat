@@ -27,13 +27,6 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
     const scriptConfig = config.script[ node.$type ];
     const taskDefinitionConfig = config.taskDefinition[ node.$type ];
 
-    if (
-      (!calledDecisionConfig || (isString(calledDecisionConfig) && !greaterOrEqual(version, calledDecisionConfig)))
-      && (!scriptConfig || (isString(scriptConfig) && !greaterOrEqual(version, scriptConfig)))
-      && (!taskDefinitionConfig || (isString(taskDefinitionConfig) && !greaterOrEqual(version, taskDefinitionConfig)))) {
-      return;
-    }
-
     if (is(node, 'bpmn:ThrowEvent') && !getEventDefinition(node)) {
       return;
     }
@@ -150,6 +143,8 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 
       if (errors && errors.length) {
         reportErrors(node, reporter, errors);
+
+        return;
       }
     }
 
@@ -161,9 +156,9 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 
     if (allowedTypes.length === 0) {
       return;
-    } else if (allowedTypes.length === 1) {
+    } else if (allowedTypes.length === 1 && !canHaveExtensionlessImplementation(node)) {
       errors = hasExtensionElement(node, allowedTypes[0], node);
-    } else {
+    } else if (!canHaveExtensionlessImplementation(node)) {
       errors = hasExtensionElement(node, allowedTypes, node);
     }
 
@@ -215,4 +210,12 @@ function getAllowedVersion(config, node) {
   const eventDefinition = getEventDefinition(node);
 
   return eventDefinition && config[ eventDefinition.$type ];
+}
+
+/**
+ * Check if a BPMN element can have an extension-less implementation
+ * (e.g. ad-hoc subprocess with implementation type BPMN).
+ */
+function canHaveExtensionlessImplementation(node) {
+  return is(node, 'bpmn:AdHocSubProcess');
 }
