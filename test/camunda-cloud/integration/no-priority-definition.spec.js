@@ -58,8 +58,6 @@ describe('integration - no-priority-definition', function() {
           // when
           const reports = await linter.lint(root);
 
-          console.log('reports', reports);
-
           // then
           expect(reports[ 'camunda-compat/no-priority-definition' ]).to.exist;
         });
