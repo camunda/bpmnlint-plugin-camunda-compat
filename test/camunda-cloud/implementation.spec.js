@@ -149,6 +149,31 @@ const valid = [
         <bpmn:serviceTask id="ServiceTask_1" />
       </bpmn:process>
     `))
+  },
+  {
+    name: 'ad-hoc subprocess (job worker) (Camunda 8.8)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="foo" />
+        </bpmn:extensionElements>
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'ad-hoc subprocess (BPMN) (Camunda 8.7)',
+    config: { version: '8.7' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="Task_1" />
+    `))
+  },
+  {
+    name: 'ad-hoc subprocess (BPMN) (Camunda 8.8)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="Task_1" />
+    `))
   }
 ];
 
@@ -656,7 +681,61 @@ const invalid = [
         requiredProperty: 'resultVariable'
       }
     }
-  }
+  },
+  {
+    name: 'ad-hoc subprocess (no task definition type) (Camunda 8.8)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AdHocSubProcess_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition />
+        </bpmn:extensionElements>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'AdHocSubProcess_1',
+      message: 'Element of type <zeebe:TaskDefinition> must have property <type>',
+      path: [
+        'extensionElements',
+        'values',
+        0,
+        'type'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_REQUIRED,
+        node: 'zeebe:TaskDefinition',
+        parentNode: 'AdHocSubProcess_1',
+        requiredProperty: 'type'
+      }
+    }
+  },
+  {
+    name: 'ad-hoc subprocess (task definition) (Camunda 8.7)',
+    config: { version: '8.7' },
+    moddleElement: createModdle(createProcess(`
+        <bpmn:adHocSubProcess id="AdHocSubProcess_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="job-worker" />
+          </bpmn:extensionElements>
+        </bpmn:adHocSubProcess>
+      `)),
+    report: {
+      id: 'AdHocSubProcess_1',
+      message: 'Extension element of type <zeebe:TaskDefinition> only allowed by Camunda 8.8 or newer',
+      path: [
+        'extensionElements',
+        'values',
+        0
+      ],
+      data: {
+        type: ERROR_TYPES.EXTENSION_ELEMENT_NOT_ALLOWED,
+        node: 'AdHocSubProcess_1',
+        parentNode: null,
+        extensionElement: 'zeebe:TaskDefinition',
+        allowedVersion: '8.8'
+      }
+    }
+  },
 ];
 
 RuleTester.verify('implementation', rule, {
