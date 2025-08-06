@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.39.1
+
+* `FIX`: make `priority-definition` rule handle number value ([#213](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/213))
+
 ## 2.39.0
 
 * `FEAT`: include [`start-event-required`](https://github.com/bpmn-io/bpmnlint/blob/main/docs/rules/start-event-required.md) rule ([#210](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/210))
