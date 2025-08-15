@@ -182,12 +182,15 @@ const invalid = [
         id: 'Subprocess_1',
         message: 'Property <outputCollection> only allowed by Camunda 8.8 or newer',
         path: [
+          'extensionElements',
+          'values',
+          0,
           'outputCollection'
         ],
         data: {
           type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
           node: 'zeebe:AdHoc',
-          parentNode: null,
+          parentNode: 'Subprocess_1',
           property: 'outputCollection',
           allowedVersion: '8.8'
         }
@@ -196,12 +199,15 @@ const invalid = [
         id: 'Subprocess_1',
         message: 'Property <outputElement> only allowed by Camunda 8.8 or newer',
         path: [
+          'extensionElements',
+          'values',
+          0,
           'outputElement'
         ],
         data: {
           type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
           node: 'zeebe:AdHoc',
-          parentNode: null,
+          parentNode: 'Subprocess_1',
           property: 'outputElement',
           allowedVersion: '8.8'
         }
@@ -223,12 +229,15 @@ const invalid = [
       id: 'Subprocess_1',
       message: 'Element of type <zeebe:AdHoc> must have property <outputElement> if it has property <outputCollection>',
       path: [
+        'extensionElements',
+        'values',
+        0,
         'outputElement'
       ],
       data: {
         type: ERROR_TYPES.PROPERTY_DEPENDENT_REQUIRED,
         node: 'zeebe:AdHoc',
-        parentNode: null,
+        parentNode: 'Subprocess_1',
         property: 'outputCollection',
         dependentRequiredProperty: 'outputElement'
       }
@@ -249,12 +258,15 @@ const invalid = [
       id: 'Subprocess_1',
       message: 'Element of type <zeebe:AdHoc> must have property <outputCollection> if it has property <outputElement>',
       path: [
+        'extensionElements',
+        'values',
+        0,
         'outputCollection'
       ],
       data: {
         type: ERROR_TYPES.PROPERTY_DEPENDENT_REQUIRED,
         node: 'zeebe:AdHoc',
-        parentNode: null,
+        parentNode: 'Subprocess_1',
         property: 'outputElement',
         dependentRequiredProperty: 'outputCollection'
       }

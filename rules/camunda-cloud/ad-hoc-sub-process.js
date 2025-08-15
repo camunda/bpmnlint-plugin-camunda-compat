@@ -48,8 +48,10 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
     }
 
     const adHoc = findExtensionElement(node, 'zeebe:AdHoc');
+
     if (adHoc) {
       const allowed = greaterOrEqual(version, OUTPUT_COLLECTION_ALLOWED_VERSION);
+
       errors.push(...hasProperties(adHoc, {
         outputCollection: {
           allowed,
@@ -61,7 +63,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
           allowedVersion: OUTPUT_COLLECTION_ALLOWED_VERSION,
           dependentRequired: 'outputCollection'
         }
-      }, adHoc));
+      }, node));
     }
 
     if (errors.length) {
