@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.41.3
+
+* `FIX`: re-introduce previous behavior to not lint task definition if element not supported ([9feb23](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/9feb238ea9855a5348cd8fd55ae4cecf0e3d8d52))
+
 ## 2.41.2
 
 * `FIX`: do not report additional `zeebe:AdHoc` errors if not supported ([712df9](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/712df92fcfc6b9a1555cca5bb2c8ef9a8587ae07))
