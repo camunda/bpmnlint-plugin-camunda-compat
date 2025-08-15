@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.41.1
+
+* `FIX`: specify correct parent node when linting `zeebe:outputCollection` and `zeebe:outputElement` of `zeebe:adHoc` elements ([69c52f](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/69c52f678df50a4bf6b370bb4b549a9ee6cfb697))
+
 ## 2.41.0
 
 * `FEAT`: validate `bpmn:AdHocSubProcess` implementation ([#214](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/214))
