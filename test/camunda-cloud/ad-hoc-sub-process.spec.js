@@ -167,12 +167,12 @@ const invalid = [
     }
   },
   {
-    name: 'ad hoc sub process (with output collection and output element attributes)',
+    name: 'ad hoc sub process (with output collection)',
     config: { version: '8.7' },
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="Subprocess_1">
         <bpmn:extensionElements>
-          <zeebe:adHoc outputCollection="myCollection" outputElement="=myElement" />
+          <zeebe:adHoc outputCollection="myCollection" />
         </bpmn:extensionElements>
         <bpmn:task id="Task_1" />
       </bpmn:adHocSubProcess>
@@ -194,7 +194,21 @@ const invalid = [
           property: 'outputCollection',
           allowedVersion: '8.8'
         }
-      },
+      }
+    ]
+  },
+  {
+    name: 'ad hoc sub process (with output element)',
+    config: { version: '8.7' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="Subprocess_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc outputElement="=myElement" />
+        </bpmn:extensionElements>
+        <bpmn:task id="Task_1" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: [
       {
         id: 'Subprocess_1',
         message: 'Property <outputElement> only allowed by Camunda 8.8 or newer',

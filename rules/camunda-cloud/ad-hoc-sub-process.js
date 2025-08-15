@@ -52,15 +52,30 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
     if (adHoc) {
       const allowed = greaterOrEqual(version, OUTPUT_COLLECTION_ALLOWED_VERSION);
 
+      // (1) check whether outputCollection and outputElement are allowed
       errors.push(...hasProperties(adHoc, {
         outputCollection: {
           allowed,
           allowedVersion: OUTPUT_COLLECTION_ALLOWED_VERSION,
-          dependentRequired: 'outputElement'
         },
         outputElement: {
           allowed,
           allowedVersion: OUTPUT_COLLECTION_ALLOWED_VERSION,
+        }
+      }, node));
+
+      if (errors.length) {
+        reportErrors(node, reporter, errors);
+
+        return;
+      }
+
+      // (2) check whether outputCollection and outputElement are both set
+      errors.push(...hasProperties(adHoc, {
+        outputCollection: {
+          dependentRequired: 'outputElement'
+        },
+        outputElement: {
           dependentRequired: 'outputCollection'
         }
       }, node));
