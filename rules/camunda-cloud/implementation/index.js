@@ -1,10 +1,11 @@
-const { is } = require('bpmnlint-utils');
+const { is, isAny } = require('bpmnlint-utils');
 
 const { getPath } = require('@bpmn-io/moddle-utils');
 
 const { isString } = require('min-dash');
 
 const config = require('./config');
+const elementTypeConfig = require('../element-type/config');
 
 const { greaterOrEqual } = require('../../utils/version');
 
@@ -23,13 +24,25 @@ const { skipInNonExecutableProcess } = require('../../utils/rule');
 
 module.exports = skipInNonExecutableProcess(function({ version }) {
   function check(node, reporter) {
+    const element = elementTypeConfig[ node.$type ];
+
+    if (!element || (isString(element) && !greaterOrEqual(version, element))) {
+      return;
+    }
+
+    const eventDefinition = isAny(node, [ 'bpmn:CatchEvent', 'bpmn:ThrowEvent' ]) && getEventDefinition(node);
+
+    if (eventDefinition && (!element[ eventDefinition.$type ] || !greaterOrEqual(version, element[ eventDefinition.$type ]))) {
+      return;
+    }
+
+    if (is(node, 'bpmn:ThrowEvent') && !eventDefinition) {
+      return;
+    }
+
     const calledDecisionConfig = config.calledDecision[ node.$type ];
     const scriptConfig = config.script[ node.$type ];
     const taskDefinitionConfig = config.taskDefinition[ node.$type ];
-
-    if (is(node, 'bpmn:ThrowEvent') && !getEventDefinition(node)) {
-      return;
-    }
 
     let errors;
 

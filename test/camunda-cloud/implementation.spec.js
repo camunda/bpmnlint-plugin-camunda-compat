@@ -48,6 +48,17 @@ const valid = [
     `))
   },
   {
+    name: 'business rule task (Camunda Cloud 1.0, business task not supported)',
+    config: { version: '1.0' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:businessRuleTask id="BusinessRuleTask_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition />
+        </bpmn:extensionElements>
+      </bpmn:businessRuleTask>
+    `))
+  },
+  {
     name: 'task (Camunda Cloud 1.1)',
     config: { version: '1.1' },
     moddleElement: createModdle(createProcess('<bpmn:task id="Task_1" />'))
@@ -735,7 +746,7 @@ const invalid = [
         allowedVersion: '8.8'
       }
     }
-  },
+  }
 ];
 
 RuleTester.verify('implementation', rule, {
