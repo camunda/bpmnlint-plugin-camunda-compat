@@ -6,7 +6,9 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
-* `FEAT`: validate `outputCollection` and `outputElement` on `zeebe:adHoc`
+## 2.40.0
+
+* `FEAT`: lint `zeebe:outputCollection` and `zeebe:outputElement` of `zeebe:adHoc` elements ([#212](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/212))
 
 ## 2.39.2
 
