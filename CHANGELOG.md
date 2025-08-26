@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.42.0
+
+* `FEAT`: update language support for feel rule ([bpmn-io/feel-lint#39](https://github.com/bpmn-io/feel-lint/pull/39))
+* `DEPS`: update `@bpmn-io/feel-lint` to `2.1.0` ([#216](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/216))
+
 ## 2.41.3
 
 * `FIX`: re-introduce previous behavior to not lint task definition if element not supported ([9feb23](https://github.com/camunda/bpmnlint-plugin-camunda-compat/commit/9feb238ea9855a5348cd8fd55ae4cecf0e3d8d52))
