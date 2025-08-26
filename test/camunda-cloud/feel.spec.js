@@ -58,6 +58,18 @@ const valid = [
     `))
   },
   {
+    name: 'multiline',
+    moddleElement: createModdle(createProcess(`
+     <bpmn:serviceTask id="Task_1">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="=&#34;multiline&#10;string&#34;" target="InputVariable_1" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    `))
+  },
+  {
     name: 'invalid FEEL expression (string property) (non-executable process)',
     config: { version: '8.2' },
     moddleElement: createModdle(createDefinitions(`
