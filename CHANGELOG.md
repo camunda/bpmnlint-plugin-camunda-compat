@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: add `no-interrupting-event-subprocess` rule
+
 ## 2.42.0
 
 * `FEAT`: update language support for feel rule ([bpmn-io/feel-lint#39](https://github.com/bpmn-io/feel-lint/pull/39))
