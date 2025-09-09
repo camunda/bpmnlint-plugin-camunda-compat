@@ -100,6 +100,7 @@ const camundaCloud86Rules = withConfig({
 const camundaCloud87Rules = withConfig({
   ...camundaCloud86Rules,
   'ad-hoc-sub-process': 'error',
+  'no-interrupting-event-subprocess': 'error'
 }, { version: '8.7' });
 
 const camundaCloud88Rules = withConfig({
@@ -169,6 +170,7 @@ const rules = {
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
   'no-execution-listeners': './rules/camunda-cloud/no-execution-listeners',
   'no-expression': './rules/camunda-cloud/no-expression',
+  'no-interrupting-event-subprocess': './rules/camunda-cloud/no-interrupting-event-subprocess',
   'no-loop': './rules/camunda-cloud/no-loop',
   'no-multiple-none-start-events': './rules/camunda-cloud/no-multiple-none-start-events',
   'no-priority-definition': './rules/camunda-cloud/no-priority-definition',
