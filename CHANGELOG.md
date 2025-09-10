@@ -6,7 +6,9 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
-* `FEAT`: add `no-interrupting-event-subprocess` rule
+## 2.43.0
+
+* `FEAT`: add `no-interrupting-event-subprocess` rule ([#217](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/217))
 
 ## 2.42.0
 
