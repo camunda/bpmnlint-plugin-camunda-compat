@@ -11,26 +11,26 @@ const { hasProperties } = require('../utils/element');
  */
 module.exports = function() {
   function check(node, reporter) {
-
-    // Only check event subprocesses
-    if (!isEventSubProcess(node)) {
+    if (!is(node, 'bpmn:StartEvent')) {
       return;
     }
 
-    // Check if event subprocess is inside an ad-hoc subprocess
+    // Check if parent is event subprocess placed inside an ad-hoc subprocess
     const parent = node.$parent;
-    if (!parent || !is(parent, 'bpmn:AdHocSubProcess')) {
+    if (!parent || !isEventSubProcess(parent)) {
       return;
     }
 
-    // Check if the event subprocess has any interrupting start events
-    const startEvents = getStartEvents(node);
+    const grandparent = parent.$parent;
+    if (!grandparent || !is(grandparent, 'bpmn:AdHocSubProcess')) {
+      return;
+    }
 
-    const errors = startEvents.flatMap(startEvent => hasProperties(startEvent, {
+    const errors = hasProperties(node, {
       isInterrupting: {
         value: false
       }
-    }, node));
+    }, node);
 
     if (errors.length) {
       reportErrors(node, reporter, errors);
@@ -44,10 +44,4 @@ module.exports = function() {
 
 function isEventSubProcess(node) {
   return is(node, 'bpmn:SubProcess') && node.get('triggeredByEvent');
-}
-
-function getStartEvents(node) {
-  return node.get('flowElements').filter(element => {
-    return is(element, 'bpmn:StartEvent');
-  });
 }
