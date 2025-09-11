@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.43.1
+
+* `FIX`: report `no-interrupting-event-subprocess` violation on start event
+
 ## 2.43.0
 
 * `FEAT`: add `no-interrupting-event-subprocess` rule ([#217](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/217))

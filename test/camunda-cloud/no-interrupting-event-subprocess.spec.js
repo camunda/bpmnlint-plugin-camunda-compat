@@ -61,17 +61,15 @@ const invalid = [
       </bpmn:adHocSubProcess>
     `)),
     report: {
-      id: 'SubProcess_2',
+      id: 'StartEvent_1',
       message: 'Property <isInterrupting> must have value of <false>',
       path: [
-        'flowElements',
-        0,
         'isInterrupting'
       ],
       data: {
         type: ERROR_TYPES.PROPERTY_VALUE_REQUIRED,
         node: 'StartEvent_1',
-        parentNode: 'SubProcess_2',
+        parentNode: null,
         property: 'isInterrupting',
         requiredValue: false
       }
