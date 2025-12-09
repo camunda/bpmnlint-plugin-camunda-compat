@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.45.0
+
+* `FEAT`: add `variable-name` rule ([#221](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/221))
+
 ## 2.44.0
 
 * `FEAT`: add Camunda 8.9 config ([#220](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/220))
