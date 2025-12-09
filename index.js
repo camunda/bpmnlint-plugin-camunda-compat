@@ -32,6 +32,7 @@ const camundaCloud10Rules = withConfig({
   'timer': 'error',
   'user-task-definition': 'warn',
   'user-task-form': 'error',
+  'variable-name': 'error',
   'feel': 'error',
   'bpmnlint/start-event-required': 'error',
 }, { version: '1.0' });
@@ -196,6 +197,7 @@ const rules = {
   'timer': './rules/camunda-cloud/timer',
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
   'user-task-form': './rules/camunda-cloud/user-task-form',
+  'variable-name': './rules/camunda-cloud/variable-name',
   'version-tag': './rules/camunda-cloud/version-tag',
   'wait-for-completion': './rules/camunda-cloud/wait-for-completion',
   ...bpmnlintRules.reduce((rules, rule) => {

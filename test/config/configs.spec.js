@@ -37,7 +37,8 @@ describe('configs', function() {
     'start-event-form': [ 'error', { version: '1.0' } ],
     'timer': [ 'error', { version: '1.0' } ],
     'user-task-definition': [ 'warn', { version: '1.0' } ],
-    'user-task-form': [ 'error', { version: '1.0' } ]
+    'user-task-form': [ 'error', { version: '1.0' } ],
+    'variable-name': [ 'error', { version: '1.0' } ]
   }));
 
 
@@ -74,7 +75,8 @@ describe('configs', function() {
     'start-event-form': [ 'error', { version: '1.1' } ],
     'timer': [ 'error', { version: '1.1' } ],
     'user-task-definition': [ 'warn', { version: '1.1' } ],
-    'user-task-form': [ 'error', { version: '1.1' } ]
+    'user-task-form': [ 'error', { version: '1.1' } ],
+    'variable-name': [ 'error', { version: '1.1' } ]
   }));
 
 
@@ -111,7 +113,8 @@ describe('configs', function() {
     'start-event-form': [ 'error', { version: '1.2' } ],
     'timer': [ 'error', { version: '1.2' } ],
     'user-task-definition': [ 'warn', { version: '1.2' } ],
-    'user-task-form': [ 'error', { version: '1.2' } ]
+    'user-task-form': [ 'error', { version: '1.2' } ],
+    'variable-name': [ 'error', { version: '1.2' } ]
   }));
 
 
@@ -148,7 +151,8 @@ describe('configs', function() {
     'start-event-form': [ 'error', { version: '1.3' } ],
     'timer': [ 'error', { version: '1.3' } ],
     'user-task-definition': [ 'warn', { version: '1.3' } ],
-    'user-task-form': [ 'error', { version: '1.3' } ]
+    'user-task-form': [ 'error', { version: '1.3' } ],
+    'variable-name': [ 'error', { version: '1.3' } ]
   }));
 
 
@@ -185,7 +189,8 @@ describe('configs', function() {
     'start-event-form': [ 'error', { version: '8.0' } ],
     'timer': [ 'error', { version: '8.0' } ],
     'user-task-definition': [ 'warn', { version: '8.0' } ],
-    'user-task-form': [ 'error', { version: '8.0' } ]
+    'user-task-form': [ 'error', { version: '8.0' } ],
+    'variable-name': [ 'error', { version: '8.0' } ]
   }));
 
 
@@ -222,7 +227,8 @@ describe('configs', function() {
     'start-event-form': [ 'error', { version: '8.1' } ],
     'timer': [ 'error', { version: '8.1' } ],
     'user-task-definition': [ 'warn', { version: '8.1' } ],
-    'user-task-form': [ 'error', { version: '8.1' } ]
+    'user-task-form': [ 'error', { version: '8.1' } ],
+    'variable-name': [ 'error', { version: '8.1' } ]
   }));
 
 
@@ -261,7 +267,8 @@ describe('configs', function() {
     'task-schedule': [ 'error', { version: '8.2' } ],
     'timer': [ 'error', { version: '8.2' } ],
     'user-task-definition': [ 'warn', { version: '8.2' } ],
-    'user-task-form': [ 'error', { version: '8.2' } ]
+    'user-task-form': [ 'error', { version: '8.2' } ],
+    'variable-name': [ 'error', { version: '8.2' } ]
   }));
 
 
@@ -301,7 +308,8 @@ describe('configs', function() {
     'task-schedule': [ 'error', { version: '8.3' } ],
     'timer': [ 'error', { version: '8.3' } ],
     'user-task-definition': [ 'warn', { version: '8.3' } ],
-    'user-task-form': [ 'error', { version: '8.3' } ]
+    'user-task-form': [ 'error', { version: '8.3' } ],
+    'variable-name': [ 'error', { version: '8.3' } ]
   }));
 
 
@@ -340,7 +348,8 @@ describe('configs', function() {
     'task-schedule': [ 'error', { version: '8.4' } ],
     'timer': [ 'error', { version: '8.4' } ],
     'user-task-definition': [ 'warn', { version: '8.4' } ],
-    'user-task-form': [ 'error', { version: '8.4' } ]
+    'user-task-form': [ 'error', { version: '8.4' } ],
+    'variable-name': [ 'error', { version: '8.4' } ]
   }));
 
 
@@ -379,6 +388,7 @@ describe('configs', function() {
     'timer': [ 'error', { version: '8.5' } ],
     'user-task-definition': [ 'warn', { version: '8.5' } ],
     'user-task-form': [ 'error', { version: '8.5' } ],
+    'variable-name': [ 'error', { version: '8.5' } ],
     'wait-for-completion': [ 'error', { version: '8.5' } ]
   }));
 
@@ -417,6 +427,7 @@ describe('configs', function() {
     'timer': [ 'error', { version: '8.6' } ],
     'user-task-definition': [ 'warn', { version: '8.6' } ],
     'user-task-form': [ 'error', { version: '8.6' } ],
+    'variable-name': [ 'error', { version: '8.6' } ],
     'version-tag': [ 'error', { version: '8.6' } ],
     'wait-for-completion': [ 'error', { version: '8.6' } ]
   }));
@@ -458,6 +469,7 @@ describe('configs', function() {
     'timer': [ 'error', { version: '8.7' } ],
     'user-task-definition': [ 'warn', { version: '8.7' } ],
     'user-task-form': [ 'error', { version: '8.7' } ],
+    'variable-name': [ 'error', { version: '8.7' } ],
     'version-tag': [ 'error', { version: '8.7' } ],
     'wait-for-completion': [ 'error', { version: '8.7' } ]
   }));
@@ -499,6 +511,7 @@ describe('configs', function() {
     'timer': [ 'error', { version: '8.8' } ],
     'user-task-definition': [ 'warn', { version: '8.8' } ],
     'user-task-form': [ 'error', { version: '8.8' } ],
+    'variable-name': [ 'error', { version: '8.8' } ],
     'version-tag': [ 'error', { version: '8.8' } ],
     'wait-for-completion': [ 'error', { version: '8.8' } ]
   }));
@@ -540,6 +553,7 @@ describe('configs', function() {
     'timer': [ 'error', { version: '8.9' } ],
     'user-task-definition': [ 'warn', { version: '8.9' } ],
     'user-task-form': [ 'error', { version: '8.9' } ],
+    'variable-name': [ 'error', { version: '8.9' } ],
     'version-tag': [ 'error', { version: '8.9' } ],
     'wait-for-completion': [ 'error', { version: '8.9' } ]
   }));
@@ -625,6 +639,7 @@ describe('configs', function() {
     'timer': 'error',
     'user-task-definition': 'warn',
     'user-task-form': 'error',
+    'variable-name': 'error',
     'version-tag': 'error',
     'wait-for-completion': 'error'
   }));
