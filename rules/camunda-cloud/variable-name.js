@@ -9,11 +9,7 @@ const { reportErrors } = require('../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
-const VARIABLE_NAME_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*$/;
-
-function isValidVariableName(value) {
-  return VARIABLE_NAME_PATTERN.test(value);
-}
+const { isValidVariableName } = require('../utils/variable-name');
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
