@@ -95,10 +95,17 @@ const invalid = [
     report: {
       id: 'StartEvent_1',
       message: 'Variable names must be a comma-separated list',
-      path: [ 'extensionElements', 'values', 'variableNames' ],
+      path: [
+        'eventDefinitions',
+        0,
+        'extensionElements',
+        'values',
+        0,
+        'variableNames'
+      ],
       data: {
-        type: ERROR_TYPES.PROPERTY_VALUE_INVALID,
-        node: 'StartEvent_1',
+        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+        node: 'ConditionalEventDefinition_1',
         parentNode: 'StartEvent_1',
         property: 'variableNames'
       }
@@ -118,10 +125,17 @@ const invalid = [
     report: {
       id: 'StartEvent_1',
       message: 'Variable name "123foo" is not a valid variable identifier',
-      path: [ 'extensionElements', 'values', 'variableNames' ],
+      path: [
+        'eventDefinitions',
+        0,
+        'extensionElements',
+        'values',
+        0,
+        'variableNames'
+      ],
       data: {
-        type: ERROR_TYPES.PROPERTY_VALUE_INVALID,
-        node: 'StartEvent_1',
+        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+        node: 'ConditionalEventDefinition_1',
         parentNode: 'StartEvent_1',
         property: 'variableNames'
       }
@@ -141,10 +155,17 @@ const invalid = [
     report: {
       id: 'StartEvent_1',
       message: 'Variable name "foo bar" is not a valid variable identifier',
-      path: [ 'extensionElements', 'values', 'variableNames' ],
+      path: [
+        'eventDefinitions',
+        0,
+        'extensionElements',
+        'values',
+        0,
+        'variableNames'
+      ],
       data: {
-        type: ERROR_TYPES.PROPERTY_VALUE_INVALID,
-        node: 'StartEvent_1',
+        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+        node: 'ConditionalEventDefinition_1',
         parentNode: 'StartEvent_1',
         property: 'variableNames'
       }

@@ -3,6 +3,10 @@ const {
 } = require('bpmnlint-utils');
 
 const {
+  getPath
+} = require('@bpmn-io/moddle-utils');
+
+const {
   findExtensionElement,
   getEventDefinition
 } = require('../utils/element');
@@ -39,15 +43,16 @@ module.exports = skipInNonExecutableProcess(function() {
 
 
     // Validate `variableNames` property of `zeebe:ConditionalFilter`
+    const path = getPath(conditionalFilter, node);
 
     // (1) Is empty or a comma-separated list
     if (!isCommaSeparatedList(variableNames)) {
       reportErrors(node, reporter, {
         message: 'Variable names must be a comma-separated list',
-        path: [ 'extensionElements', 'values', 'variableNames' ],
+        path: path.concat('variableNames'),
         data: {
-          type: ERROR_TYPES.PROPERTY_VALUE_INVALID,
-          node,
+          type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+          node: eventDefinition,
           parentNode: node,
           property: 'variableNames'
         }
@@ -65,10 +70,10 @@ module.exports = skipInNonExecutableProcess(function() {
       if (!isValidVariableName(variable)) {
         errors.push({
           message: `Variable name "${variable}" is not a valid variable identifier`,
-          path: [ 'extensionElements', 'values', 'variableNames' ],
+          path: path.concat('variableNames'),
           data: {
-            type: ERROR_TYPES.PROPERTY_VALUE_INVALID,
-            node,
+            type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+            node: eventDefinition,
             parentNode: node,
             property: 'variableNames'
           }
