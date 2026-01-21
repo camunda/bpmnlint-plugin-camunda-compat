@@ -35,6 +35,18 @@ const valid = [
     `))
   },
   {
+    name: 'conditional event with valid variableNames (with spaces)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:startEvent id="StartEvent_1">
+        <bpmn:conditionalEventDefinition id="ConditionalEventDefinition_1">
+          <bpmn:extensionElements>
+            <zeebe:conditionalFilter variableNames="foo, bar" />
+          </bpmn:extensionElements>
+        </bpmn:conditionalEventDefinition>
+      </bpmn:startEvent>
+    `))
+  },
+  {
     name: 'conditional event with empty variableNames',
     moddleElement: createModdle(createProcess(`
       <bpmn:startEvent id="StartEvent_1">
