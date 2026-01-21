@@ -60,7 +60,8 @@ module.exports = skipInNonExecutableProcess(function() {
     const errors = [];
 
     // (2) Each variable name is a valid variable identifier
-    variableNames.split(',').forEach(variable => {
+    const variables = variableNames.split(',').map(v => v.trim());
+    variables.forEach(variable => {
       if (!isValidVariableName(variable)) {
         errors.push({
           message: `Variable name "${variable}" is not a valid variable identifier`,
