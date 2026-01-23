@@ -6,7 +6,9 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
-* `FIX`: handle undefined `sourceRef` in `sequence-flow-condition` rule ([#PR_NUMBER](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/PR_NUMBER))
+## 2.45.1
+
+* `FIX`: handle undefined `sourceRef` in `sequence-flow-condition` rule ([#223](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/223))
 
 ## 2.45.0
 
