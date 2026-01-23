@@ -36,7 +36,7 @@ module.exports = skipInNonExecutableProcess(function() {
       const source = node.get('sourceRef'),
             conditionExpression = node.get('conditionExpression');
 
-      if (!isAny(source, [ 'bpmn:ExclusiveGateway', 'bpmn:InclusiveGateway' ]) && conditionExpression) {
+      if (source && !isAny(source, [ 'bpmn:ExclusiveGateway', 'bpmn:InclusiveGateway' ]) && conditionExpression) {
         reportErrors(node, reporter, {
           message: 'Property <conditionExpression> only allowed if source is of type <bpmn:ExclusiveGateway> or <bpmn:InclusiveGateway>',
           path: [ 'conditionExpression' ],
