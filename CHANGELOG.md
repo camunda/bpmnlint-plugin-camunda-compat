@@ -8,7 +8,7 @@ ___Note:__ Yet to be released changes appear here._
 
 ## 2.45.1
 
-* `FIX`: handle undefined `sourceRef` in `sequence-flow-condition` rule ([#223](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/223))
+* `FIX`: handle missing `sourceRef` in `sequence-flow-condition` rule ([#223](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/223))
 
 ## 2.45.0
 
