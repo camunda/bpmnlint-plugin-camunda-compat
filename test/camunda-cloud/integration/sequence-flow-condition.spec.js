@@ -68,6 +68,24 @@ describe('integration - sequence-flow-condition', function() {
 
       });
 
+
+      describe('broken diagram', function() {
+
+        it('should not error on broken diagram with missing sourceRef', async function() {
+
+          // given
+          const { root } = await readModdle('test/camunda-cloud/integration/sequence-flow-condition-broken-diagram.bpmn');
+
+          // when
+          const reports = await linter.lint(root);
+
+          // then
+          // Should not throw an error, even though the diagram is broken
+          expect(reports[ 'camunda-compat/sequence-flow-condition' ]).not.to.exist;
+        });
+
+      });
+
     });
 
   });
