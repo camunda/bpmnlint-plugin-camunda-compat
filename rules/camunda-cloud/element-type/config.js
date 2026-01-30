@@ -2,6 +2,7 @@ module.exports = {
   'bpmn:Association': '1.0',
   'bpmn:BoundaryEvent': {
     'bpmn:CompensateEventDefinition': '8.5',
+    'bpmn:ConditionalEventDefinition': '8.9',
     'bpmn:ErrorEventDefinition': '1.0',
     'bpmn:EscalationEventDefinition': '8.2',
     'bpmn:MessageEventDefinition': '1.0',
@@ -29,6 +30,7 @@ module.exports = {
   'bpmn:Group': '1.0',
   'bpmn:InclusiveGateway': '8.1',
   'bpmn:IntermediateCatchEvent': {
+    'bpmn:ConditionalEventDefinition': '8.9',
     'bpmn:MessageEventDefinition': '1.0',
     'bpmn:LinkEventDefinition': '8.2',
     'bpmn:TimerEventDefinition': '1.0',
@@ -54,6 +56,7 @@ module.exports = {
   'bpmn:ServiceTask': '1.0',
   'bpmn:StartEvent': {
     '_': '1.0',
+    'bpmn:ConditionalEventDefinition': '8.9',
     'bpmn:ErrorEventDefinition': '1.0',
     'bpmn:EscalationEventDefinition': '8.2',
     'bpmn:MessageEventDefinition': '1.0',

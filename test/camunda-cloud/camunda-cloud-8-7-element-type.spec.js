@@ -23,6 +23,8 @@ const valid = [
   }
 ];
 
+module.exports.valid = valid;
+
 RuleTester.verify('camunda-cloud-8-7-element-type', rule, {
   valid: withConfig(valid, { version: '8.7' }),
   invalid: []
