@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.46.0
+
+* `FEAT`: add `conditional-event` rule to Camunda Cloud 8.9 rules ([#222](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/222))
+* `FEAT`: support Conditional Events in Camunda 8.9 or newer ([#224](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/224))
+
 ## 2.45.1
 
 * `FIX`: handle missing `sourceRef` in `sequence-flow-condition` rule ([#223](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/223))
