@@ -41,7 +41,7 @@
     "@bpmn-io/moddle-utils": "^0.2.1",
     "@camunda/feel-builtins": "^0.2.0",
     "bpmnlint-utils": "^1.1.1",
-    "min-dash": "^4.1.1",
+    "min-dash": "^5.0.0",
     "semver-compare": "^1.0.0"
   },
   "files": [
