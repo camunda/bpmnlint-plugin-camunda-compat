@@ -1,4 +1,4 @@
-const BpmnModdle = require('bpmn-moddle');
+const { BpmnModdle } = require('bpmn-moddle');
 
 const { isArray } = require('min-dash');
 
