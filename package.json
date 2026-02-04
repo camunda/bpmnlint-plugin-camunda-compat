@@ -25,7 +25,7 @@
   "license": "MIT",
   "devDependencies": {
     "bpmn-moddle": "^10.0.0",
-    "bpmnlint": "^11.6.0",
+    "bpmnlint": "^11.10.0",
     "camunda-bpmn-moddle": "^7.0.1",
     "chai": "^4.4.1",
     "eslint": "^9.20.1",
