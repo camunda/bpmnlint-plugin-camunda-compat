@@ -4,9 +4,8 @@ const { expect } = chai;
 
 const sinon = require('sinon');
 
-const sinonChai = require('sinon-chai');
+const { default: sinonChai } = require('sinon-chai');
 
-chai.should();
 chai.use(sinonChai);
 
 const {
