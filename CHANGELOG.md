@@ -6,6 +6,12 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.47.0
+
+* `DEPS`: update to `@bpmn-io/moddle-utils@0.3.0`
+* `DEPS`: update to `@bpmn-io/feel-lint@3.1.0`
+* `DEPS`: update to `min-dash@5.0.0`
+
 ## 2.46.0
 
 * `FEAT`: add `conditional-event` rule to Camunda Cloud 8.9 rules ([#222](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/222))
