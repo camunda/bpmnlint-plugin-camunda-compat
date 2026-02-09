@@ -8,6 +8,7 @@ const {
 const { lintExpression } = require('@bpmn-io/feel-lint');
 
 const { getPath } = require('@bpmn-io/moddle-utils');
+const { camundaReservedNameBuiltins } = require('@camunda/feel-builtins');
 
 const { reportErrors } = require('../utils/reporter');
 
@@ -38,6 +39,7 @@ module.exports = skipInNonExecutableProcess(function() {
       if (isFeelProperty([ propertyName, propertyValue ])) {
         const lintErrors = lintExpression(propertyValue.substring(1), {
           parserDialect: 'camunda',
+          builtins: camundaReservedNameBuiltins
         });
 
         // syntax error

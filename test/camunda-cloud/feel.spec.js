@@ -70,6 +70,18 @@ const valid = [
     `))
   },
   {
+    name: 'get or else (unparsable feel extensions)',
+    moddleElement: createModdle(createProcess(`
+     <bpmn:serviceTask id="Task_1">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="=get or else(default, value)" target="InputVariable_1" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    `))
+  },
+  {
     name: 'invalid FEEL expression (string property) (non-executable process)',
     config: { version: '8.2' },
     moddleElement: createModdle(createDefinitions(`
