@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.48.1
+
+* `DEPS`: update to `@camunda/feel-builtins@1.0.0`
+
 ## 2.48.0
 
 * `FEAT`: include Camunda built-ins for `feel` rule ([#226](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/226))
