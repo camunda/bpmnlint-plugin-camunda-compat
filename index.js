@@ -110,8 +110,7 @@ const camundaCloud88Rules = withConfig({
 }, { version: '8.8' });
 
 const camundaCloud89Rules = withConfig({
-  ...camundaCloud88Rules,
-  'conditional-event': 'error'
+  ...camundaCloud88Rules
 }, { version: '8.9' });
 
 const camundaPlatform719Rules = withConfig({
@@ -155,7 +154,6 @@ const rules = {
   'element-type': './rules/camunda-cloud/element-type',
   'called-element': './rules/camunda-cloud/called-element',
   'collapsed-subprocess': './rules/camunda-cloud/collapsed-subprocess',
-  'conditional-event': './rules/camunda-cloud/conditional-event',
   'connector-properties': './rules/camunda-cloud/connector-properties',
   'duplicate-execution-listeners': './rules/camunda-cloud/duplicate-execution-listeners',
   'duplicate-task-headers': './rules/camunda-cloud/duplicate-task-headers',
