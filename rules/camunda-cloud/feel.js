@@ -17,6 +17,21 @@ const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
 const { annotateRule } = require('../helper');
 
+// Properties ignored globally
+const IGNORED_PROPERTIES = [
+  'name'
+];
+
+// Properties ignored only for specific element types
+const IGNORED_PROPERTIES_BY_TYPE = {
+  'zeebe:Input': [ 'target' ],
+  'zeebe:Output': [ 'target' ],
+  'zeebe:Header': [ 'key', 'value' ],
+  'zeebe:Property': [ 'name', 'value' ],
+  'zeebe:CalledDecision': [ 'resultVariable' ],
+  'zeebe:Script': [ 'resultVariable' ]
+};
+
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     if (is(node, 'bpmn:Expression')) {
@@ -36,7 +51,7 @@ module.exports = skipInNonExecutableProcess(function() {
         propertyValue = propertyValue.get('body');
       }
 
-      if (isFeelProperty([ propertyName, propertyValue ])) {
+      if (isFeelProperty(node, propertyName, propertyValue)) {
         const lintErrors = lintExpression(propertyValue.substring(1), {
           parserDialect: 'camunda',
           builtins: camundaReservedNameBuiltins
@@ -74,12 +89,19 @@ module.exports = skipInNonExecutableProcess(function() {
   });
 });
 
-const isFeelProperty = ([ propertyName, value ]) => {
-  return !isIgnoredProperty(propertyName) && isString(value) && value.startsWith('=');
+const isFeelProperty = (node, propertyName, value) => {
+  return !isIgnoredProperty(node, propertyName) && isString(value) && value.startsWith('=');
 };
 
-const isIgnoredProperty = propertyName => {
-  return propertyName.startsWith('$');
+const isIgnoredProperty = (node, propertyName) => {
+  if (propertyName.startsWith('$') || IGNORED_PROPERTIES.includes(propertyName)) {
+    return true;
+  }
+
+  const nodeType = node.$type;
+  const ignoredForType = IGNORED_PROPERTIES_BY_TYPE[nodeType];
+
+  return ignoredForType && ignoredForType.includes(propertyName);
 };
 
 const findParentNode = node => {
