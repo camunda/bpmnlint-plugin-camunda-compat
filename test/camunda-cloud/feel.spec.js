@@ -95,6 +95,80 @@ const valid = [
         </bpmn:serviceTask>
       </bpmn:process>
     `))
+  },
+  {
+    name: 'name with FEEL-like expression (ignored)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:task id="Task_1" name="==...foo" />
+    `))
+  },
+  {
+    name: 'input target with FEEL-like expression (ignored)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:input target="=...foo" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
+    name: 'output target with FEEL-like expression (ignored)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:output target="=...foo" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
+    name: 'task header key and value with FEEL-like expression (ignored)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:taskHeaders>
+            <zeebe:header key="==...foo" value="==...foo" />
+          </zeebe:taskHeaders>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
+    name: 'zeebe property name and value with FEEL-like expression (ignored)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="==...foo" value="==...foo" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
+    name: 'called decision resultVariable with FEEL-like expression (ignored)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:businessRuleTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:calledDecision decisionId="myDecision" resultVariable="==...foo" />
+        </bpmn:extensionElements>
+      </bpmn:businessRuleTask>
+    `))
+  },
+  {
+    name: 'script resultVariable with FEEL-like expression (ignored)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:scriptTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:script expression="=1+1" resultVariable="==...foo" />
+        </bpmn:extensionElements>
+      </bpmn:scriptTask>
+    `))
   }
 ];
 
