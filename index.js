@@ -14,6 +14,7 @@ const camundaCloud10Rules = withConfig({
   'io-mapping': 'error',
   'no-binding-type': 'error',
   'no-candidate-users': 'error',
+  'no-execution-listener-headers': 'error',
   'no-execution-listeners': 'error',
   'no-expression': 'error',
   'no-loop': 'error',
@@ -114,7 +115,8 @@ const camundaCloud89Rules = withConfig({
 }, { version: '8.9' });
 
 const camundaCloud810Rules = withConfig({
-  ...camundaCloud89Rules,
+  ...omit(camundaCloud89Rules, [ 'no-execution-listener-headers' ]),
+  'duplicate-execution-listener-headers': 'error',
   'zeebe-user-task': 'error'
 }, { version: '8.10' });
 
@@ -160,6 +162,7 @@ const rules = {
   'called-element': './rules/camunda-cloud/called-element',
   'collapsed-subprocess': './rules/camunda-cloud/collapsed-subprocess',
   'connector-properties': './rules/camunda-cloud/connector-properties',
+  'duplicate-execution-listener-headers': './rules/camunda-cloud/duplicate-execution-listener-headers',
   'duplicate-execution-listeners': './rules/camunda-cloud/duplicate-execution-listeners',
   'duplicate-task-headers': './rules/camunda-cloud/duplicate-task-headers',
   'error-reference': './rules/camunda-cloud/error-reference',
@@ -178,6 +181,7 @@ const rules = {
   'message-reference': './rules/camunda-cloud/message-reference',
   'no-binding-type': './rules/camunda-cloud/no-binding-type',
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
+  'no-execution-listener-headers': './rules/camunda-cloud/no-execution-listener-headers',
   'no-execution-listeners': './rules/camunda-cloud/no-execution-listeners',
   'no-expression': './rules/camunda-cloud/no-expression',
   'no-interrupting-event-subprocess': './rules/camunda-cloud/no-interrupting-event-subprocess',
