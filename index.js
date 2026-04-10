@@ -113,6 +113,11 @@ const camundaCloud89Rules = withConfig({
   ...camundaCloud88Rules
 }, { version: '8.9' });
 
+const camundaCloud810Rules = withConfig({
+  ...camundaCloud89Rules,
+  'zeebe-user-task': 'error'
+}, { version: '8.10' });
+
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'info'
 }, {
@@ -250,6 +255,9 @@ const configs = {
   },
   'camunda-cloud-8-9': {
     rules: camundaCloud89Rules
+  },
+  'camunda-cloud-8-10': {
+    rules: camundaCloud810Rules
   },
   'camunda-platform-7-19': {
     rules: camundaPlatform719Rules
