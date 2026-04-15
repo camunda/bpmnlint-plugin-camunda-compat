@@ -6,6 +6,9 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: support execution listners in Camunda 8.10 or newer ([#232](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/232))
+* `DEPS`: update to `zeebe-bpmn-moddle@1.13.0`
+
 ## 2.48.1
 
 * `DEPS`: update to `@camunda/feel-builtins@1.0.0`
