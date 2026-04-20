@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.49.0
+
+* `FEAT`: add Camunda 8.10 config ([#233](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/233))
+* `FEAT`: report missing zeebe:UserTask as error in 8.10 ([#233](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/233))
 * `FEAT`: support execution listners in Camunda 8.10 or newer ([#232](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/232))
 * `DEPS`: update to `zeebe-bpmn-moddle@1.13.0`
 
