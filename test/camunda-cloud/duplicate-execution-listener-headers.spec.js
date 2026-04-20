@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/camunda-cloud/duplicate-execution-listener-headers');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -64,6 +65,26 @@ const valid = [
           </zeebe:executionListeners>
         </bpmn:extensionElements>
       </bpmn:serviceTask>
+    `))
+  },
+  {
+    name: 'execution listener with duplicate header keys (non-executable process)',
+    config: { version: '8.9' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:serviceTask id="ServiceTask_1">
+          <bpmn:extensionElements>
+            <zeebe:executionListeners>
+              <zeebe:executionListener eventType="start" type="com.example.StartListener">
+                <zeebe:taskHeaders>
+                  <zeebe:header key="authToken" value="abc" />
+                  <zeebe:header key="authToken" value="def" />
+                </zeebe:taskHeaders>
+              </zeebe:executionListener>
+            </zeebe:executionListeners>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:process>
     `))
   }
 ];
