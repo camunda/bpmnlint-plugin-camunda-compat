@@ -3,6 +3,7 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/camunda-cloud/no-execution-listener-headers');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
@@ -24,10 +25,29 @@ const valid = [
     `))
   },
   {
-    name: 'no execution listeners',
+    name: 'user task without execution listener',
     config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
       <bpmn:userTask id="UserTask_1" />
+    `))
+  },
+  {
+    name: 'execution listener with headers (non-executable process)',
+    config: { version: '8.9' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1">
+        <bpmn:userTask id="UserTask_1">
+          <bpmn:extensionElements>
+            <zeebe:executionListeners>
+              <zeebe:executionListener eventType="start" type="com.example.StartListener">
+                <zeebe:taskHeaders>
+                  <zeebe:header key="authToken" value="abc" />
+                </zeebe:taskHeaders>
+              </zeebe:executionListener>
+            </zeebe:executionListeners>
+          </bpmn:extensionElements>
+        </bpmn:userTask>
+      </bpmn:process>
     `))
   }
 ];
