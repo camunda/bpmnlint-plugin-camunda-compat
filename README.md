@@ -16,14 +16,17 @@ npm install -D bpmnlint bpmnlint-plugin-camunda-compat
 
 Add configuration corresponding to your execution platform and version to your [`.bpmnlintrc` configuration](https://github.com/bpmn-io/bpmnlint#configuration):
 
-```json
+```jsonc
 {
   "extends": [
     "bpmnlint:recommended",
     "plugin:camunda-compat/camunda-cloud-8-0"
   ],
   "rules": {
-    "camunda-compat/timer": "off"
+    "camunda-compat/called-element": "off",
+
+    // some rules require a config with version to be provided
+    "camunda-compat/timer": ["warn", { "version": "8.0" }]
   }
 }
 ```
