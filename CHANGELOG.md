@@ -8,13 +8,14 @@ ___Note:__ Yet to be released changes appear here._
 
 * `FIX`: add guard to throw an error when rule config is missing version ([#234](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/234))
 
-
 ## 2.49.0
 
 * `FEAT`: add Camunda 8.10 config ([#233](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/233))
 * `FEAT`: report missing zeebe:UserTask as error in 8.10 ([#233](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/233))
-* `FEAT`: support execution listeners in Camunda 8.10 or newer ([#232](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/232))
+* `FEAT`: add `duplicate-execution-listener-headers` rule ([#232](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/232))
+* `FEAT`: add `no-execution-listener-headers` rule ([#232](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/232))
 * `FIX`: remove `conditional-event` rule ([#228](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/228))
+* `FIX`: ignore non-FEEL properties in `feel` rule ([#231](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/231))
 * `DEPS`: update to `zeebe-bpmn-moddle@1.13.0`
 
 ## 2.48.1
