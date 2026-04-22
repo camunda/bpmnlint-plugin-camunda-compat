@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.49.1
+
 * `FIX`: add guard to throw an error when rule config is missing version ([#234](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/234))
 
 ## 2.49.0
