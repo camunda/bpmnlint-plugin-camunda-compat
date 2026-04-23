@@ -598,7 +598,7 @@ describe('configs', function() {
     'no-loop': [ 'error', { version: '8.10' } ],
     'no-multiple-none-start-events' : [ 'error', { version: '8.10' } ],
     'priority-definition': [ 'error', { version: '8.10' } ],
-    'zeebe-user-task': [ 'error', { version: '8.10' } ],
+    'zeebe-user-task': [ 'warn', { version: '8.10' } ],
     'secrets': [ 'warn', { version: '8.10' } ],
     'sequence-flow-condition': [ 'error', { version: '8.10' } ],
     'signal-reference': [ 'error', { version: '8.10' } ],
