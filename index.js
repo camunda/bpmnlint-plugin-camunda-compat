@@ -116,8 +116,7 @@ const camundaCloud89Rules = withConfig({
 
 const camundaCloud810Rules = withConfig({
   ...omit(camundaCloud89Rules, [ 'no-execution-listener-headers' ]),
-  'duplicate-execution-listener-headers': 'error',
-  'zeebe-user-task': 'error'
+  'duplicate-execution-listener-headers': 'error'
 }, { version: '8.10' });
 
 const camundaPlatform719Rules = withConfig({
