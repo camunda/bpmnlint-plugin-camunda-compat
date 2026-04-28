@@ -169,6 +169,31 @@ const valid = [
         </bpmn:extensionElements>
       </bpmn:scriptTask>
     `))
+  },
+  {
+    name: 'from json (available engine version)',
+    config: { engines: { camunda: '8.9' } },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:input source="=from json(input)" target="InputVariable_1" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
+    name: 'from json (no engines configured)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:input source="=from json(input)" target="InputVariable_1" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
   }
 ];
 
@@ -253,6 +278,37 @@ const invalid = [
         node: 'zeebe:ExecutionListener',
         parentNode: 'Process_1',
         property: 'type'
+      }
+    }
+  },
+  {
+    name: 'from json (engine version too old)',
+    config: { engines: { camunda: '8.6' } },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:input source="=from json(input)" target="InputVariable_1" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Function <from json> requires Camunda >=8.9',
+      path: [
+        'extensionElements',
+        'values',
+        0,
+        'inputParameters',
+        0,
+        'source'
+      ],
+      data: {
+        type: ERROR_TYPES.FEEL_EXPRESSION_UNSUPPORTED_FUNCTION,
+        node: 'zeebe:Input',
+        parentNode: 'Task_1',
+        property: 'source'
       }
     }
   }
