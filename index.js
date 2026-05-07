@@ -35,6 +35,7 @@ const camundaCloud10Rules = withConfig({
   'user-task-form': 'error',
   'variable-name': 'error',
   'feel': 'error',
+  'feel-compatibility': 'error',
   'bpmnlint/start-event-required': 'error',
 }, { version: '1.0' });
 
@@ -171,6 +172,7 @@ const rules = {
   'executable-process': './rules/camunda-cloud/executable-process',
   'execution-listener': './rules/camunda-cloud/execution-listener',
   'feel': './rules/camunda-cloud/feel',
+  'feel-compatibility': './rules/camunda-cloud/feel-compatibility',
   'history-time-to-live': './rules/camunda-platform/history-time-to-live',
   'implementation': './rules/camunda-cloud/implementation',
   'inclusive-gateway': './rules/camunda-cloud/inclusive-gateway',
