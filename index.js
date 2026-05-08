@@ -14,6 +14,7 @@ const camundaCloud10Rules = withConfig({
   'io-mapping': 'error',
   'no-binding-type': 'error',
   'no-candidate-users': 'error',
+  'no-cancel-execution-listener': 'error',
   'no-execution-listener-headers': 'error',
   'no-execution-listeners': 'error',
   'no-expression': 'error',
@@ -119,8 +120,10 @@ const camundaCloud810Rules = withConfig({
   ...omit(camundaCloud89Rules, [
     'no-execution-listener-headers',
     'no-before-all-execution-listener',
+    'no-cancel-execution-listener'
   ]),
   'before-all-execution-listener': 'error',
+  'cancel-execution-listener': 'error',
   'duplicate-execution-listener-headers': 'error'
 }, { version: '8.10' });
 
@@ -164,6 +167,7 @@ const rules = {
   'ad-hoc-sub-process': './rules/camunda-cloud/ad-hoc-sub-process',
   'before-all-execution-listener': './rules/camunda-cloud/before-all-execution-listener',
   'element-type': './rules/camunda-cloud/element-type',
+  'cancel-execution-listener': './rules/camunda-cloud/cancel-execution-listener',
   'called-element': './rules/camunda-cloud/called-element',
   'collapsed-subprocess': './rules/camunda-cloud/collapsed-subprocess',
   'connector-properties': './rules/camunda-cloud/connector-properties',
@@ -187,6 +191,7 @@ const rules = {
   'no-binding-type': './rules/camunda-cloud/no-binding-type',
   'no-before-all-execution-listener': './rules/camunda-cloud/no-before-all-execution-listener',
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
+  'no-cancel-execution-listener': './rules/camunda-cloud/no-cancel-execution-listener',
   'no-execution-listener-headers': './rules/camunda-cloud/no-execution-listener-headers',
   'no-execution-listeners': './rules/camunda-cloud/no-execution-listeners',
   'no-expression': './rules/camunda-cloud/no-expression',
