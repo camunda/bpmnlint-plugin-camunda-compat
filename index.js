@@ -94,6 +94,7 @@ const camundaCloud86Rules = withConfig({
   ]),
   'duplicate-execution-listeners': 'error',
   'execution-listener': 'error',
+  'no-before-all-execution-listener': 'error',
   'priority-definition': 'error',
   'version-tag': 'error',
   'zeebe-user-task': 'warn',
@@ -115,7 +116,11 @@ const camundaCloud89Rules = withConfig({
 }, { version: '8.9' });
 
 const camundaCloud810Rules = withConfig({
-  ...omit(camundaCloud89Rules, [ 'no-execution-listener-headers' ]),
+  ...omit(camundaCloud89Rules, [
+    'no-execution-listener-headers',
+    'no-before-all-execution-listener',
+  ]),
+  'before-all-execution-listener': 'error',
   'duplicate-execution-listener-headers': 'error'
 }, { version: '8.10' });
 
@@ -157,6 +162,7 @@ const bpmnlintRules = [
 
 const rules = {
   'ad-hoc-sub-process': './rules/camunda-cloud/ad-hoc-sub-process',
+  'before-all-execution-listener': './rules/camunda-cloud/before-all-execution-listener',
   'element-type': './rules/camunda-cloud/element-type',
   'called-element': './rules/camunda-cloud/called-element',
   'collapsed-subprocess': './rules/camunda-cloud/collapsed-subprocess',
@@ -179,6 +185,7 @@ const rules = {
   'io-mapping': './rules/camunda-cloud/io-mapping',
   'message-reference': './rules/camunda-cloud/message-reference',
   'no-binding-type': './rules/camunda-cloud/no-binding-type',
+  'no-before-all-execution-listener': './rules/camunda-cloud/no-before-all-execution-listener',
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
   'no-execution-listener-headers': './rules/camunda-cloud/no-execution-listener-headers',
   'no-execution-listeners': './rules/camunda-cloud/no-execution-listeners',
