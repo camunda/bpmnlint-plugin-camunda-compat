@@ -24,6 +24,21 @@ const valid = [
     `))
   },
   {
+    name: 'from json on expression (available engine version)',
+    config: { engines: { camunda: '8.9' } },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:exclusiveGateway id="Gateway_1">
+        <bpmn:outgoing>Flow_1</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:task id="Task_1">
+        <bpmn:incoming>Flow_1</bpmn:incoming>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_1" sourceRef="Gateway_1" targetRef="Task_1">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=from json("true")</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+    `))
+  },
+  {
     name: 'from json (available engine version)',
     config: { engines: { camunda: '8.9' } },
     moddleElement: createModdle(createProcess(`
@@ -84,7 +99,35 @@ const invalid = [
         property: 'source'
       }
     }
-  }
+  },
+  {
+    name: 'from json on expression (engine version too old)',
+    config: { engines: { camunda: '8.6' } },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:exclusiveGateway id="Gateway_1">
+        <bpmn:outgoing>Flow_1</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:task id="Task_1">
+        <bpmn:incoming>Flow_1</bpmn:incoming>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_1" sourceRef="Gateway_1" targetRef="Task_1">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=from json("true")</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+    `)),
+    report: {
+      id: 'Flow_1',
+      message: 'FEEL function <from json> requires Camunda >=8.9',
+      path: [
+        'conditionExpression'
+      ],
+      data: {
+        type: ERROR_TYPES.FEEL_EXPRESSION_UNSUPPORTED_FUNCTION,
+        node: 'Flow_1',
+        parentNode: 'Flow_1',
+        property: 'conditionExpression'
+      }
+    }
+  },
 ];
 
 RuleTester.verify('feel-compatibility', rule, {
