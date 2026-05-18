@@ -113,7 +113,8 @@ const camundaCloud88Rules = withConfig({
 }, { version: '8.8' });
 
 const camundaCloud89Rules = withConfig({
-  ...camundaCloud88Rules
+  ...camundaCloud88Rules,
+  'start-event-form-embedded': 'warn'
 }, { version: '8.9' });
 
 const camundaCloud810Rules = withConfig({
@@ -213,6 +214,7 @@ const rules = {
   'sequence-flow-condition': './rules/camunda-cloud/sequence-flow-condition',
   'signal-reference': './rules/camunda-cloud/signal-reference',
   'start-event-form': './rules/camunda-cloud/start-event-form',
+  'start-event-form-embedded': './rules/camunda-cloud/start-event-form-embedded',
   'subscription': './rules/camunda-cloud/subscription',
   'task-listener': './rules/camunda-cloud/task-listener',
   'task-schedule': './rules/camunda-cloud/task-schedule',
