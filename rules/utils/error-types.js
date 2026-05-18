@@ -17,6 +17,7 @@ module.exports.ERROR_TYPES = Object.freeze({
   ATTACHED_TO_REF_ELEMENT_TYPE_NOT_ALLOWED: 'camunda.attachedToRefElementTypeNotAllowed',
   PROPERTY_DEPENDENT_REQUIRED: 'camunda.propertyDependentRequired',
   PROPERTY_NOT_ALLOWED: 'camunda.propertyNotAllowed',
+  PROPERTY_DEPRECATED: 'camunda.propertyDeprecated',
   PROPERTY_REQUIRED: 'camunda.propertyRequired',
   PROPERTY_TYPE_NOT_ALLOWED: 'camunda.propertyTypeNotAllowed',
   PROPERTY_VALUE_DUPLICATED: 'camunda.propertyValueDuplicated',
