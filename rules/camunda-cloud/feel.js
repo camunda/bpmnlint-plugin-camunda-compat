@@ -12,7 +12,9 @@ const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
 const { annotateRule } = require('../helper');
 
-const { isFeelProperty, findParentNode } = require('./utils/feel');
+const { findParentNode } = require('../utils/element');
+
+const { isFeelProperty } = require('./utils/feel');
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {

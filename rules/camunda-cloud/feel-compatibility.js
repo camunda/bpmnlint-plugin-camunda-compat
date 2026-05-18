@@ -12,7 +12,9 @@ const { ERROR_TYPES } = require('../utils/error-types');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
-const { isFeelProperty, findParentNode } = require('./utils/feel');
+const { findParentNode } = require('../utils/element');
+
+const { isFeelProperty } = require('./utils/feel');
 
 /**
  * Reports calls to FEEL builtins that aren't available in the target Camunda

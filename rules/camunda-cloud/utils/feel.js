@@ -1,7 +1,5 @@
 const { isString } = require('min-dash');
 
-const { isAny } = require('bpmnlint-utils');
-
 // Properties ignored globally
 const IGNORED_PROPERTIES = [
   'name'
@@ -32,15 +30,6 @@ const isFeelProperty = (node, propertyName, value) => {
   return !isIgnoredProperty(node, propertyName) && isString(value) && value.startsWith('=');
 };
 
-const findParentNode = node => {
-  while (node && !isAny(node, [ 'bpmn:FlowElement', 'bpmn:FlowElementsContainer' ])) {
-    node = node.$parent;
-  }
-
-  return node;
-};
-
 module.exports = {
-  isFeelProperty,
-  findParentNode
+  isFeelProperty
 };
