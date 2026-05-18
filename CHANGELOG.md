@@ -6,13 +6,15 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: deprecated embedded forms on start events ([#240](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/240))
+
 ## 2.51.0
 
 * `FEAT`: add linting for execution listener `cancel` event type ([#238](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/238))
 
 ## 2.50.0
 
-* `FEAT`: fix: add linting for execution listener 'Before All' event type ([#239](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/239))
+* `FEAT`: add linting for execution listener 'Before All' event type ([#239](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/239))
 
 ## 2.49.2
 
