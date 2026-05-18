@@ -525,6 +525,16 @@ function findParent(node, type) {
 
 module.exports.findParent = findParent;
 
+function findParentNode(node) {
+  while (node && !isAny(node, [ 'bpmn:FlowElement', 'bpmn:FlowElementsContainer' ])) {
+    node = node.$parent;
+  }
+
+  return node;
+}
+
+module.exports.findParentNode = findParentNode;
+
 function isEmptyString(value) {
   return isString(value) && value.trim() === '';
 }
