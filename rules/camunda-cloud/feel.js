@@ -1,8 +1,9 @@
 const { is } = require('bpmnlint-utils');
 
-const { lintExpression } = require('@bpmn-io/feel-lint');
-
 const { getPath } = require('@bpmn-io/moddle-utils');
+
+const { FeelAnalyzer } = require('@bpmn-io/feel-analyzer');
+
 const { camundaReservedNameBuiltins } = require('@camunda/feel-builtins');
 
 const { reportErrors } = require('../utils/reporter');
@@ -17,6 +18,11 @@ const { findParentNode } = require('../utils/element');
 const { isFeelProperty } = require('./utils/feel');
 
 module.exports = skipInNonExecutableProcess(function() {
+  const feelAnalyzer = new FeelAnalyzer({
+    parserDialect: 'camunda',
+    reservedNameBuiltins: camundaReservedNameBuiltins
+  });
+
   function check(node, reporter) {
     if (is(node, 'bpmn:Expression')) {
       return;
@@ -35,31 +41,27 @@ module.exports = skipInNonExecutableProcess(function() {
         propertyValue = propertyValue.get('body');
       }
 
-      if (isFeelProperty(node, propertyName, propertyValue)) {
-        const lintErrors = lintExpression(propertyValue.substring(1), {
-          parserDialect: 'camunda',
-          builtins: camundaReservedNameBuiltins
+      if (!isFeelProperty(node, propertyName, propertyValue)) {
+        return;
+      }
+
+      const { valid } = feelAnalyzer.analyzeExpression(propertyValue.substring(1));
+
+      if (!valid) {
+        const path = getPath(node, parentNode);
+
+        errors.push({
+          message: `Property <${ propertyName }> is not a valid FEEL expression`,
+          path: path
+            ? [ ...path, propertyName ]
+            : [ propertyName ],
+          data: {
+            type: ERROR_TYPES.FEEL_EXPRESSION_INVALID,
+            node,
+            parentNode,
+            property: propertyName
+          }
         });
-
-        // syntax error
-        if (lintErrors.find(({ type }) => type === 'Syntax Error')) {
-          const path = getPath(node, parentNode);
-
-          errors.push(
-            {
-              message: `Property <${ propertyName }> is not a valid FEEL expression`,
-              path: path
-                ? [ ...path, propertyName ]
-                : [ propertyName ],
-              data: {
-                type: ERROR_TYPES.FEEL_EXPRESSION_INVALID,
-                node,
-                parentNode,
-                property: propertyName
-              }
-            }
-          );
-        }
       }
     });
 
