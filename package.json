@@ -37,8 +37,7 @@
     "zeebe-bpmn-moddle": "^1.13.0"
   },
   "dependencies": {
-    "@bpmn-io/feel-analyzer": "^0.2.2",
-    "@bpmn-io/feel-lint": "^3.1.0",
+    "@bpmn-io/feel-analyzer": "^0.3.0",
     "@bpmn-io/moddle-utils": "^0.3.0",
     "@bpmn-io/semver-compat": "^0.1.0",
     "@camunda/feel-builtins": "^1.2.0",
