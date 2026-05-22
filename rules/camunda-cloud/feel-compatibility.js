@@ -18,13 +18,13 @@ const { isFeelProperty } = require('./utils/feel');
 
 /**
  * Reports calls to FEEL builtins that aren't available in the target Camunda
- * engine (configured via `config.engines.camunda`).
+ * engine (configured via `config.version`).
  */
 module.exports = skipInNonExecutableProcess(function(config = {}) {
 
-  const { engines = {} } = config;
+  const { version } = config;
   const builtins = [ ...camundaBuiltins, ...camundaReservedNameBuiltins ];
-  const unavailableByName = getUnavailableBuiltins(builtins, engines);
+  const unavailableByName = getUnavailableBuiltins(builtins, version);
 
   const feelAnalyzer = new FeelAnalyzer({
     parserDialect: 'camunda',
@@ -100,13 +100,13 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
  * that are incompatible with the provided engine versions.
  *
  * @param { Array<{ name: string, engines?: Record<string, string> }> } builtins
- * @param { Record<string, string> } engines
+ * @param { string } version
  * @returns { Map<string, { name: string, engines: Record<string, string> }> }
  */
-function getUnavailableBuiltins(builtins, engines) {
+function getUnavailableBuiltins(builtins, version) {
   const unavailable = new Map();
 
-  if (!Object.keys(engines).length) {
+  if (!version) {
     return unavailable;
   }
 
@@ -115,7 +115,7 @@ function getUnavailableBuiltins(builtins, engines) {
       continue;
     }
 
-    if (builtin.engines && !isCompatible(builtin.engines, engines)) {
+    if (builtin.engines && !isCompatible(builtin.engines, { camunda: version })) {
       unavailable.set(builtin.name, builtin);
     }
   }
