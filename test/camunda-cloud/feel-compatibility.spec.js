@@ -12,7 +12,7 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 
 const valid = [
   {
-    name: 'from json (no engines configured)',
+    name: 'from json (no version configured)',
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="Task_1">
         <bpmn:extensionElements>
@@ -25,7 +25,7 @@ const valid = [
   },
   {
     name: 'from json on expression (available engine version)',
-    config: { engines: { camunda: '8.9' } },
+    config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
       <bpmn:exclusiveGateway id="Gateway_1">
         <bpmn:outgoing>Flow_1</bpmn:outgoing>
@@ -40,7 +40,7 @@ const valid = [
   },
   {
     name: 'from json (available engine version)',
-    config: { engines: { camunda: '8.9' } },
+    config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="Task_1">
         <bpmn:extensionElements>
@@ -53,7 +53,7 @@ const valid = [
   },
   {
     name: 'from json (non-executable process)',
-    config: { version: '8.6', engines: { camunda: '8.6' } },
+    config: { version: '8.6' },
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1">
         <bpmn:serviceTask id="Task_1">
@@ -71,7 +71,7 @@ const valid = [
 const invalid = [
   {
     name: 'from json (engine version too old)',
-    config: { engines: { camunda: '8.6' } },
+    config: { version: '8.6' },
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="Task_1">
         <bpmn:extensionElements>
@@ -102,7 +102,7 @@ const invalid = [
   },
   {
     name: 'from json on expression (engine version too old)',
-    config: { engines: { camunda: '8.6' } },
+    config: { version: '8.6' },
     moddleElement: createModdle(createProcess(`
       <bpmn:exclusiveGateway id="Gateway_1">
         <bpmn:outgoing>Flow_1</bpmn:outgoing>
