@@ -6,7 +6,7 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
-* `FEAT`: deprecated embedded forms on start events ([#240](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/240))
+* `FEAT`: deprecate embedded forms on start events ([#240](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/240))
 
 ## 2.51.0
 
