@@ -29,6 +29,17 @@ const valid = [
     `))
   },
   {
+    name: 'start event with custom form key',
+    config: { version: '8.9' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:startEvent id="StartEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:formDefinition formKey="myCustomKey" />
+        </bpmn:extensionElements>
+      </bpmn:startEvent>
+    `))
+  },
+  {
     name: 'user task with embedded form (not affected)',
     config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
