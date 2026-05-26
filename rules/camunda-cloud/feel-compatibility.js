@@ -60,7 +60,12 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
 
       const expression = propertyValue.substring(1);
 
-      const { functions = [] } = feelAnalyzer.analyzeExpression(expression);
+      const { valid, functions = [] } = feelAnalyzer.analyzeExpression(expression);
+
+      // Skip invalid expressions; the `feel` rule reports the syntax error
+      if (!valid) {
+        return;
+      }
 
       const unsupported = functions.find(
         ({ name, type }) => type === 'builtin' && unavailableByName.has(name)
