@@ -52,6 +52,19 @@ const valid = [
     `))
   },
   {
+    name: 'from json (invalid FEEL syntax)',
+    config: { version: '8.6' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:input source="=from json(" target="InputVariable_1" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
     name: 'from json (non-executable process)',
     config: { version: '8.6' },
     moddleElement: createModdle(createDefinitions(`
