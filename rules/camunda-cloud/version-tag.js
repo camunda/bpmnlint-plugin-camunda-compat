@@ -9,7 +9,13 @@ const { reportErrors } = require('../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
-module.exports = skipInNonExecutableProcess(function() {
+const { greaterOrEqual } = require('../utils/version');
+
+const DMN_VERSION_TAG_EXPRESSION = '8.10';
+
+module.exports = skipInNonExecutableProcess(function(config = {}) {
+  const { version } = config;
+
   function check(node, reporter) {
     if (is(node, 'bpmn:Process')) {
       const versionTag = findExtensionElement(node, 'zeebe:VersionTag');
@@ -45,6 +51,15 @@ module.exports = skipInNonExecutableProcess(function() {
           required: true
         }
       }, node);
+
+      if (is(node, 'bpmn:BusinessRuleTask') && !greaterOrEqual(version, DMN_VERSION_TAG_EXPRESSION)) {
+        errors.push(...hasProperties(extensionElement, {
+          versionTag: {
+            allowed: (value) => !value || !value.startsWith('='),
+            allowedVersion: DMN_VERSION_TAG_EXPRESSION
+          }
+        }, node));
+      }
 
       if (errors && errors.length) {
         reportErrors(node, reporter, errors);
