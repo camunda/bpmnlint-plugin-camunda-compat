@@ -13,6 +13,7 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 const valid = [
   {
     name: 'process (version tag)',
+    config: { version: '8.6' },
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1" isExecutable="true">
         <bpmn:extensionElements>
@@ -34,6 +35,7 @@ const valid = [
   },
   {
     name: 'business rule task (version tag)',
+    config: { version: '8.6' },
     moddleElement: createModdle(createProcess(`
       <bpmn:businessRuleTask id="BusinessRuleTask_1">
         <bpmn:extensionElements>
@@ -57,6 +59,7 @@ const valid = [
   },
   {
     name: 'call activity (version tag)',
+    config: { version: '8.6' },
     moddleElement: createModdle(createProcess(`
       <bpmn:callActivity id="CallActivity_1">
         <bpmn:extensionElements>
@@ -79,7 +82,19 @@ const valid = [
     `))
   },
   {
+    name: 'business rule task (FEEL version tag) (8.10+)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:businessRuleTask id="BusinessRuleTask_1">
+        <bpmn:extensionElements>
+          <zeebe:calledDecision bindingType="versionTag" versionTag="=version" />
+        </bpmn:extensionElements>
+      </bpmn:businessRuleTask>
+    `))
+  },
+  {
     name: 'user task (version tag)',
+    config: { version: '8.6' },
     moddleElement: createModdle(createProcess(`
       <bpmn:userTask id="UserTask_1">
         <bpmn:extensionElements>
@@ -106,6 +121,7 @@ const valid = [
 const invalid = [
   {
     name: 'process (no version tag)',
+    config: { version: '8.6' },
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1" isExecutable="true">
         <bpmn:extensionElements>
@@ -132,6 +148,7 @@ const invalid = [
   },
   {
     name: 'business rule task (no version tag)',
+    config: { version: '8.6' },
     moddleElement: createModdle(createProcess(`
       <bpmn:businessRuleTask id="BusinessRuleTask_1">
         <bpmn:extensionElements>
@@ -158,6 +175,7 @@ const invalid = [
   },
   {
     name: 'call activity (no version tag)',
+    config: { version: '8.6' },
     moddleElement: createModdle(createProcess(`
       <bpmn:callActivity id="CallActivity_1">
         <bpmn:extensionElements>
@@ -184,6 +202,7 @@ const invalid = [
   },
   {
     name: 'user task (no version tag)',
+    config: { version: '8.6' },
     moddleElement: createModdle(createProcess(`
       <bpmn:userTask id="UserTask_1">
         <bpmn:extensionElements>
@@ -205,6 +224,34 @@ const invalid = [
         node: 'zeebe:FormDefinition',
         parentNode: 'UserTask_1',
         requiredProperty: 'versionTag'
+      }
+    }
+  },
+  {
+    name: 'business rule task (FEEL version tag) (<8.10)',
+    config: { version: '8.9' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:businessRuleTask id="BusinessRuleTask_1">
+        <bpmn:extensionElements>
+          <zeebe:calledDecision bindingType="versionTag" versionTag="=version" />
+        </bpmn:extensionElements>
+      </bpmn:businessRuleTask>
+    `)),
+    report: {
+      id: 'BusinessRuleTask_1',
+      message: 'Property value of <=version> only allowed by Camunda 8.10 or newer',
+      path: [
+        'extensionElements',
+        'values',
+        0,
+        'versionTag'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+        node: 'zeebe:CalledDecision',
+        parentNode: 'BusinessRuleTask_1',
+        property: 'versionTag',
+        allowedVersion: '8.10'
       }
     }
   }
