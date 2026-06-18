@@ -18,6 +18,7 @@ const camundaCloud10Rules = withConfig({
   'no-execution-listener-headers': 'error',
   'no-execution-listeners': 'error',
   'no-expression': 'error',
+  'no-job-priority-definition': 'error',
   'no-loop': 'error',
   'no-multiple-none-start-events': 'error',
   'no-priority-definition': 'error',
@@ -122,7 +123,8 @@ const camundaCloud810Rules = withConfig({
   ...omit(camundaCloud89Rules, [
     'no-execution-listener-headers',
     'no-before-all-execution-listener',
-    'no-cancel-execution-listener'
+    'no-cancel-execution-listener',
+    'no-job-priority-definition'
   ]),
   'before-all-execution-listener': 'error',
   'cancel-execution-listener': 'error',
@@ -199,6 +201,7 @@ const rules = {
   'no-execution-listeners': './rules/camunda-cloud/no-execution-listeners',
   'no-expression': './rules/camunda-cloud/no-expression',
   'no-interrupting-event-subprocess': './rules/camunda-cloud/no-interrupting-event-subprocess',
+  'no-job-priority-definition': './rules/camunda-cloud/no-job-priority-definition',
   'no-loop': './rules/camunda-cloud/no-loop',
   'no-multiple-none-start-events': './rules/camunda-cloud/no-multiple-none-start-events',
   'no-priority-definition': './rules/camunda-cloud/no-priority-definition',
