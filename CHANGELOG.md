@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.53.0
+
+* `FEAT`: add `feel-compatibility` rule ([#237](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/237))
+
 ## 2.52.0
 
 * `FEAT`: deprecate embedded forms on start events ([#240](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/240))
