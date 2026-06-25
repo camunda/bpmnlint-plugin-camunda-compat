@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.55.0
+
+* `FEAT`: add `no-job-priority-definition` rule ([#244](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/244))
+
 ## 2.54.0
 
 * `FEAT`: allow business rule task version tag to be a FEEL expression in 8.10 ([#243](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/243))
