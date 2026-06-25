@@ -34,7 +34,7 @@
     "modeler-moddle": "^0.2.0",
     "sinon": "^21.0.1",
     "sinon-chai": "^4.0.1",
-    "zeebe-bpmn-moddle": "^1.13.0"
+    "zeebe-bpmn-moddle": "^1.15.0"
   },
   "dependencies": {
     "@bpmn-io/feel-analyzer": "^0.3.0",
