@@ -528,6 +528,9 @@ describe('configs', function() {
   it('camunda-cloud-8-8', expectRules(configs, 'camunda-cloud-8-8', {
     'bpmnlint/start-event-required': [ 'error', { version: '8.8' } ],
     'ad-hoc-sub-process': [ 'error', { version: '8.8' } ],
+    'agent-tool-documentation': [ 'warn', { version: '8.8' } ],
+    'agent-tool-output-key': [ 'warn', { version: '8.8' } ],
+    'agent-fromai-contract': [ 'error', { version: '8.8' } ],
     'called-element': [ 'error', { version: '8.8' } ],
     'connector-properties': [ 'warn', { version: '8.8' } ],
     'duplicate-execution-listeners': [ 'error', { version: '8.8' } ],
@@ -575,6 +578,9 @@ describe('configs', function() {
   it('camunda-cloud-8-9', expectRules(configs, 'camunda-cloud-8-9', {
     'bpmnlint/start-event-required': [ 'error', { version: '8.9' } ],
     'ad-hoc-sub-process': [ 'error', { version: '8.9' } ],
+    'agent-tool-documentation': [ 'warn', { version: '8.9' } ],
+    'agent-tool-output-key': [ 'warn', { version: '8.9' } ],
+    'agent-fromai-contract': [ 'error', { version: '8.9' } ],
     'called-element': [ 'error', { version: '8.9' } ],
     'connector-properties': [ 'warn', { version: '8.9' } ],
     'duplicate-execution-listeners': [ 'error', { version: '8.9' } ],
@@ -622,6 +628,9 @@ describe('configs', function() {
   it('camunda-cloud-8-10', expectRules(configs, 'camunda-cloud-8-10', {
     'bpmnlint/start-event-required': [ 'error', { version: '8.10' } ],
     'ad-hoc-sub-process': [ 'error', { version: '8.10' } ],
+    'agent-tool-documentation': [ 'warn', { version: '8.10' } ],
+    'agent-tool-output-key': [ 'warn', { version: '8.10' } ],
+    'agent-fromai-contract': [ 'error', { version: '8.10' } ],
     'before-all-execution-listener': [ 'error', { version: '8.10' } ],
     'cancel-execution-listener': [ 'error', { version: '8.10' } ],
     'called-element': [ 'error', { version: '8.10' } ],
@@ -698,6 +707,9 @@ describe('configs', function() {
   it('all', expectRules(configs, 'all', {
     'bpmnlint/start-event-required': 'error',
     'ad-hoc-sub-process': 'error',
+    'agent-tool-documentation': 'warn',
+    'agent-tool-output-key': 'warn',
+    'agent-fromai-contract': 'error',
     'before-all-execution-listener': 'error',
     'cancel-execution-listener': 'error',
     'element-type': 'error',

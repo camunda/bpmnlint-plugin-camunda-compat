@@ -20,6 +20,8 @@ const { getPath } = require('@bpmn-io/moddle-utils');
 
 const { ERROR_TYPES } = require('./error-types');
 
+const { greaterOrEqual } = require('./version');
+
 module.exports.ERROR_TYPES = ERROR_TYPES;
 
 function getEventDefinition(node) {
@@ -504,6 +506,93 @@ function addAllowedVersion(data, allowedVersion) {
     allowedVersion
   };
 }
+
+function findAncestorAdHocSubProcess(node) {
+  let el = node.$parent;
+  while (el) {
+    if (is(el, 'bpmn:AdHocSubProcess')) return el;
+    el = el.$parent;
+  }
+  return null;
+}
+
+module.exports.findAncestorAdHocSubProcess = findAncestorAdHocSubProcess;
+
+// Property-based agentic detection (solution 1, marker shape revised
+// 2026-07-13). The AI Agent element templates (and external-agent templates,
+// e.g. Bedrock, Hugging Face) apply a generic zeebe:property to mark a
+// detached tools ad-hoc sub-process as a tool container to lint. This is
+// read-only and has no execution effect; it parses on the current moddle with
+// no schema change. The marker is an independent boolean, not a single-valued
+// role enum, because a Camunda agent element can carry both the
+// `toolContainer` role (hosts tools) and the `agent` role at once; a
+// single-valued `io.camunda.agenticai.role` property could not represent
+// both roles on the same element.
+const TOOL_CONTAINER_PROPERTY = 'io.camunda.agenticai.toolContainer';
+
+function hasToolContainerRoleProperty(node) {
+  const properties = findExtensionElement(node, 'zeebe:Properties');
+
+  if (!properties) {
+    return false;
+  }
+
+  return (properties.get('properties') || []).some(
+    property => property.get('name') === TOOL_CONTAINER_PROPERTY
+      && property.get('value') === 'true'
+  );
+}
+
+module.exports.hasToolContainerRoleProperty = hasToolContainerRoleProperty;
+
+// Whether an ad-hoc sub-process should have agent tool contracts linted.
+//
+// The `io.camunda.agenticai.toolContainer=true` property marker is honored at
+// every version. From 8.10, a `zeebe:agentDefinition` marker on the AHSP
+// (Camunda-provided template) is an additional signal, tracked in
+// connectors#7842; that marker doesn't exist in this plugin's pinned
+// zeebe-bpmn-moddle yet, so the check below is inert until it ships.
+//
+// Deliberately does not fall back to a bare `zeebe:AdHoc` extension: that
+// extension is also carried by plain ad-hoc sub-processes using output
+// collection, so it can't reliably distinguish agentic from non-agentic ones.
+function isAgenticAdHocSubProcess(ahsp, version) {
+  if (hasToolContainerRoleProperty(ahsp)) {
+    return true;
+  }
+
+  return !!version
+    && greaterOrEqual(version, '8.10')
+    && !!findExtensionElement(ahsp, 'zeebe:AgentDefinition');
+}
+
+module.exports.isAgenticAdHocSubProcess = isAgenticAdHocSubProcess;
+
+// Whether a node is an agent tool, i.e. the root node of a tool sub-flow that
+// sits directly inside an agentic ad-hoc sub-process. This is the single "is
+// tool" contract every agent rule gates on, so lint scope matches how the
+// agent connector actually resolves tools: only at these roots. Anything
+// nested below a root (a step inside a sub-process tool, or a downstream
+// element reached by a sequence flow) is PART of a tool, not a tool itself.
+function isAgenticToolElement(node, version) {
+
+  // a tool is an activity (task or sub-process)
+  return is(node, 'bpmn:Activity')
+
+    // an event sub-process is not a tool
+    && !(is(node, 'bpmn:SubProcess') && node.get('triggeredByEvent'))
+
+    // tool root: nothing flows into it
+    && (node.get('incoming') || []).length === 0
+
+    // it must live DIRECTLY in the AHSP, not nested
+    && is(node.$parent, 'bpmn:AdHocSubProcess')
+
+    // and that AHSP must be an agent tool container
+    && isAgenticAdHocSubProcess(node.$parent, version);
+}
+
+module.exports.isAgenticToolElement = isAgenticToolElement;
 
 function findParent(node, type) {
   if (!node) {
