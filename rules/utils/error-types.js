@@ -25,5 +25,16 @@ module.exports.ERROR_TYPES = Object.freeze({
   PROPERTY_VALUES_DUPLICATED: 'camunda.propertiesValuesDuplicated',
   PROPERTY_VALUE_NOT_ALLOWED: 'camunda.propertyValueNotAllowed',
   PROPERTY_VALUE_REQUIRED: 'camunda.propertyValueRequired',
-  SECRET_EXPRESSION_FORMAT_DEPRECATED: 'camunda.secretExpressionFormatDeprecated'
+  SECRET_EXPRESSION_FORMAT_DEPRECATED: 'camunda.secretExpressionFormatDeprecated',
+  AGENT_FEEL_FUNCTION_NAME_INVALID: 'camunda.agentFeelFunctionNameInvalid',
+  AGENT_FEEL_KEY_MISSING: 'camunda.agentFeelKeyMissing',
+  AGENT_FEEL_KEY_TYPE_INVALID: 'camunda.agentFeelKeyTypeInvalid',
+  AGENT_FEEL_KEY_PREFIX_MISSING: 'camunda.agentFeelKeyPrefixMissing',
+  AGENT_FEEL_KEY_CONDITIONAL: 'camunda.agentFeelKeyConditional',
+  AGENT_FEEL_DESCRIPTION_MISSING: 'camunda.agentFeelDescriptionMissing',
+  AGENT_FEEL_DESCRIPTION_TYPE_INVALID: 'camunda.agentFeelDescriptionTypeInvalid',
+  AGENT_FEEL_DESCRIPTION_TOO_WEAK: 'camunda.agentFeelDescriptionTooWeak',
+  AGENT_FEEL_WRONG_CONTEXT: 'camunda.agentFeelWrongContext',
+  AGENT_TOOL_OUTPUT_KEY_INVALID: 'camunda.agentToolOutputKeyInvalid',
+  AGENT_TOOL_DOCUMENTATION_MISSING: 'camunda.agentToolDocumentationMissing',
 });
