@@ -1,6 +1,6 @@
 const { is } = require('bpmnlint-utils');
 
-const { findExtensionElement } = require('../utils/element');
+const { findExtensionElement, findAncestorAdHocSubProcess } = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -15,24 +15,13 @@ const TYPOS_WITH_FIX = {
   'toolcalresult': CORRECT_TARGET,
 };
 
-function findAncestorAHSP(node) {
-  let el = node.$parent;
-  while (el) {
-    if (is(el, 'bpmn:AdHocSubProcess')) {
-      return el;
-    }
-    el = el.$parent;
-  }
-  return null;
-}
-
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     if (!is(node, 'bpmn:FlowNode')) {
       return;
     }
 
-    const ahsp = findAncestorAHSP(node);
+    const ahsp = findAncestorAdHocSubProcess(node);
     if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
       return;
     }

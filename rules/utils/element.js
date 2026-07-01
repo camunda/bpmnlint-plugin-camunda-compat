@@ -505,6 +505,17 @@ function addAllowedVersion(data, allowedVersion) {
   };
 }
 
+function findAncestorAdHocSubProcess(node) {
+  let el = node.$parent;
+  while (el) {
+    if (is(el, 'bpmn:AdHocSubProcess')) return el;
+    el = el.$parent;
+  }
+  return null;
+}
+
+module.exports.findAncestorAdHocSubProcess = findAncestorAdHocSubProcess;
+
 function findParent(node, type) {
   if (!node) {
     return null;

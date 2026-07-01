@@ -2,7 +2,7 @@ const { is } = require('bpmnlint-utils');
 
 const { parser } = require('@bpmn-io/lezer-feel');
 
-const { findExtensionElement } = require('../utils/element');
+const { findExtensionElement, findAncestorAdHocSubProcess } = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -93,19 +93,6 @@ function getPositionalArgs(invocationNode, expr) {
     child = child.nextSibling;
   }
   return [];
-}
-
-// ─── Agentic gate helpers ─────────────────────────────────────────────────────
-
-function findAncestorAHSP(node) {
-  let el = node.$parent;
-  while (el) {
-    if (is(el, 'bpmn:AdHocSubProcess')) {
-      return el;
-    }
-    el = el.$parent;
-  }
-  return null;
 }
 
 // ─── Constraint validators ────────────────────────────────────────────────────
@@ -222,7 +209,7 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    const ahsp = findAncestorAHSP(task);
+    const ahsp = findAncestorAdHocSubProcess(task);
 
     if (!ahsp) {
       reportErrors(task, reporter, invocations.map(() => ({
