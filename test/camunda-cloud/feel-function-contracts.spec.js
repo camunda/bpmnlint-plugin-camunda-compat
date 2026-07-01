@@ -56,7 +56,6 @@ function bareInput(source) {
   `);
 }
 
-// Good description: 8 words, not matching weak patterns
 const GOOD_DESC = '&quot;fetch the URL for the given search query&quot;';
 
 const valid = [
@@ -219,38 +218,14 @@ const invalid = [
     }
   },
   {
-    name: 'T14b — description is too short (< 5 words)',
+    name: 'T14a — description is blank',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput(
-      '=fromAi(toolCall.url, &quot;get URL&quot;)'
+      '=fromAi(toolCall.url, &quot;&quot;)'
     )),
     report: {
       id: 'Task_1',
-      message: `fromAi() description "get URL" is too short — add at least 5 words so the model understands what to provide. See ${DOCS_URL}`,
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TOO_WEAK }
-    }
-  },
-  {
-    name: 'T14c — description matches a weak pattern (calls API)',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput(
-      '=fromAi(toolCall.url, &quot;calls API&quot;)'
-    )),
-    report: {
-      id: 'Task_1',
-      message: `fromAi() description "calls API" is too generic — describe specifically what data the agent should supply for this field. See ${DOCS_URL}`,
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TOO_WEAK }
-    }
-  },
-  {
-    name: 'T14c — description matches weak pattern (get data)',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput(
-      '=fromAi(toolCall.url, &quot;get data&quot;)'
-    )),
-    report: {
-      id: 'Task_1',
-      message: `fromAi() description "get data" is too generic — describe specifically what data the agent should supply for this field. See ${DOCS_URL}`,
+      message: `fromAi() description is blank. Add a string describing what the agent should provide for this parameter. See ${DOCS_URL}`,
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TOO_WEAK }
     }
   },

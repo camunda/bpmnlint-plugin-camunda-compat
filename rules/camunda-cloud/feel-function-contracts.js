@@ -11,18 +11,6 @@ const { annotateRule } = require('../helper');
 const DOCS_URL = 'https://docs.camunda.io/docs/components/modeler/bpmn/agent-tools/';
 const CORRECT_NAME = 'fromAi';
 
-// Descriptions shorter than this are flagged as too weak for model guidance.
-const MIN_DESCRIPTION_WORDS = 5;
-
-// Patterns that match descriptions too generic to guide the model.
-const WEAK_DESCRIPTION_PATTERNS = [
-  /^gets?\s+data$/i,
-  /^calls?\s+api$/i,
-  /^calls?\s+rest\s+api$/i,
-  /^makes?\s+(a\s+)?request$/i,
-  /^returns?\s+(a\s+)?value$/i,
-  /^fetches?\s+(the\s+)?result$/i,
-];
 
 /**
  * Function registry — each agent FEEL function declares its parameter spec.
@@ -165,18 +153,9 @@ function validateDescriptionArg(arg) {
   // Strip the surrounding quotes to inspect the content.
   const content = arg.text.slice(1, -1);
 
-  // Check weak patterns first — a 2-word generic phrase is primarily too generic.
-  if (WEAK_DESCRIPTION_PATTERNS.some(p => p.test(content))) {
+  if (!content.trim()) {
     return {
-      message: `fromAi() description "${content}" is too generic — describe specifically what data the agent should supply for this field. See ${DOCS_URL}`,
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TOO_WEAK },
-    };
-  }
-
-  const words = content.trim().split(/\s+/).filter(Boolean);
-  if (words.length < MIN_DESCRIPTION_WORDS) {
-    return {
-      message: `fromAi() description "${content}" is too short — add at least ${MIN_DESCRIPTION_WORDS} words so the model understands what to provide. See ${DOCS_URL}`,
+      message: `fromAi() description is blank. Add a string describing what the agent should provide for this parameter. See ${DOCS_URL}`,
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TOO_WEAK },
     };
   }
