@@ -35,6 +35,10 @@ module.exports.ERROR_TYPES = Object.freeze({
   AGENT_FEEL_DESCRIPTION_TYPE_INVALID: 'camunda.agentFeelDescriptionTypeInvalid',
   AGENT_FEEL_DESCRIPTION_TOO_WEAK: 'camunda.agentFeelDescriptionTooWeak',
   AGENT_FEEL_WRONG_CONTEXT: 'camunda.agentFeelWrongContext',
+  AGENT_FEEL_KEY_SEGMENTS_INVALID: 'camunda.agentFeelKeySegmentsInvalid',
+  AGENT_FEEL_KEY_DUPLICATE: 'camunda.agentFeelKeyDuplicate',
+  AGENT_FEEL_NON_ENTRY_ELEMENT: 'camunda.agentFeelNonEntryElement',
   AGENT_TOOL_OUTPUT_KEY_INVALID: 'camunda.agentToolOutputKeyInvalid',
+  AGENT_TOOL_RESULT_MISSING: 'camunda.agentToolResultMissing',
   AGENT_TOOL_DOCUMENTATION_MISSING: 'camunda.agentToolDocumentationMissing',
 });

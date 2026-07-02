@@ -9,8 +9,7 @@ const {
 
 const { ERROR_TYPES } = require('../../rules/utils/error-types');
 
-const CORRECT_TARGET = 'toolCallResult';
-const DOCS_URL = 'https://docs.camunda.io/docs/components/modeler/bpmn/agent-tools/';
+const WARN_MESSAGE = '"toolCallResult" output is not mapped.';
 
 function agenticToolTask(outputXml = '') {
   return createProcess(`
@@ -32,16 +31,19 @@ function agenticToolTask(outputXml = '') {
 
 const valid = [
   {
-    name: 'correct output target inside agentic AHSP',
+    name: 'toolCallResult output present',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticToolTask(`
       <zeebe:output source="=taskResult" target="toolCallResult" />
     `))
   },
   {
-    name: 'no outputs — nothing to check',
+    name: 'toolCallResult present among multiple outputs',
     config: { version: '8.8' },
-    moddleElement: createModdle(agenticToolTask())
+    moddleElement: createModdle(agenticToolTask(`
+      <zeebe:output source="=taskResult" target="toolCallResult" />
+      <zeebe:output source="=extra" target="extra" />
+    `))
   },
   {
     name: 'task inside AHSP without zeebe:AdHoc — not agentic, skipped',
@@ -70,10 +72,161 @@ const valid = [
         </bpmn:extensionElements>
       </bpmn:serviceTask>
     `))
+  },
+  {
+    name: 'period-target contribution (toolCallResult.statusCode)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticToolTask(`
+      <zeebe:output source="=statusCode" target="toolCallResult.statusCode" />
+    `))
+  },
+  {
+    name: 'script task resultVariable is toolCallResult',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:scriptTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:script expression="=result" resultVariable="toolCallResult" />
+            <zeebe:ioMapping>
+              <zeebe:input source="=toolCall.query" target="query" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:scriptTask>
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'connector resultExpression header contains toolCallResult',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:taskHeaders>
+              <zeebe:header key="resultExpression" value="={toolCallResult: response.body}" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'connector resultVariable header is toolCallResult',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:taskHeaders>
+              <zeebe:header key="resultVariable" value="toolCallResult" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'downstream element sets toolCallResult — entry activity stays silent',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=intermediate" target="lookupData" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=lookupData" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'non-entry activity with misdirected outputs — reported via its entry, not itself',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=result" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=extra" target="sideChannel" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'sub-process tool whose child sets toolCallResult',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:subProcess id="Sub_1">
+          <bpmn:serviceTask id="Inner_1">
+            <bpmn:extensionElements>
+              <zeebe:ioMapping>
+                <zeebe:output source="=result" target="toolCallResult" />
+              </zeebe:ioMapping>
+            </bpmn:extensionElements>
+          </bpmn:serviceTask>
+        </bpmn:subProcess>
+      </bpmn:adHocSubProcess>
+    `))
   }
 ];
 
 const invalid = [
+  {
+    name: 'wrong output target key',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticToolTask(`
+      <zeebe:output source="=taskResult" target="result" />
+    `)),
+    report: {
+      id: 'Task_1',
+      message: WARN_MESSAGE,
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
+    }
+  },
   {
     name: 'blank output target',
     config: { version: '8.8' },
@@ -82,8 +235,9 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: `Output mapping target must be "${CORRECT_TARGET}". The target is blank — the agent will not receive the tool result. See ${DOCS_URL}`,
-      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID }
+      message: WARN_MESSAGE,
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
     }
   },
   {
@@ -94,8 +248,9 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: 'Output mapping target "= toolCallResult" should be a plain string, not a FEEL expression. Remove the "=" prefix.',
-      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID }
+      message: WARN_MESSAGE,
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
     }
   },
   {
@@ -106,32 +261,85 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: `Output mapping target "toolcallresult" looks like a typo. Did you mean "${CORRECT_TARGET}"?`,
-      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID }
+      message: WARN_MESSAGE,
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
     }
   },
   {
-    name: 'typo in output target (toolcalresult)',
+    name: 'multiple outputs, none is toolCallResult',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticToolTask(`
-      <zeebe:output source="=taskResult" target="toolcalresult" />
+      <zeebe:output source="=a" target="foo" />
+      <zeebe:output source="=b" target="bar" />
     `)),
     report: {
       id: 'Task_1',
-      message: `Output mapping target "toolcalresult" looks like a typo. Did you mean "${CORRECT_TARGET}"?`,
-      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID }
+      message: WARN_MESSAGE,
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
     }
   },
   {
-    name: 'wrong output target key',
+    name: 'misdirected result across the tool flow — reported on the entry activity',
     config: { version: '8.8' },
-    moddleElement: createModdle(agenticToolTask(`
-      <zeebe:output source="=taskResult" target="result" />
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=result" target="toolCalResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
     `)),
     report: {
       id: 'Task_1',
-      message: `Output mapping target must be "${CORRECT_TARGET}" so the agent can receive the tool result. Got "result". See ${DOCS_URL}`,
-      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID }
+      message: WARN_MESSAGE,
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
+    }
+  },
+  {
+    name: 'tool with no result channel at all — returns nothing to the agent',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticToolTask()),
+    report: {
+      id: 'Task_1',
+      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
+    }
+  },
+  {
+    name: 'script task resultVariable misdirected (toolResult)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:scriptTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:script expression="=result" resultVariable="toolResult" />
+          </bpmn:extensionElements>
+        </bpmn:scriptTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: WARN_MESSAGE,
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
     }
   }
 ];

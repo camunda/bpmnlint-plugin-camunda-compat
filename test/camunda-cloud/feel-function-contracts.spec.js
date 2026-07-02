@@ -9,8 +9,6 @@ const {
 
 const { ERROR_TYPES } = require('../../rules/utils/error-types');
 
-const DOCS_URL = 'https://docs.camunda.io/docs/components/modeler/bpmn/agent-tools/';
-
 // Helpers
 
 function agenticInput(source) {
@@ -67,13 +65,6 @@ const valid = [
     ))
   },
   {
-    name: 'T1b — correct fromAi with nested path key',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput(
-      `=fromAi(toolCall.params.query, ${GOOD_DESC})`
-    ))
-  },
-  {
     name: 'non-FEEL source (no = prefix) — rule ignores it',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('plainValue'))
@@ -82,10 +73,32 @@ const valid = [
     name: 'FEEL expression without fromAi call — rule ignores it',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('=someVariable'))
+  },
+  {
+    name: 'documented overloads — 3rd (type), 4th (schema), 5th (options) args are not errors',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      `=fromAi(toolCall.url, ${GOOD_DESC}, &quot;string&quot;, { type: &quot;string&quot; }, {})`
+    ))
+  },
+  {
+    name: 'valid fromAi nested in a FEEL context object',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      `={ q: fromAi(toolCall.query, ${GOOD_DESC}) }`
+    ))
+  },
+  {
+    name: 'valid fromAi inside a string concatenation',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      `=&quot;https://api.example.com/&quot; + fromAi(toolCall.path, ${GOOD_DESC})`
+    ))
   }
 ];
 
 const invalid = [
+
   // ─── Key argument errors ───────────────────────────────────────────────────
 
   {
@@ -97,7 +110,8 @@ const invalid = [
     report: {
       id: 'Task_1',
       message: 'fromAi() key must be a FEEL path, not a string literal. Remove the quotes around "toolCall.url".',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID }
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -108,8 +122,9 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'fromAi() key must be a FEEL path starting with toolCall., not null.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID }
+      message: 'fromAi() key must be a FEEL path starting with "toolCall.", not null.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -120,8 +135,9 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'fromAi() key must be a FEEL path starting with toolCall., not a number.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID }
+      message: 'fromAi() key must be a FEEL path starting with "toolCall.", not a number.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -132,8 +148,9 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'fromAi() key must be a FEEL path starting with toolCall., not an arithmetic expression.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID }
+      message: 'fromAi() key must be a FEEL path starting with "toolCall.", not an arithmetic expression.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -145,7 +162,8 @@ const invalid = [
     report: {
       id: 'Task_1',
       message: 'fromAi() key must use dot notation, not bracket notation. Use toolCall.name instead of toolCall["name"].',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID }
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -156,8 +174,9 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'fromAi() key must start with toolCall.. Use toolCall.url instead of a bare name.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_PREFIX_MISSING }
+      message: 'fromAi() key must start with "toolCall.". Use toolCall.url instead of a bare name.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_PREFIX_MISSING },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -168,8 +187,22 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'fromAi() key must start with toolCall.. Got context.url.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_PREFIX_MISSING }
+      message: 'fromAi() key must start with "toolCall.". Got context.url.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_PREFIX_MISSING },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+    }
+  },
+  {
+    name: 'T9 — nested key path: connector uses the last segment as parameter name',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      `=fromAi(toolCall.params.query, ${GOOD_DESC})`
+    )),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() key must be a single name under toolCall. Use toolCall.query instead of toolCall.params.query.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_SEGMENTS_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -181,7 +214,8 @@ const invalid = [
     report: {
       id: 'Task_1',
       message: 'fromAi() key uses a conditional expression. Ensure at least one branch resolves to a toolCall.* path.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_CONDITIONAL }
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_CONDITIONAL },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -191,7 +225,8 @@ const invalid = [
     report: {
       id: 'Task_1',
       message: 'fromAi() requires a key argument — a FEEL path like toolCall.url.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING }
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
 
@@ -203,8 +238,9 @@ const invalid = [
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url)')),
     report: {
       id: 'Task_1',
-      message: `fromAi() description is missing. Add a string describing what the agent should provide for this parameter. See ${DOCS_URL}`,
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING }
+      message: 'fromAi() description is missing.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -214,7 +250,8 @@ const invalid = [
     report: {
       id: 'Task_1',
       message: 'fromAi() description should be a string literal — use a quoted string describing what the agent should provide.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID }
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -225,8 +262,105 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: `fromAi() description is blank. Add a string describing what the agent should provide for this parameter. See ${DOCS_URL}`,
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TOO_WEAK }
+      message: 'fromAi() description is blank.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TOO_WEAK },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+    }
+  },
+  {
+    name: 'fromAi nested in a context object — missing description still found',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      '={ q: fromAi(toolCall.query) }'
+    )),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() description is missing.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+    }
+  },
+  {
+    name: 'two fromAi invocations in one expression — one report per invocation',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      '={ a: fromAi(toolCall.a), b: fromAi(toolCall.b) }'
+    )),
+    report: [
+      {
+        id: 'Task_1',
+        message: 'fromAi() description is missing.',
+        data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
+        propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      },
+      {
+        id: 'Task_1',
+        message: 'fromAi() description is missing.',
+        data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
+        propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      }
+    ]
+  },
+
+  // ─── Tool-scope errors ─────────────────────────────────────────────────────
+
+  {
+    name: 'fromAi on a non-entry element — ignored at runtime',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.confirmation, ${GOOD_DESC})" target="confirmation" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.subject, ${GOOD_DESC})" target="subject" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_2',
+      message: 'fromAi() is ignored here: only the tool\'s entry element defines AI inputs. Define it there and read the toolCall variable directly.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_NON_ENTRY_ELEMENT },
+      propertiesPanel: { entryIds: [ 'Task_2-input-0-source' ] }
+    }
+  },
+  {
+    name: 'duplicate fromAi key across two inputs of one tool',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.a, ${GOOD_DESC})" target="first" />
+              <zeebe:input source="=fromAi(toolCall.a, ${GOOD_DESC})" target="second" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() key toolCall.a is declared more than once in this tool. Declare it once and reference it directly elsewhere.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_DUPLICATE },
+      propertiesPanel: { entryIds: [ 'inputs' ] }
     }
   },
   {
@@ -236,7 +370,8 @@ const invalid = [
     report: {
       id: 'Task_1',
       message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID }
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -246,7 +381,8 @@ const invalid = [
     report: {
       id: 'Task_1',
       message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID }
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
 
@@ -261,7 +397,8 @@ const invalid = [
     report: {
       id: 'Task_1',
       message: 'Wrong function name "fromai" — use fromAi (case-sensitive).',
-      data: { type: ERROR_TYPES.AGENT_FEEL_FUNCTION_NAME_INVALID }
+      data: { type: ERROR_TYPES.AGENT_FEEL_FUNCTION_NAME_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
 
@@ -276,7 +413,8 @@ const invalid = [
     report: {
       id: 'Task_1',
       message: 'fromAi() should only be used inside an agentic sub-process.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT }
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
   {
@@ -288,7 +426,8 @@ const invalid = [
     report: {
       id: 'Task_1',
       message: 'This sub-process is not configured as agentic. Add zeebe:AdHoc to use agent tool contracts.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT }
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   }
 ];

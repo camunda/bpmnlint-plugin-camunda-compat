@@ -112,7 +112,7 @@ const camundaCloud87Rules = withConfig({
 const camundaCloud88Rules = withConfig({
   ...omit(camundaCloud87Rules, [ 'no-task-listeners' ]),
   'agent-tool-documentation': 'warn',
-  'agent-tool-output-key': 'error',
+  'agent-tool-output-key': 'warn',
   'feel-function-contracts': 'warn',
   'task-listener': 'error'
 }, { version: '8.8' });

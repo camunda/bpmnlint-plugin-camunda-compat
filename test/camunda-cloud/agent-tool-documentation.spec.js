@@ -3,13 +3,12 @@ const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 const rule = require('../../rules/camunda-cloud/agent-tool-documentation');
 
 const {
+  createDefinitions,
   createModdle,
   createProcess
 } = require('../helper');
 
 const { ERROR_TYPES } = require('../../rules/utils/error-types');
-
-const DOCS_URL = 'https://docs.camunda.io/docs/components/modeler/bpmn/agent-tools/';
 
 function agenticAHSP(taskXml) {
   return createProcess(`
@@ -73,6 +72,71 @@ const valid = [
         </bpmn:serviceTask>
       </bpmn:adHocSubProcess>
     `))
+  },
+  {
+    name: 'activity with incoming sequence flow — skipped (reached via routing, not invoked directly by agent)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:documentation>Entry point tool.</bpmn:documentation>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'exclusive gateway inside agentic AHSP — skipped (not an Activity)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:exclusiveGateway id="Gateway_1" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'event sub-process inside agentic AHSP — skipped (triggered by event, not invoked by agent)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:subProcess id="EventSub_1" triggeredByEvent="true" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'unicode documentation text',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:documentation>获取给定查询的 API 数据 🔍</bpmn:documentation>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
+    name: 'non-executable process — skipped',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1" isExecutable="false">
+        <bpmn:adHocSubProcess id="AHSP_1">
+          <bpmn:extensionElements>
+            <zeebe:adHoc />
+          </bpmn:extensionElements>
+          <bpmn:serviceTask id="Task_1" />
+        </bpmn:adHocSubProcess>
+      </bpmn:process>
+    `))
   }
 ];
 
@@ -85,8 +149,9 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: `Tool documentation is missing. Describe what this tool does so the agent knows when to use it. See ${DOCS_URL}`,
-      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING }
+      message: 'Tool documentation is missing.',
+      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
+      propertiesPanel: { entryIds: [ 'documentation' ] }
     }
   },
   {
@@ -99,8 +164,9 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: `Tool documentation is missing. Describe what this tool does so the agent knows when to use it. See ${DOCS_URL}`,
-      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING }
+      message: 'Tool documentation is missing.',
+      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
+      propertiesPanel: { entryIds: [ 'documentation' ] }
     }
   },
   {
@@ -111,8 +177,51 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: `Tool documentation is missing. Describe what this tool does so the agent knows when to use it. See ${DOCS_URL}`,
-      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING }
+      message: 'Tool documentation is missing.',
+      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
+      propertiesPanel: { entryIds: [ 'documentation' ] }
+    }
+  },
+  {
+    name: 'whitespace-only documentation inside agentic AHSP',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:documentation>   </bpmn:documentation>
+      </bpmn:serviceTask>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Tool documentation is missing.',
+      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
+      propertiesPanel: { entryIds: [ 'documentation' ] }
+    }
+  },
+  {
+    name: 'entry activity with attached boundary event still requires documentation',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:serviceTask id="Task_1" />
+      <bpmn:boundaryEvent id="Boundary_1" attachedToRef="Task_1" />
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Tool documentation is missing.',
+      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
+      propertiesPanel: { entryIds: [ 'documentation' ] }
+    }
+  },
+  {
+    name: 'call activity as tool requires documentation',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:callActivity id="Task_1" />
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Tool documentation is missing.',
+      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
+      propertiesPanel: { entryIds: [ 'documentation' ] }
     }
   }
 ];
