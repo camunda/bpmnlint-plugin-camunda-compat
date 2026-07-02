@@ -9,12 +9,14 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 const { annotateRule } = require('../helper');
 
 /**
- * Validates agent FEEL function contracts on input mappings inside agentic
- * ad-hoc sub-processes. For fromAi(): the key must be a FEEL path starting
- * with `toolCall.`, the function name is case-sensitive, and a string-literal
- * description is expected (the LLM uses it to supply the value). Extra
- * arguments (type, schema, options) are part of the documented signature and
- * are not validated. Reports once per fromAi() invocation.
+ * Validates agent FEEL function contracts inside agentic ad-hoc sub-processes.
+ * For fromAi() in input mappings: the key must be a single-segment FEEL path
+ * starting with `toolCall.`, the function name is case-sensitive, and a
+ * string-literal description is expected (the LLM uses it to supply the value).
+ * Extra arguments (type, schema, options) are part of the documented signature
+ * and are not validated. Also flags fromAi() used where the connector never
+ * populates toolCall: on non-entry elements, in output mappings, and in
+ * sequence flow conditions. Reports once per fromAi() invocation.
  */
 const CORRECT_NAME = 'fromAi';
 
@@ -192,6 +194,16 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
+    if (is(node, 'zeebe:Output')) {
+      checkOutputSurface(node, reporter);
+      return;
+    }
+
+    if (is(node, 'bpmn:SequenceFlow')) {
+      checkConditionSurface(node, reporter);
+      return;
+    }
+
     if (!is(node, 'zeebe:Input')) {
       return;
     }
@@ -353,5 +365,75 @@ module.exports = skipInNonExecutableProcess(function() {
         propertiesPanel: { entryIds: [ 'inputs' ] },
       })));
     }
+  }
+
+  /**
+   * fromAi() only defines tool inputs; the connector reads it from input
+   * mappings and never populates toolCall on the output side, so a fromAi()
+   * call in an output source silently resolves to null. Scoped to agentic
+   * ad-hoc sub-processes to avoid firing on unrelated diagrams.
+   */
+  function checkOutputSurface(node, reporter) {
+    const source = node.get('source');
+    if (!source || !source.startsWith('=')) {
+      return;
+    }
+
+    const expr = source.substring(1).trim();
+    const invocations = findFunctionInvocations(expr);
+    if (!invocations.length) {
+      return;
+    }
+
+    const task = node.$parent && node.$parent.$parent && node.$parent.$parent.$parent;
+    if (!task || !is(task, 'bpmn:FlowNode')) {
+      return;
+    }
+
+    const ahsp = findAncestorAdHocSubProcess(task);
+    if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
+      return;
+    }
+
+    const outputIndex = (node.$parent.get('outputParameters') || []).indexOf(node);
+    const propertiesPanel = {
+      entryIds: [ `${ task.get('id') }-output-${ outputIndex }-source` ]
+    };
+
+    reportErrors(task, reporter, invocations.map(() => ({
+      message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      propertiesPanel,
+    })));
+  }
+
+  /**
+   * The toolCall context is only populated for a tool's inputs, so fromAi() in
+   * a sequence flow condition resolves to null and the branch never behaves as
+   * intended. Scoped to agentic ad-hoc sub-processes.
+   */
+  function checkConditionSurface(node, reporter) {
+    const condition = node.get('conditionExpression');
+    const body = condition && condition.get('body');
+    if (!body || !body.startsWith('=')) {
+      return;
+    }
+
+    const expr = body.substring(1).trim();
+    const invocations = findFunctionInvocations(expr);
+    if (!invocations.length) {
+      return;
+    }
+
+    const ahsp = findAncestorAdHocSubProcess(node);
+    if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
+      return;
+    }
+
+    reportErrors(node, reporter, invocations.map(() => ({
+      message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      propertiesPanel: { entryIds: [ 'conditionExpression' ] },
+    })));
   }
 });

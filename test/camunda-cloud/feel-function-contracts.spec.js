@@ -429,6 +429,56 @@ const invalid = [
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
+  },
+  {
+    name: 'T19 — fromAi in an output mapping source (ignored at runtime)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=fromAi(toolCall.url, ${GOOD_DESC})" target="result" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      propertiesPanel: { entryIds: [ 'Task_1-output-0-source' ] }
+    }
+  },
+  {
+    name: 'T20 — fromAi in a sequence flow condition (toolCall not in scope)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2">
+          <bpmn:conditionExpression>=fromAi(toolCall.ready, ${GOOD_DESC})</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Flow_1',
+      message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      propertiesPanel: { entryIds: [ 'conditionExpression' ] }
+    }
   }
 ];
 
