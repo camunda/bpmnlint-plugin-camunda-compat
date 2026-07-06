@@ -147,7 +147,7 @@ function collectElementChannels(element, channels) {
 
 function isToolCallResultChannel({ kind, value }) {
   if (kind === 'resultExpression') {
-    return /toolCallResult/.test(value);
+    return /\btoolCallResult\b/.test(value);
   }
 
   return value === 'toolCallResult' || value.startsWith('toolCallResult.');
