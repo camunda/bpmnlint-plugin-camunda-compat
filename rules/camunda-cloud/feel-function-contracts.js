@@ -9,44 +9,21 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 const { annotateRule } = require('../helper');
 
 /**
- * Validates agent FEEL function contracts inside agentic ad-hoc sub-processes.
- * For fromAi() in input mappings: the key must be a single-segment FEEL path
- * starting with `toolCall.`, the function name is case-sensitive, and a
- * string-literal description is expected (the LLM uses it to supply the value).
- * Extra arguments (type, schema, options) are part of the documented signature
- * and are not validated. Also flags fromAi() used where the connector never
- * populates toolCall: on non-entry elements, in output mappings, and in
- * sequence flow conditions. Reports once per fromAi() invocation.
+ * Validates the judgment-call parts of fromAi() calls inside agentic
+ * ad-hoc sub-processes: description quality (the LLM uses the description to
+ * decide what value to supply, so a missing or weak one degrades accuracy
+ * without breaking anything), and the ambiguous conditional-key case. Extra
+ * arguments (type, schema, options) are part of the documented signature and
+ * are not validated.
+ *
+ * Structural breaks (wrong key type, missing/misplaced toolCall. prefix,
+ * multi-segment keys, duplicate keys, function name casing, wrong context)
+ * are deterministic silent-failure cases and live in agent-fromai-contract
+ * as errors. This rule silently defers to that gating (an out-of-scope call
+ * is not double-reported here).
  */
 const CORRECT_NAME = 'fromAi';
-
-
-/**
- * Function registry — each agent FEEL function declares its parameter spec.
- * Adding a new function here makes the generic rule validate it automatically.
- */
-const AGENT_FUNCTION_SPECS = {
-  fromAi: {
-
-    // Casing aliases detected as typos (name ≠ canonical → offer fix).
-    aliases: [ 'fromai', 'fromAI' ],
-    params: [
-      {
-        name: 'key',
-        type: 'feel-path',
-        required: true,
-        constraints: [ 'no-string-literal', 'no-null', 'no-numeric', 'no-arithmetic', 'no-bracket', 'toolCall-prefix' ],
-      },
-      {
-        name: 'description',
-        type: 'string-literal',
-        required: false,
-        absentSeverity: 'warn',
-        constraints: [ 'is-string-literal', 'min-words', 'not-weak' ],
-      },
-    ],
-  },
-};
+const NAME_ALIASES = [ 'fromai', 'fromAI' ];
 
 // ─── Lezer helpers ───────────────────────────────────────────────────────────
 
@@ -60,7 +37,7 @@ function findFunctionInvocations(expr) {
       if (nameNode && nameNode.type.name === 'VariableName') {
         const name = expr.slice(nameNode.from, nameNode.to);
         const nameLower = name.toLowerCase();
-        if (Object.keys(AGENT_FUNCTION_SPECS).some(fn => fn.toLowerCase() === nameLower)) {
+        if (nameLower === CORRECT_NAME.toLowerCase()) {
           result.push({ name, node });
         }
       }
@@ -95,67 +72,16 @@ function getPositionalArgs(invocationNode, expr) {
 
 // ─── Constraint validators ────────────────────────────────────────────────────
 
-function validateKeyArg(arg, taskId) {
-  switch (arg.type) {
-  case 'StringLiteral':
-    return {
-      message: `fromAi() key must be a FEEL path, not a string literal. Remove the quotes around ${arg.text}.`,
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-    };
-  case 'null':
-    return {
-      message: 'fromAi() key must be a FEEL path starting with "toolCall.", not null.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-    };
-  case 'NumericLiteral':
-    return {
-      message: 'fromAi() key must be a FEEL path starting with "toolCall.", not a number.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-    };
-  case 'ArithmeticExpression':
-    return {
-      message: 'fromAi() key must be a FEEL path starting with "toolCall.", not an arithmetic expression.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-    };
-  case 'FilterExpression':
-    return {
-      message: 'fromAi() key must use dot notation, not bracket notation. Use toolCall.name instead of toolCall["name"].',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-    };
-  case 'VariableName':
-    return {
-      message: `fromAi() key must start with "toolCall.". Use toolCall.${arg.text} instead of a bare name.`,
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_PREFIX_MISSING },
-    };
-  case 'PathExpression': {
-    if (!arg.text.startsWith('toolCall.')) {
-      return {
-        message: `fromAi() key must start with "toolCall.". Got ${arg.text}.`,
-        data: { type: ERROR_TYPES.AGENT_FEEL_KEY_PREFIX_MISSING },
-      };
-    }
-
-    // The connector uses the LAST path segment as the parameter name, so a
-    // nested key like toolCall.input.filter reads a path it never populates.
-    const segments = arg.text.split('.');
-    if (segments.length > 2) {
-      return {
-        message: `fromAi() key must be a single name under toolCall. Use toolCall.${ segments[ segments.length - 1 ] } instead of ${ arg.text }.`,
-        data: { type: ERROR_TYPES.AGENT_FEEL_KEY_SEGMENTS_INVALID },
-      };
-    }
+function validateConditionalKey(arg) {
+  if (arg.type !== 'IfExpression') {
     return null;
   }
-  case 'IfExpression':
 
-    // Conditional key — ambiguous; explain-only warning.
-    return {
-      message: 'fromAi() key uses a conditional expression. Ensure at least one branch resolves to a toolCall.* path.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_CONDITIONAL },
-    };
-  default:
-    return null;
-  }
+  // Conditional key — ambiguous; explain-only warning.
+  return {
+    message: 'fromAi() key uses a conditional expression. Ensure at least one branch resolves to a toolCall.* path.',
+    data: { type: ERROR_TYPES.AGENT_FEEL_KEY_CONDITIONAL },
+  };
 }
 
 function validateDescriptionArg(arg) {
@@ -189,21 +115,6 @@ function validateDescriptionArg(arg) {
 
 module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
-    if (is(node, 'bpmn:Activity')) {
-      checkDuplicateKeys(node, reporter);
-      return;
-    }
-
-    if (is(node, 'zeebe:Output')) {
-      checkOutputSurface(node, reporter);
-      return;
-    }
-
-    if (is(node, 'bpmn:SequenceFlow')) {
-      checkConditionSurface(node, reporter);
-      return;
-    }
-
     if (!is(node, 'zeebe:Input')) {
       return;
     }
@@ -225,6 +136,19 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
+    const ahsp = findAncestorAdHocSubProcess(task);
+    if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
+
+      // Wrong context is agent-fromai-contract's concern; don't double-report.
+      return;
+    }
+
+    // The connector resolves fromAi() only on the tool's entry element.
+    const incoming = task.get('incoming') || [];
+    if (incoming.length > 0) {
+      return;
+    }
+
     // Properties-panel entry for this input parameter, so clicking the report
     // opens the right mapping (id convention: {elementId}-input-{index}-source).
     const inputIndex = (node.$parent.get('inputParameters') || []).indexOf(node);
@@ -232,67 +156,27 @@ module.exports = skipInNonExecutableProcess(function() {
       entryIds: [ `${ task.get('id') }-input-${ inputIndex }-source` ]
     };
 
-    const ahsp = findAncestorAdHocSubProcess(task);
-
-    if (!ahsp) {
-      reportErrors(task, reporter, invocations.map(() => ({
-        message: 'fromAi() should only be used inside an agentic sub-process.',
-        data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-        propertiesPanel,
-      })));
-      return;
-    }
-
-    if (!findExtensionElement(ahsp, 'zeebe:AdHoc')) {
-      reportErrors(task, reporter, invocations.map(() => ({
-        message: 'This sub-process is not configured as agentic. Add zeebe:AdHoc to use agent tool contracts.',
-        data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-        propertiesPanel,
-      })));
-      return;
-    }
-
-    // The connector resolves fromAi() only on the tool's entry element (the
-    // root node of the sub-flow); calls on downstream elements are ignored at
-    // runtime.
-    const incoming = task.get('incoming') || [];
-    if (incoming.length > 0) {
-      reportErrors(task, reporter, invocations.map(() => ({
-        message: 'fromAi() is ignored here: only the tool\'s entry element defines AI inputs. Define it there and read the toolCall variable directly.',
-        data: { type: ERROR_TYPES.AGENT_FEEL_NON_ENTRY_ELEMENT },
-        propertiesPanel,
-      })));
-      return;
-    }
-
-    // Inside agentic AHSP — run full contract checks.
     const errors = [];
 
     for (const inv of invocations) {
 
-      // Check for casing typo in function name.
-      const spec = AGENT_FUNCTION_SPECS[CORRECT_NAME];
-      if (inv.name !== CORRECT_NAME && spec.aliases.includes(inv.name.toLowerCase())) {
-        errors.push({
-          message: `Wrong function name "${inv.name}" — use ${CORRECT_NAME} (case-sensitive).`,
-          data: { type: ERROR_TYPES.AGENT_FEEL_FUNCTION_NAME_INVALID },
-        });
+      // A casing typo isn't a recognized fromAi() call yet; agent-fromai-contract
+      // reports the typo itself, skip judgment-call checks for it here.
+      if (inv.name !== CORRECT_NAME && NAME_ALIASES.includes(inv.name.toLowerCase())) {
         continue;
       }
 
       const args = getPositionalArgs(inv.node, expr);
 
       if (args.length === 0) {
-        errors.push({
-          message: 'fromAi() requires a key argument — a FEEL path like toolCall.url.',
-          data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
-        });
+
+        // Missing key argument is a structural break; agent-fromai-contract's job.
         continue;
       }
 
-      const keyError = validateKeyArg(args[0], task.id);
-      if (keyError) {
-        errors.push(keyError);
+      const conditionalError = validateConditionalKey(args[0]);
+      if (conditionalError) {
+        errors.push(conditionalError);
       }
 
       if (args.length < 2) {
@@ -316,124 +200,4 @@ module.exports = skipInNonExecutableProcess(function() {
   return annotateRule('feel-function-contracts', {
     check
   });
-
-  /**
-   * The connector combines all fromAi() definitions of the tool's entry
-   * element into one input schema, so a key declared twice collides. Reports
-   * once per duplicated key on the entry activity.
-   */
-  function checkDuplicateKeys(task, reporter) {
-    const incoming = task.get('incoming') || [];
-    if (incoming.length > 0) {
-      return;
-    }
-
-    const ahsp = findAncestorAdHocSubProcess(task);
-    if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
-      return;
-    }
-
-    const ioMapping = findExtensionElement(task, 'zeebe:IoMapping');
-    if (!ioMapping) {
-      return;
-    }
-
-    const keyCounts = {};
-
-    for (const input of ioMapping.get('inputParameters') || []) {
-      const source = input.get('source');
-      if (!source || !source.startsWith('=')) {
-        continue;
-      }
-
-      const expr = source.substring(1).trim();
-      for (const inv of findFunctionInvocations(expr)) {
-        const args = getPositionalArgs(inv.node, expr);
-        const key = args[ 0 ];
-        if (key && key.type === 'PathExpression' && key.text.startsWith('toolCall.')) {
-          keyCounts[ key.text ] = (keyCounts[ key.text ] || 0) + 1;
-        }
-      }
-    }
-
-    const duplicates = Object.keys(keyCounts).filter(key => keyCounts[ key ] > 1);
-
-    if (duplicates.length) {
-      reportErrors(task, reporter, duplicates.map(key => ({
-        message: `fromAi() key ${ key } is declared more than once in this tool. Declare it once and reference it directly elsewhere.`,
-        data: { type: ERROR_TYPES.AGENT_FEEL_KEY_DUPLICATE },
-        propertiesPanel: { entryIds: [ 'inputs' ] },
-      })));
-    }
-  }
-
-  /**
-   * fromAi() only defines tool inputs; the connector reads it from input
-   * mappings and never populates toolCall on the output side, so a fromAi()
-   * call in an output source silently resolves to null. Scoped to agentic
-   * ad-hoc sub-processes to avoid firing on unrelated diagrams.
-   */
-  function checkOutputSurface(node, reporter) {
-    const source = node.get('source');
-    if (!source || !source.startsWith('=')) {
-      return;
-    }
-
-    const expr = source.substring(1).trim();
-    const invocations = findFunctionInvocations(expr);
-    if (!invocations.length) {
-      return;
-    }
-
-    const task = node.$parent && node.$parent.$parent && node.$parent.$parent.$parent;
-    if (!task || !is(task, 'bpmn:FlowNode')) {
-      return;
-    }
-
-    const ahsp = findAncestorAdHocSubProcess(task);
-    if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
-      return;
-    }
-
-    const outputIndex = (node.$parent.get('outputParameters') || []).indexOf(node);
-    const propertiesPanel = {
-      entryIds: [ `${ task.get('id') }-output-${ outputIndex }-source` ]
-    };
-
-    reportErrors(task, reporter, invocations.map(() => ({
-      message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel,
-    })));
-  }
-
-  /**
-   * The toolCall context is only populated for a tool's inputs, so fromAi() in
-   * a sequence flow condition resolves to null and the branch never behaves as
-   * intended. Scoped to agentic ad-hoc sub-processes.
-   */
-  function checkConditionSurface(node, reporter) {
-    const condition = node.get('conditionExpression');
-    const body = condition && condition.get('body');
-    if (!body || !body.startsWith('=')) {
-      return;
-    }
-
-    const expr = body.substring(1).trim();
-    const invocations = findFunctionInvocations(expr);
-    if (!invocations.length) {
-      return;
-    }
-
-    const ahsp = findAncestorAdHocSubProcess(node);
-    if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
-      return;
-    }
-
-    reportErrors(node, reporter, invocations.map(() => ({
-      message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel: { entryIds: [ 'conditionExpression' ] },
-    })));
-  }
 });

@@ -113,6 +113,7 @@ const camundaCloud88Rules = withConfig({
   ...omit(camundaCloud87Rules, [ 'no-task-listeners' ]),
   'agent-tool-documentation': 'warn',
   'agent-tool-output-key': 'warn',
+  'agent-fromai-contract': 'error',
   'feel-function-contracts': 'warn',
   'task-listener': 'error'
 }, { version: '8.8' });
@@ -172,6 +173,7 @@ const bpmnlintRules = [
 
 const rules = {
   'ad-hoc-sub-process': './rules/camunda-cloud/ad-hoc-sub-process',
+  'agent-fromai-contract': './rules/camunda-cloud/agent-fromai-contract',
   'agent-tool-documentation': './rules/camunda-cloud/agent-tool-documentation',
   'agent-tool-output-key': './rules/camunda-cloud/agent-tool-output-key',
   'before-all-execution-listener': './rules/camunda-cloud/before-all-execution-listener',
