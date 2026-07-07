@@ -296,7 +296,7 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'This sub-process is not configured as agentic.',
+      message: 'This sub-process is not configured as agentic. Add a zeebe:property named "io.camunda.agenticai.role" with value "toolContainer" (or "agent") to enable agent tool contracts.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
