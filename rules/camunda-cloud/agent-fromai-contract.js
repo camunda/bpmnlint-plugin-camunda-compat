@@ -2,7 +2,7 @@ const { is } = require('bpmnlint-utils');
 
 const { parser } = require('@bpmn-io/lezer-feel');
 
-const { findExtensionElement, findAncestorAdHocSubProcess } = require('../utils/element');
+const { findExtensionElement, findAncestorAdHocSubProcess, isAgenticAdHocSubProcess } = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -188,9 +188,9 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    if (!findExtensionElement(ahsp, 'zeebe:AdHoc')) {
+    if (!isAgenticAdHocSubProcess(ahsp)) {
       reportErrors(task, reporter, invocations.map(() => ({
-        message: 'This sub-process is not configured as agentic. Add zeebe:AdHoc to use agent tool contracts.',
+        message: 'This sub-process is not configured as agentic.',
         data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
         propertiesPanel,
       })));
@@ -261,7 +261,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     const ahsp = findAncestorAdHocSubProcess(task);
-    if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp)) {
       return;
     }
 
@@ -323,7 +323,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     const ahsp = findAncestorAdHocSubProcess(task);
-    if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp)) {
       return;
     }
 
@@ -358,7 +358,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     const ahsp = findAncestorAdHocSubProcess(node);
-    if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp)) {
       return;
     }
 

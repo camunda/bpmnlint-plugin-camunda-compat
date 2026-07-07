@@ -296,7 +296,7 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'This sub-process is not configured as agentic. Add zeebe:AdHoc to use agent tool contracts.',
+      message: 'This sub-process is not configured as agentic.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }

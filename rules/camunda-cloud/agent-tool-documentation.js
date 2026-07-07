@@ -1,6 +1,6 @@
 const { is } = require('bpmnlint-utils');
 
-const { findExtensionElement, findAncestorAdHocSubProcess } = require('../utils/element');
+const { findAncestorAdHocSubProcess, isAgenticAdHocSubProcess } = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -29,7 +29,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     const ahsp = findAncestorAdHocSubProcess(node);
-    if (!ahsp || !findExtensionElement(ahsp, 'zeebe:AdHoc')) {
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp)) {
       return;
     }
 

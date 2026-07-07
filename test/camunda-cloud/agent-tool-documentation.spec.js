@@ -21,6 +21,21 @@ function agenticAHSP(taskXml) {
   `);
 }
 
+// Detached tools AHSP marked agentic by the property marker (solution 1),
+// without a zeebe:adHoc element.
+function agenticAHSPViaRole(taskXml) {
+  return createProcess(`
+    <bpmn:adHocSubProcess id="AHSP_1">
+      <bpmn:extensionElements>
+        <zeebe:properties>
+          <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+        </zeebe:properties>
+      </bpmn:extensionElements>
+      ${taskXml}
+    </bpmn:adHocSubProcess>
+  `);
+}
+
 const valid = [
   {
     name: 'tool task with documentation inside agentic AHSP',
@@ -38,6 +53,15 @@ const valid = [
       <bpmn:serviceTask id="Task_1">
         <bpmn:documentation>Fetches data from the external REST API endpoint.</bpmn:documentation>
         <bpmn:documentation>Returns a JSON response for further processing.</bpmn:documentation>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
+    name: 'documented tool inside AHSP marked agentic by role property',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSPViaRole(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:documentation>Searches the web for relevant information based on a user query string.</bpmn:documentation>
       </bpmn:serviceTask>
     `))
   },
@@ -216,6 +240,19 @@ const invalid = [
     config: { version: '8.8' },
     moddleElement: createModdle(agenticAHSP(`
       <bpmn:callActivity id="Task_1" />
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Tool documentation is missing.',
+      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
+      propertiesPanel: { entryIds: [ 'documentation' ] }
+    }
+  },
+  {
+    name: 'undocumented tool inside AHSP marked agentic by role property',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSPViaRole(`
+      <bpmn:serviceTask id="Task_1" />
     `)),
     report: {
       id: 'Task_1',
