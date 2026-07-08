@@ -8,18 +8,20 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 const { annotateRule } = require('../helper');
 
 /**
- * Validates the judgment-call parts of fromAi() calls inside agentic
- * ad-hoc sub-processes: description quality (the LLM uses the description to
- * decide what value to supply, so a missing or weak one degrades accuracy
- * without breaking anything), and the ambiguous conditional-key case. Extra
- * arguments (type, schema, options) are part of the documented signature and
- * are not validated.
+ * Advisory checks on fromAi() calls inside agentic ad-hoc sub-processes,
+ * for cases that have a plausible, not-obviously-wrong reading and might
+ * simply not work as the modeler expects: a description that is missing,
+ * blank, or a non-string-literal expression (e.g. a variable reference
+ * someone might use to build the text dynamically, which the connector does
+ * not evaluate as documentation), and a conditional key where at least one
+ * branch might resolve to a valid path. Extra arguments (type, schema,
+ * options) are part of the documented signature and are not validated.
  *
- * Structural breaks (wrong key type, missing/misplaced toolCall. prefix,
- * multi-segment keys, duplicate keys, function name casing, wrong context)
- * are deterministic silent-failure cases and live in agent-fromai-contract
- * as errors. This rule silently defers to that gating (an out-of-scope call
- * is not double-reported here).
+ * Violations with no legitimate reading (wrong key type, missing/misplaced
+ * toolCall. prefix, multi-segment keys, duplicate keys, function name
+ * casing, a description that is a bare number or null literal, wrong
+ * context) live in agent-fromai-contract as errors. This rule silently
+ * defers to that gating (an out-of-scope call is not double-reported here).
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 
@@ -37,14 +39,16 @@ function validateConditionalKey(arg) {
 
 function validateDescriptionArg(arg) {
   if (arg.type !== 'StringLiteral') {
+
+    // A bare number or null literal has no legitimate reading as a
+    // description; agent-fromai-contract already reports it as an error,
+    // skip it here to avoid double-reporting the same violation.
     if (arg.type === 'NumericLiteral' || arg.type === 'null') {
-      return {
-        message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
-        data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
-      };
+      return null;
     }
+
     return {
-      message: 'fromAi() description should be a string literal — use a quoted string describing what the agent should provide.',
+      message: 'fromAi() description is a FEEL expression, not a string literal. The connector may not evaluate it as documentation text, and the agent might not receive a usable description.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
     };
   }
@@ -149,7 +153,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
     }
   }
 
-  return annotateRule('feel-function-contracts', {
+  return annotateRule('agent-fromai-guidance', {
     check
   });
 });

@@ -1,6 +1,6 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
-const rule = require('../../rules/camunda-cloud/feel-function-contracts');
+const rule = require('../../rules/camunda-cloud/agent-fromai-guidance');
 
 const {
   createModdle,
@@ -132,6 +132,16 @@ const valid = [
     moddleElement: createModdle(ahspInputNoExtension(
       `=fromAi(toolCall.url, ${GOOD_DESC})`
     ))
+  },
+  {
+    name: 'T15 — description is numeric literal — not this rule\'s concern (agent-fromai-contract\'s job, no legitimate reading)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, 42)'))
+  },
+  {
+    name: 'T15b — description is null — not this rule\'s concern (agent-fromai-contract\'s job, no legitimate reading)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, null)'))
   }
 ];
 
@@ -172,7 +182,7 @@ const invalid = [
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, myDescription)')),
     report: {
       id: 'Task_1',
-      message: 'fromAi() description should be a string literal — use a quoted string describing what the agent should provide.',
+      message: 'fromAi() description is a FEEL expression, not a string literal. The connector may not evaluate it as documentation text, and the agent might not receive a usable description.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -224,31 +234,9 @@ const invalid = [
       }
     ]
   },
-  {
-    name: 'T15 — description is numeric literal',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, 42)')),
-    report: {
-      id: 'Task_1',
-      message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
-    }
-  },
-  {
-    name: 'T15b — description is null',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, null)')),
-    report: {
-      id: 'Task_1',
-      message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
-    }
-  }
 ];
 
-RuleTester.verify('feel-function-contracts', rule, {
+RuleTester.verify('agent-fromai-guidance', rule, {
   valid,
   invalid
 });

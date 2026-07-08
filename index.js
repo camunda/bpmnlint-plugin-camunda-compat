@@ -114,7 +114,7 @@ const camundaCloud88Rules = withConfig({
   'agent-tool-documentation': 'warn',
   'agent-tool-output-key': 'warn',
   'agent-fromai-contract': 'error',
-  'feel-function-contracts': 'warn',
+  'agent-fromai-guidance': 'warn',
   'task-listener': 'error'
 }, { version: '8.8' });
 
@@ -174,6 +174,7 @@ const bpmnlintRules = [
 const rules = {
   'ad-hoc-sub-process': './rules/camunda-cloud/ad-hoc-sub-process',
   'agent-fromai-contract': './rules/camunda-cloud/agent-fromai-contract',
+  'agent-fromai-guidance': './rules/camunda-cloud/agent-fromai-guidance',
   'agent-tool-documentation': './rules/camunda-cloud/agent-tool-documentation',
   'agent-tool-output-key': './rules/camunda-cloud/agent-tool-output-key',
   'before-all-execution-listener': './rules/camunda-cloud/before-all-execution-listener',
@@ -193,7 +194,6 @@ const rules = {
   'execution-listener': './rules/camunda-cloud/execution-listener',
   'feel': './rules/camunda-cloud/feel',
   'feel-compatibility': './rules/camunda-cloud/feel-compatibility',
-  'feel-function-contracts': './rules/camunda-cloud/feel-function-contracts',
   'history-time-to-live': './rules/camunda-platform/history-time-to-live',
   'implementation': './rules/camunda-cloud/implementation',
   'inclusive-gateway': './rules/camunda-cloud/inclusive-gateway',

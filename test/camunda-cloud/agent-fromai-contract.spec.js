@@ -96,14 +96,14 @@ const valid = [
     ))
   },
   {
-    name: 'conditional key (if-expression) — not this rule\'s concern (feel-function-contracts warns)',
+    name: 'conditional key (if-expression) — not this rule\'s concern (agent-fromai-guidance warns)',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput(
       `=fromAi(if x then toolCall.a else toolCall.b, ${GOOD_DESC})`
     ))
   },
   {
-    name: 'description quality — not this rule\'s concern (feel-function-contracts warns)',
+    name: 'description missing or non-string (other than number/null) — not this rule\'s concern (agent-fromai-guidance warns)',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url)'))
   }
@@ -225,6 +225,34 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() requires a key argument — a FEEL path like toolCall.url.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+    }
+  },
+
+  // ─── Description argument errors ───────────────────────────────────────────
+  // A bare number or null literal has no legitimate reading as a description,
+  // unlike a missing/blank/other-non-string description (agent-fromai-guidance,
+  // a judgment call). See T15/T15b, moved here from feel-function-contracts.
+
+  {
+    name: 'T15 — description is numeric literal',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, 42)')),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+    }
+  },
+  {
+    name: 'T15b — description is null',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, null)')),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },

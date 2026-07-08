@@ -8,17 +8,20 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 const { annotateRule } = require('../helper');
 
 /**
- * Validates the structural parts of fromAi() calls that the AI Agent
- * connector cannot recover from: the call silently resolves to nothing at
- * runtime, with no error. Covers wrong key type, missing/misplaced
- * toolCall. prefix, multi-segment keys, duplicate keys within one tool,
- * function name casing, and using fromAi() where the connector never
+ * Validates the parts of fromAi() calls that have no legitimate reading: the
+ * call silently resolves to nothing at runtime, with no error, and there is
+ * no plausible intent behind the violation. Covers wrong key type,
+ * missing/misplaced toolCall. prefix, multi-segment keys, duplicate keys
+ * within one tool, function name casing, a description argument that is a
+ * bare number or null literal, and using fromAi() where the connector never
  * populates toolCall (non-entry elements, output mappings, sequence flow
  * conditions, non-agentic or non-AHSP contexts). Reports once per violation.
  *
- * Description quality (missing/blank/wrong-type) and the ambiguous
- * conditional-key case are judgment calls, not deterministic breakage; they
- * stay in feel-function-contracts as warnings.
+ * A description that is missing, blank, or any other non-string-literal
+ * expression (e.g. a variable reference someone might use to build the text
+ * dynamically) is a plausible, not-obviously-wrong attempt, not a mistake
+ * with no legitimate reading — those stay in agent-fromai-guidance as
+ * warnings, along with the ambiguous conditional-key case.
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 
@@ -76,9 +79,25 @@ function validateKeyArg(arg) {
   default:
 
     // Conditional (IfExpression) and other ambiguous shapes are a judgment
-    // call, not a deterministic break; handled by feel-function-contracts.
+    // call, not a deterministic break; handled by agent-fromai-guidance.
     return null;
   }
+}
+
+/**
+ * A bare number or null literal has no legitimate reading as a tool
+ * description; unlike a variable reference or a blank string, there is no
+ * plausible intent behind it. Any other non-string type is a judgment call
+ * and is handled by agent-fromai-guidance instead.
+ */
+function validateDescriptionTypeInvalid(arg) {
+  if (arg.type === 'NumericLiteral' || arg.type === 'null') {
+    return {
+      message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
+    };
+  }
+  return null;
 }
 
 // ─── Rule ─────────────────────────────────────────────────────────────────────
@@ -189,6 +208,13 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       const keyError = validateKeyArg(args[0]);
       if (keyError) {
         errors.push(keyError);
+      }
+
+      if (args.length >= 2) {
+        const descriptionError = validateDescriptionTypeInvalid(args[1]);
+        if (descriptionError) {
+          errors.push(descriptionError);
+        }
       }
     }
 
