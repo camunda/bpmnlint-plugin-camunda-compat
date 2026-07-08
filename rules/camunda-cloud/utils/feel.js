@@ -33,10 +33,8 @@ const isFeelProperty = (node, propertyName, value) => {
 };
 
 // ─── fromAi() lezer helpers ─────────────────────────────────────────────────
-// Shared by agent-fromai-contract and agent-fromai-guidance: the former checks
-// the parts of a fromAi() call with no legitimate reading (error), the latter
-// the parts that are a plausible, not-obviously-wrong attempt (warn), but both
-// first locate the calls and read their positional args.
+// Used by agent-fromai-contract to locate fromAi() calls and read their
+// positional arguments.
 
 const CORRECT_NAME = 'fromAi';
 const NAME_ALIASES = [ 'fromai', 'fromAI' ];

@@ -242,7 +242,8 @@ const invalid = [
   // FromAiTaggedParameterExtractor (camunda/camunda). This includes a bare
   // number, null, a variable reference, or any other expression -- none of
   // them can ever resolve to text there, regardless of process variables.
-  // Missing/blank stay agent-fromai-guidance's concern (a judgment call).
+  // A missing or blank description is valid (the argument is optional) and
+  // is not reported at all.
 
   {
     name: 'T15 — description is numeric literal',
