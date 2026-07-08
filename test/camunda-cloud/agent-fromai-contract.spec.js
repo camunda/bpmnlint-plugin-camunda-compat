@@ -96,13 +96,6 @@ const valid = [
     ))
   },
   {
-    name: 'conditional key (if-expression) — not this rule\'s concern (agent-fromai-guidance warns)',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput(
-      `=fromAi(if x then toolCall.a else toolCall.b, ${GOOD_DESC})`
-    ))
-  },
-  {
     name: 'description omitted — valid, the description argument is optional (neither rule reports)',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url)'))
@@ -214,6 +207,19 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key must be a single name under toolCall. Use toolCall.query instead of toolCall.params.query.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_SEGMENTS_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+    }
+  },
+  {
+    name: 'T10 — key is a conditional expression (if-expression)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      `=fromAi(if x then toolCall.a else toolCall.b, ${GOOD_DESC})`
+    )),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() key must be a FEEL path starting with "toolCall.", not a conditional expression. The connector requires a plain reference regardless of which branch would apply at runtime.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },

@@ -10,25 +10,28 @@ const { annotateRule } = require('../helper');
 /**
  * Validates the parts of fromAi() calls that have no legitimate reading: the
  * call silently resolves to nothing at runtime, with no error, and there is
- * no plausible intent behind the violation. Covers wrong key type,
- * missing/misplaced toolCall. prefix, multi-segment keys, duplicate keys
- * within one tool, function name casing, a description argument that is not
- * a string literal, and using fromAi() where the connector never populates
- * toolCall (non-entry elements, output mappings, sequence flow conditions,
- * non-agentic or non-AHSP contexts). Reports once per violation.
+ * no plausible intent behind the violation. Covers wrong key type (including
+ * a conditional/if-expression key), missing/misplaced toolCall. prefix,
+ * multi-segment keys, duplicate keys within one tool, function name casing,
+ * a description argument that is not a string literal, and using fromAi()
+ * where the connector never populates toolCall (non-entry elements, output
+ * mappings, sequence flow conditions, non-agentic or non-AHSP contexts).
+ * Reports once per violation.
  *
- * The description argument is parsed to a FEEL AST node at tool-schema
- * resolution time, from the deployed process definition, not evaluated
- * against a process instance's variables (confirmed against
- * FromAiTaggedParameterExtractor in camunda/camunda: `asString()` requires a
- * `ConstString` node and throws otherwise). A variable reference or any other
- * non-literal expression can never resolve to text there, so it has no more
- * legitimate reading than a bare number or null literal.
+ * Both the key and description arguments are parsed to FEEL AST nodes at
+ * tool-schema resolution time, from the deployed process definition, not
+ * evaluated against a process instance's variables (confirmed against
+ * FromAiTaggedParameterExtractor in camunda/camunda: `parameterName()`
+ * requires a `Ref` node and `asString()` requires a `ConstString` node,
+ * throwing otherwise; `throwsExceptionWhenValueIsNotAReference` in that
+ * repo's test suite confirms this for every non-reference shape it exercises,
+ * including a nested function call). A conditional key can never resolve
+ * this way, regardless of which branch would be "correct" at runtime, so it
+ * has no more legitimate reading than a bare number or null literal used as
+ * the key or description.
  *
  * A description that is simply absent (no argument, or an empty string) is
  * valid: the fromAi() description is optional, so neither rule reports it.
- * agent-fromai-guidance handles the remaining advisory case (a conditional
- * key).
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 
@@ -83,10 +86,12 @@ function validateKeyArg(arg) {
     }
     return null;
   }
+  case 'IfExpression':
+    return {
+      message: 'fromAi() key must be a FEEL path starting with "toolCall.", not a conditional expression. The connector requires a plain reference regardless of which branch would apply at runtime.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
+    };
   default:
-
-    // Conditional (IfExpression) and other ambiguous shapes are a judgment
-    // call, not a deterministic break; handled by agent-fromai-guidance.
     return null;
   }
 }
