@@ -12,16 +12,23 @@ const { annotateRule } = require('../helper');
  * call silently resolves to nothing at runtime, with no error, and there is
  * no plausible intent behind the violation. Covers wrong key type,
  * missing/misplaced toolCall. prefix, multi-segment keys, duplicate keys
- * within one tool, function name casing, a description argument that is a
- * bare number or null literal, and using fromAi() where the connector never
- * populates toolCall (non-entry elements, output mappings, sequence flow
- * conditions, non-agentic or non-AHSP contexts). Reports once per violation.
+ * within one tool, function name casing, a description argument that is not
+ * a string literal, and using fromAi() where the connector never populates
+ * toolCall (non-entry elements, output mappings, sequence flow conditions,
+ * non-agentic or non-AHSP contexts). Reports once per violation.
  *
- * A description that is missing, blank, or any other non-string-literal
- * expression (e.g. a variable reference someone might use to build the text
- * dynamically) is a plausible, not-obviously-wrong attempt, not a mistake
- * with no legitimate reading — those stay in agent-fromai-guidance as
- * warnings, along with the ambiguous conditional-key case.
+ * The description argument is parsed to a FEEL AST node at tool-schema
+ * resolution time, from the deployed process definition, not evaluated
+ * against a process instance's variables (confirmed against
+ * FromAiTaggedParameterExtractor in camunda/camunda: `asString()` requires a
+ * `ConstString` node and throws otherwise). A variable reference or any other
+ * non-literal expression can never resolve to text there, so it has no more
+ * legitimate reading than a bare number or null literal.
+ *
+ * A description that is missing or blank (a valid but empty string literal)
+ * is a plausible, not-obviously-wrong attempt, not a mistake with no
+ * legitimate reading — those stay in agent-fromai-guidance as warnings, along
+ * with the ambiguous conditional-key case.
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 
@@ -85,13 +92,13 @@ function validateKeyArg(arg) {
 }
 
 /**
- * A bare number or null literal has no legitimate reading as a tool
- * description; unlike a variable reference or a blank string, there is no
- * plausible intent behind it. Any other non-string type is a judgment call
- * and is handled by agent-fromai-guidance instead.
+ * Any non-string-literal description (a bare number, null, a variable
+ * reference, or any other expression) has no legitimate reading: the
+ * connector requires a literal string to build the tool schema and throws
+ * otherwise, so there is no case where a non-literal description works.
  */
 function validateDescriptionTypeInvalid(arg) {
-  if (arg.type === 'NumericLiteral' || arg.type === 'null') {
+  if (arg.type !== 'StringLiteral') {
     return {
       message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },

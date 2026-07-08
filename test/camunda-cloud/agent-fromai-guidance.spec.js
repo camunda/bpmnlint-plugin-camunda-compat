@@ -142,6 +142,11 @@ const valid = [
     name: 'T15b — description is null — not this rule\'s concern (agent-fromai-contract\'s job, no legitimate reading)',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, null)'))
+  },
+  {
+    name: 'T13 — description is a variable reference — not this rule\'s concern (agent-fromai-contract\'s job, no legitimate reading)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, myDescription)'))
   }
 ];
 
@@ -173,17 +178,6 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() description is missing.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
-    }
-  },
-  {
-    name: 'T13 — description is a variable reference',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, myDescription)')),
-    report: {
-      id: 'Task_1',
-      message: 'fromAi() description is a FEEL expression, not a string literal. The connector may not evaluate it as documentation text, and the agent might not receive a usable description.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },

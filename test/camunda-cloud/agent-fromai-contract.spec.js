@@ -103,7 +103,7 @@ const valid = [
     ))
   },
   {
-    name: 'description missing or non-string (other than number/null) — not this rule\'s concern (agent-fromai-guidance warns)',
+    name: 'description missing — not this rule\'s concern (agent-fromai-guidance warns)',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url)'))
   }
@@ -230,9 +230,13 @@ const invalid = [
   },
 
   // ─── Description argument errors ───────────────────────────────────────────
-  // A bare number or null literal has no legitimate reading as a description,
-  // unlike a missing/blank/other-non-string description (agent-fromai-guidance,
-  // a judgment call). See T15/T15b, moved here from feel-function-contracts.
+  // Any non-string-literal description has no legitimate reading: the
+  // connector requires a literal string (ConstString) to build the tool
+  // schema from the deployed process definition and throws otherwise, per
+  // FromAiTaggedParameterExtractor (camunda/camunda). This includes a bare
+  // number, null, a variable reference, or any other expression -- none of
+  // them can ever resolve to text there, regardless of process variables.
+  // Missing/blank stay agent-fromai-guidance's concern (a judgment call).
 
   {
     name: 'T15 — description is numeric literal',
@@ -249,6 +253,17 @@ const invalid = [
     name: 'T15b — description is null',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, null)')),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+    }
+  },
+  {
+    name: 'T13 — description is a variable reference',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, myDescription)')),
     report: {
       id: 'Task_1',
       message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
