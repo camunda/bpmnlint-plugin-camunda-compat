@@ -1,8 +1,7 @@
 const { is } = require('bpmnlint-utils');
 
-const { parser } = require('@bpmn-io/lezer-feel');
-
 const { findExtensionElement, findAncestorAdHocSubProcess, isAgenticAdHocSubProcess } = require('../utils/element');
+const { CORRECT_NAME, NAME_ALIASES, findFunctionInvocations, getPositionalArgs } = require('./utils/feel');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -21,54 +20,6 @@ const { annotateRule } = require('../helper');
  * conditional-key case are judgment calls, not deterministic breakage; they
  * stay in feel-function-contracts as warnings.
  */
-const CORRECT_NAME = 'fromAi';
-const NAME_ALIASES = [ 'fromai', 'fromAI' ];
-
-// ─── Lezer helpers ───────────────────────────────────────────────────────────
-
-function findFunctionInvocations(expr) {
-  const tree = parser.parse(expr);
-  const result = [];
-
-  function visit(node) {
-    if (node.type.name === 'FunctionInvocation') {
-      const nameNode = node.firstChild;
-      if (nameNode && nameNode.type.name === 'VariableName') {
-        const name = expr.slice(nameNode.from, nameNode.to);
-        const nameLower = name.toLowerCase();
-        if (nameLower === CORRECT_NAME.toLowerCase()) {
-          result.push({ name, node });
-        }
-      }
-    }
-    let child = node.firstChild;
-    while (child) {
-      visit(child);
-      child = child.nextSibling;
-    }
-  }
-
-  visit(tree.topNode);
-  return result;
-}
-
-function getPositionalArgs(invocationNode, expr) {
-  let child = invocationNode.firstChild;
-  while (child) {
-    if (child.type.name === 'PositionalParameters') {
-      const args = [];
-      let arg = child.firstChild;
-      while (arg) {
-        args.push({ type: arg.type.name, text: expr.slice(arg.from, arg.to) });
-        arg = arg.nextSibling;
-      }
-      return args;
-    }
-    child = child.nextSibling;
-  }
-  return [];
-}
-
 // ─── Constraint validators ────────────────────────────────────────────────────
 
 function validateKeyArg(arg) {
@@ -132,7 +83,8 @@ function validateKeyArg(arg) {
 
 // ─── Rule ─────────────────────────────────────────────────────────────────────
 
-module.exports = skipInNonExecutableProcess(function() {
+module.exports = skipInNonExecutableProcess(function(config = {}) {
+  const { version } = config;
   function check(node, reporter) {
     if (is(node, 'bpmn:Activity')) {
       checkDuplicateKeys(node, reporter);
@@ -188,7 +140,7 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
-    if (!isAgenticAdHocSubProcess(ahsp)) {
+    if (!isAgenticAdHocSubProcess(ahsp, version)) {
       reportErrors(task, reporter, invocations.map(() => ({
         message: 'This sub-process is not configured as agentic. Add a zeebe:property named "io.camunda.agenticai.role" with value "toolContainer" (or "agent") to enable agent tool contracts.',
         data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
@@ -261,7 +213,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     const ahsp = findAncestorAdHocSubProcess(task);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp)) {
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
       return;
     }
 
@@ -323,7 +275,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     const ahsp = findAncestorAdHocSubProcess(task);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp)) {
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
       return;
     }
 
@@ -358,7 +310,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     const ahsp = findAncestorAdHocSubProcess(node);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp)) {
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
       return;
     }
 

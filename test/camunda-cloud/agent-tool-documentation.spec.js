@@ -66,6 +66,13 @@ const valid = [
     `))
   },
   {
+    name: 'undocumented tool inside zeebe:AdHoc-only AHSP at 8.10 — not agentic without the marker, skipped',
+    config: { version: '8.10' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:serviceTask id="Task_1" />
+    `))
+  },
+  {
     name: 'task inside regular SubProcess (not AHSP) — skipped',
     config: { version: '8.8' },
     moddleElement: createModdle(createProcess(`

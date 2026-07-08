@@ -20,6 +20,8 @@ const { getPath } = require('@bpmn-io/moddle-utils');
 
 const { ERROR_TYPES } = require('./error-types');
 
+const { greaterOrEqual } = require('./version');
+
 module.exports.ERROR_TYPES = ERROR_TYPES;
 
 function getEventDefinition(node) {
@@ -540,12 +542,24 @@ function hasAgenticRoleProperty(node) {
 
 module.exports.hasAgenticRoleProperty = hasAgenticRoleProperty;
 
-// Whether an ad-hoc sub-process should have agent tool contracts linted. The
-// property marker (solution 1) is the going-forward signal; the zeebe:AdHoc arm
-// is the interim gate retained for backward compatibility until templates apply
-// the marker to existing processes. See PR #245 and epic #3719.
-function isAgenticAdHocSubProcess(ahsp) {
-  return !!(findExtensionElement(ahsp, 'zeebe:AdHoc') || hasAgenticRoleProperty(ahsp));
+// Whether an ad-hoc sub-process should have agent tool contracts linted.
+//
+// The `io.camunda.agenticai.role` property marker (solution 1) is the
+// going-forward signal and is honored at every version. The bare `zeebe:AdHoc`
+// arm is an interim gate: `zeebe:AdHoc` is also carried by plain ad-hoc
+// sub-processes that use output collection, so it over-matches. It is kept only
+// before 8.10 for backward compatibility with agentic processes modeled before
+// the marker existed; from 8.10 on, detection relies on the marker alone, giving
+// element templates a migration window to apply it. See PR #245 and epic #3719.
+function isAgenticAdHocSubProcess(ahsp, version) {
+  if (hasAgenticRoleProperty(ahsp)) {
+    return true;
+  }
+
+  // Missing version falls back to the interim gate (honor zeebe:AdHoc).
+  const before810 = !version || !greaterOrEqual(version, '8.10');
+
+  return before810 && !!findExtensionElement(ahsp, 'zeebe:AdHoc');
 }
 
 module.exports.isAgenticAdHocSubProcess = isAgenticAdHocSubProcess;

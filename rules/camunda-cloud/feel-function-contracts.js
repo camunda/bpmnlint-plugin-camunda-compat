@@ -1,8 +1,7 @@
 const { is } = require('bpmnlint-utils');
 
-const { parser } = require('@bpmn-io/lezer-feel');
-
 const { findAncestorAdHocSubProcess, isAgenticAdHocSubProcess } = require('../utils/element');
+const { CORRECT_NAME, NAME_ALIASES, findFunctionInvocations, getPositionalArgs } = require('./utils/feel');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -22,54 +21,6 @@ const { annotateRule } = require('../helper');
  * as errors. This rule silently defers to that gating (an out-of-scope call
  * is not double-reported here).
  */
-const CORRECT_NAME = 'fromAi';
-const NAME_ALIASES = [ 'fromai', 'fromAI' ];
-
-// ─── Lezer helpers ───────────────────────────────────────────────────────────
-
-function findFunctionInvocations(expr) {
-  const tree = parser.parse(expr);
-  const result = [];
-
-  function visit(node) {
-    if (node.type.name === 'FunctionInvocation') {
-      const nameNode = node.firstChild;
-      if (nameNode && nameNode.type.name === 'VariableName') {
-        const name = expr.slice(nameNode.from, nameNode.to);
-        const nameLower = name.toLowerCase();
-        if (nameLower === CORRECT_NAME.toLowerCase()) {
-          result.push({ name, node });
-        }
-      }
-    }
-    let child = node.firstChild;
-    while (child) {
-      visit(child);
-      child = child.nextSibling;
-    }
-  }
-
-  visit(tree.topNode);
-  return result;
-}
-
-function getPositionalArgs(invocationNode, expr) {
-  let child = invocationNode.firstChild;
-  while (child) {
-    if (child.type.name === 'PositionalParameters') {
-      const args = [];
-      let arg = child.firstChild;
-      while (arg) {
-        args.push({ type: arg.type.name, text: expr.slice(arg.from, arg.to) });
-        arg = arg.nextSibling;
-      }
-      return args;
-    }
-    child = child.nextSibling;
-  }
-  return [];
-}
-
 // ─── Constraint validators ────────────────────────────────────────────────────
 
 function validateConditionalKey(arg) {
@@ -113,7 +64,8 @@ function validateDescriptionArg(arg) {
 
 // ─── Rule ─────────────────────────────────────────────────────────────────────
 
-module.exports = skipInNonExecutableProcess(function() {
+module.exports = skipInNonExecutableProcess(function(config = {}) {
+  const { version } = config;
   function check(node, reporter) {
     if (!is(node, 'zeebe:Input')) {
       return;
@@ -137,7 +89,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     const ahsp = findAncestorAdHocSubProcess(task);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp)) {
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
 
       // Wrong context is agent-fromai-contract's concern; don't double-report.
       return;

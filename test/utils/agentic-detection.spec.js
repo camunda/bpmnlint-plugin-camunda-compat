@@ -84,25 +84,55 @@ describe('utils/element - agentic detection', function() {
 
   describe('#isAgenticAdHocSubProcess', function() {
 
-    it('is true via zeebe:AdHoc (interim gate)', async function() {
-      expect(isAgenticAdHocSubProcess(await getAHSP('<zeebe:adHoc />'))).to.be.true;
+    describe('property marker (all versions)', function() {
+
+      it('is true via role=agent at 8.8', async function() {
+        expect(isAgenticAdHocSubProcess(await getAHSP(ROLE_AGENT), '8.8')).to.be.true;
+      });
+
+
+      it('is true via role=agent at 8.10', async function() {
+        expect(isAgenticAdHocSubProcess(await getAHSP(ROLE_AGENT), '8.10')).to.be.true;
+      });
+
+
+      it('is true via role=toolContainer at 8.10', async function() {
+        expect(isAgenticAdHocSubProcess(await getAHSP(ROLE_TOOL_CONTAINER), '8.10')).to.be.true;
+      });
+
     });
 
 
-    it('is true via role=agent property', async function() {
-      expect(isAgenticAdHocSubProcess(await getAHSP(ROLE_AGENT))).to.be.true;
-    });
+    describe('interim zeebe:AdHoc gate (version-forked)', function() {
+
+      it('is true via zeebe:AdHoc at 8.8', async function() {
+        expect(isAgenticAdHocSubProcess(await getAHSP('<zeebe:adHoc />'), '8.8')).to.be.true;
+      });
 
 
-    it('is true via role=toolContainer property', async function() {
-      expect(isAgenticAdHocSubProcess(await getAHSP(ROLE_TOOL_CONTAINER))).to.be.true;
+      it('is true via zeebe:AdHoc at 8.9', async function() {
+        expect(isAgenticAdHocSubProcess(await getAHSP('<zeebe:adHoc />'), '8.9')).to.be.true;
+      });
+
+
+      it('is FALSE via zeebe:AdHoc at 8.10 (marker required)', async function() {
+        expect(isAgenticAdHocSubProcess(await getAHSP('<zeebe:adHoc />'), '8.10')).to.be.false;
+      });
+
+
+      it('still true at 8.10 when the role marker is also present', async function() {
+        const ahsp = await getAHSP(`<zeebe:adHoc />${ROLE_TOOL_CONTAINER}`);
+
+        expect(isAgenticAdHocSubProcess(ahsp, '8.10')).to.be.true;
+      });
+
     });
 
 
     it('is false when neither marker is present', async function() {
       const { root } = await createModdle(createProcess('<bpmn:adHocSubProcess id="AHSP_1" />'));
 
-      expect(isAgenticAdHocSubProcess(root.rootElements[0].flowElements[0])).to.be.false;
+      expect(isAgenticAdHocSubProcess(root.rootElements[0].flowElements[0], '8.8')).to.be.false;
     });
 
   });

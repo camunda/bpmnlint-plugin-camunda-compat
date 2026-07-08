@@ -19,7 +19,8 @@ const { annotateRule } = require('../helper');
  * signal and may retry or hallucinate an outcome). Results written from
  * arbitrary FEEL expressions are not statically detectable.
  */
-module.exports = skipInNonExecutableProcess(function() {
+module.exports = skipInNonExecutableProcess(function(config = {}) {
+  const { version } = config;
   function check(node, reporter) {
     if (!is(node, 'bpmn:Activity')) {
       return;
@@ -37,7 +38,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     const ahsp = findAncestorAdHocSubProcess(node);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp)) {
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
       return;
     }
 

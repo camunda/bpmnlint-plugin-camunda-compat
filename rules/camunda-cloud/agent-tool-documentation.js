@@ -13,7 +13,8 @@ const { annotateRule } = require('../helper');
  * sequence flows, not an event sub-process) inside an agentic ad-hoc
  * sub-process has no documentation text.
  */
-module.exports = skipInNonExecutableProcess(function() {
+module.exports = skipInNonExecutableProcess(function(config = {}) {
+  const { version } = config;
   function check(node, reporter) {
     if (!is(node, 'bpmn:Activity')) {
       return;
@@ -29,7 +30,7 @@ module.exports = skipInNonExecutableProcess(function() {
     }
 
     const ahsp = findAncestorAdHocSubProcess(node);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp)) {
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
       return;
     }
 
