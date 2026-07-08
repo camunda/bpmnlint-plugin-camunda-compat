@@ -8,18 +8,18 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 const { annotateRule } = require('../helper');
 
 /**
- * Advisory checks on fromAi() calls inside agentic ad-hoc sub-processes, for
- * cases that have a plausible, not-obviously-wrong reading and might simply
- * not work as the modeler expects: a description that is missing or blank
- * (a valid but empty string literal), and a conditional key where at least
+ * Advisory checks on fromAi() calls inside agentic ad-hoc sub-processes for
+ * valid but not-recommended patterns: a tool input with no description (the
+ * argument omitted, or an empty string), and a conditional key where at least
  * one branch might resolve to a valid path. Extra arguments (type, schema,
  * options) are part of the documented signature and are not validated.
  *
- * Violations with no legitimate reading (wrong key type, missing/misplaced
- * toolCall. prefix, multi-segment keys, duplicate keys, function name
- * casing, a description that is not a string literal at all, wrong context)
- * live in agent-fromai-contract as errors. This rule silently defers to that
- * gating (an out-of-scope call is not double-reported here).
+ * These do not break the tool, so they are Warnings, not Errors. Violations
+ * with no legitimate reading (wrong key type, missing/misplaced toolCall.
+ * prefix, multi-segment keys, duplicate keys, function name casing, a
+ * description that is not a string literal at all, wrong context) live in
+ * agent-fromai-contract as errors. This rule silently defers to that gating
+ * (an out-of-scope call is not double-reported here).
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 
@@ -35,25 +35,26 @@ function validateConditionalKey(arg) {
   };
 }
 
-function validateDescriptionArg(arg) {
-
-  // Any non-string-literal description has no legitimate reading and is
-  // agent-fromai-contract's concern; skip it here to avoid double-reporting.
-  if (arg.type !== 'StringLiteral') {
+// A tool input with no description content is a valid but not-recommended
+// pattern: the LLM has only the parameter name to work from. Missing (no
+// second argument) and blank (an empty string literal) are the same case. A
+// description that is a non-string-literal expression has no legitimate reading
+// at all and is agent-fromai-contract's error, so it is skipped here.
+function validateDescription(args) {
+  if (args.length >= 2 && args[1].type !== 'StringLiteral') {
     return null;
   }
 
-  // Strip the surrounding quotes to inspect the content.
-  const content = arg.text.slice(1, -1);
+  const hasContent = args.length >= 2 && args[1].text.slice(1, -1).trim();
 
-  if (!content.trim()) {
-    return {
-      message: 'fromAi() description is blank.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TOO_WEAK },
-    };
+  if (hasContent) {
+    return null;
   }
 
-  return null;
+  return {
+    message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
+    data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
+  };
 }
 
 // ─── Rule ─────────────────────────────────────────────────────────────────────
@@ -125,16 +126,9 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
         errors.push(conditionalError);
       }
 
-      if (args.length < 2) {
-        errors.push({
-          message: 'fromAi() description is missing.',
-          data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
-        });
-      } else {
-        const descError = validateDescriptionArg(args[1]);
-        if (descError) {
-          errors.push(descError);
-        }
+      const descriptionError = validateDescription(args);
+      if (descriptionError) {
+        errors.push(descriptionError);
       }
     }
 

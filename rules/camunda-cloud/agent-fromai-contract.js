@@ -25,10 +25,10 @@ const { annotateRule } = require('../helper');
  * non-literal expression can never resolve to text there, so it has no more
  * legitimate reading than a bare number or null literal.
  *
- * A description that is missing or blank (a valid but empty string literal)
- * is a plausible, not-obviously-wrong attempt, not a mistake with no
- * legitimate reading — those stay in agent-fromai-guidance as warnings, along
- * with the ambiguous conditional-key case.
+ * A description that is simply absent (no argument, or an empty string) is
+ * valid but not recommended, not a mistake with no legitimate reading; that
+ * stays in agent-fromai-guidance as a warning, along with the ambiguous
+ * conditional-key case.
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 

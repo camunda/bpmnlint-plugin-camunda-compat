@@ -33,7 +33,6 @@ module.exports.ERROR_TYPES = Object.freeze({
   AGENT_FEEL_KEY_CONDITIONAL: 'camunda.agentFeelKeyConditional',
   AGENT_FEEL_DESCRIPTION_MISSING: 'camunda.agentFeelDescriptionMissing',
   AGENT_FEEL_DESCRIPTION_TYPE_INVALID: 'camunda.agentFeelDescriptionTypeInvalid',
-  AGENT_FEEL_DESCRIPTION_TOO_WEAK: 'camunda.agentFeelDescriptionTooWeak',
   AGENT_FEEL_WRONG_CONTEXT: 'camunda.agentFeelWrongContext',
   AGENT_FEEL_KEY_SEGMENTS_INVALID: 'camunda.agentFeelKeySegmentsInvalid',
   AGENT_FEEL_KEY_DUPLICATE: 'camunda.agentFeelKeyDuplicate',

@@ -176,7 +176,7 @@ const invalid = [
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url)')),
     report: {
       id: 'Task_1',
-      message: 'fromAi() description is missing.',
+      message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -189,8 +189,8 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'fromAi() description is blank.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TOO_WEAK },
+      message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
   },
@@ -202,7 +202,7 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'fromAi() description is missing.',
+      message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -216,13 +216,13 @@ const invalid = [
     report: [
       {
         id: 'Task_1',
-        message: 'fromAi() description is missing.',
+        message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
         data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
         propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
       },
       {
         id: 'Task_1',
-        message: 'fromAi() description is missing.',
+        message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
         data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
         propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
       }
