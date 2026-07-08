@@ -26,9 +26,9 @@ const { annotateRule } = require('../helper');
  * legitimate reading than a bare number or null literal.
  *
  * A description that is simply absent (no argument, or an empty string) is
- * valid but not recommended, not a mistake with no legitimate reading; that
- * stays in agent-fromai-guidance as a warning, along with the ambiguous
- * conditional-key case.
+ * valid: the fromAi() description is optional, so neither rule reports it.
+ * agent-fromai-guidance handles the remaining advisory case (a conditional
+ * key).
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 

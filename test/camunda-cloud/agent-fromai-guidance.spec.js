@@ -147,6 +147,16 @@ const valid = [
     name: 'T13 — description is a variable reference — not this rule\'s concern (agent-fromai-contract\'s job, no legitimate reading)',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, myDescription)'))
+  },
+  {
+    name: 'description omitted — valid, the description argument is optional',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url)'))
+  },
+  {
+    name: 'description is an empty string — valid, the description argument is optional',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, &quot;&quot;)'))
   }
 ];
 
@@ -166,68 +176,7 @@ const invalid = [
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_CONDITIONAL },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
-  },
-
-  // ─── Description argument errors ──────────────────────────────────────────
-
-  {
-    name: 'T12 — description argument missing',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput('=fromAi(toolCall.url)')),
-    report: {
-      id: 'Task_1',
-      message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
-    }
-  },
-  {
-    name: 'T14a — description is blank',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput(
-      '=fromAi(toolCall.url, &quot;&quot;)'
-    )),
-    report: {
-      id: 'Task_1',
-      message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
-    }
-  },
-  {
-    name: 'fromAi nested in a context object — missing description still found',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput(
-      '={ q: fromAi(toolCall.query) }'
-    )),
-    report: {
-      id: 'Task_1',
-      message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
-    }
-  },
-  {
-    name: 'two fromAi invocations in one expression — one report per invocation',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticInput(
-      '={ a: fromAi(toolCall.a), b: fromAi(toolCall.b) }'
-    )),
-    report: [
-      {
-        id: 'Task_1',
-        message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
-        data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
-        propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
-      },
-      {
-        id: 'Task_1',
-        message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
-        data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
-        propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
-      }
-    ]
-  },
+  }
 ];
 
 RuleTester.verify('agent-fromai-guidance', rule, {

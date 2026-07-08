@@ -8,18 +8,19 @@ const { skipInNonExecutableProcess } = require('../utils/rule');
 const { annotateRule } = require('../helper');
 
 /**
- * Advisory checks on fromAi() calls inside agentic ad-hoc sub-processes for
- * valid but not-recommended patterns: a tool input with no description (the
- * argument omitted, or an empty string), and a conditional key where at least
- * one branch might resolve to a valid path. Extra arguments (type, schema,
- * options) are part of the documented signature and are not validated.
+ * Advisory check on fromAi() calls inside agentic ad-hoc sub-processes: a
+ * conditional key where at least one branch might resolve to a valid path.
+ * The description argument is optional per the fromAi() signature, so an
+ * omitted or empty description is valid and is not reported here; a tool's
+ * own missing documentation is a separate concern owned by
+ * agent-tool-documentation.
  *
- * These do not break the tool, so they are Warnings, not Errors. Violations
- * with no legitimate reading (wrong key type, missing/misplaced toolCall.
- * prefix, multi-segment keys, duplicate keys, function name casing, a
- * description that is not a string literal at all, wrong context) live in
- * agent-fromai-contract as errors. This rule silently defers to that gating
- * (an out-of-scope call is not double-reported here).
+ * The conditional-key case does not deterministically break, so it is a
+ * Warning. Violations with no legitimate reading (wrong key type,
+ * missing/misplaced toolCall. prefix, multi-segment keys, duplicate keys,
+ * function name casing, a description that is not a string literal, wrong
+ * context) live in agent-fromai-contract as errors. This rule silently defers
+ * to that gating (an out-of-scope call is not double-reported here).
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 
@@ -32,28 +33,6 @@ function validateConditionalKey(arg) {
   return {
     message: 'fromAi() key uses a conditional expression. Ensure at least one branch resolves to a toolCall.* path.',
     data: { type: ERROR_TYPES.AGENT_FEEL_KEY_CONDITIONAL },
-  };
-}
-
-// A tool input with no description content is a valid but not-recommended
-// pattern: the LLM has only the parameter name to work from. Missing (no
-// second argument) and blank (an empty string literal) are the same case. A
-// description that is a non-string-literal expression has no legitimate reading
-// at all and is agent-fromai-contract's error, so it is skipped here.
-function validateDescription(args) {
-  if (args.length >= 2 && args[1].type !== 'StringLiteral') {
-    return null;
-  }
-
-  const hasContent = args.length >= 2 && args[1].text.slice(1, -1).trim();
-
-  if (hasContent) {
-    return null;
-  }
-
-  return {
-    message: 'fromAi() has no description. Add a quoted string describing what the agent should provide.',
-    data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_MISSING },
   };
 }
 
@@ -124,11 +103,6 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       const conditionalError = validateConditionalKey(args[0]);
       if (conditionalError) {
         errors.push(conditionalError);
-      }
-
-      const descriptionError = validateDescription(args);
-      if (descriptionError) {
-        errors.push(descriptionError);
       }
     }
 

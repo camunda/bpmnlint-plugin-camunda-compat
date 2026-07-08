@@ -103,7 +103,7 @@ const valid = [
     ))
   },
   {
-    name: 'description missing — not this rule\'s concern (agent-fromai-guidance warns)',
+    name: 'description omitted — valid, the description argument is optional (neither rule reports)',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url)'))
   }
