@@ -173,7 +173,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
 
     if (!isAgenticAdHocSubProcess(ahsp, version)) {
       reportErrors(task, reporter, invocations.map(() => ({
-        message: 'This sub-process is not configured as agentic. Add a zeebe:property named "io.camunda.agenticai.role" with value "toolContainer" (or "agent") to enable agent tool contracts.',
+        message: 'This sub-process is not configured as agentic. Add a zeebe:property named "io.camunda.agenticai.role" with value "toolContainer" to enable agent tool contracts.',
         data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
         propertiesPanel,
       })));

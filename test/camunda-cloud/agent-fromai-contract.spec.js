@@ -15,7 +15,9 @@ function agenticInput(source) {
   return createProcess(`
     <bpmn:adHocSubProcess id="AHSP_1">
       <bpmn:extensionElements>
-        <zeebe:adHoc />
+        <zeebe:properties>
+          <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+        </zeebe:properties>
       </bpmn:extensionElements>
       <bpmn:serviceTask id="Task_1">
         <bpmn:extensionElements>
@@ -287,7 +289,9 @@ const invalid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
-          <zeebe:adHoc />
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
           <bpmn:extensionElements>
@@ -339,14 +343,14 @@ const invalid = [
     }
   },
   {
-    name: 'T18 — fromAi inside AHSP without zeebe:AdHoc (not agentic)',
+    name: 'T18 — fromAi inside AHSP with no agentic marker (not agentic)',
     config: { version: '8.8' },
     moddleElement: createModdle(ahspInputNoExtension(
       `=fromAi(toolCall.url, ${GOOD_DESC})`
     )),
     report: {
       id: 'Task_1',
-      message: 'This sub-process is not configured as agentic. Add a zeebe:property named "io.camunda.agenticai.role" with value "toolContainer" (or "agent") to enable agent tool contracts.',
+      message: 'This sub-process is not configured as agentic. Add a zeebe:property named "io.camunda.agenticai.role" with value "toolContainer" to enable agent tool contracts.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -357,7 +361,9 @@ const invalid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
-          <zeebe:adHoc />
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
           <bpmn:outgoing>Flow_1</bpmn:outgoing>
@@ -391,7 +397,9 @@ const invalid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
-          <zeebe:adHoc />
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
           <bpmn:extensionElements>
@@ -415,7 +423,9 @@ const invalid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
-          <zeebe:adHoc />
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
           <bpmn:outgoing>Flow_1</bpmn:outgoing>

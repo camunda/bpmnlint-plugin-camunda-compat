@@ -520,14 +520,17 @@ module.exports.findAncestorAdHocSubProcess = findAncestorAdHocSubProcess;
 
 // Property-based agentic detection (solution 1). The AI Agent element templates
 // (and external-agent templates, e.g. Bedrock, Hugging Face) apply a generic
-// zeebe:property that marks an element's agentic role. This is read-only and has
-// no execution effect; it parses on the current moddle with no schema change.
-// `agent` marks an embedded AI Agent ad-hoc sub-process; `toolContainer` marks a
-// detached tools ad-hoc sub-process. Either makes the AHSP a tool container to lint.
+// zeebe:property to mark a detached tools ad-hoc sub-process as a tool
+// container to lint. This is read-only and has no execution effect; it parses
+// on the current moddle with no schema change. `toolContainer` is the only
+// role value this plugin's rules consult: every rule here is about tool
+// configuration (fromAi(), toolCallResult, tool documentation), which only
+// ever lives in a tool-container AHSP. `agent` is a reserved role value for
+// other, non-linting uses and is not checked here.
 const AGENTIC_ROLE_PROPERTY = 'io.camunda.agenticai.role';
-const AGENTIC_ROLES = [ 'agent', 'toolContainer' ];
+const TOOL_CONTAINER_ROLE = 'toolContainer';
 
-function hasAgenticRoleProperty(node) {
+function hasToolContainerRoleProperty(node) {
   const properties = findExtensionElement(node, 'zeebe:Properties');
 
   if (!properties) {
@@ -536,30 +539,34 @@ function hasAgenticRoleProperty(node) {
 
   return (properties.get('properties') || []).some(
     property => property.get('name') === AGENTIC_ROLE_PROPERTY
-      && AGENTIC_ROLES.includes(property.get('value'))
+      && property.get('value') === TOOL_CONTAINER_ROLE
   );
 }
 
-module.exports.hasAgenticRoleProperty = hasAgenticRoleProperty;
+module.exports.hasToolContainerRoleProperty = hasToolContainerRoleProperty;
 
 // Whether an ad-hoc sub-process should have agent tool contracts linted.
 //
-// The `io.camunda.agenticai.role` property marker (solution 1) is the
-// going-forward signal and is honored at every version. The bare `zeebe:AdHoc`
-// arm is an interim gate: `zeebe:AdHoc` is also carried by plain ad-hoc
-// sub-processes that use output collection, so it over-matches. It is kept only
-// before 8.10 for backward compatibility with agentic processes modeled before
-// the marker existed; from 8.10 on, detection relies on the marker alone, giving
-// element templates a migration window to apply it. See PR #245 and epic #3719.
+// The `io.camunda.agenticai.role=toolContainer` property marker is honored at
+// every version. From 8.10, a `zeebe:agentDefinition` marker on the AHSP
+// (Camunda-provided template) is an additional signal, tracked in
+// connectors#7842; that marker doesn't exist in this plugin's pinned
+// zeebe-bpmn-moddle yet, so the check below is inert until it ships.
+//
+// The interim `zeebe:AdHoc` fallback is dropped (Slack decision, 2026-07-09):
+// it over-matched plain output-collection ad-hoc sub-processes, with no
+// reliable way to tell them apart from agentic ones. Element templates are
+// expected to write the property marker directly instead. See PR #245 and
+// epic #3719 for the follow-up to backport the marker into templates that
+// don't yet write it.
 function isAgenticAdHocSubProcess(ahsp, version) {
-  if (hasAgenticRoleProperty(ahsp)) {
+  if (hasToolContainerRoleProperty(ahsp)) {
     return true;
   }
 
-  // Missing version falls back to the interim gate (honor zeebe:AdHoc).
-  const before810 = !version || !greaterOrEqual(version, '8.10');
-
-  return before810 && !!findExtensionElement(ahsp, 'zeebe:AdHoc');
+  return !!version
+    && greaterOrEqual(version, '8.10')
+    && !!findExtensionElement(ahsp, 'zeebe:AgentDefinition');
 }
 
 module.exports.isAgenticAdHocSubProcess = isAgenticAdHocSubProcess;

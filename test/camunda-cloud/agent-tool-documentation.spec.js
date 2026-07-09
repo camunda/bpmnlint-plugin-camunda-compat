@@ -14,19 +14,6 @@ function agenticAHSP(taskXml) {
   return createProcess(`
     <bpmn:adHocSubProcess id="AHSP_1">
       <bpmn:extensionElements>
-        <zeebe:adHoc />
-      </bpmn:extensionElements>
-      ${taskXml}
-    </bpmn:adHocSubProcess>
-  `);
-}
-
-// Detached tools AHSP marked agentic by the property marker (solution 1),
-// without a zeebe:adHoc element.
-function agenticAHSPViaRole(taskXml) {
-  return createProcess(`
-    <bpmn:adHocSubProcess id="AHSP_1">
-      <bpmn:extensionElements>
         <zeebe:properties>
           <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
         </zeebe:properties>
@@ -57,19 +44,15 @@ const valid = [
     `))
   },
   {
-    name: 'documented tool inside AHSP marked agentic by role property',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticAHSPViaRole(`
-      <bpmn:serviceTask id="Task_1">
-        <bpmn:documentation>Searches the web for relevant information based on a user query string.</bpmn:documentation>
-      </bpmn:serviceTask>
-    `))
-  },
-  {
-    name: 'undocumented tool inside zeebe:AdHoc-only AHSP at 8.10 — not agentic without the marker, skipped',
+    name: 'undocumented tool inside a bare zeebe:AdHoc AHSP — not agentic, skipped (property marker required, at every version)',
     config: { version: '8.10' },
-    moddleElement: createModdle(agenticAHSP(`
-      <bpmn:serviceTask id="Task_1" />
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:adHoc />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1" />
+      </bpmn:adHocSubProcess>
     `))
   },
   {
@@ -82,7 +65,7 @@ const valid = [
     `))
   },
   {
-    name: 'task inside AHSP without zeebe:AdHoc — not agentic, skipped',
+    name: 'task inside AHSP with no agentic marker — not agentic, skipped',
     config: { version: '8.8' },
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
@@ -96,7 +79,9 @@ const valid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
-          <zeebe:adHoc />
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
           <bpmn:documentation>Searches the web for information.</bpmn:documentation>
@@ -110,7 +95,9 @@ const valid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
-          <zeebe:adHoc />
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
           <bpmn:documentation>Entry point tool.</bpmn:documentation>
@@ -128,7 +115,9 @@ const valid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
-          <zeebe:adHoc />
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:exclusiveGateway id="Gateway_1" />
       </bpmn:adHocSubProcess>
@@ -140,7 +129,9 @@ const valid = [
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
-          <zeebe:adHoc />
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:subProcess id="EventSub_1" triggeredByEvent="true" />
       </bpmn:adHocSubProcess>
@@ -162,7 +153,9 @@ const valid = [
       <bpmn:process id="Process_1" isExecutable="false">
         <bpmn:adHocSubProcess id="AHSP_1">
           <bpmn:extensionElements>
-            <zeebe:adHoc />
+            <zeebe:properties>
+              <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+            </zeebe:properties>
           </bpmn:extensionElements>
           <bpmn:serviceTask id="Task_1" />
         </bpmn:adHocSubProcess>
@@ -247,19 +240,6 @@ const invalid = [
     config: { version: '8.8' },
     moddleElement: createModdle(agenticAHSP(`
       <bpmn:callActivity id="Task_1" />
-    `)),
-    report: {
-      id: 'Task_1',
-      message: 'Tool documentation is missing.',
-      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
-      propertiesPanel: { entryIds: [ 'documentation' ] }
-    }
-  },
-  {
-    name: 'undocumented tool inside AHSP marked agentic by role property',
-    config: { version: '8.8' },
-    moddleElement: createModdle(agenticAHSPViaRole(`
-      <bpmn:serviceTask id="Task_1" />
     `)),
     report: {
       id: 'Task_1',
