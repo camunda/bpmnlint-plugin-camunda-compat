@@ -100,6 +100,15 @@ function collectResultChannels(entry) {
       }
     }
 
+    // Boundary events can define alternate tool paths that still contribute outputs.
+    const parent = element.$parent;
+    const siblings = parent && parent.get && parent.get('flowElements');
+    for (const boundary of siblings || []) {
+      if (is(boundary, 'bpmn:BoundaryEvent') && boundary.get('attachedToRef') === element) {
+        queue.push(boundary);
+      }
+    }
+
     if (is(element, 'bpmn:SubProcess')) {
       for (const child of element.get('flowElements') || []) {
         if (is(child, 'bpmn:FlowNode')) {

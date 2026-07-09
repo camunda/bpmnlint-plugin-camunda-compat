@@ -92,8 +92,10 @@ function validateKeyArg(arg) {
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
     };
   default:
-    return null;
-  }
+    return {
+      message: `fromAi() key must be a FEEL path starting with "toolCall.", not a ${arg.type}.`,
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
+    };
 }
 
 /**
