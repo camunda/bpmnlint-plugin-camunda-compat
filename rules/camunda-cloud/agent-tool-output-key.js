@@ -1,7 +1,7 @@
 const { is } = require('bpmnlint-utils');
 
 const { findAncestorAdHocSubProcess, isAgenticAdHocSubProcess } = require('../utils/element');
-const { reportErrors } = require('../utils/reporter');
+const { reportErrors, getName } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
 const { annotateRule } = require('../helper');
@@ -13,11 +13,13 @@ const { annotateRule } = require('../helper');
  * or a part like `toolCallResult.statusCode`), a script task or called decision
  * `resultVariable`, or a connector `resultVariable`/`resultExpression` header.
  *
- * The rule warns once per tool, on the entry activity: when the tool flow
- * writes result-shaped variables but none of them is `toolCallResult`
- * (misdirection), or when it writes none at all (the agent gets no completion
- * signal and may retry or hallucinate an outcome). Results written from
- * arbitrary FEEL expressions are not statically detectable.
+ * The rule warns once per tool: on the element that actually miswrote a
+ * result-shaped variable, when the tool flow writes some but none of them is
+ * `toolCallResult` (misdirection or wrong casing); on the entry activity when
+ * the flow writes none at all, since there's no single offending element to
+ * point to (the agent gets no completion signal and may retry or hallucinate
+ * an outcome). Results written from arbitrary FEEL expressions are not
+ * statically detectable.
  */
 module.exports = skipInNonExecutableProcess(function(config = {}) {
   const { version } = config;
@@ -55,9 +57,43 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
 
     const hasResult = channels.some(isToolCallResultChannel);
     if (!hasResult) {
-      reportErrors(node, reporter, {
+      const casingMismatch = channels.find(isToolCallResultCasingMismatch);
+
+      if (casingMismatch) {
+        reportErrors(casingMismatch.element, reporter, {
+          message: `Wrong casing "${getCasingMismatchText(casingMismatch)}": use toolCallResult (case-sensitive).`,
+          data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+          propertiesPanel: { entryIds: [ 'outputs' ] },
+        });
+        return;
+      }
+
+      // Every channel here is a miswrite (none matched toolCallResult), so
+      // the first one is a real misdirected write; report on the element
+      // that actually wrote it, not the tool's entry.
+      const misdirected = channels[ 0 ];
+      reportErrors(misdirected.element, reporter, {
         message: '"toolCallResult" output is not mapped.',
         data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+        propertiesPanel: { entryIds: [ 'outputs' ] },
+      });
+      return;
+    }
+
+    // toolCallResult is set somewhere, but assigning it more than once
+    // overwrites the earlier value. Part contributions (toolCallResult.part)
+    // and the context put(toolCallResult, ...) accumulation pattern are
+    // exempt; every other full write after the first one is flagged.
+    const fullWrites = channels.filter(isToolCallResultChannel).filter(isFullOverwriteChannel);
+
+    for (let i = 1; i < fullWrites.length; i++) {
+      const overwriter = fullWrites[ i ];
+      const overwritten = fullWrites[ i - 1 ];
+      const overwrittenLabel = getName(overwritten.element) || overwritten.element.get('id');
+
+      reportErrors(overwriter.element, reporter, {
+        message: `This overwrites the "toolCallResult" value set on "${overwrittenLabel}".`,
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
         propertiesPanel: { entryIds: [ 'outputs' ] },
       });
     }
@@ -75,7 +111,8 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
  *
  * @param {ModdleElement} entry
  *
- * @returns {Object[]} channels as { kind, value }
+ * @returns {Object[]} channels as { kind, value, element }, element being
+ * whichever element in the flow actually wrote this channel
  */
 function collectResultChannels(entry) {
   const channels = [],
@@ -130,14 +167,14 @@ function collectElementChannels(element, channels) {
   for (const value of extensionElements.get('values')) {
     if (is(value, 'zeebe:IoMapping')) {
       for (const output of value.get('outputParameters') || []) {
-        channels.push({ kind: 'output', value: output.get('target') || '' });
+        channels.push({ kind: 'output', value: output.get('target') || '', source: output.get('source'), element });
       }
     }
 
     if (is(value, 'zeebe:Script') || is(value, 'zeebe:CalledDecision')) {
       const resultVariable = value.get('resultVariable');
       if (resultVariable) {
-        channels.push({ kind: 'resultVariable', value: resultVariable });
+        channels.push({ kind: 'resultVariable', value: resultVariable, element });
       }
     }
 
@@ -145,10 +182,10 @@ function collectElementChannels(element, channels) {
       for (const header of value.get('values') || []) {
         const key = header.get('key');
         if (key === 'resultVariable') {
-          channels.push({ kind: 'resultVariable', value: header.get('value') || '' });
+          channels.push({ kind: 'resultVariable', value: header.get('value') || '', element });
         }
         if (key === 'resultExpression') {
-          channels.push({ kind: 'resultExpression', value: header.get('value') || '' });
+          channels.push({ kind: 'resultExpression', value: header.get('value') || '', element });
         }
       }
     }
@@ -161,4 +198,52 @@ function isToolCallResultChannel({ kind, value }) {
   }
 
   return value === 'toolCallResult' || value.startsWith('toolCallResult.');
+}
+
+// A same-letters, wrong-case variant of toolCallResult (e.g. toolcallresult,
+// TOOLCALLRESULT), not any other typo. Mirrors agent-fromai-contract's
+// case-insensitive name matching for fromAi().
+function isToolCallResultCasingMismatch({ kind, value }) {
+  if (kind === 'resultExpression') {
+    return /\btoolcallresult\b/i.test(value) && !/\btoolCallResult\b/.test(value);
+  }
+
+  const lower = value.toLowerCase();
+  const isCasingVariant = lower === 'toolcallresult' || lower.startsWith('toolcallresult.');
+
+  return isCasingVariant && !isToolCallResultChannel({ kind, value });
+}
+
+// The mismatched word itself, not the whole expression, for resultExpression
+// channels (a connector header value is a full FEEL expression, e.g.
+// `={toolcallresult: response.body}`).
+function getCasingMismatchText({ kind, value }) {
+  if (kind === 'resultExpression') {
+    const match = value.match(/\btoolcallresult\b/i);
+    return match ? match[0] : value;
+  }
+
+  return value;
+}
+
+// The documented safe-accumulation pattern for combining several elements'
+// contributions into one toolCallResult: `context put(toolCallResult, ...)`.
+// Only meaningful for output mappings; connectors and script/decision result
+// variables can't read the prior value, so they can never accumulate this way.
+const CONTEXT_PUT_TOOL_CALL_RESULT = /^=?\s*context\s+put\s*\(\s*toolCallResult\s*,/;
+
+// Whether this channel fully replaces toolCallResult, as opposed to
+// contributing one field (toolCallResult.part) or safely appending to the
+// existing value via context put(). Only meaningful for channels that
+// already passed isToolCallResultChannel.
+function isFullOverwriteChannel({ kind, value, source }) {
+  if (kind === 'resultExpression' || kind === 'resultVariable') {
+    return true;
+  }
+
+  if (value !== 'toolCallResult') {
+    return false;
+  }
+
+  return !CONTEXT_PUT_TOOL_CALL_RESULT.test(source || '');
 }

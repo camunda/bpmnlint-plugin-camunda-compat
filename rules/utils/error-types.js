@@ -36,6 +36,8 @@ module.exports.ERROR_TYPES = Object.freeze({
   AGENT_FEEL_KEY_DUPLICATE: 'camunda.agentFeelKeyDuplicate',
   AGENT_FEEL_NON_ENTRY_ELEMENT: 'camunda.agentFeelNonEntryElement',
   AGENT_TOOL_OUTPUT_KEY_INVALID: 'camunda.agentToolOutputKeyInvalid',
+  AGENT_TOOL_OUTPUT_KEY_CASING_INVALID: 'camunda.agentToolOutputKeyCasingInvalid',
+  AGENT_TOOL_OUTPUT_KEY_OVERWRITE: 'camunda.agentToolOutputKeyOverwrite',
   AGENT_TOOL_RESULT_MISSING: 'camunda.agentToolResultMissing',
   AGENT_TOOL_DOCUMENTATION_MISSING: 'camunda.agentToolDocumentationMissing',
 });

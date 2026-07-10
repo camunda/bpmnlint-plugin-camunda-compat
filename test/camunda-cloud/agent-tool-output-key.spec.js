@@ -224,6 +224,66 @@ const valid = [
         </bpmn:subProcess>
       </bpmn:adHocSubProcess>
     `))
+  },
+  {
+    name: 'entry sets toolCallResult, downstream appends via context put(): no overwrite',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=a" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=context put(toolCallResult, &quot;confirmation&quot;, b)" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'entry and downstream write different toolCallResult parts: no overwrite',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=a" target="toolCallResult.statusCode" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=b" target="toolCallResult.body" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
+    `))
   }
 ];
 
@@ -268,15 +328,41 @@ const invalid = [
     }
   },
   {
-    name: 'typo in output target (toolcallresult)',
+    name: 'wrong casing in output target (toolcallresult)',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticToolTask(`
       <zeebe:output source="=taskResult" target="toolcallresult" />
     `)),
     report: {
       id: 'Task_1',
-      message: WARN_MESSAGE,
-      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+      message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
+    }
+  },
+  {
+    name: 'wrong casing in connector resultExpression header (toolcallresult)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:taskHeaders>
+              <zeebe:header key="resultExpression" value="={toolcallresult: response.body}" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
       propertiesPanel: { entryIds: [ 'outputs' ] }
     }
   },
@@ -295,7 +381,7 @@ const invalid = [
     }
   },
   {
-    name: 'misdirected result across the tool flow — reported on the entry activity',
+    name: 'misdirected result across the tool flow: reported on the element that wrote it, not the entry',
     config: { version: '8.8' },
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
@@ -319,9 +405,40 @@ const invalid = [
       </bpmn:adHocSubProcess>
     `)),
     report: {
-      id: 'Task_1',
+      id: 'Task_2',
       message: WARN_MESSAGE,
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
+    }
+  },
+  {
+    name: 'wrong casing on a downstream element: reported there, not on the entry',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=result" target="toolcallresult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_2',
+      message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
       propertiesPanel: { entryIds: [ 'outputs' ] }
     }
   },
@@ -359,6 +476,97 @@ const invalid = [
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
       propertiesPanel: { entryIds: [ 'outputs' ] }
     }
+  },
+  {
+    name: 'entry and downstream connector both set toolCallResult: downstream overwrites entry',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1" name="Fetch data">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:taskHeaders>
+              <zeebe:header key="resultExpression" value="={toolCallResult: response.body}" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2" name="Re-send">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:taskHeaders>
+              <zeebe:header key="resultExpression" value="={toolCallResult: response.body}" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_2',
+      message: 'This overwrites the "toolCallResult" value set on "Fetch data".',
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
+      propertiesPanel: { entryIds: [ 'outputs' ] },
+      name: 'Re-send'
+    }
+  },
+  {
+    name: 'three elements each overwrite toolCallResult: two warnings, each naming the one before it',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=a" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:outgoing>Flow_2</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=b" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_3">
+          <bpmn:incoming>Flow_2</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=c" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+        <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_2" targetRef="Task_3" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: [
+      {
+        id: 'Task_2',
+        message: 'This overwrites the "toolCallResult" value set on "Task_1".',
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
+        propertiesPanel: { entryIds: [ 'outputs' ] }
+      },
+      {
+        id: 'Task_3',
+        message: 'This overwrites the "toolCallResult" value set on "Task_2".',
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
+        propertiesPanel: { entryIds: [ 'outputs' ] }
+      }
+    ]
   }
 ];
 
