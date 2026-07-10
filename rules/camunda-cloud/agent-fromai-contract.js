@@ -108,7 +108,7 @@ function validateKeyArg(arg) {
 function validateDescriptionTypeInvalid(arg) {
   if (arg.type !== 'StringLiteral') {
     return {
-      message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
+      message: 'fromAi() description must be a string literal: a quoted string describing what the agent should provide.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
     };
   }
@@ -175,8 +175,9 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
     }
 
     if (!isAgenticAdHocSubProcess(ahsp, version)) {
+      const ahspLabel = ahsp.get('name') || ahsp.get('id');
       reportErrors(task, reporter, invocations.map(() => ({
-        message: 'This sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.role" with value "toolContainer".',
+        message: `The "${ahspLabel}" sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.role" with value "toolContainer" to "${ahspLabel}".`,
         data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
         propertiesPanel,
       })));
@@ -196,7 +197,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       return;
     }
 
-    // Inside agentic AHSP, on the entry element — run structural checks.
+    // Inside agentic AHSP, on the entry element: run structural checks.
     const errors = [];
 
     for (const inv of invocations) {
@@ -204,7 +205,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       // Check for casing typo in function name.
       if (inv.name !== CORRECT_NAME && NAME_ALIASES.includes(inv.name.toLowerCase())) {
         errors.push({
-          message: `Wrong function name "${inv.name}" — use ${CORRECT_NAME} (case-sensitive).`,
+          message: `Wrong function name "${inv.name}". Use ${CORRECT_NAME} (case-sensitive).`,
           data: { type: ERROR_TYPES.AGENT_FEEL_FUNCTION_NAME_INVALID },
         });
         continue;
@@ -214,7 +215,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
 
       if (args.length === 0) {
         errors.push({
-          message: 'fromAi() requires a key argument — a FEEL path like toolCall.url.',
+          message: 'fromAi() requires a key argument: a FEEL path like toolCall.url.',
           data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
         });
         continue;

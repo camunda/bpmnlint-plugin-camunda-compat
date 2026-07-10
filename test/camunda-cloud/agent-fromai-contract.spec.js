@@ -231,7 +231,7 @@ const invalid = [
     moddleElement: createModdle(agenticInput('=fromAi()')),
     report: {
       id: 'Task_1',
-      message: 'fromAi() requires a key argument — a FEEL path like toolCall.url.',
+      message: 'fromAi() requires a key argument: a FEEL path like toolCall.url.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -253,7 +253,7 @@ const invalid = [
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, 42)')),
     report: {
       id: 'Task_1',
-      message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
+      message: 'fromAi() description must be a string literal: a quoted string describing what the agent should provide.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -264,7 +264,7 @@ const invalid = [
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, null)')),
     report: {
       id: 'Task_1',
-      message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
+      message: 'fromAi() description must be a string literal: a quoted string describing what the agent should provide.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -275,7 +275,7 @@ const invalid = [
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url, myDescription)')),
     report: {
       id: 'Task_1',
-      message: 'fromAi() description must be a string literal — a quoted string describing what the agent should provide.',
+      message: 'fromAi() description must be a string literal: a quoted string describing what the agent should provide.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -321,7 +321,7 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'Wrong function name "fromai" — use fromAi (case-sensitive).',
+      message: 'Wrong function name "fromai". Use fromAi (case-sensitive).',
       data: { type: ERROR_TYPES.AGENT_FEEL_FUNCTION_NAME_INVALID },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -343,14 +343,35 @@ const invalid = [
     }
   },
   {
-    name: 'T18 — fromAi inside AHSP with no agentic marker (not agentic)',
+    name: 'T18 — fromAi inside AHSP with no agentic marker (not agentic), unnamed AHSP falls back to its id',
     config: { version: '8.8' },
     moddleElement: createModdle(ahspInputNoExtension(
       `=fromAi(toolCall.url, ${GOOD_DESC})`
     )),
     report: {
       id: 'Task_1',
-      message: 'This sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.role" with value "toolContainer".',
+      message: 'The "AHSP_1" sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.role" with value "toolContainer" to "AHSP_1".',
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+    }
+  },
+  {
+    name: 'fromAi inside AHSP with no agentic marker (not agentic), named AHSP uses its name',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1" name="Delivery Tools">
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.url, ${GOOD_DESC})" target="value" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'The "Delivery Tools" sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.role" with value "toolContainer" to "Delivery Tools".',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
