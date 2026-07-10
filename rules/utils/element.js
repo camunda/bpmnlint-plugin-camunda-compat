@@ -553,12 +553,9 @@ module.exports.hasToolContainerRoleProperty = hasToolContainerRoleProperty;
 // connectors#7842; that marker doesn't exist in this plugin's pinned
 // zeebe-bpmn-moddle yet, so the check below is inert until it ships.
 //
-// The interim `zeebe:AdHoc` fallback is dropped (Slack decision, 2026-07-09):
-// it over-matched plain output-collection ad-hoc sub-processes, with no
-// reliable way to tell them apart from agentic ones. Element templates are
-// expected to write the property marker directly instead. See PR #245 and
-// epic #3719 for the follow-up to backport the marker into templates that
-// don't yet write it.
+// Deliberately does not fall back to a bare `zeebe:AdHoc` extension: that
+// extension is also carried by plain ad-hoc sub-processes using output
+// collection, so it can't reliably distinguish agentic from non-agentic ones.
 function isAgenticAdHocSubProcess(ahsp, version) {
   if (hasToolContainerRoleProperty(ahsp)) {
     return true;
