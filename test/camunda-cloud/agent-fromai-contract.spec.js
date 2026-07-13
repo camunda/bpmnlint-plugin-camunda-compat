@@ -16,7 +16,7 @@ function agenticInput(source) {
     <bpmn:adHocSubProcess id="AHSP_1">
       <bpmn:extensionElements>
         <zeebe:properties>
-          <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
         </zeebe:properties>
       </bpmn:extensionElements>
       <bpmn:serviceTask id="Task_1">
@@ -290,7 +290,7 @@ const invalid = [
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
           <zeebe:properties>
-            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
           </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
@@ -350,7 +350,7 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'The "AHSP_1" sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.role" with value "toolContainer" to "AHSP_1".',
+      message: 'The "AHSP_1" sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.toolContainer" with value "true" to "AHSP_1".',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -371,7 +371,7 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: 'The "Delivery Tools" sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.role" with value "toolContainer" to "Delivery Tools".',
+      message: 'The "Delivery Tools" sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.toolContainer" with value "true" to "Delivery Tools".',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -383,7 +383,7 @@ const invalid = [
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
           <zeebe:properties>
-            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
           </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
@@ -419,7 +419,7 @@ const invalid = [
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
           <zeebe:properties>
-            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
           </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
@@ -445,7 +445,7 @@ const invalid = [
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
           <zeebe:properties>
-            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
           </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">

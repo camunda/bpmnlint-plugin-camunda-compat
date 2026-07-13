@@ -518,17 +518,17 @@ function findAncestorAdHocSubProcess(node) {
 
 module.exports.findAncestorAdHocSubProcess = findAncestorAdHocSubProcess;
 
-// Property-based agentic detection (solution 1). The AI Agent element templates
-// (and external-agent templates, e.g. Bedrock, Hugging Face) apply a generic
-// zeebe:property to mark a detached tools ad-hoc sub-process as a tool
-// container to lint. This is read-only and has no execution effect; it parses
-// on the current moddle with no schema change. `toolContainer` is the only
-// role value this plugin's rules consult: every rule here is about tool
-// configuration (fromAi(), toolCallResult, tool documentation), which only
-// ever lives in a tool-container AHSP. `agent` is a reserved role value for
-// other, non-linting uses and is not checked here.
-const AGENTIC_ROLE_PROPERTY = 'io.camunda.agenticai.role';
-const TOOL_CONTAINER_ROLE = 'toolContainer';
+// Property-based agentic detection (solution 1, marker shape revised
+// 2026-07-13). The AI Agent element templates (and external-agent templates,
+// e.g. Bedrock, Hugging Face) apply a generic zeebe:property to mark a
+// detached tools ad-hoc sub-process as a tool container to lint. This is
+// read-only and has no execution effect; it parses on the current moddle with
+// no schema change. The marker is an independent boolean, not a single-valued
+// role enum, because a Camunda agent element can carry both the
+// `toolContainer` role (hosts tools) and the `agent` role at once; a
+// single-valued `io.camunda.agenticai.role` property could not represent
+// both roles on the same element.
+const TOOL_CONTAINER_PROPERTY = 'io.camunda.agenticai.toolContainer';
 
 function hasToolContainerRoleProperty(node) {
   const properties = findExtensionElement(node, 'zeebe:Properties');
@@ -538,8 +538,8 @@ function hasToolContainerRoleProperty(node) {
   }
 
   return (properties.get('properties') || []).some(
-    property => property.get('name') === AGENTIC_ROLE_PROPERTY
-      && property.get('value') === TOOL_CONTAINER_ROLE
+    property => property.get('name') === TOOL_CONTAINER_PROPERTY
+      && property.get('value') === 'true'
   );
 }
 
@@ -547,7 +547,7 @@ module.exports.hasToolContainerRoleProperty = hasToolContainerRoleProperty;
 
 // Whether an ad-hoc sub-process should have agent tool contracts linted.
 //
-// The `io.camunda.agenticai.role=toolContainer` property marker is honored at
+// The `io.camunda.agenticai.toolContainer=true` property marker is honored at
 // every version. From 8.10, a `zeebe:agentDefinition` marker on the AHSP
 // (Camunda-provided template) is an additional signal, tracked in
 // connectors#7842; that marker doesn't exist in this plugin's pinned

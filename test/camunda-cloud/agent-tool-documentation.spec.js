@@ -15,7 +15,7 @@ function agenticAHSP(taskXml) {
     <bpmn:adHocSubProcess id="AHSP_1">
       <bpmn:extensionElements>
         <zeebe:properties>
-          <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+          <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
         </zeebe:properties>
       </bpmn:extensionElements>
       ${taskXml}
@@ -80,7 +80,7 @@ const valid = [
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
           <zeebe:properties>
-            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
           </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
@@ -96,7 +96,7 @@ const valid = [
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
           <zeebe:properties>
-            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
           </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:serviceTask id="Task_1">
@@ -116,7 +116,7 @@ const valid = [
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
           <zeebe:properties>
-            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
           </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:exclusiveGateway id="Gateway_1" />
@@ -130,7 +130,7 @@ const valid = [
       <bpmn:adHocSubProcess id="AHSP_1">
         <bpmn:extensionElements>
           <zeebe:properties>
-            <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
           </zeebe:properties>
         </bpmn:extensionElements>
         <bpmn:subProcess id="EventSub_1" triggeredByEvent="true" />
@@ -154,7 +154,7 @@ const valid = [
         <bpmn:adHocSubProcess id="AHSP_1">
           <bpmn:extensionElements>
             <zeebe:properties>
-              <zeebe:property name="io.camunda.agenticai.role" value="toolContainer" />
+              <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
             </zeebe:properties>
           </bpmn:extensionElements>
           <bpmn:serviceTask id="Task_1" />
