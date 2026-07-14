@@ -284,6 +284,67 @@ const valid = [
         <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
       </bpmn:adHocSubProcess>
     `))
+  },
+  {
+    name: 'toolCallResult written on two mutually exclusive branches: no overwrite (branches never both run)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:exclusiveGateway id="Gateway_1">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:outgoing>Flow_2</bpmn:outgoing>
+          <bpmn:outgoing>Flow_3</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+        <bpmn:serviceTask id="Task_A">
+          <bpmn:incoming>Flow_2</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=a" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_B">
+          <bpmn:incoming>Flow_3</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=b" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Gateway_1" />
+        <bpmn:sequenceFlow id="Flow_2" sourceRef="Gateway_1" targetRef="Task_A" />
+        <bpmn:sequenceFlow id="Flow_3" sourceRef="Gateway_1" targetRef="Task_B" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'sub-process tool sets toolCallResult itself; inner task writes nothing — inner is not a separate tool',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:subProcess id="Sub_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=result" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+          <bpmn:serviceTask id="Inner_1" />
+        </bpmn:subProcess>
+      </bpmn:adHocSubProcess>
+    `))
   }
 ];
 

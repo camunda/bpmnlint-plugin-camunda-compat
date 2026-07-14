@@ -413,6 +413,34 @@ const invalid = [
     }
   },
   {
+    name: 'fromAi nested inside a sub-process tool — not the tool root, ignored at runtime',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:subProcess id="Sub_1">
+          <bpmn:serviceTask id="Inner_1">
+            <bpmn:extensionElements>
+              <zeebe:ioMapping>
+                <zeebe:input source="=fromAi(toolCall.subject, ${GOOD_DESC})" target="subject" />
+              </zeebe:ioMapping>
+            </bpmn:extensionElements>
+          </bpmn:serviceTask>
+        </bpmn:subProcess>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Inner_1',
+      message: 'fromAi() is ignored here: only the tool\'s entry element defines AI inputs. Define it there and read the toolCall variable directly.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_NON_ENTRY_ELEMENT },
+      propertiesPanel: { entryIds: [ 'Inner_1-input-0-source' ] }
+    }
+  },
+  {
     name: 'T19 — fromAi in an output mapping source (ignored at runtime)',
     config: { version: '8.8' },
     moddleElement: createModdle(createProcess(`

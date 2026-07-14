@@ -161,6 +161,16 @@ const valid = [
         </bpmn:adHocSubProcess>
       </bpmn:process>
     `))
+  },
+  {
+    name: 'documented sub-process tool with an undocumented inner task — inner is not a separate tool, skipped',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:subProcess id="Sub_1">
+        <bpmn:documentation>Fetches and returns data from the external API.</bpmn:documentation>
+        <bpmn:serviceTask id="Inner_1" />
+      </bpmn:subProcess>
+    `))
   }
 ];
 
