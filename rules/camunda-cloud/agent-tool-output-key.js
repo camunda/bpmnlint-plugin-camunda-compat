@@ -1,6 +1,6 @@
 const { is } = require('bpmnlint-utils');
 
-const { findAncestorAdHocSubProcess, isAgenticAdHocSubProcess } = require('../utils/element');
+const { isAgenticToolElement } = require('../utils/element');
 const { reportErrors, getName } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -24,27 +24,15 @@ const { annotateRule } = require('../helper');
 module.exports = skipInNonExecutableProcess(function(config = {}) {
   const { version } = config;
   function check(node, reporter) {
-    if (!is(node, 'bpmn:Activity')) {
+
+    // Only a tool entry (a root activity directly inside an agentic AHSP) is a
+    // tool; the whole tool flow is then inspected from here. Elements nested
+    // inside a tool are not separate tools, so they are not entry points.
+    if (!isAgenticToolElement(node, version)) {
       return;
     }
 
-    if (is(node, 'bpmn:SubProcess') && node.get('triggeredByEvent')) {
-      return;
-    }
-
-    // Only evaluate tool entry points (no incoming sequence flows); the whole
-    // tool flow is inspected from here.
-    const incoming = node.get('incoming') || [];
-    if (incoming.length > 0) {
-      return;
-    }
-
-    const ahsp = findAncestorAdHocSubProcess(node);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
-      return;
-    }
-
-    const channels = collectResultChannels(node);
+    const { channels, linear } = collectResultChannels(node);
 
     if (!channels.length) {
       reportErrors(node, reporter, {
@@ -84,18 +72,33 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
     // overwrites the earlier value. Part contributions (toolCallResult.part)
     // and the context put(toolCallResult, ...) accumulation pattern are
     // exempt; every other full write after the first one is flagged.
-    const fullWrites = channels.filter(isToolCallResultChannel).filter(isFullOverwriteChannel);
+    //
+    // Only flag overwrites on a strictly linear tool flow, where the writes
+    // are guaranteed to run one after another. If the flow branches (an
+    // exclusive/parallel split, a join, or a boundary event), two writes may
+    // sit on alternative paths that never both run in one execution, so
+    // flagging them would be a false positive. We conservatively suppress the
+    // check for any non-linear flow.
+    //
+    // Future improvement: instead of suppressing, walk backward from the
+    // flow's leaf nodes and reason about which writes can actually co-execute.
+    // That has to account for inclusive-OR splits and other BPMN
+    // diverge/converge shapes: the common inner-orchestration case is one
+    // entry with multiple leaf nodes, so naive flattening over-reports.
+    if (linear) {
+      const fullWrites = channels.filter(isToolCallResultChannel).filter(isFullOverwriteChannel);
 
-    for (let i = 1; i < fullWrites.length; i++) {
-      const overwriter = fullWrites[ i ];
-      const overwritten = fullWrites[ i - 1 ];
-      const overwrittenLabel = getName(overwritten.element) || overwritten.element.get('id');
+      for (let i = 1; i < fullWrites.length; i++) {
+        const overwriter = fullWrites[ i ];
+        const overwritten = fullWrites[ i - 1 ];
+        const overwrittenLabel = getName(overwritten.element) || overwritten.element.get('id');
 
-      reportErrors(overwriter.element, reporter, {
-        message: `This overwrites the "toolCallResult" value set on "${overwrittenLabel}".`,
-        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
-        propertiesPanel: { entryIds: [ 'outputs' ] },
-      });
+        reportErrors(overwriter.element, reporter, {
+          message: `This overwrites the "toolCallResult" value set on "${overwrittenLabel}".`,
+          data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
+          propertiesPanel: { entryIds: [ 'outputs' ] },
+        });
+      }
     }
   }
 
@@ -109,15 +112,24 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
  * everything reachable through outgoing sequence flows, and the contents of
  * embedded sub-processes.
  *
+ * Also reports whether the flow is strictly linear: a single chain with no
+ * branching. A flow is non-linear if any traversed element splits (more than
+ * one outgoing sequence flow), joins (more than one incoming), or has a
+ * boundary event attached. Non-linear flows can place two writes on
+ * alternative paths, so the caller uses this to avoid false overwrite reports.
+ *
  * @param {ModdleElement} entry
  *
- * @returns {Object[]} channels as { kind, value, element }, element being
- * whichever element in the flow actually wrote this channel
+ * @returns {Object} { channels, linear } — channels as { kind, value, element }
+ * (element being whichever element in the flow actually wrote this channel),
+ * and linear being true when the flow is a single non-branching chain
  */
 function collectResultChannels(entry) {
   const channels = [],
         visited = new Set(),
         queue = [ entry ];
+
+  let linear = true;
 
   while (queue.length) {
     const element = queue.shift();
@@ -130,18 +142,30 @@ function collectResultChannels(entry) {
 
     collectElementChannels(element, channels);
 
-    for (const flow of element.get('outgoing') || []) {
+    const outgoing = element.get('outgoing') || [];
+    const incoming = element.get('incoming') || [];
+
+    // A split (>1 outgoing) or a join (>1 incoming) means the flow is not a
+    // single guaranteed-sequential chain, so writes may live on paths that
+    // never both run.
+    if (outgoing.length > 1 || incoming.length > 1) {
+      linear = false;
+    }
+
+    for (const flow of outgoing) {
       const target = flow.get('targetRef');
       if (target) {
         queue.push(target);
       }
     }
 
-    // Boundary events can define alternate tool paths that still contribute outputs.
+    // Boundary events can define alternate tool paths that still contribute
+    // outputs; an alternate path is a branch, so the flow is not linear.
     const parent = element.$parent;
     const siblings = parent && parent.get && parent.get('flowElements');
     for (const boundary of siblings || []) {
       if (is(boundary, 'bpmn:BoundaryEvent') && boundary.get('attachedToRef') === element) {
+        linear = false;
         queue.push(boundary);
       }
     }
@@ -155,7 +179,7 @@ function collectResultChannels(entry) {
     }
   }
 
-  return channels;
+  return { channels, linear };
 }
 
 function collectElementChannels(element, channels) {
@@ -178,6 +202,12 @@ function collectElementChannels(element, channels) {
       }
     }
 
+    // resultVariable / resultExpression task headers are treated as output
+    // channels for ANY task, not only recognized connector tasks. This breadth
+    // is intentional: the goal is to capture every way a tool writes its
+    // output. resultVariable/resultExpression is the convention connectors use,
+    // but custom element templates can follow the same convention, so gating on
+    // connector-ness would miss those and let a real miswrite through.
     if (is(value, 'zeebe:TaskHeaders')) {
       for (const header of value.get('values') || []) {
         const key = header.get('key');

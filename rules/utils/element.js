@@ -568,6 +568,32 @@ function isAgenticAdHocSubProcess(ahsp, version) {
 
 module.exports.isAgenticAdHocSubProcess = isAgenticAdHocSubProcess;
 
+// Whether a node is an agent tool, i.e. the root node of a tool sub-flow that
+// sits directly inside an agentic ad-hoc sub-process. This is the single "is
+// tool" contract every agent rule gates on, so lint scope matches how the
+// agent connector actually resolves tools: only at these roots. Anything
+// nested below a root (a step inside a sub-process tool, or a downstream
+// element reached by a sequence flow) is PART of a tool, not a tool itself.
+function isAgenticToolElement(node, version) {
+
+  // a tool is an activity (task or sub-process)
+  return is(node, 'bpmn:Activity')
+
+    // an event sub-process is not a tool
+    && !(is(node, 'bpmn:SubProcess') && node.get('triggeredByEvent'))
+
+    // tool root: nothing flows into it
+    && (node.get('incoming') || []).length === 0
+
+    // it must live DIRECTLY in the AHSP, not nested
+    && is(node.$parent, 'bpmn:AdHocSubProcess')
+
+    // and that AHSP must be an agent tool container
+    && isAgenticAdHocSubProcess(node.$parent, version);
+}
+
+module.exports.isAgenticToolElement = isAgenticToolElement;
+
 function findParent(node, type) {
   if (!node) {
     return null;

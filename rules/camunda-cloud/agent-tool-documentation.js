@@ -1,6 +1,4 @@
-const { is } = require('bpmnlint-utils');
-
-const { findAncestorAdHocSubProcess, isAgenticAdHocSubProcess } = require('../utils/element');
+const { isAgenticToolElement } = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -16,21 +14,10 @@ const { annotateRule } = require('../helper');
 module.exports = skipInNonExecutableProcess(function(config = {}) {
   const { version } = config;
   function check(node, reporter) {
-    if (!is(node, 'bpmn:Activity')) {
-      return;
-    }
 
-    if (is(node, 'bpmn:SubProcess') && node.get('triggeredByEvent')) {
-      return;
-    }
-
-    const incoming = node.get('incoming') || [];
-    if (incoming.length > 0) {
-      return;
-    }
-
-    const ahsp = findAncestorAdHocSubProcess(node);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
+    // Only a tool (a root activity directly inside an agentic AHSP) needs
+    // documentation; steps nested inside a tool are not separate tools.
+    if (!isAgenticToolElement(node, version)) {
       return;
     }
 

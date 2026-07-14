@@ -184,11 +184,13 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       return;
     }
 
-    // The connector resolves fromAi() only on the tool's entry element (the
-    // root node of the sub-flow); calls on downstream elements are ignored at
-    // runtime.
+    // The connector resolves fromAi() only on the tool's entry element: the
+    // root node sitting DIRECTLY inside the AHSP. A call is ignored at runtime
+    // either when the element has an incoming flow (it is downstream of the
+    // root) or when it is nested below the AHSP (e.g. a task inside a
+    // sub-process tool, whose parent is the sub-process, not the AHSP).
     const incoming = task.get('incoming') || [];
-    if (incoming.length > 0) {
+    if (incoming.length > 0 || task.$parent !== ahsp) {
       reportErrors(task, reporter, invocations.map(() => ({
         message: 'fromAi() is ignored here: only the tool\'s entry element defines AI inputs. Define it there and read the toolCall variable directly.',
         data: { type: ERROR_TYPES.AGENT_FEEL_NON_ENTRY_ELEMENT },
@@ -256,6 +258,13 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
 
     const ahsp = findAncestorAdHocSubProcess(task);
     if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
+      return;
+    }
+
+    // Only the tool's entry element (directly inside the AHSP) defines inputs;
+    // a nested task's fromAi() is ignored at runtime, so its keys are moot and
+    // the main check already reports it as a non-entry call.
+    if (task.$parent !== ahsp) {
       return;
     }
 
