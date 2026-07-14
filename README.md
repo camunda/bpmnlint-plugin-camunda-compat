@@ -79,7 +79,7 @@ npx bpmnlint my-diagram.bpmn
 ## Resources
 
 * [Issues](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues)
-
+* [Rule authoring guide](./docs/RULE_AUTHORING.md)
 
 ## Related
 
