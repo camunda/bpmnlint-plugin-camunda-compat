@@ -6,6 +6,13 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.56.0
+
+* `FEAT`: add agent discovery lint rules ([#247](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/247), [#245](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/245))
+* `FEAT`: add `agent-fromai-contract` rule ([#245](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/245))
+* `FEAT`: add `agent-tool-output-key` rule ([#245](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/245))
+* `FEAT`: add `agent-tool-documentation` rule ([#245](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/245))
+
 ## 2.55.0
 
 * `FEAT`: add `no-job-priority-definition` rule ([#244](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/244))
