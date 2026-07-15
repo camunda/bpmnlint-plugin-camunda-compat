@@ -33,6 +33,48 @@ const valid = [
       <bpmn:callActivity id="CallActivity_1" />
     </bpmn:process>
     `))
+  },
+  {
+    name: 'call activity (empty business ID)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:callActivity id="CallActivity_1">
+        <bpmn:extensionElements>
+          <zeebe:calledElement processId="foo" businessId="" />
+        </bpmn:extensionElements>
+      </bpmn:callActivity>
+    `))
+  },
+  {
+    name: 'call activity (business ID FEEL expression, not length-checked)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:callActivity id="CallActivity_1">
+        <bpmn:extensionElements>
+          <zeebe:calledElement processId="foo" businessId="=${ 'a'.repeat(300) }" />
+        </bpmn:extensionElements>
+      </bpmn:callActivity>
+    `))
+  },
+  {
+    name: 'call activity (literal business ID shorter than 256 characters)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:callActivity id="CallActivity_1">
+        <bpmn:extensionElements>
+          <zeebe:calledElement processId="foo" businessId="order-123" />
+        </bpmn:extensionElements>
+      </bpmn:callActivity>
+    `))
+  },
+  {
+    name: 'call activity (literal business ID before 8.10, flagged by no-business-id instead)',
+    config: { version: '8.9' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:callActivity id="CallActivity_1">
+        <bpmn:extensionElements>
+          <zeebe:calledElement processId="foo" businessId="${ 'a'.repeat(300) }" />
+        </bpmn:extensionElements>
+      </bpmn:callActivity>
+    `))
   }
 ];
 
@@ -75,6 +117,33 @@ const invalid = [
         node: 'zeebe:CalledElement',
         parentNode: 'CallActivity_1',
         requiredProperty: 'processId'
+      }
+    }
+  },
+  {
+    name: 'call activity (literal business ID with 256 characters)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:callActivity id="CallActivity_1">
+        <bpmn:extensionElements>
+          <zeebe:calledElement processId="foo" businessId="${ 'a'.repeat(256) }" />
+        </bpmn:extensionElements>
+      </bpmn:callActivity>
+    `)),
+    report: {
+      id: 'CallActivity_1',
+      message: `Property value of <${ 'a'.repeat(10) }...> not allowed`,
+      path: [
+        'extensionElements',
+        'values',
+        0,
+        'businessId'
+      ],
+      data: {
+        type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
+        node: 'zeebe:CalledElement',
+        parentNode: 'CallActivity_1',
+        property: 'businessId'
       }
     }
   }
