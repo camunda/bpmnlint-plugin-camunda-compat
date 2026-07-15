@@ -6,6 +6,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.58.0
+
+* `FEAT`: add `no-business-id` rule flagging call activity business ID before Camunda 8.10 ([#250](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/250))
+* `FEAT`: validate business ID in Camunda 8.10 ([#250](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/250))
+
 ## 2.57.0
 
 * `FEAT`: simplify non-agent fromAi() diagnostics ([#251](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/251))

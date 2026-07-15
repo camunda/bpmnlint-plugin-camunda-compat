@@ -13,6 +13,7 @@ const camundaCloud10Rules = withConfig({
   'message-reference': 'error',
   'io-mapping': 'error',
   'no-binding-type': 'error',
+  'no-business-id': 'error',
   'no-candidate-users': 'error',
   'no-cancel-execution-listener': 'error',
   'no-execution-listener-headers': 'error',
@@ -124,6 +125,7 @@ const camundaCloud89Rules = withConfig({
 
 const camundaCloud810Rules = withConfig({
   ...omit(camundaCloud89Rules, [
+    'no-business-id',
     'no-execution-listener-headers',
     'no-before-all-execution-listener',
     'no-cancel-execution-listener',
@@ -200,6 +202,7 @@ const rules = {
   'io-mapping': './rules/camunda-cloud/io-mapping',
   'message-reference': './rules/camunda-cloud/message-reference',
   'no-binding-type': './rules/camunda-cloud/no-binding-type',
+  'no-business-id': './rules/camunda-cloud/no-business-id',
   'no-before-all-execution-listener': './rules/camunda-cloud/no-before-all-execution-listener',
   'no-candidate-users': './rules/camunda-cloud/no-candidate-users',
   'no-cancel-execution-listener': './rules/camunda-cloud/no-cancel-execution-listener',
