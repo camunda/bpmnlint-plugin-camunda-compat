@@ -177,7 +177,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
     if (!isAgenticAdHocSubProcess(ahsp, version)) {
       const ahspLabel = ahsp.get('name') || ahsp.get('id');
       reportErrors(task, reporter, invocations.map(() => ({
-        message: `The "${ahspLabel}" sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.toolContainer" with value "true" to "${ahspLabel}".`,
+        message: `The "${ahspLabel}" sub-process is not marked as agentic, so fromAi() has no effect.`,
         data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
         propertiesPanel,
       })));
