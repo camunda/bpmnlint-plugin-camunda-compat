@@ -350,7 +350,7 @@ const invalid = [
     )),
     report: {
       id: 'Task_1',
-      message: 'The "AHSP_1" sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.toolContainer" with value "true" to "AHSP_1".',
+      message: 'The "AHSP_1" sub-process is not marked as agentic, so fromAi() has no effect.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
@@ -371,7 +371,7 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: 'The "Delivery Tools" sub-process is not marked as agentic, so fromAi() has no effect. Add an Extension property "io.camunda.agenticai.toolContainer" with value "true" to "Delivery Tools".',
+      message: 'The "Delivery Tools" sub-process is not marked as agentic, so fromAi() has no effect.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
       propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
     }
