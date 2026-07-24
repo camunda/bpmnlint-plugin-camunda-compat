@@ -345,6 +345,22 @@ const valid = [
         </bpmn:subProcess>
       </bpmn:adHocSubProcess>
     `))
+  },
+  {
+    name: 'toolCallResult output present inside legacy AI Agent template AHSP — treated as agentic',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1">
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=toolCall.url" target="url" />
+              <zeebe:output source="=taskResult" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `))
   }
 ];
 
@@ -573,6 +589,28 @@ const invalid = [
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
       propertiesPanel: { entryIds: [ 'outputs' ] },
       name: 'Re-send'
+    }
+  },
+  {
+    name: 'wrong output target key inside legacy AI Agent template AHSP — treated as agentic, reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1">
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=toolCall.url" target="url" />
+              <zeebe:output source="=taskResult" target="result" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: WARN_MESSAGE,
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+      propertiesPanel: { entryIds: [ 'outputs' ] }
     }
   },
   {

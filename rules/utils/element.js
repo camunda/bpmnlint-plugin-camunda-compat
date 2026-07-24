@@ -530,6 +530,13 @@ module.exports.findAncestorAdHocSubProcess = findAncestorAdHocSubProcess;
 // both roles on the same element.
 const TOOL_CONTAINER_PROPERTY = 'io.camunda.agenticai.toolContainer';
 
+// The AI Agent job-worker template applied to an ad-hoc sub-process. Its id is
+// stable across template versions (versioning is tracked separately via
+// zeebe:modelerTemplateVersion), so matching it recognizes every version. Older
+// versions of this template predate the TOOL_CONTAINER_PROPERTY marker, so
+// their AHSPs are agentic but carry no marker; the template id identifies them.
+const LEGACY_AI_AGENT_TEMPLATE = 'io.camunda.connectors.agenticai.aiagent.jobworker.v1';
+
 function hasToolContainerRoleProperty(node) {
   const properties = findExtensionElement(node, 'zeebe:Properties');
 
@@ -556,8 +563,16 @@ module.exports.hasToolContainerRoleProperty = hasToolContainerRoleProperty;
 // Deliberately does not fall back to a bare `zeebe:AdHoc` extension: that
 // extension is also carried by plain ad-hoc sub-processes using output
 // collection, so it can't reliably distinguish agentic from non-agentic ones.
+//
+// Older AI Agent job-worker templates predate the property marker; they are
+// still agentic and are recognized by their (version-agnostic) element template
+// id (see LEGACY_AI_AGENT_TEMPLATE).
 function isAgenticAdHocSubProcess(ahsp, version) {
   if (hasToolContainerRoleProperty(ahsp)) {
+    return true;
+  }
+
+  if (ahsp.get('modelerTemplate') === LEGACY_AI_AGENT_TEMPLATE) {
     return true;
   }
 
