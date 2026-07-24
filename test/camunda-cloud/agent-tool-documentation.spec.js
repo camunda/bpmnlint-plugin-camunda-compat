@@ -171,6 +171,17 @@ const valid = [
         <bpmn:serviceTask id="Inner_1" />
       </bpmn:subProcess>
     `))
+  },
+  {
+    name: 'documented tool inside legacy AI Agent template AHSP — treated as agentic',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1">
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:documentation>Searches the web for relevant information.</bpmn:documentation>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `))
   }
 ];
 
@@ -250,6 +261,21 @@ const invalid = [
     config: { version: '8.8' },
     moddleElement: createModdle(agenticAHSP(`
       <bpmn:callActivity id="Task_1" />
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Tool documentation is missing.',
+      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
+      propertiesPanel: { entryIds: [ 'documentation' ] }
+    }
+  },
+  {
+    name: 'undocumented tool inside legacy AI Agent template AHSP — treated as agentic, reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1">
+        <bpmn:serviceTask id="Task_1" />
+      </bpmn:adHocSubProcess>
     `)),
     report: {
       id: 'Task_1',

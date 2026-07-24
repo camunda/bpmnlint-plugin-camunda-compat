@@ -4,6 +4,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ## Unreleased
 
+* `FIX`: recognize legacy AI Agent templates as agentic across all agent rules ([#252](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/252))
+
 ___Note:__ Yet to be released changes appear here._
 
 ## 2.58.0

@@ -30,9 +30,9 @@ function agenticInput(source) {
   `);
 }
 
-function ahspInputNoExtension(source) {
+function ahspInputNoExtension(source, attributes = '') {
   return createProcess(`
-    <bpmn:adHocSubProcess id="AHSP_1">
+    <bpmn:adHocSubProcess id="AHSP_1" ${attributes}>
       <bpmn:serviceTask id="Task_1">
         <bpmn:extensionElements>
           <zeebe:ioMapping>
@@ -101,6 +101,14 @@ const valid = [
     name: 'description omitted — valid, the description argument is optional (neither rule reports)',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url)'))
+  },
+  {
+    name: 'legacy AI Agent template — treated as an agentic sub-process',
+    config: { version: '8.8' },
+    moddleElement: createModdle(ahspInputNoExtension(
+      '=fromAi(toolCall.url)',
+      'zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1"'
+    ))
   }
 ];
 
@@ -476,6 +484,75 @@ const invalid = [
             <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
           </zeebe:properties>
         </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2">
+          <bpmn:conditionExpression>=fromAi(toolCall.ready, ${GOOD_DESC})</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Flow_1',
+      message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      propertiesPanel: { entryIds: [ 'conditionExpression' ] }
+    }
+  },
+
+  // ─── Legacy template invalid cases ──────────────────────────────────────────
+
+  {
+    name: 'legacy template — duplicate fromAi key across two inputs',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1">
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.a, ${GOOD_DESC})" target="first" />
+              <zeebe:input source="=fromAi(toolCall.a, ${GOOD_DESC})" target="second" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() key toolCall.a is declared more than once in this tool. Declare it once and reference it directly elsewhere.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_DUPLICATE },
+      propertiesPanel: { entryIds: [ 'inputs' ] }
+    }
+  },
+  {
+    name: 'legacy template — fromAi in output mapping',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1">
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=fromAi(toolCall.url, ${GOOD_DESC})" target="result" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      propertiesPanel: { entryIds: [ 'Task_1-output-0-source' ] }
+    }
+  },
+  {
+    name: 'legacy template — fromAi in sequence flow condition',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1">
         <bpmn:serviceTask id="Task_1">
           <bpmn:outgoing>Flow_1</bpmn:outgoing>
         </bpmn:serviceTask>
