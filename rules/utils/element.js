@@ -16,13 +16,66 @@ const {
   isAny
 } = require('bpmnlint-utils');
 
-const { getPath } = require('@bpmn-io/moddle-utils');
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
 const { ERROR_TYPES } = require('./error-types');
 
 const { greaterOrEqual } = require('./version');
 
 module.exports.ERROR_TYPES = ERROR_TYPES;
+
+/**
+ * Build the `{ paths }` fragment for a multi-field finding: one leaf moddle path
+ * per offending node, rooted at `parentNode`. Nodes whose path can't be resolved
+ * are dropped; the fragment is empty when none resolve, so the `paths` key is
+ * only present when it carries usable locations.
+ *
+ * @param {Array<Object>} nodes
+ * @param {string} propertyName leaf property appended to each node's path
+ * @param {Object} [parentNode]
+ *
+ * @returns {{ paths?: Array<Array<string|number>> }}
+ */
+function leafPaths(nodes, propertyName, parentNode = null) {
+  const paths = nodes
+    .map(node => getPath(node, parentNode))
+    .filter(path => isArray(path))
+    .map(path => pathConcat(path, propertyName));
+
+  return paths.length ? { paths } : {};
+}
+
+/**
+ * Build a moddle path that locates `node` relative to `element` by following a
+ * single reference edge.
+ *
+ * `getPath` (from @bpmn-io/moddle-utils) only walks containment (`$parent`), so
+ * it roots any referenced node at `bpmn:Definitions` — a path that cannot be
+ * resolved starting from `element`. This helper instead stitches together
+ *
+ *   getPath(referenceHolder, element) + referenceProperty + getPath(node, referencedRoot)
+ *
+ * yielding a path that resolves locally from `element`, because moddle
+ * `get(referenceProperty)` transparently follows the reference.
+ *
+ * @param {Object} options
+ * @param {Object} options.element root element the path is relative to
+ * @param {Object} options.referenceHolder node holding the reference (contained in `element`)
+ * @param {string} options.referenceProperty name of the reference property
+ * @param {Object} options.referencedRoot referenced root element
+ * @param {Object} options.node checked node (contained in `referencedRoot`)
+ *
+ * @returns {Array<string|number>|null} null when a segment can't be resolved
+ */
+function getReferencePath({ element, referenceHolder, referenceProperty, referencedRoot, node }) {
+  return pathConcat(
+    getPath(referenceHolder, element),
+    referenceProperty,
+    getPath(node, referencedRoot)
+  );
+}
+
+module.exports.getReferencePath = getReferencePath;
 
 function getEventDefinition(node) {
   const eventDefinitions = node.get('eventDefinitions');
@@ -121,6 +174,10 @@ module.exports.hasDuplicatedPropertyValues = function(node, propertiesName, prop
       return {
         message: `Properties of type <${ duplicateProperties[ 0 ].$type }> have property <${ propertyName }> with duplicate value of <${ duplicate }>`,
         path: null,
+
+        // one leaf path per offending field, so consumers resolve entry ids
+        // render-agnostically (template field vs. standard field)
+        ...leafPaths(duplicateProperties, propertyName, parentNode),
         data: {
           type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
           node,
@@ -169,6 +226,11 @@ module.exports.hasDuplicatedPropertiesValues = function(node, containerPropertyN
       return {
         message: `Properties of type <${ duplicate.$type }> have properties with duplicate values (${ duplicatesSummary })`,
         path: null,
+
+        // one leaf path per offending location; `type` is the field that
+        // represents the duplicated element in the properties panel, so
+        // consumers resolve its entry id render-agnostically
+        ...leafPaths(duplicateProperties, 'type', parentNode),
         data: {
           type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
           node,
@@ -184,13 +246,13 @@ module.exports.hasDuplicatedPropertiesValues = function(node, containerPropertyN
   return [];
 };
 
-module.exports.hasProperties = function(node, properties, parentNode = null) {
+module.exports.hasProperties = function(node, properties, parentNode = null, nodePath) {
   return Object.entries(properties).reduce((results, property) => {
     const [ propertyName, propertyChecks ] = property;
 
     const { allowedVersion = null } = propertyChecks;
 
-    const path = getPath(node, parentNode);
+    const path = nodePath === undefined ? getPath(node, parentNode) : nodePath;
 
     const propertyValue = node.get(propertyName);
 
@@ -201,9 +263,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           message: allowedVersion
             ? `Element of type <${ node.$type }> without property <${ propertyName }> only allowed by Camunda ${ allowedVersion } or newer`
             : `Element of type <${ node.$type }> must have property <${ propertyName }>`,
-          path: path
-            ? [ ...path, propertyName ]
-            : [ propertyName ],
+          path: pathConcat(path || [], propertyName),
           data: addAllowedVersion({
             type: ERROR_TYPES.PROPERTY_REQUIRED,
             node,
@@ -222,9 +282,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           ...results,
           {
             message: `Element of type <${ node.$type }> must have property <${ propertyName }> if it has property <${ propertyChecks.dependentRequired }>`,
-            path: path
-              ? [ ...path, propertyName ]
-              : [ propertyName ],
+            path: pathConcat(path || [], propertyName),
             data: {
               type: ERROR_TYPES.PROPERTY_DEPENDENT_REQUIRED,
               node,
@@ -252,9 +310,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           message: allowedVersion
             ? `Property <${ propertyName }> of type <${ propertyValue.$type }> only allowed by Camunda ${ allowedVersion } or newer`
             : `Property <${ propertyName }> of type <${ propertyValue.$type }> not allowed`,
-          path: path
-            ? [ ...path, propertyName ]
-            : [ propertyName ],
+          path: pathConcat(path || [], propertyName),
           data: addAllowedVersion({
             type: ERROR_TYPES.PROPERTY_TYPE_NOT_ALLOWED,
             node,
@@ -271,9 +327,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
         ...results,
         {
           message: `Property <${ propertyName }> must have value of <${ propertyChecks.value }>`,
-          path: path
-            ? [ ...path, propertyName ]
-            : [ propertyName ],
+          path: pathConcat(path || [], propertyName),
           data: {
             type: ERROR_TYPES.PROPERTY_VALUE_REQUIRED,
             node,
@@ -292,9 +346,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           message: allowedVersion
             ? `Property <${ propertyName }> only allowed by Camunda ${ allowedVersion } or newer`
             : `Property <${ propertyName }> not allowed`,
-          path: path
-            ? [ ...path, propertyName ]
-            : [ propertyName ],
+          path: pathConcat(path || [], propertyName),
           data: addAllowedVersion({
             type: ERROR_TYPES.PROPERTY_NOT_ALLOWED,
             node,
@@ -312,9 +364,7 @@ module.exports.hasProperties = function(node, properties, parentNode = null) {
           message: allowedVersion
             ? `Property value of <${ truncate(propertyValue) }> only allowed by Camunda ${ allowedVersion } or newer`
             : `Property value of <${ truncate(propertyValue) }> not allowed`,
-          path: path
-            ? [ ...path, propertyName ]
-            : [ propertyName ],
+          path: pathConcat(path || [], propertyName),
           data: addAllowedVersion({
             type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
             node,
@@ -432,9 +482,7 @@ module.exports.hasExpression = function(node, propertyName, check, parentNode = 
       return [
         {
           message: `Property <${ propertyName }> must have expression value`,
-          path: path
-            ? [ ...path, propertyName ]
-            : null,
+          path: pathConcat(path, propertyName),
           data: {
             type: ERROR_TYPES.EXPRESSION_REQUIRED,
             node: is(expression, 'bpmn:Expression') ? expression : node,
@@ -462,9 +510,7 @@ module.exports.hasExpression = function(node, propertyName, check, parentNode = 
         message: allowedVersion
           ? `Expression value of <${ propertyValue }> only allowed by Camunda ${ allowedVersion }`
           : `Expression value of <${ propertyValue }> not allowed`,
-        path: path
-          ? [ ...path, propertyName ]
-          : null,
+        path: pathConcat(path, propertyName),
         data: addAllowedVersion({
           type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
           node: is(expression, 'bpmn:Expression') ? expression : node,

@@ -1,6 +1,6 @@
 const { is } = require('bpmnlint-utils');
 
-const { getPath } = require('@bpmn-io/moddle-utils');
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 const { camundaBuiltins, camundaReservedNameBuiltins } = require('@camunda/feel-builtins');
 
 const { FeelAnalyzer } = require('@bpmn-io/feel-analyzer');
@@ -77,9 +77,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
 
         errors.push({
           message: `FEEL function <${ builtin.name }> requires Camunda ${ builtin.engines.camunda }`,
-          path: path
-            ? [ ...path, propertyName ]
-            : [ propertyName ],
+          path: pathConcat(path || [], propertyName),
           data: {
             type: ERROR_TYPES.FEEL_EXPRESSION_UNSUPPORTED_FUNCTION,
             node,

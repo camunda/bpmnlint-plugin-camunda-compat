@@ -126,7 +126,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key must be a FEEL path, not a string literal. Remove the quotes around "toolCall.url".',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -139,7 +139,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key must be a FEEL path starting with "toolCall.", not null.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -152,7 +152,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key must be a FEEL path starting with "toolCall.", not a number.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -165,7 +165,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key must be a FEEL path starting with "toolCall.", not an arithmetic expression.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -178,7 +178,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key must use dot notation, not bracket notation. Use toolCall.name instead of toolCall["name"].',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -191,7 +191,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key must start with "toolCall.". Use toolCall.url instead of a bare name.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_PREFIX_MISSING },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -204,7 +204,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key must start with "toolCall.". Got context.url.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_PREFIX_MISSING },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -217,7 +217,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key must be a single name under toolCall. Use toolCall.query instead of toolCall.params.query.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_SEGMENTS_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -230,7 +230,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key must be a FEEL path starting with "toolCall.", not a conditional expression. The connector requires a plain reference regardless of which branch would apply at runtime.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -241,7 +241,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() requires a key argument: a FEEL path like toolCall.url.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
 
@@ -263,7 +263,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() description must be a string literal: a quoted string describing what the agent should provide.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -274,7 +274,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() description must be a string literal: a quoted string describing what the agent should provide.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -285,7 +285,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() description must be a string literal: a quoted string describing what the agent should provide.',
       data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
 
@@ -315,7 +315,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key toolCall.a is declared more than once in this tool. Declare it once and reference it directly elsewhere.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_DUPLICATE },
-      propertiesPanel: { entryIds: [ 'inputs' ] }
+      paths: [ [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ], [ 'extensionElements', 'values', 0, 'inputParameters', 1, 'source' ] ]
     }
   },
 
@@ -331,7 +331,7 @@ const invalid = [
       id: 'Task_1',
       message: 'Wrong function name "fromai". Use fromAi (case-sensitive).',
       data: { type: ERROR_TYPES.AGENT_FEEL_FUNCTION_NAME_INVALID },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
 
@@ -347,7 +347,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() should only be used inside an agentic sub-process.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -360,7 +360,7 @@ const invalid = [
       id: 'Task_1',
       message: 'The "AHSP_1" sub-process is not marked as agentic, so fromAi() has no effect.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -381,7 +381,7 @@ const invalid = [
       id: 'Task_1',
       message: 'The "Delivery Tools" sub-process is not marked as agentic, so fromAi() has no effect.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel: { entryIds: [ 'Task_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -417,7 +417,7 @@ const invalid = [
       id: 'Task_2',
       message: 'fromAi() is ignored here: only the tool\'s entry element defines AI inputs. Define it there and read the toolCall variable directly.',
       data: { type: ERROR_TYPES.AGENT_FEEL_NON_ENTRY_ELEMENT },
-      propertiesPanel: { entryIds: [ 'Task_2-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -445,7 +445,7 @@ const invalid = [
       id: 'Inner_1',
       message: 'fromAi() is ignored here: only the tool\'s entry element defines AI inputs. Define it there and read the toolCall variable directly.',
       data: { type: ERROR_TYPES.AGENT_FEEL_NON_ENTRY_ELEMENT },
-      propertiesPanel: { entryIds: [ 'Inner_1-input-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
     }
   },
   {
@@ -471,7 +471,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel: { entryIds: [ 'Task_1-output-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'source' ]
     }
   },
   {
@@ -499,7 +499,7 @@ const invalid = [
       id: 'Flow_1',
       message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel: { entryIds: [ 'conditionExpression' ] }
+      path: [ 'conditionExpression' ]
     }
   },
 
@@ -524,7 +524,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() key toolCall.a is declared more than once in this tool. Declare it once and reference it directly elsewhere.',
       data: { type: ERROR_TYPES.AGENT_FEEL_KEY_DUPLICATE },
-      propertiesPanel: { entryIds: [ 'inputs' ] }
+      paths: [ [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ], [ 'extensionElements', 'values', 0, 'inputParameters', 1, 'source' ] ]
     }
   },
   {
@@ -545,7 +545,7 @@ const invalid = [
       id: 'Task_1',
       message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel: { entryIds: [ 'Task_1-output-0-source' ] }
+      path: [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'source' ]
     }
   },
   {
@@ -568,7 +568,7 @@ const invalid = [
       id: 'Flow_1',
       message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel: { entryIds: [ 'conditionExpression' ] }
+      path: [ 'conditionExpression' ]
     }
   }
 ];

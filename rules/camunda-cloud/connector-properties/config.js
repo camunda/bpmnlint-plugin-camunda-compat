@@ -1,4 +1,4 @@
-const { getPath } = require('@bpmn-io/moddle-utils');
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
 const { findExtensionElement } = require('../../utils/element');
 
@@ -75,7 +75,7 @@ function getInboundConnectorError(node, propertyName, allowedVersion) {
 
   return {
     message: `Connector property <name> with value <${ propertyName }> only allowed by Camunda ${ allowedVersion } or newer.`,
-    path: path ? [ ...path, 'name' ] : [ 'name' ],
+    path: pathConcat(path || [], 'name'),
     data: {
       type: ERROR_TYPES.CONNECTORS_PROPERTY_VALUE_NOT_ALLOWED,
       node: property,

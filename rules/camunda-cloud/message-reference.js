@@ -5,6 +5,7 @@ const {
 
 const {
   getEventDefinition,
+  getReferencePath,
   hasProperties
 } = require('../utils/element');
 
@@ -45,11 +46,19 @@ module.exports = skipInNonExecutableProcess(function() {
 
     const messageRef = eventDefinitionOrReceiveTask.get('messageRef');
 
+    const nodePath = getReferencePath({
+      element: node,
+      referenceHolder: eventDefinitionOrReceiveTask,
+      referenceProperty: 'messageRef',
+      referencedRoot: messageRef,
+      node: messageRef
+    });
+
     errors = hasProperties(messageRef, {
       name: {
         required: true
       }
-    }, node);
+    }, node, nodePath);
 
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);

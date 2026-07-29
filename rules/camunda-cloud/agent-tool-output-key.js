@@ -1,5 +1,7 @@
 const { is } = require('bpmnlint-utils');
 
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
+
 const { isAgenticToolElement } = require('../utils/element');
 const { reportErrors, getName } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
@@ -38,7 +40,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       reportErrors(node, reporter, {
         message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
         data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
-        propertiesPanel: { entryIds: [ 'outputs' ] },
+        path: getOutputsPath(node),
       });
       return;
     }
@@ -51,7 +53,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
         reportErrors(casingMismatch.element, reporter, {
           message: `Wrong casing "${getCasingMismatchText(casingMismatch)}": use toolCallResult (case-sensitive).`,
           data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
-          propertiesPanel: { entryIds: [ 'outputs' ] },
+          path: getChannelPath(casingMismatch),
         });
         return;
       }
@@ -63,7 +65,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       reportErrors(misdirected.element, reporter, {
         message: '"toolCallResult" output is not mapped.',
         data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
-        propertiesPanel: { entryIds: [ 'outputs' ] },
+        path: getChannelPath(misdirected),
       });
       return;
     }
@@ -96,7 +98,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
         reportErrors(overwriter.element, reporter, {
           message: `This overwrites the "toolCallResult" value set on "${overwrittenLabel}".`,
           data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
-          propertiesPanel: { entryIds: [ 'outputs' ] },
+          path: getChannelPath(overwriter),
         });
       }
     }
@@ -120,8 +122,9 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
  *
  * @param {ModdleElement} entry
  *
- * @returns {Object} { channels, linear } — channels as { kind, value, element }
- * (element being whichever element in the flow actually wrote this channel),
+ * @returns {Object} { channels, linear } — channels as { kind, value, element,
+ * node, property } (element being whichever element in the flow actually wrote
+ * this channel; node/property the moddle leaf that carries the offending value),
  * and linear being true when the flow is a single non-branching chain
  */
 function collectResultChannels(entry) {
@@ -191,14 +194,14 @@ function collectElementChannels(element, channels) {
   for (const value of extensionElements.get('values')) {
     if (is(value, 'zeebe:IoMapping')) {
       for (const output of value.get('outputParameters') || []) {
-        channels.push({ kind: 'output', value: output.get('target') || '', source: output.get('source'), element });
+        channels.push({ kind: 'output', value: output.get('target') || '', source: output.get('source'), element, node: output, property: 'target' });
       }
     }
 
     if (is(value, 'zeebe:Script') || is(value, 'zeebe:CalledDecision')) {
       const resultVariable = value.get('resultVariable');
       if (resultVariable) {
-        channels.push({ kind: 'resultVariable', value: resultVariable, element });
+        channels.push({ kind: 'resultVariable', value: resultVariable, element, node: value, property: 'resultVariable' });
       }
     }
 
@@ -212,14 +215,43 @@ function collectElementChannels(element, channels) {
       for (const header of value.get('values') || []) {
         const key = header.get('key');
         if (key === 'resultVariable') {
-          channels.push({ kind: 'resultVariable', value: header.get('value') || '', element });
+          channels.push({ kind: 'resultVariable', value: header.get('value') || '', element, node: header, property: 'value' });
         }
         if (key === 'resultExpression') {
-          channels.push({ kind: 'resultExpression', value: header.get('value') || '', element });
+          channels.push({ kind: 'resultExpression', value: header.get('value') || '', element, node: header, property: 'value' });
         }
       }
     }
   }
+}
+
+// The moddle leaf path to the write that actually carries the offending value
+// (an output target, a script/decision resultVariable, a connector header
+// value), relative to the element the finding is reported on. The panel
+// resolves this render-agnostically to the concrete field — a standard output
+// entry, or the matching element-template field when the tool is template
+// bound. Degrades to null (element selection) if the node is detached.
+function getChannelPath(channel) {
+  return pathConcat(getPath(channel.node, channel.element), channel.property);
+}
+
+// Best-effort location for a "tool returns nothing" finding: the tool's output
+// mapping collection, which the panel resolves outward to the outputs group.
+// When the tool has no output mapping at all there is nothing to point at, so
+// the finding degrades to element selection (null path) rather than fabricate a
+// target.
+function getOutputsPath(element) {
+  const extensionElements = element.get('extensionElements');
+  if (!extensionElements) {
+    return null;
+  }
+
+  const ioMapping = (extensionElements.get('values') || []).find(value => is(value, 'zeebe:IoMapping'));
+  if (!ioMapping) {
+    return null;
+  }
+
+  return pathConcat(getPath(ioMapping, element), 'outputParameters');
 }
 
 function isToolCallResultChannel({ kind, value }) {

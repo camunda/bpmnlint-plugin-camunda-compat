@@ -122,8 +122,9 @@ const invalid = [
       id: 'StartEvent_1',
       message: 'Element of type <bpmn:Signal> must have property <name>',
       path: [
-        'rootElements',
-        1,
+        'eventDefinitions',
+        0,
+        'signalRef',
         'name'
       ],
       data: {
@@ -171,8 +172,9 @@ const invalid = [
       id: 'IntermediateThrowEvent_1',
       message: 'Element of type <bpmn:Signal> must have property <name>',
       path: [
-        'rootElements',
-        1,
+        'eventDefinitions',
+        0,
+        'signalRef',
         'name'
       ],
       data: {
@@ -220,8 +222,9 @@ const invalid = [
       id: 'EndEvent_1',
       message: 'Element of type <bpmn:Signal> must have property <name>',
       path: [
-        'rootElements',
-        1,
+        'eventDefinitions',
+        0,
+        'signalRef',
         'name'
       ],
       data: {

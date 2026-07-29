@@ -1,4 +1,4 @@
-const { getPath } = require('@bpmn-io/moddle-utils');
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
 const {
   is,
@@ -72,9 +72,7 @@ module.exports = skipInNonExecutableProcess(function() {
 
             reportErrors(linkCatchEvent, reporter, {
               message: `Property of type <bpmn:LinkEventDefinition> has property <name> with duplicate value of <${ name }>`,
-              path: path
-                ? [ ...path, 'name' ]
-                : [ 'name' ],
+              path: pathConcat(path || [], 'name'),
               data: {
                 type: ERROR_TYPES.ELEMENT_PROPERTY_VALUE_DUPLICATED,
                 node: linkEventDefinition,

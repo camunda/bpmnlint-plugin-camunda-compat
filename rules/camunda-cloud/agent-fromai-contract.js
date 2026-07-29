@@ -1,5 +1,7 @@
 const { is } = require('bpmnlint-utils');
 
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
+
 const { findExtensionElement, findAncestorAdHocSubProcess, isAgenticAdHocSubProcess } = require('../utils/element');
 const { CORRECT_NAME, NAME_ALIASES, findFunctionInvocations, getPositionalArgs } = require('./utils/feel');
 const { reportErrors } = require('../utils/reporter');
@@ -156,12 +158,11 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       return;
     }
 
-    // Properties-panel entry for this input parameter, so clicking the report
-    // opens the right mapping (id convention: {elementId}-input-{index}-source).
-    const inputIndex = (node.$parent.get('inputParameters') || []).indexOf(node);
-    const propertiesPanel = {
-      entryIds: [ `${ task.get('id') }-input-${ inputIndex }-source` ]
-    };
+    // Moddle path to this input parameter's source, so a single downstream
+    // resolver maps it to the entry the modeler actually renders — the standard
+    // input mapping, or a template's custom entry. The rule stays agnostic to
+    // the id scheme.
+    const path = pathConcat(getPath(node, task), 'source');
 
     const ahsp = findAncestorAdHocSubProcess(task);
 
@@ -169,7 +170,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       reportErrors(task, reporter, invocations.map(() => ({
         message: 'fromAi() should only be used inside an agentic sub-process.',
         data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-        propertiesPanel,
+        path,
       })));
       return;
     }
@@ -179,7 +180,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       reportErrors(task, reporter, invocations.map(() => ({
         message: `The "${ahspLabel}" sub-process is not marked as agentic, so fromAi() has no effect.`,
         data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-        propertiesPanel,
+        path,
       })));
       return;
     }
@@ -194,7 +195,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       reportErrors(task, reporter, invocations.map(() => ({
         message: 'fromAi() is ignored here: only the tool\'s entry element defines AI inputs. Define it there and read the toolCall variable directly.',
         data: { type: ERROR_TYPES.AGENT_FEEL_NON_ENTRY_ELEMENT },
-        propertiesPanel,
+        path,
       })));
       return;
     }
@@ -237,7 +238,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
     }
 
     if (errors.length) {
-      reportErrors(task, reporter, errors.map(error => ({ ...error, propertiesPanel })));
+      reportErrors(task, reporter, errors.map(error => ({ ...error, path })));
     }
   }
 
@@ -273,7 +274,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       return;
     }
 
-    const keyCounts = {};
+    const keyOccurrences = {};
 
     for (const input of ioMapping.get('inputParameters') || []) {
       const source = input.get('source');
@@ -286,18 +287,18 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
         const args = getPositionalArgs(inv.node, expr);
         const key = args[ 0 ];
         if (key && key.type === 'PathExpression' && key.text.startsWith('toolCall.')) {
-          keyCounts[ key.text ] = (keyCounts[ key.text ] || 0) + 1;
+          (keyOccurrences[ key.text ] = keyOccurrences[ key.text ] || []).push(input);
         }
       }
     }
 
-    const duplicates = Object.keys(keyCounts).filter(key => keyCounts[ key ] > 1);
+    const duplicates = Object.keys(keyOccurrences).filter(key => keyOccurrences[ key ].length > 1);
 
     if (duplicates.length) {
       reportErrors(task, reporter, duplicates.map(key => ({
         message: `fromAi() key ${ key } is declared more than once in this tool. Declare it once and reference it directly elsewhere.`,
         data: { type: ERROR_TYPES.AGENT_FEEL_KEY_DUPLICATE },
-        propertiesPanel: { entryIds: [ 'inputs' ] },
+        paths: keyOccurrences[ key ].map(input => pathConcat(getPath(input, task), 'source')),
       })));
     }
   }
@@ -330,15 +331,12 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       return;
     }
 
-    const outputIndex = (node.$parent.get('outputParameters') || []).indexOf(node);
-    const propertiesPanel = {
-      entryIds: [ `${ task.get('id') }-output-${ outputIndex }-source` ]
-    };
+    const path = pathConcat(getPath(node, task), 'source');
 
     reportErrors(task, reporter, invocations.map(() => ({
       message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel,
+      path,
     })));
   }
 
@@ -368,7 +366,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
     reportErrors(node, reporter, invocations.map(() => ({
       message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
       data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      propertiesPanel: { entryIds: [ 'conditionExpression' ] },
+      path: getPath(condition, node),
     })));
   }
 });

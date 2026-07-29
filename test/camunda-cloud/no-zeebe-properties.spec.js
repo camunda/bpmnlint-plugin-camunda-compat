@@ -60,7 +60,10 @@ const invalid = [
         parentNode: null,
         extensionElement: 'zeebe:Properties',
         allowedVersion: '8.1'
-      }
+      },
+      paths: [
+        [ 'extensionElements', 'values', 0, 'properties', 0, 'name' ]
+      ]
     }
   }
 ];

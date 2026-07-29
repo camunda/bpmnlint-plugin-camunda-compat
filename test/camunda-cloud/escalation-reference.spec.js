@@ -97,8 +97,9 @@ const invalid = [
       id: 'EndEvent_1',
       message: 'Element of type <bpmn:Escalation> must have property <escalationCode>',
       path: [
-        'rootElements',
-        1,
+        'eventDefinitions',
+        0,
+        'escalationRef',
         'escalationCode'
       ],
       data: {

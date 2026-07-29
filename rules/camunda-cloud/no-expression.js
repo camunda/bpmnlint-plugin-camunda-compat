@@ -2,7 +2,7 @@ const {
   is
 } = require('bpmnlint-utils');
 
-const { getPath } = require('@bpmn-io/moddle-utils');
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
 const {
   ERROR_TYPES,
@@ -103,9 +103,7 @@ function noExpression(node, propertyName, parentNode, allowedVersion) {
 
   return {
     message,
-    path: path
-      ? [ ...path, propertyName ]
-      : [ propertyName ],
+    path: pathConcat(path || [], propertyName),
     data
   };
 }

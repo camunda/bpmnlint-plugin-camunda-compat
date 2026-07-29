@@ -110,6 +110,10 @@ const invalid = [
       id: 'ServiceTask_1',
       message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <authToken>',
       path: null,
+      paths: [
+        [ 'extensionElements', 'values', 0, 'listeners', 0, 'headers', 'values', 0, 'key' ],
+        [ 'extensionElements', 'values', 0, 'listeners', 0, 'headers', 'values', 1, 'key' ]
+      ],
       data: {
         type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
         node: 'zeebe:TaskHeaders',
@@ -147,6 +151,10 @@ const invalid = [
         id: 'ServiceTask_1',
         message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <authToken>',
         path: null,
+        paths: [
+          [ 'extensionElements', 'values', 0, 'listeners', 0, 'headers', 'values', 0, 'key' ],
+          [ 'extensionElements', 'values', 0, 'listeners', 0, 'headers', 'values', 1, 'key' ]
+        ],
         data: {
           type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
           node: 'zeebe:TaskHeaders',
@@ -164,6 +172,10 @@ const invalid = [
         id: 'ServiceTask_1',
         message: 'Properties of type <zeebe:Header> have property <key> with duplicate value of <endpoint>',
         path: null,
+        paths: [
+          [ 'extensionElements', 'values', 0, 'listeners', 0, 'headers', 'values', 2, 'key' ],
+          [ 'extensionElements', 'values', 0, 'listeners', 0, 'headers', 'values', 3, 'key' ]
+        ],
         data: {
           type: ERROR_TYPES.PROPERTY_VALUE_DUPLICATED,
           node: 'zeebe:TaskHeaders',

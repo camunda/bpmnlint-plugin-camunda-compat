@@ -5,6 +5,7 @@ const {
 
 const {
   getEventDefinition,
+  getReferencePath,
   hasProperties
 } = require('../utils/element');
 
@@ -47,11 +48,19 @@ module.exports = skipInNonExecutableProcess(function() {
       return;
     }
 
+    const nodePath = getReferencePath({
+      element: node,
+      referenceHolder: eventDefinition,
+      referenceProperty: 'escalationRef',
+      referencedRoot: escalationRef,
+      node: escalationRef
+    });
+
     errors = hasProperties(escalationRef, {
       escalationCode: {
         required: true
       }
-    }, node);
+    }, node, nodePath);
 
     if (errors.length) {
       reportErrors(node, reporter, errors);

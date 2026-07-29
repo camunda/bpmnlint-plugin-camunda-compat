@@ -5,6 +5,7 @@ const {
 
 const {
   getEventDefinition,
+  getReferencePath,
   hasProperties
 } = require('../utils/element');
 
@@ -52,11 +53,19 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
       return;
     }
 
+    const nodePath = getReferencePath({
+      element: node,
+      referenceHolder: eventDefinition,
+      referenceProperty: 'errorRef',
+      referencedRoot: errorRef,
+      node: errorRef
+    });
+
     errors = hasProperties(errorRef, {
       errorCode: {
         required: true
       }
-    }, node);
+    }, node, nodePath);
 
     if (errors.length) {
       reportErrors(node, reporter, errors);
