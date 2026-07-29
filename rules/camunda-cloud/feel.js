@@ -1,6 +1,6 @@
 const { is } = require('bpmnlint-utils');
 
-const { getPath } = require('@bpmn-io/moddle-utils');
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
 const { FeelAnalyzer } = require('@bpmn-io/feel-analyzer');
 
@@ -52,9 +52,7 @@ module.exports = skipInNonExecutableProcess(function() {
 
         errors.push({
           message: `Property <${ propertyName }> is not a valid FEEL expression`,
-          path: path
-            ? [ ...path, propertyName ]
-            : [ propertyName ],
+          path: pathConcat(path || [], propertyName),
           data: {
             type: ERROR_TYPES.FEEL_EXPRESSION_INVALID,
             node,

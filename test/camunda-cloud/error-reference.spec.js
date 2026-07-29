@@ -106,8 +106,9 @@ const invalid = [
       id: 'EndEvent_1',
       message: 'Element of type <bpmn:Error> must have property <errorCode>',
       path: [
-        'rootElements',
-        1,
+        'eventDefinitions',
+        0,
+        'errorRef',
         'errorCode'
       ],
       data: {
@@ -133,8 +134,9 @@ const invalid = [
       id: 'EndEvent_1',
       message: 'Element of type <bpmn:Error> must have property <errorCode>',
       path: [
-        'rootElements',
-        1,
+        'eventDefinitions',
+        0,
+        'errorRef',
         'errorCode'
       ],
       data: {
@@ -187,8 +189,9 @@ const invalid = [
       id: 'BoundaryEvent_1',
       message: 'Element of type <bpmn:Error> must have property <errorCode>',
       path: [
-        'rootElements',
-        1,
+        'eventDefinitions',
+        0,
+        'errorRef',
         'errorCode'
       ],
       data: {

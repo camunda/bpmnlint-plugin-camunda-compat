@@ -6,6 +6,7 @@ const {
 const {
   findExtensionElement,
   getEventDefinition,
+  getReferencePath,
   hasExtensionElement,
   hasProperties
 } = require('../utils/element');
@@ -49,11 +50,19 @@ module.exports = skipInNonExecutableProcess(function() {
 
     const subscription = findExtensionElement(messageRef, 'zeebe:Subscription');
 
+    const nodePath = getReferencePath({
+      element: node,
+      referenceHolder: eventDefinitionOrReceiveTask,
+      referenceProperty: 'messageRef',
+      referencedRoot: messageRef,
+      node: subscription
+    });
+
     errors = hasProperties(subscription, {
       correlationKey: {
         required: true
       }
-    }, node);
+    }, node, nodePath);
 
     if (errors && errors.length) {
       reportErrors(node, reporter, errors);

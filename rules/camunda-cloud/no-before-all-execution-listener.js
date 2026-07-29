@@ -1,4 +1,4 @@
-const { getPath } = require('@bpmn-io/moddle-utils');
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
 const {
   findExtensionElement
@@ -30,7 +30,7 @@ module.exports = skipInNonExecutableProcess(function() {
       return [
         {
           message: `Property <eventType> of <zeebe:ExecutionListener> with value <beforeAll> only allowed by Camunda ${ ALLOWED_VERSION } or newer`,
-          path: [ ...getPath(listener, node), 'eventType' ],
+          path: pathConcat(getPath(listener, node), 'eventType'),
           data: {
             type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
             node: listener,

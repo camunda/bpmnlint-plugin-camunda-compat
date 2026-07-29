@@ -1,6 +1,6 @@
 const { is } = require('bpmnlint-utils');
 
-const { getPath } = require('@bpmn-io/moddle-utils');
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
 const {
   ERROR_TYPES,
@@ -33,7 +33,7 @@ module.exports = skipInNonExecutableProcess(function() {
       return [
         {
           message: 'Property <eventType> of <zeebe:ExecutionListener> with value <beforeAll> only allowed on multi-instance elements',
-          path: [ ...getPath(listener, node), 'eventType' ],
+          path: pathConcat(getPath(listener, node), 'eventType'),
           data: {
             type: ERROR_TYPES.PROPERTY_VALUE_NOT_ALLOWED,
             node: listener,

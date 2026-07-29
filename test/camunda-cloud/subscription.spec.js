@@ -132,8 +132,9 @@ const invalid = [
       id: 'StartEvent_1',
       message: 'Element of type <zeebe:Subscription> must have property <correlationKey>',
       path: [
-        'rootElements',
-        1,
+        'eventDefinitions',
+        0,
+        'messageRef',
         'extensionElements',
         'values',
         0,
@@ -186,8 +187,7 @@ const invalid = [
       id: 'ReceiveTask_1',
       message: 'Element of type <zeebe:Subscription> must have property <correlationKey>',
       path: [
-        'rootElements',
-        1,
+        'messageRef',
         'extensionElements',
         'values',
         0,

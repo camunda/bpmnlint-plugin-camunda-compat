@@ -2,7 +2,7 @@ const { isString } = require('min-dash');
 
 const { is } = require('bpmnlint-utils');
 
-const { getPath } = require('@bpmn-io/moddle-utils');
+const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
 const {
   findExtensionElement,
@@ -99,9 +99,7 @@ function getReport(propertyName, node, parentNode) {
 
   return {
     message: `Property <${ propertyName }> uses deprecated secret expression format`,
-    path: path
-      ? [ ...getPath(node, parentNode), propertyName ]
-      : [ propertyName ],
+    path: pathConcat(path || [], propertyName),
     data: {
       type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
       node,

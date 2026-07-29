@@ -29,7 +29,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
         {
           message: 'Tool documentation is missing.',
           data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
-          propertiesPanel: { entryIds: [ 'documentation' ] },
+          path: [ 'documentation' ],
         },
       ]);
     }

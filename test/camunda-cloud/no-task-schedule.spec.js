@@ -56,7 +56,10 @@ const invalid = [
         parentNode: null,
         extensionElement: 'zeebe:TaskSchedule',
         allowedVersion: '8.2'
-      }
+      },
+      paths: [
+        [ 'extensionElements', 'values', 0, 'dueDate' ]
+      ]
     }
   }
 ];

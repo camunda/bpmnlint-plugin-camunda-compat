@@ -11,6 +11,11 @@ const { ERROR_TYPES } = require('../../rules/utils/error-types');
 
 const WARN_MESSAGE = '"toolCallResult" output is not mapped.';
 
+const OUTPUT_TARGET_PATH = [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'target' ];
+const HEADER_VALUE_PATH = [ 'extensionElements', 'values', 0, 'values', 0, 'value' ];
+const RESULT_VARIABLE_PATH = [ 'extensionElements', 'values', 0, 'resultVariable' ];
+const OUTPUTS_ANCHOR_PATH = [ 'extensionElements', 'values', 0, 'outputParameters' ];
+
 function agenticToolTask(outputXml = '') {
   return createProcess(`
     <bpmn:adHocSubProcess id="AHSP_1">
@@ -375,7 +380,7 @@ const invalid = [
       id: 'Task_1',
       message: WARN_MESSAGE,
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: OUTPUT_TARGET_PATH
     }
   },
   {
@@ -388,7 +393,7 @@ const invalid = [
       id: 'Task_1',
       message: WARN_MESSAGE,
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: OUTPUT_TARGET_PATH
     }
   },
   {
@@ -401,7 +406,7 @@ const invalid = [
       id: 'Task_1',
       message: WARN_MESSAGE,
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: OUTPUT_TARGET_PATH
     }
   },
   {
@@ -414,7 +419,7 @@ const invalid = [
       id: 'Task_1',
       message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: OUTPUT_TARGET_PATH
     }
   },
   {
@@ -440,7 +445,7 @@ const invalid = [
       id: 'Task_1',
       message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: HEADER_VALUE_PATH
     }
   },
   {
@@ -454,7 +459,7 @@ const invalid = [
       id: 'Task_1',
       message: WARN_MESSAGE,
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: OUTPUT_TARGET_PATH
     }
   },
   {
@@ -485,7 +490,7 @@ const invalid = [
       id: 'Task_2',
       message: WARN_MESSAGE,
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: OUTPUT_TARGET_PATH
     }
   },
   {
@@ -516,7 +521,7 @@ const invalid = [
       id: 'Task_2',
       message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: OUTPUT_TARGET_PATH
     }
   },
   {
@@ -527,7 +532,7 @@ const invalid = [
       id: 'Task_1',
       message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
       data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: OUTPUTS_ANCHOR_PATH
     }
   },
   {
@@ -551,7 +556,7 @@ const invalid = [
       id: 'Task_1',
       message: WARN_MESSAGE,
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: RESULT_VARIABLE_PATH
     }
   },
   {
@@ -587,7 +592,7 @@ const invalid = [
       id: 'Task_2',
       message: 'This overwrites the "toolCallResult" value set on "Fetch data".',
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
-      propertiesPanel: { entryIds: [ 'outputs' ] },
+      path: HEADER_VALUE_PATH,
       name: 'Re-send'
     }
   },
@@ -610,7 +615,7 @@ const invalid = [
       id: 'Task_1',
       message: WARN_MESSAGE,
       data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
-      propertiesPanel: { entryIds: [ 'outputs' ] }
+      path: OUTPUT_TARGET_PATH
     }
   },
   {
@@ -657,13 +662,13 @@ const invalid = [
         id: 'Task_2',
         message: 'This overwrites the "toolCallResult" value set on "Task_1".',
         data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
-        propertiesPanel: { entryIds: [ 'outputs' ] }
+        path: OUTPUT_TARGET_PATH
       },
       {
         id: 'Task_3',
         message: 'This overwrites the "toolCallResult" value set on "Task_2".',
         data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
-        propertiesPanel: { entryIds: [ 'outputs' ] }
+        path: OUTPUT_TARGET_PATH
       }
     ]
   }

@@ -128,6 +128,10 @@ const invalid = [
       id: 'ServiceTask_1',
       message: 'Properties of type <zeebe:ExecutionListener> have properties with duplicate values (property <eventType> with duplicate value of <start>, property <type> with duplicate value of <duplicate>)',
       path: null,
+      paths: [
+        [ 'extensionElements', 'values', 0, 'listeners', 0, 'type' ],
+        [ 'extensionElements', 'values', 0, 'listeners', 1, 'type' ]
+      ],
       data: {
         type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
         node: 'zeebe:ExecutionListeners',
@@ -162,6 +166,11 @@ const invalid = [
         id: 'ServiceTask_1',
         message: 'Properties of type <zeebe:ExecutionListener> have properties with duplicate values (property <eventType> with duplicate value of <start>, property <type> with duplicate value of <duplicate>)',
         path: null,
+        paths: [
+          [ 'extensionElements', 'values', 0, 'listeners', 0, 'type' ],
+          [ 'extensionElements', 'values', 0, 'listeners', 1, 'type' ],
+          [ 'extensionElements', 'values', 0, 'listeners', 2, 'type' ]
+        ],
         data: {
           type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
           node: 'zeebe:ExecutionListeners',
@@ -182,6 +191,11 @@ const invalid = [
         id: 'ServiceTask_1',
         message: 'Properties of type <zeebe:ExecutionListener> have properties with duplicate values (property <eventType> with duplicate value of <start>, property <type> with duplicate value of <duplicate>)',
         path: null,
+        paths: [
+          [ 'extensionElements', 'values', 0, 'listeners', 0, 'type' ],
+          [ 'extensionElements', 'values', 0, 'listeners', 1, 'type' ],
+          [ 'extensionElements', 'values', 0, 'listeners', 2, 'type' ]
+        ],
         data: {
           type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
           node: 'zeebe:ExecutionListeners',
@@ -219,6 +233,10 @@ const invalid = [
         id: 'ServiceTask_1',
         message: 'Properties of type <zeebe:ExecutionListener> have properties with duplicate values (property <eventType> with duplicate value of <start>, property <type> with duplicate value of <duplicate>)',
         path: null,
+        paths: [
+          [ 'extensionElements', 'values', 0, 'listeners', 0, 'type' ],
+          [ 'extensionElements', 'values', 0, 'listeners', 1, 'type' ]
+        ],
         data: {
           type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
           node: 'zeebe:ExecutionListeners',
@@ -238,6 +256,10 @@ const invalid = [
         id: 'ServiceTask_1',
         message: 'Properties of type <zeebe:ExecutionListener> have properties with duplicate values (property <eventType> with duplicate value of <start>, property <type> with duplicate value of <duplicate_2>)',
         path: null,
+        paths: [
+          [ 'extensionElements', 'values', 0, 'listeners', 2, 'type' ],
+          [ 'extensionElements', 'values', 0, 'listeners', 3, 'type' ]
+        ],
         data: {
           type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
           node: 'zeebe:ExecutionListeners',
@@ -271,6 +293,10 @@ const invalid = [
       id: 'ServiceTask_1',
       message: 'Properties of type <zeebe:ExecutionListener> have properties with duplicate values (property <eventType> with duplicate value of <start>, property <type> with duplicate value of <>)',
       path: null,
+      paths: [
+        [ 'extensionElements', 'values', 0, 'listeners', 0, 'type' ],
+        [ 'extensionElements', 'values', 0, 'listeners', 1, 'type' ]
+      ],
       data: {
         type: ERROR_TYPES.PROPERTY_VALUES_DUPLICATED,
         node: 'zeebe:ExecutionListeners',

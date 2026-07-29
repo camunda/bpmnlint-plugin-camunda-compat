@@ -98,8 +98,9 @@ const invalid = [
       id: 'StartEvent_1',
       message: 'Element of type <bpmn:Message> must have property <name>',
       path: [
-        'rootElements',
-        1,
+        'eventDefinitions',
+        0,
+        'messageRef',
         'name'
       ],
       data: {
@@ -141,8 +142,7 @@ const invalid = [
       id: 'ReceiveTask_1',
       message: 'Element of type <bpmn:Message> must have property <name>',
       path: [
-        'rootElements',
-        1,
+        'messageRef',
         'name'
       ],
       data: {
