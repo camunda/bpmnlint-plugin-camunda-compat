@@ -25,21 +25,8 @@ async function getAHSP(extensionXml) {
   return root.rootElements[0].flowElements[0];
 }
 
-const AGENT_MARKER = `
-  <zeebe:properties>
-    <zeebe:property name="io.camunda.agenticai.agent" value="true" />
-  </zeebe:properties>
-`;
-
 const TOOL_CONTAINER_MARKER = `
   <zeebe:properties>
-    <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
-  </zeebe:properties>
-`;
-
-const BOTH_MARKERS = `
-  <zeebe:properties>
-    <zeebe:property name="io.camunda.agenticai.agent" value="true" />
     <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
   </zeebe:properties>
 `;
@@ -50,16 +37,6 @@ describe('utils/element - agentic detection', function() {
 
     it('detects toolContainer=true', async function() {
       expect(hasToolContainerProperty(await getAHSP(TOOL_CONTAINER_MARKER))).to.be.true;
-    });
-
-
-    it('ignores the agent marker alone (reserved for other, non-linting uses)', async function() {
-      expect(hasToolContainerProperty(await getAHSP(AGENT_MARKER))).to.be.false;
-    });
-
-
-    it('detects toolContainer=true when the agent marker is also present', async function() {
-      expect(hasToolContainerProperty(await getAHSP(BOTH_MARKERS))).to.be.true;
     });
 
 
@@ -110,25 +87,6 @@ describe('utils/element - agentic detection', function() {
 
       it('is true with no version given', async function() {
         expect(isAgenticAdHocSubProcess(await getAHSP(TOOL_CONTAINER_MARKER))).to.be.true;
-      });
-
-
-      it('is true when both markers are present on the same element', async function() {
-        expect(isAgenticAdHocSubProcess(await getAHSP(BOTH_MARKERS), '8.8')).to.be.true;
-      });
-
-    });
-
-
-    describe('agent=true property marker alone (not consulted by these rules)', function() {
-
-      it('is false at 8.8', async function() {
-        expect(isAgenticAdHocSubProcess(await getAHSP(AGENT_MARKER), '8.8')).to.be.false;
-      });
-
-
-      it('is false at 8.10', async function() {
-        expect(isAgenticAdHocSubProcess(await getAHSP(AGENT_MARKER), '8.10')).to.be.false;
       });
 
     });

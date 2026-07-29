@@ -524,10 +524,9 @@ module.exports.findAncestorAdHocSubProcess = findAncestorAdHocSubProcess;
 // detached tools ad-hoc sub-process as a tool container to lint. This is
 // read-only and has no execution effect; it parses on the current moddle with
 // no schema change. The marker is an independent boolean, not a single-valued
-// role enum, because a Camunda agent element can carry both the
-// `toolContainer` role (hosts tools) and the `agent` role at once; a
-// single-valued `io.camunda.agenticai.role` property could not represent
-// both roles on the same element.
+// role enum: the original design paired it with an `io.camunda.agenticai.agent`
+// value so a single element could in principle declare both, but no template
+// ever shipped that value, so this plugin only checks for `toolContainer`.
 const TOOL_CONTAINER_PROPERTY = 'io.camunda.agenticai.toolContainer';
 
 // The AI Agent job-worker template applied to an ad-hoc sub-process. Its id is
