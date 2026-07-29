@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.59.0
+
+* `FEAT`: expose relevant `path` or `paths` with rule reports ([#255](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/255))
+
 ## 2.58.2
 
 * `CHORE`: improve agent detection ([#253](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/253))
