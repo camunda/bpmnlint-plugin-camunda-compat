@@ -204,7 +204,8 @@ location, built with `getPath` / `pathConcat` from
 properties panel resolves it to the entry it renders — the standard field, or an
 element-template field when the element is template-bound — so the same rule
 lights up the right entry in both cases. A missing path silently loses inline
-errors and click-to-focus.
+errors and click-to-focus (which is sometimes the right, graceful outcome — see
+[Best-effort paths](#best-effort-paths-element-level--missing-findings) below).
 
 - **One offending field:** emit a single `path`.
 - **Several offending fields** (e.g. duplicate keys across a list): emit a plural
@@ -214,6 +215,39 @@ errors and click-to-focus.
   you; for a field on a _referenced_ element use the exported `getReferencePath`,
   which stitches a path _through_ a moddle reference (e.g. an event's `messageRef`)
   so it still resolves locally from the reported element.
+
+### Best-effort paths (element-level & missing findings)
+
+Not every finding sits on a scalar field. A finding may be about a _missing_
+value (there is no field yet), or about an element/group as a whole. Emit the
+**most specific path the element's configuration allows**, and let the panel do
+the rest — resolution is best-effort on both ends:
+
+- **Offending value exists →** point at its scalar leaf (the normal case above).
+- **No single offending value, but a container/property exists →** point at that
+  **anchor** (a property such as `documentation`, or a collection such as
+  `outputParameters`). The panel resolves a container **outward** to the group
+  that renders it (e.g. `zeebe:IoMapping` `outputParameters` → the _Output_
+  group), so navigation still lands in the right section.
+- **Nothing exists to point at →** emit **no path**. The finding degrades to
+  plain element selection. This is a deliberate, graceful outcome — never
+  fabricate a leaf or an anchor just to have a path.
+
+Two rules of thumb keep this honest:
+
+- **Never construct an entry id**, not even for element-level findings. Where the
+  offending location cannot be a field, resolve to a group (panel-side) or degrade
+  to the element — do not smuggle a `propertiesPanel.entryIds` back in.
+- **Build the path with `pathConcat`**, which encodes the degrade for free:
+  `pathConcat(base, leaf)` returns `null` (→ element selection) when `base` is
+  nil, and `pathConcat(base || [], leaf)` anchors on the property name even at the
+  element root (the legacy `[ leaf ]` fallback). Prefer these over a raw
+  `[ ...base, leaf ]` spread, which throws on a nil `base`.
+
+`agent-tool-documentation` (anchors on the `documentation` property) and
+`agent-tool-output-key` (a concrete output leaf when a write exists, the
+`outputParameters` container when the tool returns nothing, no path when there is
+no output mapping at all) are the reference examples.
 
 ## Detecting Camunda concepts (encode the contract once)
 

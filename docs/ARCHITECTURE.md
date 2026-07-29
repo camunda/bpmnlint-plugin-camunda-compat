@@ -133,3 +133,17 @@ and never reconstructs an entry id itself:
 
 A finding that legitimately spans several fields (e.g. duplicate keys) carries a
 plural `paths` — one moddle location per field — and each resolves the same way.
+
+Resolution is **best-effort on both ends**. A rule emits the most specific
+location its element allows: a scalar leaf when the offending value exists,
+otherwise the nearest existing anchor — a property (`documentation`) or a
+container (`outputParameters`). The panel then resolves the most specific entry
+it renders, **walking outward** when the location is not itself a field: a scalar
+leaf → its field entry; a container → the group that renders it (e.g.
+`zeebe:IoMapping` `outputParameters` → the _Output_ group). When a finding has
+no location to point at at all, the rule emits **no path** and it degrades to
+plain element selection — no fabricated leaf, no entry id, no element-level
+resolution pushed back into `@camunda/linting`. The `getEntryId` listeners fire
+in reverse render order and each **defers** (returns nothing) for locations it
+does not own, so the standard provider still answers once a template provider
+declines.
