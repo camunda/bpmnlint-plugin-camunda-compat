@@ -34,28 +34,13 @@ work in both.
 - **In-app linting** — the same rules power the "problems" experience inside
   Desktop and Web Modeler. There, a report must be human-readable and
   **click-to-focus**: selecting it highlights the offending element and opens
-  the relevant properties-panel entry.
+  the relevant properties-panel entry. This perspective is composed downstream
+  and is only **half** delivered by this package — you contribute a
+  machine-readable finding; [`@camunda/linting`](https://github.com/camunda/linting)
+  and the properties panel turn it into a version-aware message and
+  click-to-focus navigation.
 
-The in-app perspective is **not** delivered by this package alone:
-
-```
-                bpmnlint-plugin-camunda-compat   ← rules live here (this repo)
-                            │
-                            ▼
-                     @camunda/linting            ← composes rules, resolves
-                            │                       messages + entry navigation
-              ┌─────────────┴─────────────┐
-              ▼                           ▼
-       Desktop Modeler               Web Modeler
-```
-
-[`@camunda/linting`](https://github.com/camunda/linting) wraps this plugin
-(together with element-templates linting), turns raw reports into modeler
-problems, and adds the message polish and properties-panel navigation. **A rule
-here is only half of the in-app feature.** You contribute a machine-readable
-finding; `@camunda/linting` and the properties panel turn it into a
-version-aware message and click-to-focus navigation. See
-[`ARCHITECTURE.md`](./ARCHITECTURE.md) for the system-level view of how the
+See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the system-level view of how the
 libraries compose.
 
 ## Anatomy of a rule
@@ -90,7 +75,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
     });
   }
 
-  // annotateRule attaches the modeling-guidance documentation URL
+  // attach the docs URL — see "Documenting a rule" below
   return annotateRule('my-rule', { check });
 });
 ```
@@ -99,6 +84,22 @@ The factory receives `config` with `{ version, platform }` (`platform` defaults
 to `camunda-cloud`). Keep the `check` function flat and early-return heavy: bail
 as soon as the node is out of scope. A reader should be able to see the guard
 conditions before the logic.
+
+**Documenting a rule.** A rule attaches its docs URL through `meta.documentation`.
+Two ways to do it:
+
+- `annotateRule(ruleName, { check })` ([`rules/helper.js`](../rules/helper.js))
+  derives the modeling-guidance page URL from the rule name
+  (`https://docs.camunda.io/docs/components/modeler/reference/modeling-guidance/rules/<ruleName>/`).
+  Use it when the rule's canonical docs **is** its modeling-guidance page.
+- Manual `return { meta: { documentation: { url } }, check }` — use it to point at
+  a specific external source of truth (an engine/connector doc or migration guide)
+  instead of the generated modeling-guidance URL.
+  [`zeebe-user-task`](../rules/camunda-cloud/zeebe-user-task.js) does this, linking
+  the user-task migration docs.
+
+`annotateRule` also merges any `meta.documentation` you pass — an explicit `url`
+overrides the derived one.
 
 Errors contain `data`, the machine-readable payload attached to each finding:
 It is distinct from the human-readable `message`.

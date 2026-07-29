@@ -133,7 +133,3 @@ and never reconstructs an entry id itself:
 
 A finding that legitimately spans several fields (e.g. duplicate keys) carries a
 plural `paths` — one moddle location per field — and each resolves the same way.
-
-> The render-agnostic resolution described here is being rolled out across the
-> panel and linting repos under
-> [internal-docs#1355](https://github.com/bpmn-io/internal-docs/issues/1355).
