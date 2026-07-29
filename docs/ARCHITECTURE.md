@@ -62,7 +62,12 @@ Two contributions:
    only on template-bound elements — unknown/missing template, per-property
    constraints, engine-version compatibility, available updates. It is
    **dynamic** (depends on the loaded templates), so the host injects it into
-   `@camunda/linting` at runtime as a plugin.
+   `@camunda/linting` at runtime as a plugin. This rule set is the **one
+   deliberate exemption** from the render-agnostic `path` contract below: its
+   findings are template-specific by construction (they never apply to a standard
+   field) and often target a required-but-_missing_ property that has no moddle
+   location to resolve, so it emits the `custom-entry-*` `entryIds` directly via
+   ET's own `getPropertyEntryId` — resolving where the knowledge already lives.
 2. **The properties-panel provider** that renders template-bound fields — and
    therefore resolves a moddle `path` to the entry it renders for those fields.
 
