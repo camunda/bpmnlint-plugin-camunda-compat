@@ -5,7 +5,7 @@ const { expect } = chai;
 const { createProcess, createModdle } = require('../helper');
 
 const {
-  hasToolContainerRoleProperty,
+  hasToolContainerProperty,
   isAgenticAdHocSubProcess
 } = require('../../rules/utils/element');
 
@@ -25,7 +25,7 @@ async function getAHSP(extensionXml) {
   return root.rootElements[0].flowElements[0];
 }
 
-const AGENT_ROLE_MARKER = `
+const AGENT_MARKER = `
   <zeebe:properties>
     <zeebe:property name="io.camunda.agenticai.agent" value="true" />
   </zeebe:properties>
@@ -37,7 +37,7 @@ const TOOL_CONTAINER_MARKER = `
   </zeebe:properties>
 `;
 
-const BOTH_ROLE_MARKERS = `
+const BOTH_MARKERS = `
   <zeebe:properties>
     <zeebe:property name="io.camunda.agenticai.agent" value="true" />
     <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
@@ -46,20 +46,20 @@ const BOTH_ROLE_MARKERS = `
 
 describe('utils/element - agentic detection', function() {
 
-  describe('#hasToolContainerRoleProperty', function() {
+  describe('#hasToolContainerProperty', function() {
 
     it('detects toolContainer=true', async function() {
-      expect(hasToolContainerRoleProperty(await getAHSP(TOOL_CONTAINER_MARKER))).to.be.true;
+      expect(hasToolContainerProperty(await getAHSP(TOOL_CONTAINER_MARKER))).to.be.true;
     });
 
 
     it('ignores the agent marker alone (reserved for other, non-linting uses)', async function() {
-      expect(hasToolContainerRoleProperty(await getAHSP(AGENT_ROLE_MARKER))).to.be.false;
+      expect(hasToolContainerProperty(await getAHSP(AGENT_MARKER))).to.be.false;
     });
 
 
     it('detects toolContainer=true when the agent marker is also present', async function() {
-      expect(hasToolContainerRoleProperty(await getAHSP(BOTH_ROLE_MARKERS))).to.be.true;
+      expect(hasToolContainerProperty(await getAHSP(BOTH_MARKERS))).to.be.true;
     });
 
 
@@ -70,7 +70,7 @@ describe('utils/element - agentic detection', function() {
         </zeebe:properties>
       `);
 
-      expect(hasToolContainerRoleProperty(ahsp)).to.be.false;
+      expect(hasToolContainerProperty(ahsp)).to.be.false;
     });
 
 
@@ -81,14 +81,14 @@ describe('utils/element - agentic detection', function() {
         </zeebe:properties>
       `);
 
-      expect(hasToolContainerRoleProperty(ahsp)).to.be.false;
+      expect(hasToolContainerProperty(ahsp)).to.be.false;
     });
 
 
     it('is false without extension elements', async function() {
       const { root } = await createModdle(createProcess('<bpmn:adHocSubProcess id="AHSP_1" />'));
 
-      expect(hasToolContainerRoleProperty(root.rootElements[0].flowElements[0])).to.be.false;
+      expect(hasToolContainerProperty(root.rootElements[0].flowElements[0])).to.be.false;
     });
 
   });
@@ -113,8 +113,8 @@ describe('utils/element - agentic detection', function() {
       });
 
 
-      it('is true when both role markers are present on the same element', async function() {
-        expect(isAgenticAdHocSubProcess(await getAHSP(BOTH_ROLE_MARKERS), '8.8')).to.be.true;
+      it('is true when both markers are present on the same element', async function() {
+        expect(isAgenticAdHocSubProcess(await getAHSP(BOTH_MARKERS), '8.8')).to.be.true;
       });
 
     });
@@ -123,12 +123,12 @@ describe('utils/element - agentic detection', function() {
     describe('agent=true property marker alone (not consulted by these rules)', function() {
 
       it('is false at 8.8', async function() {
-        expect(isAgenticAdHocSubProcess(await getAHSP(AGENT_ROLE_MARKER), '8.8')).to.be.false;
+        expect(isAgenticAdHocSubProcess(await getAHSP(AGENT_MARKER), '8.8')).to.be.false;
       });
 
 
       it('is false at 8.10', async function() {
-        expect(isAgenticAdHocSubProcess(await getAHSP(AGENT_ROLE_MARKER), '8.10')).to.be.false;
+        expect(isAgenticAdHocSubProcess(await getAHSP(AGENT_MARKER), '8.10')).to.be.false;
       });
 
     });

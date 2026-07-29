@@ -537,7 +537,7 @@ const TOOL_CONTAINER_PROPERTY = 'io.camunda.agenticai.toolContainer';
 // their AHSPs are agentic but carry no marker; the template id identifies them.
 const LEGACY_AI_AGENT_TEMPLATE = 'io.camunda.connectors.agenticai.aiagent.jobworker.v1';
 
-function hasToolContainerRoleProperty(node) {
+function hasToolContainerProperty(node) {
   const properties = findExtensionElement(node, 'zeebe:Properties');
 
   if (!properties) {
@@ -550,7 +550,7 @@ function hasToolContainerRoleProperty(node) {
   );
 }
 
-module.exports.hasToolContainerRoleProperty = hasToolContainerRoleProperty;
+module.exports.hasToolContainerProperty = hasToolContainerProperty;
 
 // Whether an ad-hoc sub-process should have agent tool contracts linted.
 //
@@ -568,7 +568,7 @@ module.exports.hasToolContainerRoleProperty = hasToolContainerRoleProperty;
 // still agentic and are recognized by their (version-agnostic) element template
 // id (see LEGACY_AI_AGENT_TEMPLATE).
 function isAgenticAdHocSubProcess(ahsp, version) {
-  if (hasToolContainerRoleProperty(ahsp)) {
+  if (hasToolContainerProperty(ahsp)) {
     return true;
   }
 
