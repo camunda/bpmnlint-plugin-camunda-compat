@@ -56,6 +56,34 @@ function bareInput(source) {
   `);
 }
 
+const TOOL_CONTAINER_MARKER = `
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>`;
+
+// A service task tool root (no incoming, directly in the AHSP) whose
+// zeebe:taskDefinition carries the given attributes, optionally alongside an
+// input mapping declaring a key. `agentic` controls whether the AHSP carries
+// the toolContainer marker.
+function taskDefinitionTool(taskDefAttrs, { agentic = true, inputMapping = '' } = {}) {
+  return createProcess(`
+    <bpmn:adHocSubProcess id="AHSP_1">${agentic ? TOOL_CONTAINER_MARKER : ''}
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition ${taskDefAttrs} />
+          ${inputMapping}
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    </bpmn:adHocSubProcess>
+  `);
+}
+
+function inputMappingXml(source, target = 'value') {
+  return `<zeebe:ioMapping><zeebe:input source="${source}" target="${target}" /></zeebe:ioMapping>`;
+}
+
 const GOOD_DESC = '&quot;fetch the URL for the given search query&quot;';
 
 const valid = [
@@ -109,6 +137,78 @@ const valid = [
       '=fromAi(toolCall.url)',
       'zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1"'
     ))
+  },
+  {
+    name: 'fromAi() in Retries, key declared by an input mapping on the same tool — the wrapper is redundant, not broken',
+    config: { version: '8.8' },
+    moddleElement: createModdle(taskDefinitionTool(
+      'retries="=fromAi(toolCall.retries)"',
+      { inputMapping: inputMappingXml(`=fromAi(toolCall.retries, ${GOOD_DESC}, &quot;number&quot;)`) }
+    ))
+  },
+  {
+    name: 'plain toolCall.retries read in Retries, no fromAi() wrapper — never swept at all',
+    config: { version: '8.8' },
+    moddleElement: createModdle(taskDefinitionTool(
+      'retries="=toolCall.retries"',
+      { inputMapping: inputMappingXml(`=fromAi(toolCall.retries, ${GOOD_DESC}, &quot;number&quot;)`) }
+    ))
+  },
+  {
+    name: 'retries is a plain FEEL literal, not fromAi() — rule ignores it',
+    config: { version: '8.8' },
+    moddleElement: createModdle(taskDefinitionTool('retries="=3"'))
+  },
+  {
+    name: 'zeebe:taskHeader value with no parseable fromAi() invocation',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="search" />
+            <zeebe:taskHeaders>
+              <zeebe:header key="note" value="=not really feel fromAi" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'bpmn:Documentation mentioning fromAi() in prose is not swept',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:documentation>=fromAi(toolCall.x) is used to tag AI-provided values</bpmn:documentation>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.url, ${GOOD_DESC})" target="value" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'nested agent-as-tool — fromAi() in the inner agentic AHSP\'s own input mapping is a live tool-input declaration',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_Outer">${TOOL_CONTAINER_MARKER}
+        <bpmn:adHocSubProcess id="AHSP_Inner">
+          <bpmn:extensionElements>
+            <zeebe:properties>
+              <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+            </zeebe:properties>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.q, ${GOOD_DESC})" target="value" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+          <bpmn:serviceTask id="Task_1" />
+        </bpmn:adHocSubProcess>
+      </bpmn:adHocSubProcess>
+    `))
   }
 ];
 
@@ -449,7 +549,7 @@ const invalid = [
     }
   },
   {
-    name: 'T19 — fromAi in an output mapping source (ignored at runtime)',
+    name: 'T19 — fromAi in an output mapping source, key not declared anywhere (ignored at runtime)',
     config: { version: '8.8' },
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
@@ -469,13 +569,18 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.url is never provided and this output mapping resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.url here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:Output',
+        parentNode: 'Task_1',
+        property: 'source'
+      },
       path: [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'source' ]
     }
   },
   {
-    name: 'T20 — fromAi in a sequence flow condition (toolCall not in scope)',
+    name: 'T20 — fromAi in a sequence flow condition, key not declared anywhere',
     config: { version: '8.8' },
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1">
@@ -497,8 +602,13 @@ const invalid = [
     `)),
     report: {
       id: 'Flow_1',
-      message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.ready is never provided and this sequence flow condition resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.ready here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'Flow_1',
+        parentNode: 'Flow_1',
+        property: 'conditionExpression'
+      },
       path: [ 'conditionExpression' ]
     }
   },
@@ -528,7 +638,7 @@ const invalid = [
     }
   },
   {
-    name: 'legacy template — fromAi in output mapping',
+    name: 'legacy template — fromAi in output mapping, key not declared anywhere',
     config: { version: '8.8' },
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1">
@@ -543,13 +653,18 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
-      message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.url is never provided and this output mapping resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.url here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:Output',
+        parentNode: 'Task_1',
+        property: 'source'
+      },
       path: [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'source' ]
     }
   },
   {
-    name: 'legacy template — fromAi in sequence flow condition',
+    name: 'legacy template — fromAi in sequence flow condition, key not declared anywhere',
     config: { version: '8.8' },
     moddleElement: createModdle(createProcess(`
       <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1">
@@ -566,9 +681,478 @@ const invalid = [
     `)),
     report: {
       id: 'Flow_1',
-      message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.ready is never provided and this sequence flow condition resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.ready here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'Flow_1',
+        parentNode: 'Flow_1',
+        property: 'conditionExpression'
+      },
       path: [ 'conditionExpression' ]
+    }
+  },
+
+  // ─── Non-input properties: undeclared key (the #256 bug) ───────────────────
+
+  {
+    name: 'screenshot repro — fromAi() in Retries, non-agentic AHSP, key declared nowhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(taskDefinitionTool(
+      `type="search" retries="=fromAi(toolCall.query, ${GOOD_DESC})"`,
+      { agentic: false }
+    )),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.query is never provided and the <retries> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.query here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:TaskDefinition',
+        parentNode: 'Task_1',
+        property: 'retries'
+      },
+      path: [ 'extensionElements', 'values', 0, 'retries' ]
+    }
+  },
+  {
+    name: 'fromAi() in Retries, agentic AHSP, key declared nowhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(taskDefinitionTool(
+      `retries="=fromAi(toolCall.retries, ${GOOD_DESC}, &quot;number&quot;)"`
+    )),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.retries is never provided and the <retries> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.retries here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:TaskDefinition',
+        parentNode: 'Task_1',
+        property: 'retries'
+      },
+      path: [ 'extensionElements', 'values', 0, 'retries' ]
+    }
+  },
+  {
+    name: 'per-element precision — key declared on a different tool does not excuse this one',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:serviceTask id="Task_A">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.retries, ${GOOD_DESC}, &quot;number&quot;)" target="value" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_B">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition retries="=fromAi(toolCall.retries)" />
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_B',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.retries is never provided and the <retries> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.retries here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:TaskDefinition',
+        parentNode: 'Task_B',
+        property: 'retries'
+      },
+      path: [ 'extensionElements', 'values', 0, 'retries' ]
+    }
+  },
+  {
+    name: 'fromAi() in taskDefinition type, key declared nowhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(taskDefinitionTool(
+      `type="=fromAi(toolCall.jobType, ${GOOD_DESC})"`
+    )),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.jobType is never provided and the <type> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.jobType here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:TaskDefinition',
+        parentNode: 'Task_1',
+        property: 'type'
+      },
+      path: [ 'extensionElements', 'values', 0, 'type' ]
+    }
+  },
+  {
+    name: 'fromAi() in a zeebe:taskHeader value, key declared nowhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="search" />
+            <zeebe:taskHeaders>
+              <zeebe:header key="resultExpression" value="=fromAi(toolCall.expr, ${GOOD_DESC})" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.expr is never provided and the <value> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.expr here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:Header',
+        parentNode: 'Task_1',
+        property: 'value'
+      },
+      path: [ 'extensionElements', 'values', 1, 'values', 0, 'value' ]
+    }
+  },
+  {
+    name: 'fromAi() in a zeebe:property value, key declared nowhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:properties>
+              <zeebe:property name="custom" value="=fromAi(toolCall.custom, ${GOOD_DESC})" />
+            </zeebe:properties>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.custom is never provided and the <value> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.custom here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:Property',
+        parentNode: 'Task_1',
+        property: 'value'
+      },
+      path: [ 'extensionElements', 'values', 0, 'properties', 0, 'value' ]
+    }
+  },
+  {
+    name: 'fromAi() in a zeebe:script expression, key declared nowhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:scriptTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:script expression="=fromAi(toolCall.expr, ${GOOD_DESC})" resultVariable="result" />
+          </bpmn:extensionElements>
+        </bpmn:scriptTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.expr is never provided and the <expression> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.expr here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:Script',
+        parentNode: 'Task_1',
+        property: 'expression'
+      },
+      path: [ 'extensionElements', 'values', 0, 'expression' ]
+    }
+  },
+  {
+    name: 'fromAi() in zeebe:assignmentDefinition assignee, key declared nowhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:userTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:assignmentDefinition assignee="=fromAi(toolCall.assignee, ${GOOD_DESC})" />
+          </bpmn:extensionElements>
+        </bpmn:userTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.assignee is never provided and the <assignee> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.assignee here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:AssignmentDefinition',
+        parentNode: 'Task_1',
+        property: 'assignee'
+      },
+      path: [ 'extensionElements', 'values', 0, 'assignee' ]
+    }
+  },
+  {
+    name: 'fromAi() in an execution listener retries, key declared nowhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="search" />
+            <zeebe:executionListeners>
+              <zeebe:executionListener eventType="start" type="my-listener" retries="=fromAi(toolCall.retries, ${GOOD_DESC}, &quot;number&quot;)" />
+            </zeebe:executionListeners>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.retries is never provided and the <retries> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.retries here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:ExecutionListener',
+        parentNode: 'Task_1',
+        property: 'retries'
+      },
+      path: [ 'extensionElements', 'values', 1, 'listeners', 0, 'retries' ]
+    }
+  },
+  {
+    name: 'fromAi() in multi-instance inputCollection, key declared nowhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:multiInstanceLoopCharacteristics>
+            <bpmn:extensionElements>
+              <zeebe:loopCharacteristics inputCollection="=fromAi(toolCall.items, ${GOOD_DESC})" />
+            </bpmn:extensionElements>
+          </bpmn:multiInstanceLoopCharacteristics>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.items is never provided and the <inputCollection> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.items here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:LoopCharacteristics',
+        parentNode: 'Task_1',
+        property: 'inputCollection'
+      },
+      path: [ 'loopCharacteristics', 'extensionElements', 'values', 0, 'inputCollection' ]
+    }
+  },
+  {
+    name: 'fromAi() in a timer duration, key declared nowhere — reported once, not twice',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:intermediateCatchEvent id="Task_1">
+          <bpmn:timerEventDefinition>
+            <bpmn:timeDuration>=fromAi(toolCall.wait, ${GOOD_DESC})</bpmn:timeDuration>
+          </bpmn:timerEventDefinition>
+        </bpmn:intermediateCatchEvent>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.wait is never provided and the <timeDuration> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.wait here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'bpmn:TimerEventDefinition',
+        parentNode: 'Task_1',
+        property: 'timeDuration'
+      },
+      path: [ 'eventDefinitions', 0, 'timeDuration' ]
+    }
+  },
+  {
+    name: 'both a valid input source and an undeclared retries key on one task — reports only retries',
+    config: { version: '8.8' },
+    moddleElement: createModdle(taskDefinitionTool(
+      `retries="=fromAi(toolCall.other, ${GOOD_DESC}, &quot;number&quot;)"`,
+      { inputMapping: inputMappingXml(`=fromAi(toolCall.a, ${GOOD_DESC})`) }
+    )),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.other is never provided and the <retries> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.other here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:TaskDefinition',
+        parentNode: 'Task_1',
+        property: 'retries'
+      },
+      path: [ 'extensionElements', 'values', 0, 'retries' ]
+    }
+  },
+
+  // ─── The agent's own properties ─────────────────────────────────────────────
+
+  {
+    name: 'fromAi() in the agent\'s own input mapping — not a tool, toolCall never in scope there',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+          <zeebe:ioMapping>
+            <zeebe:input source="=fromAi(toolCall.systemPrompt, ${GOOD_DESC})" target="value" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'AHSP_1',
+      message: 'fromAi() defines a tool input and has no effect on the agent sub-process itself. Define it on a tool inside this sub-process.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:Input',
+        parentNode: 'AHSP_1',
+        property: 'source'
+      },
+      path: [ 'extensionElements', 'values', 1, 'inputParameters', 0, 'source' ]
+    }
+  },
+  {
+    name: 'fromAi() in the agent\'s own zeebe:adHoc activeElementsCollection',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+          <zeebe:adHoc activeElementsCollection="=fromAi(toolCall.elements, ${GOOD_DESC})" />
+        </bpmn:extensionElements>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'AHSP_1',
+      message: 'fromAi() defines a tool input and has no effect on the agent sub-process itself. Define it on a tool inside this sub-process.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:AdHoc',
+        parentNode: 'AHSP_1',
+        property: 'activeElementsCollection'
+      },
+      path: [ 'extensionElements', 'values', 1, 'activeElementsCollection' ]
+    }
+  },
+  {
+    name: 'fromAi() in the agent\'s own completionCondition',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">${TOOL_CONTAINER_MARKER}
+        <bpmn:completionCondition>=fromAi(toolCall.done, ${GOOD_DESC})</bpmn:completionCondition>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'AHSP_1',
+      message: 'fromAi() defines a tool input and has no effect on the agent sub-process itself. Define it on a tool inside this sub-process.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'AHSP_1',
+        parentNode: 'AHSP_1',
+        property: 'completionCondition'
+      },
+      path: [ 'completionCondition' ]
+    }
+  },
+
+  // ─── Widening: non-input surfaces report regardless of context ─────────────
+
+  {
+    name: 'fromAi() in an output mapping, non-agentic AHSP',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=fromAi(toolCall.url, ${GOOD_DESC})" target="result" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.url is never provided and this output mapping resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.url here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:Output',
+        parentNode: 'Task_1',
+        property: 'source'
+      },
+      path: [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'source' ]
+    }
+  },
+  {
+    name: 'fromAi() in a sequence flow condition, non-agentic AHSP',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2">
+          <bpmn:conditionExpression>=fromAi(toolCall.ready, ${GOOD_DESC})</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Flow_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.ready is never provided and this sequence flow condition resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.ready here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'Flow_1',
+        parentNode: 'Flow_1',
+        property: 'conditionExpression'
+      },
+      path: [ 'conditionExpression' ]
+    }
+  },
+  {
+    name: 'fromAi() in an output mapping, no AHSP anywhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:output source="=fromAi(toolCall.url, ${GOOD_DESC})" target="result" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.url is never provided and this output mapping resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.url here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:Output',
+        parentNode: 'Task_1',
+        property: 'source'
+      },
+      path: [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'source' ]
+    }
+  },
+  {
+    name: 'fromAi() in taskDefinition retries, no AHSP anywhere',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition retries="=fromAi(toolCall.retries, ${GOOD_DESC}, &quot;number&quot;)" />
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() only defines a tool input in an input mapping, so toolCall.retries is never provided and the <retries> property resolves to null. Declare it in an input mapping on the tool\'s entry element, then read toolCall.retries here.',
+      data: {
+        type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+        node: 'zeebe:TaskDefinition',
+        parentNode: 'Task_1',
+        property: 'retries'
+      },
+      path: [ 'extensionElements', 'values', 0, 'retries' ]
     }
   }
 ];

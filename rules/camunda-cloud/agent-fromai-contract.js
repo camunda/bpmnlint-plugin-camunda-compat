@@ -6,6 +6,7 @@ const {
   findExtensionElement,
   findAncestorAdHocSubProcess,
   isAgenticAdHocSubProcess,
+  isAgenticToolElement,
   findParentNode
 } = require('../utils/element');
 const {
@@ -48,10 +49,20 @@ const { annotateRule } = require('../helper');
  * valid: the fromAi() description is optional, so neither rule reports it.
  *
  * check() walks every FEEL-bearing property of every node (the same
- * mechanism as the `feel` syntax rule), not just the three surfaces this
- * rule currently reports on. That breadth is deliberate groundwork: the
- * property sweep already sees every candidate site, checkSite() below just
- * doesn't have a message for most of them yet.
+ * mechanism as the `feel` syntax rule), not just an input mapping source.
+ * This is deliberate: fromAi() is only ever DECLARED as a tool parameter in
+ * an input mapping on the tool's entry element (AdHocSubProcessTransformer
+ * in camunda/camunda extracts tagged parameters only from
+ * `adHocActivity.getInputMappings()`), but the resulting `toolCall` variable
+ * is READABLE anywhere in that tool's sub-flow once activated
+ * (BpmnAdHocSubProcessBehavior#activateElement merges it as a local variable
+ * on the ad-hoc sub-process's inner instance). So a fromAi() call outside an
+ * input mapping is not automatically dead: `fromAi(toolCall.retries)` in a
+ * task's Retries field is genuinely correct if `toolCall.retries` was
+ * declared by a fromAi() call in an input mapping on the same tool. What is
+ * always broken is a fromAi(toolCall.KEY, ...) whose KEY was declared
+ * nowhere: the schema never gets that parameter, so the call always
+ * resolves to null. checkSite() below is key-aware for exactly this reason.
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 
@@ -210,25 +221,116 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
   }
 
   /**
-   * Dispatches a site to its surface-specific check. This PR only recognizes
-   * the three surfaces the rule already reports on; every other site the
-   * sweep finds (e.g. a fromAi() in a task's Retries field) is silently
-   * ignored for now. See the module docblock.
+   * Dispatches a site to its surface-specific check, first rung wins:
+   *
+   *   1. the owner is the agent itself (not a tool): toolCall lives on the
+   *      tool's inner instance, a child scope the agent's own properties
+   *      never see, regardless of which property this is.
+   *   2. an input mapping source: the existing context-then-structure ladder.
+   *   3. anything else: key-aware, see checkNonInputSite.
    */
   function checkSite(site, owner) {
+    if (isAgentItself(owner, version)) {
+      return site.invocations.map(() => ({
+        message: 'fromAi() defines a tool input and has no effect on the agent sub-process itself. Define it on a tool inside this sub-process.',
+        data: {
+          type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+          node: site.node,
+          parentNode: owner,
+          property: site.propertyName
+        },
+        path: site.path,
+      }));
+    }
+
     if (is(site.node, 'zeebe:Input') && site.propertyName === 'source') {
       return checkInputSite(site, owner);
     }
 
-    if (is(site.node, 'zeebe:Output') && site.propertyName === 'source') {
-      return checkOutputSite(site, owner);
+    return checkNonInputSite(site, owner);
+  }
+
+  /**
+   * `owner` is the agent's own ad-hoc sub-process, not a tool inside it: an
+   * agentic AHSP that is not itself a tool of some outer agent. A nested
+   * agentic AHSP that IS a tool of an outer agent is excluded here: it is an
+   * ad-hoc activity of that outer agent, so fromAi() in its own input
+   * mappings is a live tool-input declaration, handled by checkInputSite.
+   */
+  function isAgentItself(owner, version) {
+    return is(owner, 'bpmn:AdHocSubProcess')
+      && isAgenticAdHocSubProcess(owner, version)
+      && !isAgenticToolElement(owner, version);
+  }
+
+  /**
+   * A human label for where this site sits, used only to phrase the
+   * undeclared-key message. Falls back to naming the raw property.
+   */
+  function getSurfaceLabel(node, propertyName) {
+    if (is(node, 'zeebe:Output') && propertyName === 'source') {
+      return 'this output mapping';
     }
 
-    if (is(site.node, 'bpmn:SequenceFlow') && site.propertyName === 'conditionExpression') {
-      return checkConditionSite(site, owner);
+    if (is(node, 'bpmn:SequenceFlow') && propertyName === 'conditionExpression') {
+      return 'this sequence flow condition';
     }
 
-    return [];
+    return `the <${propertyName}> property`;
+  }
+
+  /**
+   * Any property other than an input mapping source. fromAi(toolCall.KEY, ...)
+   * here is valid only if KEY was already declared by a fromAi() call in an
+   * input mapping on the same tool; declaration is looked up per-element when
+   * `owner` is itself a tool's entry element (exact: that element's own input
+   * mappings are the only source `AdHocSubProcessTransformer` would ever
+   * read for it), and as a union across every tool entry in the ad-hoc
+   * sub-process otherwise (an approximation: finding the true owning tool
+   * for a downstream element or a sequence flow would need a backward walk
+   * over sequence flows, which agent-tool-output-key.js already documents as
+   * unsolved for splits and joins; the union only under-reports, it never
+   * over-reports, which is the right side to err on for a fixed-error rule).
+   */
+  function checkNonInputSite(site, owner) {
+    const { node, propertyName, expr, invocations, path } = site;
+
+    const surfaceLabel = getSurfaceLabel(node, propertyName);
+    const ahsp = findAncestorAdHocSubProcess(owner);
+    const declaredKeys = (ahsp && isAgenticAdHocSubProcess(ahsp, version))
+      ? (isAgenticToolElement(owner, version)
+        ? getOwnDeclaredKeys(owner)
+        : getAhspDeclaredKeys(ahsp))
+      : null;
+
+    const errors = [];
+
+    for (const inv of invocations) {
+      const args = getPositionalArgs(inv.node, expr);
+      const keyArg = args[0];
+      const keyText = (keyArg && keyArg.type === 'PathExpression' && keyArg.text.startsWith('toolCall.'))
+        ? keyArg.text
+        : null;
+
+      if (keyText && declaredKeys && declaredKeys.has(keyText)) {
+        continue;
+      }
+
+      const subject = keyText || 'this value';
+
+      errors.push({
+        message: `fromAi() only defines a tool input in an input mapping, so ${subject} is never provided and ${surfaceLabel} resolves to null. Declare it in an input mapping on the tool's entry element, then read ${subject} here.`,
+        data: {
+          type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT,
+          node,
+          parentNode: owner,
+          property: propertyName
+        },
+        path,
+      });
+    }
+
+    return errors;
   }
 
   function checkInputSite(site, task) {
@@ -308,44 +410,71 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
   }
 
   /**
-   * fromAi() only defines tool inputs; the connector reads it from input
-   * mappings and never populates toolCall on the output side, so a fromAi()
-   * call in an output source silently resolves to null. Scoped to agentic
-   * ad-hoc sub-processes to avoid firing on unrelated diagrams.
+   * fromAi() key paths declared by input-mapping sources directly on this
+   * activity, grouped by key with every declaring input, regardless of
+   * whether this activity is the tool's entry element. Shared by
+   * checkDuplicateKeys, which cares about repeats, and getOwnDeclaredKeys,
+   * which cares only about membership.
    */
-  function checkOutputSite(site, task) {
-    const { invocations, path } = site;
-
-    const ahsp = findAncestorAdHocSubProcess(task);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
-      return [];
+  function collectOwnDeclaredKeyOccurrences(activity) {
+    const ioMapping = findExtensionElement(activity, 'zeebe:IoMapping');
+    if (!ioMapping) {
+      return {};
     }
 
-    return invocations.map(() => ({
-      message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      path,
-    }));
+    const keyOccurrences = {};
+
+    for (const input of ioMapping.get('inputParameters') || []) {
+      const source = input.get('source');
+      if (!source || !source.startsWith('=')) {
+        continue;
+      }
+
+      const expr = source.substring(1).trim();
+      for (const inv of findFunctionInvocations(expr)) {
+        const args = getPositionalArgs(inv.node, expr);
+        const key = args[ 0 ];
+        if (key && key.type === 'PathExpression' && key.text.startsWith('toolCall.')) {
+          (keyOccurrences[ key.text ] = keyOccurrences[ key.text ] || []).push(input);
+        }
+      }
+    }
+
+    return keyOccurrences;
   }
 
   /**
-   * The toolCall context is only populated for a tool's inputs, so fromAi() in
-   * a sequence flow condition resolves to null and the branch never behaves as
-   * intended. Scoped to agentic ad-hoc sub-processes.
+   * The exact declaration set for one activity: every fromAi() key its own
+   * input mappings declare, regardless of whether it is a tool's entry
+   * element. Used as-is when the site being checked lives directly on that
+   * activity (no approximation needed there).
    */
-  function checkConditionSite(site, flow) {
-    const { invocations, path } = site;
+  function getOwnDeclaredKeys(activity) {
+    return new Set(Object.keys(collectOwnDeclaredKeyOccurrences(activity)));
+  }
 
-    const ahsp = findAncestorAdHocSubProcess(flow);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
-      return [];
+  /**
+   * The union of declared keys across every tool entry element directly
+   * inside this ad-hoc sub-process. Used for a site that is not itself a
+   * tool's entry element (a downstream element, or a sequence flow), where
+   * the true owning tool would need a backward walk over sequence flows to
+   * find precisely; see checkNonInputSite for why the union is the right
+   * approximation.
+   */
+  function getAhspDeclaredKeys(ahsp) {
+    const keys = new Set();
+
+    for (const child of ahsp.get('flowElements') || []) {
+      if (!isAgenticToolElement(child, version)) {
+        continue;
+      }
+
+      for (const key of getOwnDeclaredKeys(child)) {
+        keys.add(key);
+      }
     }
 
-    return invocations.map(() => ({
-      message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      path,
-    }));
+    return keys;
   }
 
   /**
@@ -371,29 +500,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       return;
     }
 
-    const ioMapping = findExtensionElement(task, 'zeebe:IoMapping');
-    if (!ioMapping) {
-      return;
-    }
-
-    const keyOccurrences = {};
-
-    for (const input of ioMapping.get('inputParameters') || []) {
-      const source = input.get('source');
-      if (!source || !source.startsWith('=')) {
-        continue;
-      }
-
-      const expr = source.substring(1).trim();
-      for (const inv of findFunctionInvocations(expr)) {
-        const args = getPositionalArgs(inv.node, expr);
-        const key = args[ 0 ];
-        if (key && key.type === 'PathExpression' && key.text.startsWith('toolCall.')) {
-          (keyOccurrences[ key.text ] = keyOccurrences[ key.text ] || []).push(input);
-        }
-      }
-    }
-
+    const keyOccurrences = collectOwnDeclaredKeyOccurrences(task);
     const duplicates = Object.keys(keyOccurrences).filter(key => keyOccurrences[ key ].length > 1);
 
     if (duplicates.length) {
