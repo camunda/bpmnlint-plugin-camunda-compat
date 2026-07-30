@@ -2,8 +2,20 @@ const { is } = require('bpmnlint-utils');
 
 const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
-const { findExtensionElement, findAncestorAdHocSubProcess, isAgenticAdHocSubProcess } = require('../utils/element');
-const { CORRECT_NAME, NAME_ALIASES, findFunctionInvocations, getPositionalArgs } = require('./utils/feel');
+const {
+  findExtensionElement,
+  findAncestorAdHocSubProcess,
+  isAgenticAdHocSubProcess,
+  findParentNode
+} = require('../utils/element');
+const {
+  CORRECT_NAME,
+  NAME_ALIASES,
+  findFunctionInvocations,
+  getPositionalArgs,
+  isFeelBearingProperty,
+  unwrapExpression
+} = require('./utils/feel');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -34,6 +46,12 @@ const { annotateRule } = require('../helper');
  *
  * A description that is simply absent (no argument, or an empty string) is
  * valid: the fromAi() description is optional, so neither rule reports it.
+ *
+ * check() walks every FEEL-bearing property of every node (the same
+ * mechanism as the `feel` syntax rule), not just the three surfaces this
+ * rule currently reports on. That breadth is deliberate groundwork: the
+ * property sweep already sees every candidate site, checkSite() below just
+ * doesn't have a message for most of them yet.
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 
@@ -121,68 +139,118 @@ function validateDescriptionTypeInvalid(arg) {
 
 module.exports = skipInNonExecutableProcess(function(config = {}) {
   const { version } = config;
+
   function check(node, reporter) {
+
+    // Expression wrappers (conditionExpression, completionCondition, timer
+    // definitions) are swept from their owner via unwrapExpression instead;
+    // visiting them again here would double-report the same call.
+    if (is(node, 'bpmn:Expression')) {
+      return;
+    }
+
     if (is(node, 'bpmn:Activity')) {
+
+      // No early return: an activity (e.g. an ad-hoc sub-process with a
+      // completionCondition) can also carry FEEL-bearing properties of its
+      // own, which the sweep below still needs to see.
       checkDuplicateKeys(node, reporter);
+    }
+
+    const owner = findParentNode(node);
+    if (!owner) {
       return;
     }
 
-    if (is(node, 'zeebe:Output')) {
-      checkOutputSurface(node, reporter);
-      return;
+    const errors = [];
+
+    for (const site of collectFromAiSites(node, owner)) {
+      errors.push(...checkSite(site, owner));
     }
 
-    if (is(node, 'bpmn:SequenceFlow')) {
-      checkConditionSurface(node, reporter);
-      return;
+    if (errors.length) {
+      reportErrors(owner, reporter, errors);
+    }
+  }
+
+  return annotateRule('agent-fromai-contract', {
+    check
+  });
+
+  /**
+   * Every own property of `node` that carries a parseable fromAi()
+   * invocation, with the moddle path to report it against already resolved.
+   */
+  function collectFromAiSites(node, owner) {
+    const sites = [];
+
+    Object.entries(node).forEach(([ propertyName, rawValue ]) => {
+      const value = unwrapExpression(rawValue);
+
+      if (!isFeelBearingProperty(node, propertyName, value)) {
+        return;
+      }
+
+      const expr = value.substring(1).trim();
+      const invocations = findFunctionInvocations(expr);
+      if (!invocations.length) {
+        return;
+      }
+
+      sites.push({
+        node,
+        propertyName,
+        expr,
+        invocations,
+        path: pathConcat(getPath(node, owner) || [], propertyName)
+      });
+    });
+
+    return sites;
+  }
+
+  /**
+   * Dispatches a site to its surface-specific check. This PR only recognizes
+   * the three surfaces the rule already reports on; every other site the
+   * sweep finds (e.g. a fromAi() in a task's Retries field) is silently
+   * ignored for now. See the module docblock.
+   */
+  function checkSite(site, owner) {
+    if (is(site.node, 'zeebe:Input') && site.propertyName === 'source') {
+      return checkInputSite(site, owner);
     }
 
-    if (!is(node, 'zeebe:Input')) {
-      return;
+    if (is(site.node, 'zeebe:Output') && site.propertyName === 'source') {
+      return checkOutputSite(site, owner);
     }
 
-    const source = node.get('source');
-    if (!source || !source.startsWith('=')) {
-      return;
+    if (is(site.node, 'bpmn:SequenceFlow') && site.propertyName === 'conditionExpression') {
+      return checkConditionSite(site, owner);
     }
 
-    const expr = source.substring(1).trim();
-    const invocations = findFunctionInvocations(expr);
-    if (invocations.length === 0) {
-      return;
-    }
+    return [];
+  }
 
-    // Walk from zeebe:Input → zeebe:IoMapping → bpmn:ExtensionElements → task
-    const task = node.$parent && node.$parent.$parent && node.$parent.$parent.$parent;
-    if (!task || !is(task, 'bpmn:FlowNode')) {
-      return;
-    }
-
-    // Moddle path to this input parameter's source, so a single downstream
-    // resolver maps it to the entry the modeler actually renders — the standard
-    // input mapping, or a template's custom entry. The rule stays agnostic to
-    // the id scheme.
-    const path = pathConcat(getPath(node, task), 'source');
+  function checkInputSite(site, task) {
+    const { invocations, expr, path } = site;
 
     const ahsp = findAncestorAdHocSubProcess(task);
 
     if (!ahsp) {
-      reportErrors(task, reporter, invocations.map(() => ({
+      return invocations.map(() => ({
         message: 'fromAi() should only be used inside an agentic sub-process.',
         data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
         path,
-      })));
-      return;
+      }));
     }
 
     if (!isAgenticAdHocSubProcess(ahsp, version)) {
       const ahspLabel = ahsp.get('name') || ahsp.get('id');
-      reportErrors(task, reporter, invocations.map(() => ({
+      return invocations.map(() => ({
         message: `The "${ahspLabel}" sub-process is not marked as agentic, so fromAi() has no effect.`,
         data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
         path,
-      })));
-      return;
+      }));
     }
 
     // The connector resolves fromAi() only on the tool's entry element: the
@@ -192,12 +260,11 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
     // sub-process tool, whose parent is the sub-process, not the AHSP).
     const incoming = task.get('incoming') || [];
     if (incoming.length > 0 || task.$parent !== ahsp) {
-      reportErrors(task, reporter, invocations.map(() => ({
+      return invocations.map(() => ({
         message: 'fromAi() is ignored here: only the tool\'s entry element defines AI inputs. Define it there and read the toolCall variable directly.',
         data: { type: ERROR_TYPES.AGENT_FEEL_NON_ENTRY_ELEMENT },
         path,
-      })));
-      return;
+      }));
     }
 
     // Inside agentic AHSP, on the entry element: run structural checks.
@@ -237,14 +304,49 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       }
     }
 
-    if (errors.length) {
-      reportErrors(task, reporter, errors.map(error => ({ ...error, path })));
-    }
+    return errors.map(error => ({ ...error, path }));
   }
 
-  return annotateRule('agent-fromai-contract', {
-    check
-  });
+  /**
+   * fromAi() only defines tool inputs; the connector reads it from input
+   * mappings and never populates toolCall on the output side, so a fromAi()
+   * call in an output source silently resolves to null. Scoped to agentic
+   * ad-hoc sub-processes to avoid firing on unrelated diagrams.
+   */
+  function checkOutputSite(site, task) {
+    const { invocations, path } = site;
+
+    const ahsp = findAncestorAdHocSubProcess(task);
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
+      return [];
+    }
+
+    return invocations.map(() => ({
+      message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      path,
+    }));
+  }
+
+  /**
+   * The toolCall context is only populated for a tool's inputs, so fromAi() in
+   * a sequence flow condition resolves to null and the branch never behaves as
+   * intended. Scoped to agentic ad-hoc sub-processes.
+   */
+  function checkConditionSite(site, flow) {
+    const { invocations, path } = site;
+
+    const ahsp = findAncestorAdHocSubProcess(flow);
+    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
+      return [];
+    }
+
+    return invocations.map(() => ({
+      message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
+      path,
+    }));
+  }
 
   /**
    * The connector combines all fromAi() definitions of the tool's entry
@@ -301,72 +403,5 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
         paths: keyOccurrences[ key ].map(input => pathConcat(getPath(input, task), 'source')),
       })));
     }
-  }
-
-  /**
-   * fromAi() only defines tool inputs; the connector reads it from input
-   * mappings and never populates toolCall on the output side, so a fromAi()
-   * call in an output source silently resolves to null. Scoped to agentic
-   * ad-hoc sub-processes to avoid firing on unrelated diagrams.
-   */
-  function checkOutputSurface(node, reporter) {
-    const source = node.get('source');
-    if (!source || !source.startsWith('=')) {
-      return;
-    }
-
-    const expr = source.substring(1).trim();
-    const invocations = findFunctionInvocations(expr);
-    if (!invocations.length) {
-      return;
-    }
-
-    const task = node.$parent && node.$parent.$parent && node.$parent.$parent.$parent;
-    if (!task || !is(task, 'bpmn:FlowNode')) {
-      return;
-    }
-
-    const ahsp = findAncestorAdHocSubProcess(task);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
-      return;
-    }
-
-    const path = pathConcat(getPath(node, task), 'source');
-
-    reportErrors(task, reporter, invocations.map(() => ({
-      message: 'fromAi() defines a tool input and has no effect in an output mapping. Define it in an input mapping on the tool\'s entry element.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      path,
-    })));
-  }
-
-  /**
-   * The toolCall context is only populated for a tool's inputs, so fromAi() in
-   * a sequence flow condition resolves to null and the branch never behaves as
-   * intended. Scoped to agentic ad-hoc sub-processes.
-   */
-  function checkConditionSurface(node, reporter) {
-    const condition = node.get('conditionExpression');
-    const body = condition && condition.get('body');
-    if (!body || !body.startsWith('=')) {
-      return;
-    }
-
-    const expr = body.substring(1).trim();
-    const invocations = findFunctionInvocations(expr);
-    if (!invocations.length) {
-      return;
-    }
-
-    const ahsp = findAncestorAdHocSubProcess(node);
-    if (!ahsp || !isAgenticAdHocSubProcess(ahsp, version)) {
-      return;
-    }
-
-    reportErrors(node, reporter, invocations.map(() => ({
-      message: 'fromAi() defines a tool input and cannot be used in a sequence flow condition. Define it in an input mapping on the tool\'s entry element.',
-      data: { type: ERROR_TYPES.AGENT_FEEL_WRONG_CONTEXT },
-      path: getPath(condition, node),
-    })));
   }
 });
