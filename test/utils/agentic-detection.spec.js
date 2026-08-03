@@ -5,6 +5,7 @@ const { expect } = chai;
 const { createProcess, createModdle } = require('../helper');
 
 const {
+  hasAiAgentJobWorkerType,
   hasToolContainerProperty,
   isAgenticAdHocSubProcess
 } = require('../../rules/utils/element');
@@ -29,6 +30,10 @@ const TOOL_CONTAINER_MARKER = `
   <zeebe:properties>
     <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
   </zeebe:properties>
+`;
+
+const AI_AGENT_JOB_WORKER_TASK_DEFINITION = `
+  <zeebe:taskDefinition type="io.camunda.agenticai:aiagent-job-worker:1" />
 `;
 
 describe('utils/element - agentic detection', function() {
@@ -71,7 +76,46 @@ describe('utils/element - agentic detection', function() {
   });
 
 
+  describe('#hasAiAgentJobWorkerType', function() {
+
+    it('detects the AI Agent job worker type', async function() {
+      expect(hasAiAgentJobWorkerType(await getAHSP(AI_AGENT_JOB_WORKER_TASK_DEFINITION))).to.be.true;
+    });
+
+
+    it('ignores an unrelated job worker type', async function() {
+      const ahsp = await getAHSP('<zeebe:taskDefinition type="some.other.worker" />');
+
+      expect(hasAiAgentJobWorkerType(ahsp)).to.be.false;
+    });
+
+
+    it('is false without a task definition', async function() {
+      const { root } = await createModdle(createProcess('<bpmn:adHocSubProcess id="AHSP_1" />'));
+
+      expect(hasAiAgentJobWorkerType(root.rootElements[0].flowElements[0])).to.be.false;
+    });
+
+  });
+
+
   describe('#isAgenticAdHocSubProcess', function() {
+
+    describe('AI Agent job worker type (forked templates without the legacy id)', function() {
+
+      it('is true regardless of a forked modelerTemplate id', async function() {
+        const { root } = await createModdle(createProcess(`
+          <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="someOrg.forkedAiAgentTemplate">
+            <bpmn:extensionElements>
+              ${ AI_AGENT_JOB_WORKER_TASK_DEFINITION }
+            </bpmn:extensionElements>
+          </bpmn:adHocSubProcess>
+        `));
+
+        expect(isAgenticAdHocSubProcess(root.rootElements[0].flowElements[0])).to.be.true;
+      });
+
+    });
 
     describe('toolContainer=true property marker (all versions)', function() {
 
