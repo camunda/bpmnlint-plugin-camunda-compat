@@ -83,6 +83,13 @@ describe('utils/element - agentic detection', function() {
     });
 
 
+    it('detects later versions of the AI Agent job worker type', async function() {
+      const ahsp = await getAHSP('<zeebe:taskDefinition type="io.camunda.agenticai:aiagent-job-worker:2" />');
+
+      expect(hasAiAgentJobWorkerType(ahsp)).to.be.true;
+    });
+
+
     it('ignores an unrelated job worker type', async function() {
       const ahsp = await getAHSP('<zeebe:taskDefinition type="some.other.worker" />');
 
