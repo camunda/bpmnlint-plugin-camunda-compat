@@ -582,6 +582,22 @@ const TOOL_CONTAINER_PROPERTY = 'io.camunda.agenticai.toolContainer';
 // their AHSPs are agentic but carry no marker; the template id identifies them.
 const LEGACY_AI_AGENT_TEMPLATE = 'io.camunda.connectors.agenticai.aiagent.jobworker.v1';
 
+// The job worker type Camunda's AI Agent job-worker template assigns to the
+// AHSP's own zeebe:taskDefinition. Organizations sometimes publish a forked
+// element template (own modelerTemplate id, so LEGACY_AI_AGENT_TEMPLATE
+// doesn't match) while keeping the same job worker underneath, since the
+// fork still needs a worker subscribing to that type to execute it (#259).
+const AI_AGENT_JOB_WORKER_TYPE_PREFIX = 'io.camunda.agenticai:aiagent-job-worker:';
+
+function hasAiAgentJobWorkerType(node) {
+  const taskDefinition = findExtensionElement(node, 'zeebe:TaskDefinition');
+  const type = taskDefinition && taskDefinition.get('type');
+
+  return !!type && type.startsWith(AI_AGENT_JOB_WORKER_TYPE_PREFIX);
+}
+
+module.exports.hasAiAgentJobWorkerType = hasAiAgentJobWorkerType;
+
 function hasToolContainerProperty(node) {
   const properties = findExtensionElement(node, 'zeebe:Properties');
 
@@ -611,13 +627,19 @@ module.exports.hasToolContainerProperty = hasToolContainerProperty;
 //
 // Older AI Agent job-worker templates predate the property marker; they are
 // still agentic and are recognized by their (version-agnostic) element template
-// id (see LEGACY_AI_AGENT_TEMPLATE).
+// id (see LEGACY_AI_AGENT_TEMPLATE). Forked templates that don't carry that
+// id are still recognized by the underlying job worker type prefix (see
+// AI_AGENT_JOB_WORKER_TYPE_PREFIX), since that's what the fork must keep to run.
 function isAgenticAdHocSubProcess(ahsp, version) {
   if (hasToolContainerProperty(ahsp)) {
     return true;
   }
 
   if (ahsp.get('modelerTemplate') === LEGACY_AI_AGENT_TEMPLATE) {
+    return true;
+  }
+
+  if (hasAiAgentJobWorkerType(ahsp)) {
     return true;
   }
 

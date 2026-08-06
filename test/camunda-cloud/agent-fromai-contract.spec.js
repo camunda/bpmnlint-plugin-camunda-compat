@@ -109,6 +109,42 @@ const valid = [
       '=fromAi(toolCall.url)',
       'zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1"'
     ))
+  },
+  {
+    name: 'forked AI Agent template — recognized by the AI Agent job worker type',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="someOrg.forkedAiAgentTemplate">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="io.camunda.agenticai:aiagent-job-worker:1" />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.url)" target="value" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'forked AI Agent template later version — recognized by the AI Agent job worker type prefix',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1" zeebe:modelerTemplate="someOrg.forkedAiAgentTemplate">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="io.camunda.agenticai:aiagent-job-worker:2" />
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.url)" target="value" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `))
   }
 ];
 

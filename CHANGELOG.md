@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: detect agentic ad-hoc sub-process by AI Agent job worker type ([#260](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/260))
+
 ## 2.59.0
 
 * `FEAT`: expose relevant `path` or `paths` with rule reports ([#255](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/255))
