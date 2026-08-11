@@ -3,7 +3,7 @@ const { is } = require('bpmnlint-utils');
 const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
 const { findExtensionElement, findAncestorAdHocSubProcess, isAgenticAdHocSubProcess } = require('../utils/element');
-const { CORRECT_NAME, NAME_ALIASES, findFunctionInvocations, getPositionalArgs } = require('./utils/feel');
+const { CORRECT_NAME, NAME_ALIASES, findFunctionInvocations, getArgs } = require('./utils/feel');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -34,6 +34,10 @@ const { annotateRule } = require('../helper');
  *
  * A description that is simply absent (no argument, or an empty string) is
  * valid: the fromAi() description is optional, so neither rule reports it.
+ *
+ * Positional and named calls are equivalent, because
+ * FromAiTaggedParameterExtractor funnels both into the same five-argument
+ * call. Every check below therefore applies to both forms.
  */
 // ─── Constraint validators ────────────────────────────────────────────────────
 
@@ -214,9 +218,9 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
         continue;
       }
 
-      const args = getPositionalArgs(inv.node, expr);
+      const args = getArgs(inv.node, expr);
 
-      if (args.length === 0) {
+      if (!args[0]) {
         errors.push({
           message: 'fromAi() requires a key argument: a FEEL path like toolCall.url.',
           data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
@@ -229,7 +233,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
         errors.push(keyError);
       }
 
-      if (args.length >= 2) {
+      if (args[1]) {
         const descriptionError = validateDescriptionTypeInvalid(args[1]);
         if (descriptionError) {
           errors.push(descriptionError);
@@ -284,7 +288,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
 
       const expr = source.substring(1).trim();
       for (const inv of findFunctionInvocations(expr)) {
-        const args = getPositionalArgs(inv.node, expr);
+        const args = getArgs(inv.node, expr);
         const key = args[ 0 ];
         if (key && key.type === 'PathExpression' && key.text.startsWith('toolCall.')) {
           (keyOccurrences[ key.text ] = keyOccurrences[ key.text ] || []).push(input);
