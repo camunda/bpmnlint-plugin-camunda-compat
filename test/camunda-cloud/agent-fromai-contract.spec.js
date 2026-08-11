@@ -102,6 +102,65 @@ const valid = [
     config: { version: '8.8' },
     moddleElement: createModdle(agenticInput('=fromAi(toolCall.url)'))
   },
+
+  // Named parameters are equivalent to positional ones: the connector
+  // resolves them by name (value, description, type, schema, options) and
+  // ignores their order, so the same calls are valid in either form.
+
+  {
+    name: 'N1 — named arguments: key and type, the form reported in #261',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      '=fromAi(value: toolCall.url, type: &quot;string&quot;)'
+    ))
+  },
+  {
+    name: 'N2 — named arguments: key only',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(value: toolCall.url)'))
+  },
+  {
+    name: 'N3 — named arguments: key and description',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      `=fromAi(value: toolCall.url, description: ${GOOD_DESC})`
+    ))
+  },
+  {
+    name: 'N4 — named arguments in a different order than the signature',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      `=fromAi(description: ${GOOD_DESC}, type: &quot;string&quot;, value: toolCall.url)`
+    ))
+  },
+  {
+    name: 'N5 — named arguments: all five parameters supplied',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      `=fromAi(value: toolCall.url, description: ${GOOD_DESC}, type: &quot;string&quot;, schema: { enum: [ &quot;a&quot;, &quot;b&quot; ] }, options: { required: false })`
+    ))
+  },
+  {
+    name: 'N12 — unrecognized parameter name alongside a valid key: the engine drops it, the rest of the call stands',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      '=fromAi(value: toolCall.url, unknownParam: 1)'
+    ))
+  },
+  {
+    name: 'N13 — comment between a named parameter and its value is not the value',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      '=fromAi(value: /* the key */ toolCall.url)'
+    ))
+  },
+  {
+    name: 'N14 — comment between positional arguments does not shift them',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      `=fromAi(toolCall.url, /* why */ ${GOOD_DESC})`
+    ))
+  },
   {
     name: 'legacy AI Agent template — treated as an agentic sub-process',
     config: { version: '8.8' },
@@ -281,6 +340,89 @@ const invalid = [
     }
   },
 
+  // Named calls run through the same checks as positional ones, so a key that
+  // is absent or malformed is reported identically in either form.
+
+  {
+    name: 'N6 — named arguments without a value parameter',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(type: &quot;number&quot;)')),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() requires a key argument: a FEEL path like toolCall.url.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
+    }
+  },
+  {
+    name: 'N7 — misspelled parameter name: the connector drops it, leaving no key',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(valu: toolCall.url)')),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() requires a key argument: a FEEL path like toolCall.url.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
+    }
+  },
+  {
+    name: 'N8 — named key is a string literal',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      '=fromAi(value: &quot;toolCall.url&quot;)'
+    )),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() key must be a FEEL path, not a string literal. Remove the quotes around "toolCall.url".',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_TYPE_INVALID },
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
+    }
+  },
+  {
+    name: 'N15 — named value parameter with nothing after the colon',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(value:)')),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() requires a key argument: a FEEL path like toolCall.url.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
+    }
+  },
+  {
+    name: 'N16 — parameter names are case-sensitive, so VALUE is not recognized',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(VALUE: toolCall.url)')),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() requires a key argument: a FEEL path like toolCall.url.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_MISSING },
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
+    }
+  },
+  {
+    name: 'N17 — named key with more than one segment under toolCall',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(value: toolCall.input.filter)')),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() key must be a single name under toolCall. Use toolCall.filter instead of toolCall.input.filter.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_SEGMENTS_INVALID },
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
+    }
+  },
+  {
+    name: 'N9 — named key is a bare variable name',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput('=fromAi(value: myVar)')),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() key must start with "toolCall.". Use toolCall.myVar instead of a bare name.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_PREFIX_MISSING },
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
+    }
+  },
+
   // ─── Description argument errors ───────────────────────────────────────────
   // Any non-string-literal description has no legitimate reading: the
   // connector requires a literal string (ConstString) to build the tool
@@ -325,6 +467,20 @@ const invalid = [
     }
   },
 
+  {
+    name: 'N10 — named description is a numeric literal',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticInput(
+      '=fromAi(value: toolCall.url, description: 42)'
+    )),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() description must be a string literal: a quoted string describing what the agent should provide.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_DESCRIPTION_TYPE_INVALID },
+      path: [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ]
+    }
+  },
+
   // ─── Duplicate keys ────────────────────────────────────────────────────────
 
   {
@@ -342,6 +498,34 @@ const invalid = [
             <zeebe:ioMapping>
               <zeebe:input source="=fromAi(toolCall.a, ${GOOD_DESC})" target="first" />
               <zeebe:input source="=fromAi(toolCall.a, ${GOOD_DESC})" target="second" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'fromAi() key toolCall.a is declared more than once in this tool. Declare it once and reference it directly elsewhere.',
+      data: { type: ERROR_TYPES.AGENT_FEEL_KEY_DUPLICATE },
+      paths: [ [ 'extensionElements', 'values', 0, 'inputParameters', 0, 'source' ], [ 'extensionElements', 'values', 0, 'inputParameters', 1, 'source' ] ]
+    }
+  },
+
+  {
+    name: 'N11 — duplicate key declared once positionally and once by name',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:input source="=fromAi(toolCall.a, ${GOOD_DESC})" target="first" />
+              <zeebe:input source="=fromAi(value: toolCall.a, description: ${GOOD_DESC})" target="second" />
             </zeebe:ioMapping>
           </bpmn:extensionElements>
         </bpmn:serviceTask>
