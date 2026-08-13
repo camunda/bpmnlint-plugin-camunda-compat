@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.59.2
+
 * `FIX`: accept `fromAi()` named arguments in `agent-fromai-contract` ([#261](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/261))
 
 ## 2.59.1
