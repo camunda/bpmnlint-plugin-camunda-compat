@@ -449,18 +449,114 @@ const invalid = [
     }
   },
   {
-    name: 'multiple outputs, none is toolCallResult',
+    name: 'multiple outputs, none is toolCallResult — each row reported',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticToolTask(`
       <zeebe:output source="=a" target="foo" />
       <zeebe:output source="=b" target="bar" />
     `)),
-    report: {
-      id: 'Task_1',
-      message: WARN_MESSAGE,
-      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
-      path: OUTPUT_TARGET_PATH
-    }
+    report: [
+      {
+        id: 'Task_1',
+        message: WARN_MESSAGE,
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+        path: [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'target' ]
+      },
+      {
+        id: 'Task_1',
+        message: WARN_MESSAGE,
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+        path: [ 'extensionElements', 'values', 0, 'outputParameters', 1, 'target' ]
+      }
+    ]
+  },
+  {
+    name: 'misdirected output and casing near-miss on sibling rows — each reported on its own row',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticToolTask(`
+      <zeebe:output source="=a" target="someOtherVariable" />
+      <zeebe:output source="=b" target="toolCallresult" />
+    `)),
+    report: [
+      {
+        id: 'Task_1',
+        message: WARN_MESSAGE,
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+        path: [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'target' ]
+      },
+      {
+        id: 'Task_1',
+        message: 'Wrong casing "toolCallresult": use toolCallResult (case-sensitive).',
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+        path: [ 'extensionElements', 'values', 0, 'outputParameters', 1, 'target' ]
+      }
+    ]
+  },
+  {
+    name: 'two casing near-misses — each reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticToolTask(`
+      <zeebe:output source="=a" target="toolcallresult" />
+      <zeebe:output source="=b" target="TOOLCALLRESULT.statusCode" />
+    `)),
+    report: [
+      {
+        id: 'Task_1',
+        message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+        path: [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'target' ]
+      },
+      {
+        id: 'Task_1',
+        message: 'Wrong casing "TOOLCALLRESULT.statusCode": use toolCallResult (case-sensitive).',
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+        path: [ 'extensionElements', 'values', 0, 'outputParameters', 1, 'target' ]
+      }
+    ]
+  },
+  {
+    name: 'misdirected writes on entry and downstream element — each reported where it was written',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=a" target="foo" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=b" target="bar" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: [
+      {
+        id: 'Task_1',
+        message: WARN_MESSAGE,
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+        path: OUTPUT_TARGET_PATH
+      },
+      {
+        id: 'Task_2',
+        message: WARN_MESSAGE,
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+        path: OUTPUT_TARGET_PATH
+      }
+    ]
   },
   {
     name: 'misdirected result across the tool flow: reported on the element that wrote it, not the entry',

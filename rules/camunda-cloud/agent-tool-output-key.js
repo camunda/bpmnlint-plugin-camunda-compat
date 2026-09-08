@@ -15,10 +15,11 @@ const { annotateRule } = require('../helper');
  * or a part like `toolCallResult.statusCode`), a script task or called decision
  * `resultVariable`, or a connector `resultVariable`/`resultExpression` header.
  *
- * The rule warns once per tool: on the element that actually miswrote a
- * result-shaped variable, when the tool flow writes some but none of them is
- * `toolCallResult` (misdirection or wrong casing); on the entry activity when
- * the flow writes none at all, since there's no single offending element to
+ * When the tool flow writes result-shaped variables but none of them is
+ * `toolCallResult`, every miswrite is reported individually on the element
+ * that wrote it (misdirection or wrong casing), so each offending output row
+ * carries its own finding. When the flow writes none at all, the rule reports
+ * once on the entry activity, since there's no single offending element to
  * point to (the agent gets no completion signal and may retry or hallucinate
  * an outcome). Results written from arbitrary FEEL expressions are not
  * statically detectable.
@@ -47,26 +48,25 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
 
     const hasResult = channels.some(isToolCallResultChannel);
     if (!hasResult) {
-      const casingMismatch = channels.find(isToolCallResultCasingMismatch);
-
-      if (casingMismatch) {
-        reportErrors(casingMismatch.element, reporter, {
-          message: `Wrong casing "${getCasingMismatchText(casingMismatch)}": use toolCallResult (case-sensitive).`,
-          data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
-          path: getChannelPath(casingMismatch),
-        });
-        return;
-      }
 
       // Every channel here is a miswrite (none matched toolCallResult), so
-      // the first one is a real misdirected write; report on the element
-      // that actually wrote it, not the tool's entry.
-      const misdirected = channels[ 0 ];
-      reportErrors(misdirected.element, reporter, {
-        message: '"toolCallResult" output is not mapped.',
-        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
-        path: getChannelPath(misdirected),
-      });
+      // each is reported on the element that wrote it. A wrong-casing
+      // near-miss gets the more specific guidance.
+      for (const channel of channels) {
+        if (isToolCallResultCasingMismatch(channel)) {
+          reportErrors(channel.element, reporter, {
+            message: `Wrong casing "${getCasingMismatchText(channel)}": use toolCallResult (case-sensitive).`,
+            data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+            path: getChannelPath(channel),
+          });
+        } else {
+          reportErrors(channel.element, reporter, {
+            message: '"toolCallResult" output is not mapped.',
+            data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_INVALID },
+            path: getChannelPath(channel),
+          });
+        }
+      }
       return;
     }
 
