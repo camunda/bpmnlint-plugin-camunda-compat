@@ -515,6 +515,110 @@ const invalid = [
     ]
   },
   {
+    name: 'casing near-misses alongside a correct toolCallResult write — still reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticToolTask(`
+      <zeebe:output source="=a" target="toolcallresult" />
+      <zeebe:output source="=b" target="toolCallresult" />
+      <zeebe:output source="=c" target="toolCallResult" />
+    `)),
+    report: [
+      {
+        id: 'Task_1',
+        message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+        path: [ 'extensionElements', 'values', 0, 'outputParameters', 0, 'target' ]
+      },
+      {
+        id: 'Task_1',
+        message: 'Wrong casing "toolCallresult": use toolCallResult (case-sensitive).',
+        data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+        path: [ 'extensionElements', 'values', 0, 'outputParameters', 1, 'target' ]
+      }
+    ]
+  },
+  {
+    name: 'miscased resultExpression alongside a correct toolCallResult write — still reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:taskHeaders>
+              <zeebe:header key="resultExpression" value="={toolcallresult: response.body}" />
+            </zeebe:taskHeaders>
+            <zeebe:ioMapping>
+              <zeebe:output source="=taskResult" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+      path: HEADER_VALUE_PATH
+    }
+  },
+  {
+    name: 'miscased token inside a resultExpression that also sets toolCallResult — still reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:taskHeaders>
+              <zeebe:header key="resultExpression" value="={toolcallresult: a, toolCallResult: b}" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+      path: HEADER_VALUE_PATH
+    }
+  },
+  {
+    name: 'miscased token after a correctly cased one in the same resultExpression — miscased token named',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:extensionElements>
+            <zeebe:taskHeaders>
+              <zeebe:header key="resultExpression" value="={toolCallResult: a, TOOLCALLRESULT: b}" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Wrong casing "TOOLCALLRESULT": use toolCallResult (case-sensitive).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+      path: HEADER_VALUE_PATH
+    }
+  },
+  {
     name: 'misdirected writes on entry and downstream element — each reported where it was written',
     config: { version: '8.8' },
     moddleElement: createModdle(createProcess(`
