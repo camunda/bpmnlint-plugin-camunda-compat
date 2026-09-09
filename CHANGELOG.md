@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.60.1
+
+* `FIX`: always report miscased `toolCallResult` writes ([#269](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/269))
+
 ## 2.60.0
 
 * `FIX`: report `agent-tool-output-key` on each offending output ([#266](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/266))
