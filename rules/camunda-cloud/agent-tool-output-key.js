@@ -15,10 +15,11 @@ const { annotateRule } = require('../helper');
  * or a part like `toolCallResult.statusCode`), a script task or called decision
  * `resultVariable`, or a connector `resultVariable`/`resultExpression` header.
  *
- * When the tool flow writes result-shaped variables but none of them is
- * `toolCallResult`, every miswrite is reported individually on the element
- * that wrote it (misdirection or wrong casing), so each offending output row
- * carries its own finding. When the flow writes none at all, the rule reports
+ * A wrong-casing near-miss (`toolcallresult`, `TOOLCALLRESULT`, ...) is always
+ * reported on the element that wrote it, even when a sibling write already
+ * sets `toolCallResult` correctly — case-sensitive engines never read it.
+ * Other miswrites are reported individually per row only while no valid
+ * `toolCallResult` exists. When the flow writes none at all, the rule reports
  * once on the entry activity, since there's no single offending element to
  * point to (the agent gets no completion signal and may retry or hallucinate
  * an outcome). Results written from arbitrary FEEL expressions are not
@@ -68,6 +69,19 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
         }
       }
       return;
+    }
+
+    // Miscased near-misses are reported even when a sibling already sets
+    // toolCallResult correctly. Casing variants never satisfy
+    // isToolCallResultChannel, so the overwrite check below ignores them.
+    for (const channel of channels) {
+      if (isToolCallResultCasingMismatch(channel)) {
+        reportErrors(channel.element, reporter, {
+          message: `Wrong casing "${getCasingMismatchText(channel)}": use toolCallResult (case-sensitive).`,
+          data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+          path: getChannelPath(channel),
+        });
+      }
     }
 
     // toolCallResult is set somewhere, but assigning it more than once
@@ -267,7 +281,7 @@ function isToolCallResultChannel({ kind, value }) {
 // case-insensitive name matching for fromAi().
 function isToolCallResultCasingMismatch({ kind, value }) {
   if (kind === 'resultExpression') {
-    return /\btoolcallresult\b/i.test(value) && !/\btoolCallResult\b/.test(value);
+    return !!getResultExpressionCasingMismatch(value);
   }
 
   const lower = value.toLowerCase();
@@ -276,13 +290,21 @@ function isToolCallResultCasingMismatch({ kind, value }) {
   return isCasingVariant && !isToolCallResultChannel({ kind, value });
 }
 
+// The first miscased toolCallResult token in a FEEL expression, or null when
+// every occurrence is cased correctly. Tokens are judged individually, so a
+// correct occurrence never excuses a miscased sibling in the same expression.
+function getResultExpressionCasingMismatch(value) {
+  const tokens = value.match(/\btoolcallresult\b/gi) || [];
+
+  return tokens.find(token => token !== 'toolCallResult') || null;
+}
+
 // The mismatched word itself, not the whole expression, for resultExpression
 // channels (a connector header value is a full FEEL expression, e.g.
 // `={toolcallresult: response.body}`).
 function getCasingMismatchText({ kind, value }) {
   if (kind === 'resultExpression') {
-    const match = value.match(/\btoolcallresult\b/i);
-    return match ? match[0] : value;
+    return getResultExpressionCasingMismatch(value) || value;
   }
 
   return value;
