@@ -13,6 +13,7 @@ const { ERROR_TYPES } = require('../../rules/utils/element');
 const valid = [
   {
     name: 'subscription with valid correlation key',
+    config: { version: '8.9' },
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1" isExecutable="true">
         <bpmn:subProcess id="SubProcess_1" triggeredByEvent="true">
@@ -30,6 +31,7 @@ const valid = [
   },
   {
     name: 'input with valid source',
+    config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="ServiceTask_1">
         <bpmn:extensionElements>
@@ -42,6 +44,7 @@ const valid = [
   },
   {
     name: 'property with valid value',
+    config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
       <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
         <bpmn:extensionElements>
@@ -54,6 +57,7 @@ const valid = [
   },
   {
     name: 'property with valid value with dashes',
+    config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
       <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
         <bpmn:extensionElements>
@@ -66,6 +70,7 @@ const valid = [
   },
   {
     name: 'property with valid value with spaces',
+    config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
       <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
         <bpmn:extensionElements>
@@ -75,12 +80,52 @@ const valid = [
         </bpmn:extensionElements>
       </bpmn:intermediateCatchEvent>
     `))
+  },
+  {
+    name: 'property with valid value (camunda.secrets format, pre-8.10)',
+    config: { version: '8.9' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="camunda.secrets.FOO" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `))
+  },
+  {
+    name: 'property with valid value (camunda.secrets format, 8.10+)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="camunda.secrets.FOO" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `))
+  },
+  {
+    name: 'input with valid source (camunda.secrets format embedded in string)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="ServiceTask_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:input source="Bearer camunda.secrets.FOO" target="bar" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
   }
 ];
 
 const invalid = [
   {
     name: 'subscription with invalid correlation key',
+    config: { version: '8.9' },
     moddleElement: createModdle(createDefinitions(`
       <bpmn:process id="Process_1" isExecutable="true">
         <bpmn:subProcess id="SubProcess_1" triggeredByEvent="true">
@@ -111,13 +156,15 @@ const invalid = [
           type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Subscription',
           parentNode: 'StartEvent_1',
-          property: 'correlationKey'
+          property: 'correlationKey',
+          allowedVersion: '8.10'
         }
       }
     ]
   },
   {
     name: 'input with invalid source',
+    config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
       <bpmn:serviceTask id="ServiceTask_1">
         <bpmn:extensionElements>
@@ -143,13 +190,15 @@ const invalid = [
           type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Input',
           parentNode: 'ServiceTask_1',
-          property: 'source'
+          property: 'source',
+          allowedVersion: '8.10'
         }
       }
     ]
   },
   {
     name: 'property with invalid value',
+    config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
       <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
         <bpmn:extensionElements>
@@ -175,13 +224,15 @@ const invalid = [
           type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Property',
           parentNode: 'IntermediateCatchEvent_1',
-          property: 'value'
+          property: 'value',
+          allowedVersion: '8.10'
         }
       }
     ]
   },
   {
     name: 'property with invalid value with space',
+    config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
       <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
         <bpmn:extensionElements>
@@ -207,7 +258,42 @@ const invalid = [
           type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Property',
           parentNode: 'IntermediateCatchEvent_1',
-          property: 'value'
+          property: 'value',
+          allowedVersion: '8.10'
+        }
+      }
+    ]
+  },
+  {
+    name: 'property with invalid value (legacy wrapped format, 8.10+)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="{{secrets.FOO}}" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `)),
+    report: [
+      {
+        id: 'IntermediateCatchEvent_1',
+        message: 'Property <value> uses deprecated secret expression format',
+        path: [
+          'extensionElements',
+          'values',
+          0,
+          'properties',
+          0,
+          'value'
+        ],
+        data: {
+          type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
+          node: 'zeebe:Property',
+          parentNode: 'IntermediateCatchEvent_1',
+          property: 'value',
+          allowedVersion: '8.10'
         }
       }
     ]
