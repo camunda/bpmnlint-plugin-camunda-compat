@@ -4,9 +4,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ## Unreleased
 
-* `FIX`: recognize `camunda.secrets.<name>` format in `secrets` and stop recommending it below Camunda 8.10 ([#267](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/267))
-
 ___Note:__ Yet to be released changes appear here._
+
+## 2.60.2
+
+* `FIX`: recognize `camunda.secrets.<name>` format in `secrets` and stop recommending it below Camunda 8.10 ([#267](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/267))
 
 ## 2.60.1
 
