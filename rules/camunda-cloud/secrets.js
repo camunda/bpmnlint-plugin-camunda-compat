@@ -100,8 +100,10 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
       return true;
     }
 
-    // the current, opt-in `camunda.secrets.<name>` format is always accepted
-    if (/camunda\.secrets\.[\w-]+/.test(value)) {
+    // the current, opt-in `camunda.secrets.<name>` format is always accepted;
+    // `<name>` may be backtick-escaped (e.g. `` `db-password` ``, `` `tls.crt` ``)
+    // when it is not a plain FEEL identifier
+    if (/camunda\.secrets\.(?:[\w-]+|`[^`]+`)/.test(value)) {
       return true;
     }
 

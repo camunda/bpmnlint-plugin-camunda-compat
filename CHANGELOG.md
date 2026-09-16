@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.60.3
+
+* `FIX`: recognize backtick-escaped `camunda.secrets.<name>` references in `secrets` ([#270](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/270))
+
 ## 2.60.2
 
 * `FIX`: recognize `camunda.secrets.<name>` format in `secrets` and stop recommending it below Camunda 8.10 ([#267](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/267))

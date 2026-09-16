@@ -119,6 +119,45 @@ const valid = [
         </bpmn:extensionElements>
       </bpmn:serviceTask>
     `))
+  },
+  {
+    name: 'property with valid value (camunda.secrets format, backtick-escaped dashed name, pre-8.10)',
+    config: { version: '8.9' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="camunda.secrets.\`db-password\`" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `))
+  },
+  {
+    name: 'property with valid value (camunda.secrets format, backtick-escaped dashed name, 8.10+)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="camunda.secrets.\`db-password\`" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `))
+  },
+  {
+    name: 'property with valid value (camunda.secrets format, backtick-escaped dotted name, 8.10+)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="camunda.secrets.\`tls.crt\`" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `))
   }
 ];
 
