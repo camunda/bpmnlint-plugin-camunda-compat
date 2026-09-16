@@ -4,6 +4,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ## Unreleased
 
+* `FIX`: link `secrets` to the secret resolution documentation ([camunda/camunda-modeler#6156](https://github.com/camunda/camunda-modeler/issues/6156))
+
 ___Note:__ Yet to be released changes appear here._
 
 ## 2.60.3
