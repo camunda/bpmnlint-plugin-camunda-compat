@@ -117,6 +117,11 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
   }
 
   return {
+    meta: {
+      documentation: {
+        url: 'https://docs.camunda.io/docs/next/components/concepts/secret-resolution/'
+      }
+    },
     check
   };
 });
