@@ -133,7 +133,8 @@ const camundaCloud810Rules = withConfig({
   ]),
   'before-all-execution-listener': 'error',
   'cancel-execution-listener': 'error',
-  'duplicate-execution-listener-headers': 'error'
+  'duplicate-execution-listener-headers': 'error',
+  'secret-reference': 'error'
 }, { version: '8.10' });
 
 const camundaPlatform719Rules = withConfig({
@@ -224,6 +225,7 @@ const rules = {
   'no-zeebe-user-task': './rules/camunda-cloud/no-zeebe-user-task',
   'priority-definition': './rules/camunda-cloud/priority-definition',
   'zeebe-user-task': './rules/camunda-cloud/zeebe-user-task',
+  'secret-reference': './rules/camunda-cloud/secret-reference',
   'secrets': './rules/camunda-cloud/secrets',
   'sequence-flow-condition': './rules/camunda-cloud/sequence-flow-condition',
   'signal-reference': './rules/camunda-cloud/signal-reference',
