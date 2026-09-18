@@ -5,6 +5,7 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 ## Unreleased
 
 * `FIX`: link `secrets` to the secret resolution documentation ([camunda/camunda-modeler#6156](https://github.com/camunda/camunda-modeler/issues/6156))
+* `FEAT`: add `secret-reference` rule flagging secret references written as a string literal (FEEL or static), nested in a list, or nested in a context returned by an `if` branch, from Camunda 8.10 ([camunda/camunda-modeler#6156](https://github.com/camunda/camunda-modeler/issues/6156))
 
 ___Note:__ Yet to be released changes appear here._
 

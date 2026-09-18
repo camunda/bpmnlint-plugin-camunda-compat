@@ -121,6 +121,36 @@ const valid = [
     `))
   },
   {
+
+    // covered as an error by the `secret-reference` rule instead
+    name: 'input with valid source (secret reference written as a string literal, 8.10+)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="ServiceTask_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:input source="=&quot;camunda.secrets.API_TOKEN&quot;" target="bar" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
+
+    // covered as an error by the `secret-reference` rule instead
+    name: 'input with valid source (secret reference inside a list, 8.10+)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="ServiceTask_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:input source="=[camunda.secrets.API_TOKEN]" target="bar" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
     name: 'property with valid value (camunda.secrets format, backtick-escaped dashed name, pre-8.10)',
     config: { version: '8.9' },
     moddleElement: createModdle(createProcess(`
