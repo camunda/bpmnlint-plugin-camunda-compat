@@ -158,6 +158,19 @@ const valid = [
         </bpmn:extensionElements>
       </bpmn:intermediateCatchEvent>
     `))
+  },
+  {
+    name: 'property with valid value (legacy wrapped format, 8.10+)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="{{secrets.FOO}}" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `))
   }
 ];
 
@@ -195,8 +208,7 @@ const invalid = [
           type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Subscription',
           parentNode: 'StartEvent_1',
-          property: 'correlationKey',
-          allowedVersion: '8.10'
+          property: 'correlationKey'
         }
       }
     ]
@@ -229,8 +241,7 @@ const invalid = [
           type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Input',
           parentNode: 'ServiceTask_1',
-          property: 'source',
-          allowedVersion: '8.10'
+          property: 'source'
         }
       }
     ]
@@ -263,8 +274,7 @@ const invalid = [
           type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Property',
           parentNode: 'IntermediateCatchEvent_1',
-          property: 'value',
-          allowedVersion: '8.10'
+          property: 'value'
         }
       }
     ]
@@ -297,42 +307,7 @@ const invalid = [
           type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
           node: 'zeebe:Property',
           parentNode: 'IntermediateCatchEvent_1',
-          property: 'value',
-          allowedVersion: '8.10'
-        }
-      }
-    ]
-  },
-  {
-    name: 'property with invalid value (legacy wrapped format, 8.10+)',
-    config: { version: '8.10' },
-    moddleElement: createModdle(createProcess(`
-      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
-        <bpmn:extensionElements>
-          <zeebe:properties>
-            <zeebe:property name="bar" value="{{secrets.FOO}}" />
-          </zeebe:properties>
-        </bpmn:extensionElements>
-      </bpmn:intermediateCatchEvent>
-    `)),
-    report: [
-      {
-        id: 'IntermediateCatchEvent_1',
-        message: 'Property <value> uses deprecated secret expression format',
-        path: [
-          'extensionElements',
-          'values',
-          0,
-          'properties',
-          0,
-          'value'
-        ],
-        data: {
-          type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
-          node: 'zeebe:Property',
-          parentNode: 'IntermediateCatchEvent_1',
-          property: 'value',
-          allowedVersion: '8.10'
+          property: 'value'
         }
       }
     ]

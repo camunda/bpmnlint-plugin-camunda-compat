@@ -5,6 +5,7 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 ## Unreleased
 
 * `FIX`: link `secrets` to the secret resolution documentation ([camunda/camunda-modeler#6156](https://github.com/camunda/camunda-modeler/issues/6156))
+* `FIX`: stop flagging legacy `{{secrets.<name>}}` format as deprecated in `secrets` ([camunda/camunda-modeler#6156](https://github.com/camunda/camunda-modeler/issues/6156))
 
 ___Note:__ Yet to be released changes appear here._
 

@@ -15,13 +15,7 @@ const { reportErrors } = require('../utils/reporter');
 
 const { skipInNonExecutableProcess } = require('../utils/rule');
 
-const { greaterOrEqual } = require('../utils/version');
-
-// `camunda.secrets.<name>` only resolves on engines with this version or newer;
-// before that, `{{secrets.<name>}}` remains the only working format
-const CAMUNDA_SECRETS_FORMAT_ALLOWED_VERSION = '8.10';
-
-module.exports = skipInNonExecutableProcess(function({ version }) {
+module.exports = skipInNonExecutableProcess(function() {
   function check(node, reporter) {
     const errors = [
       validateIoMapping,
@@ -107,12 +101,6 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
       return true;
     }
 
-    // once the engine supports `camunda.secrets.<name>`, any remaining
-    // `secrets.<name>` reference (wrapped or not) is considered outdated
-    if (greaterOrEqual(version, CAMUNDA_SECRETS_FORMAT_ALLOWED_VERSION)) {
-      return false;
-    }
-
     return /{{\s*secrets\.[\w-]+\s*}}/.test(value);
   }
 
@@ -136,8 +124,7 @@ function getReport(propertyName, node, parentNode) {
       type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
       node,
       parentNode: parentNode,
-      property: propertyName,
-      allowedVersion: CAMUNDA_SECRETS_FORMAT_ALLOWED_VERSION
+      property: propertyName
     }
   };
 }
