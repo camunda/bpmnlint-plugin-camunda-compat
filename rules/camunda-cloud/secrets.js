@@ -119,7 +119,7 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
   return {
     meta: {
       documentation: {
-        url: 'https://docs.camunda.io/docs/next/components/concepts/secret-resolution/'
+        url: 'https://docs.camunda.io/docs/components/connectors/use-connectors/migrate-secrets/'
       }
     },
     check
