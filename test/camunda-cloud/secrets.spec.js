@@ -1,3 +1,5 @@
+const { expect } = require('chai');
+
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
 
 const rule = require('../../rules/camunda-cloud/secrets');
@@ -304,6 +306,40 @@ const invalid = [
     ]
   },
   {
+    name: 'input with invalid source (legacy wrapped format, 8.10+)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:serviceTask id="ServiceTask_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:input source="{{secrets.FOO}}" target="bar" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `)),
+    report: [
+      {
+        id: 'ServiceTask_1',
+        message: 'Property <source> uses legacy secret expression format',
+        path: [
+          'extensionElements',
+          'values',
+          0,
+          'inputParameters',
+          0,
+          'source'
+        ],
+        data: {
+          type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_LEGACY,
+          node: 'zeebe:Input',
+          parentNode: 'ServiceTask_1',
+          property: 'source',
+          allowedVersion: '8.10'
+        }
+      }
+    ]
+  },
+  {
     name: 'property with invalid value (legacy wrapped format, 8.10+)',
     config: { version: '8.10' },
     moddleElement: createModdle(createProcess(`
@@ -311,6 +347,40 @@ const invalid = [
         <bpmn:extensionElements>
           <zeebe:properties>
             <zeebe:property name="bar" value="{{secrets.FOO}}" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:intermediateCatchEvent>
+    `)),
+    report: [
+      {
+        id: 'IntermediateCatchEvent_1',
+        message: 'Property <value> uses legacy secret expression format',
+        path: [
+          'extensionElements',
+          'values',
+          0,
+          'properties',
+          0,
+          'value'
+        ],
+        data: {
+          type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_LEGACY,
+          node: 'zeebe:Property',
+          parentNode: 'IntermediateCatchEvent_1',
+          property: 'value',
+          allowedVersion: '8.10'
+        }
+      }
+    ]
+  },
+  {
+    name: 'property with invalid value (deprecated bare format, 8.10+)',
+    config: { version: '8.10' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="bar" value="secrets.FOO" />
           </zeebe:properties>
         </bpmn:extensionElements>
       </bpmn:intermediateCatchEvent>
@@ -342,4 +412,35 @@ const invalid = [
 RuleTester.verify('secrets', rule, {
   valid,
   invalid
+});
+
+describe('camunda-cloud/secrets - documentation link', function() {
+
+  it('should not link migration guide below 8.10', function() {
+
+    // given
+    const version = '8.9';
+
+    // when
+    const { meta } = rule({ version });
+
+    // then
+    expect(meta.documentation).not.to.exist;
+  });
+
+
+  it('should link migration guide from 8.10', function() {
+
+    // given
+    const version = '8.10';
+
+    // when
+    const { meta } = rule({ version });
+
+    // then
+    expect(meta.documentation.url).to.eql(
+      'https://docs.camunda.io/docs/components/connectors/use-connectors/migrate-secrets/'
+    );
+  });
+
 });
