@@ -4,9 +4,11 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ## Unreleased
 
-* `FIX`: distinguish deprecated (`secrets.<name>`) from legacy (`{{secrets.<name>}}`) secret expression formats in `secrets`, and link the secrets migration guide only once there is something to migrate to ([#274](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/274))
-
 ___Note:__ Yet to be released changes appear here._
+
+## 2.60.4
+
+* `FIX`: distinguish deprecated (`secrets.<name>`) from legacy (`{{secrets.<name>}}`) secret expression formats in `secrets`, and link the secrets migration guide only once there is something to migrate to ([#274](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/274))
 
 ## 2.60.3
 
