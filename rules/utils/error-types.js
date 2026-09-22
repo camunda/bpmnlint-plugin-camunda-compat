@@ -26,6 +26,7 @@ module.exports.ERROR_TYPES = Object.freeze({
   PROPERTY_VALUE_NOT_ALLOWED: 'camunda.propertyValueNotAllowed',
   PROPERTY_VALUE_REQUIRED: 'camunda.propertyValueRequired',
   SECRET_EXPRESSION_FORMAT_DEPRECATED: 'camunda.secretExpressionFormatDeprecated',
+  SECRET_EXPRESSION_FORMAT_LEGACY: 'camunda.secretExpressionFormatLegacy',
   AGENT_FEEL_FUNCTION_NAME_INVALID: 'camunda.agentFeelFunctionNameInvalid',
   AGENT_FEEL_KEY_MISSING: 'camunda.agentFeelKeyMissing',
   AGENT_FEEL_KEY_TYPE_INVALID: 'camunda.agentFeelKeyTypeInvalid',

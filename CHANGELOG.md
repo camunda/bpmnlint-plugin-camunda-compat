@@ -4,7 +4,7 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ## Unreleased
 
-* `FIX`: link `secrets` to the secrets migration guide ([camunda/camunda-modeler#6156](https://github.com/camunda/camunda-modeler/issues/6156))
+* `FIX`: distinguish deprecated (`secrets.<name>`) from legacy (`{{secrets.<name>}}`) secret expression formats in `secrets`, and link the secrets migration guide only once there is something to migrate to ([#274](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/274))
 
 ___Note:__ Yet to be released changes appear here._
 

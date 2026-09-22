@@ -47,8 +47,12 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
     }
 
     return ioMapping.get('inputParameters')
-      .filter(inputParameter => !isValidSecret(inputParameter.get('source')))
-      .map(inputParameter => getReport('source', inputParameter, node));
+      .map(inputParameter => {
+        const format = getInvalidSecretFormat(inputParameter.get('source'));
+
+        return format && getReport('source', inputParameter, node, format);
+      })
+      .filter(Boolean);
   }
 
   function validateProperties(node) {
@@ -59,8 +63,12 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
     }
 
     return (properties.get('properties'))
-      .filter(property => !isValidSecret(property.get('value')))
-      .map(property => getReport('value', property, node));
+      .map(property => {
+        const format = getInvalidSecretFormat(property.get('value'));
+
+        return format && getReport('value', property, node, format);
+      })
+      .filter(Boolean);
   }
 
   function validateSubscription(node) {
@@ -90,50 +98,68 @@ module.exports = skipInNonExecutableProcess(function({ version }) {
 
     const correlationKey = subscription.get('correlationKey');
 
-    return isValidSecret(correlationKey)
-      ? []
-      : [ getReport('correlationKey', subscription, node) ];
+    const format = getInvalidSecretFormat(correlationKey);
+
+    return format ? [ getReport('correlationKey', subscription, node, format) ] : [];
   }
 
-  function isValidSecret(value) {
+  // returns `null` when `value` is a valid secret expression, otherwise which
+  // kind of outdated format it uses:
+  //
+  // - 'deprecated': `secrets.<name>`, never a working format on its own
+  // - 'legacy': `{{secrets.<name>}}`, worked until `camunda.secrets.<name>`
+  //   became available and is only reported from that version on
+  function getInvalidSecretFormat(value) {
     if (!value || !isString(value) || !value.includes('secrets.')) {
-      return true;
+      return null;
     }
 
     // the current, opt-in `camunda.secrets.<name>` format is always accepted;
     // `<name>` may be backtick-escaped (e.g. `` `db-password` ``, `` `tls.crt` ``)
     // when it is not a plain FEEL identifier
     if (/camunda\.secrets\.(?:[\w-]+|`[^`]+`)/.test(value)) {
-      return true;
+      return null;
     }
+
+    const isLegacyFormat = /{{\s*secrets\.[\w-]+\s*}}/.test(value);
 
     // once the engine supports `camunda.secrets.<name>`, any remaining
-    // `secrets.<name>` reference (wrapped or not) is considered outdated
+    // `secrets.<name>` reference is outdated: the legacy wrapped format is
+    // superseded, anything else never resolved in the first place
     if (greaterOrEqual(version, CAMUNDA_SECRETS_FORMAT_ALLOWED_VERSION)) {
-      return false;
+      return isLegacyFormat ? 'legacy' : 'deprecated';
     }
 
-    return /{{\s*secrets\.[\w-]+\s*}}/.test(value);
+    return isLegacyFormat ? null : 'deprecated';
+  }
+
+  const meta = {};
+
+  // the migration guide only applies once there is actually something to
+  // migrate to; below that version, the wrapped legacy format is still the
+  // correct fix, not a migration
+  if (greaterOrEqual(version, CAMUNDA_SECRETS_FORMAT_ALLOWED_VERSION)) {
+    meta.documentation = {
+      url: 'https://docs.camunda.io/docs/components/connectors/use-connectors/migrate-secrets/'
+    };
   }
 
   return {
-    meta: {
-      documentation: {
-        url: 'https://docs.camunda.io/docs/components/connectors/use-connectors/migrate-secrets/'
-      }
-    },
+    meta,
     check
   };
 });
 
-function getReport(propertyName, node, parentNode) {
+function getReport(propertyName, node, parentNode, format) {
   const path = getPath(node, parentNode);
 
+  const isLegacy = format === 'legacy';
+
   return {
-    message: `Property <${ propertyName }> uses deprecated secret expression format`,
+    message: `Property <${ propertyName }> uses ${ isLegacy ? 'legacy' : 'deprecated' } secret expression format`,
     path: pathConcat(path || [], propertyName),
     data: {
-      type: ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
+      type: isLegacy ? ERROR_TYPES.SECRET_EXPRESSION_FORMAT_LEGACY : ERROR_TYPES.SECRET_EXPRESSION_FORMAT_DEPRECATED,
       node,
       parentNode: parentNode,
       property: propertyName,
