@@ -133,7 +133,8 @@ const camundaCloud810Rules = withConfig({
   ]),
   'before-all-execution-listener': 'error',
   'cancel-execution-listener': 'error',
-  'duplicate-execution-listener-headers': 'error'
+  'duplicate-execution-listener-headers': 'error',
+  'unresolvable-secret-reference': 'error'
 }, { version: '8.10' });
 
 const camundaPlatform719Rules = withConfig({
@@ -233,6 +234,7 @@ const rules = {
   'task-listener': './rules/camunda-cloud/task-listener',
   'task-schedule': './rules/camunda-cloud/task-schedule',
   'timer': './rules/camunda-cloud/timer',
+  'unresolvable-secret-reference': './rules/camunda-cloud/unresolvable-secret-reference',
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
   'user-task-form': './rules/camunda-cloud/user-task-form',
   'variable-name': './rules/camunda-cloud/variable-name',
