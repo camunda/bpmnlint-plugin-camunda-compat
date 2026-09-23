@@ -6,6 +6,10 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.61.0
+
+* `FEAT`: add `unresolvable-secret-reference` rule flagging secret references written as a string literal (FEEL or static, in a `zeebe:Input` source or a `zeebe:Property` value), nested in a list, or nested in a context returned by an `if` branch, from Camunda 8.10 ([#272](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/272))
+
 ## 2.60.4
 
 * `FIX`: distinguish deprecated (`secrets.<name>`) from legacy (`{{secrets.<name>}}`) secret expression formats in `secrets`, and link the secrets migration guide only once there is something to migrate to ([#274](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/274))
