@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: report `history-time-to-live` with structured data, so it resolves to a properties panel entry ([#275](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/275))
+
 ## 2.61.0
 
 * `FEAT`: add `unresolvable-secret-reference` rule flagging secret references written as a string literal (FEEL or static, in a `zeebe:Input` source or a `zeebe:Property` value), nested in a list, or nested in a context returned by an `if` branch, from Camunda 8.10 ([#272](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/272))
