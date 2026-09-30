@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.61.1
+
 * `FIX`: report `history-time-to-live` with structured data, so it resolves to a properties panel entry ([#275](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/275))
 
 ## 2.61.0
