@@ -34,7 +34,13 @@ const invalid = [
       message: 'Property <historyTimeToLive> should be configured on <bpmn:Process> or engine level.',
       path: [
         'historyTimeToLive'
-      ]
+      ],
+      data: {
+        type: 'camunda.propertyRequired',
+        node: 'Process_1',
+        parentNode: null,
+        requiredProperty: 'historyTimeToLive'
+      }
     }
   }
 ];
