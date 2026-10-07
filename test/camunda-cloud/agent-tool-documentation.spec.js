@@ -44,6 +44,69 @@ const valid = [
     `))
   },
   {
+    name: 'documented intermediate throw event inside agentic AHSP',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:intermediateThrowEvent id="Event_1">
+        <bpmn:documentation>Sends the response to the requesting system.</bpmn:documentation>
+        <bpmn:messageEventDefinition />
+      </bpmn:intermediateThrowEvent>
+    `))
+  },
+  {
+    name: 'gateway-marked tool task is exempt regardless of gateway type value',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.gateway.type" value="unexpected-value" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+    `))
+  },
+  {
+    name: 'gateway-marked intermediate throw event is exempt',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:intermediateThrowEvent id="Event_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.gateway.type" value="mcp" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:messageEventDefinition />
+      </bpmn:intermediateThrowEvent>
+    `))
+  },
+  {
+    name: 'intermediate event with an incoming flow is not an agent tool',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:documentation>Entry tool.</bpmn:documentation>
+      </bpmn:serviceTask>
+      <bpmn:intermediateThrowEvent id="Event_1">
+        <bpmn:incoming>Flow_1</bpmn:incoming>
+        <bpmn:messageEventDefinition />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Event_1" />
+    `))
+  },
+  {
+    name: 'boundary event is not an agent tool',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:serviceTask id="Task_1">
+        <bpmn:documentation>Entry tool.</bpmn:documentation>
+      </bpmn:serviceTask>
+      <bpmn:boundaryEvent id="Boundary_1" attachedToRef="Task_1">
+        <bpmn:messageEventDefinition />
+      </bpmn:boundaryEvent>
+    `))
+  },
+  {
     name: 'undocumented tool inside a bare zeebe:AdHoc AHSP — not agentic, skipped (property marker required, at every version)',
     config: { version: '8.10' },
     moddleElement: createModdle(createProcess(`
@@ -251,6 +314,36 @@ const invalid = [
     `)),
     report: {
       id: 'Task_1',
+      message: 'Tool documentation is missing.',
+      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
+      path: [ 'documentation' ]
+    }
+  },
+  {
+    name: 'undocumented intermediate throw event inside agentic AHSP',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:intermediateThrowEvent id="Event_1">
+        <bpmn:messageEventDefinition />
+      </bpmn:intermediateThrowEvent>
+    `)),
+    report: {
+      id: 'Event_1',
+      message: 'Tool documentation is missing.',
+      data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
+      path: [ 'documentation' ]
+    }
+  },
+  {
+    name: 'undocumented intermediate catch event inside agentic AHSP',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:intermediateCatchEvent id="Event_1">
+        <bpmn:messageEventDefinition />
+      </bpmn:intermediateCatchEvent>
+    `)),
+    report: {
+      id: 'Event_1',
       message: 'Tool documentation is missing.',
       data: { type: ERROR_TYPES.AGENT_TOOL_DOCUMENTATION_MISSING },
       path: [ 'documentation' ]

@@ -613,6 +613,24 @@ function hasToolContainerProperty(node) {
 
 module.exports.hasToolContainerProperty = hasToolContainerProperty;
 
+// Gateway tools (e.g. MCP Client, A2A) load their description and input schema
+// from the external source, so the marker's presence alone identifies them.
+const GATEWAY_TOOL_TYPE_PROPERTY = 'io.camunda.agenticai.gateway.type';
+
+function hasGatewayToolProperty(node) {
+  const properties = findExtensionElement(node, 'zeebe:Properties');
+
+  if (!properties) {
+    return false;
+  }
+
+  return (properties.get('properties') || []).some(
+    property => property.get('name') === GATEWAY_TOOL_TYPE_PROPERTY
+  );
+}
+
+module.exports.hasGatewayToolProperty = hasGatewayToolProperty;
+
 // Whether an ad-hoc sub-process should have agent tool contracts linted.
 //
 // The `io.camunda.agenticai.toolContainer=true` property marker is honored at
@@ -675,6 +693,24 @@ function isAgenticToolElement(node, version) {
 }
 
 module.exports.isAgenticToolElement = isAgenticToolElement;
+
+// The documentation rule also covers intermediate events, which can be
+// resolved as tools without changing the activity-only contracts of other rules.
+function isAgenticToolDocumentationElement(node, version) {
+  if (isAgenticToolElement(node, version)) {
+    return true;
+  }
+
+  if (!isAny(node, [ 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent' ])) {
+    return false;
+  }
+
+  return (node.get('incoming') || []).length === 0
+    && is(node.$parent, 'bpmn:AdHocSubProcess')
+    && isAgenticAdHocSubProcess(node.$parent, version);
+}
+
+module.exports.isAgenticToolDocumentationElement = isAgenticToolDocumentationElement;
 
 function findParent(node, type) {
   if (!node) {

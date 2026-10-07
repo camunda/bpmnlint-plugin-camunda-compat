@@ -6,6 +6,7 @@ const { createProcess, createModdle } = require('../helper');
 
 const {
   hasAiAgentJobWorkerType,
+  hasGatewayToolProperty,
   hasToolContainerProperty,
   isAgenticAdHocSubProcess
 } = require('../../rules/utils/element');
@@ -71,6 +72,26 @@ describe('utils/element - agentic detection', function() {
       const { root } = await createModdle(createProcess('<bpmn:adHocSubProcess id="AHSP_1" />'));
 
       expect(hasToolContainerProperty(root.rootElements[0].flowElements[0])).to.be.false;
+    });
+
+  });
+
+
+  describe('#hasGatewayToolProperty', function() {
+
+    it('detects the marker regardless of value', async function() {
+      const element = await getAHSP(`
+        <zeebe:properties>
+          <zeebe:property name="io.camunda.agenticai.gateway.type" value="" />
+        </zeebe:properties>
+      `);
+
+      expect(hasGatewayToolProperty(element)).to.be.true;
+    });
+
+
+    it('ignores an unrelated property name', async function() {
+      expect(hasGatewayToolProperty(await getAHSP(TOOL_CONTAINER_MARKER))).to.be.false;
     });
 
   });
