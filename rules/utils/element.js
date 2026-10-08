@@ -615,9 +615,9 @@ module.exports.hasToolContainerProperty = hasToolContainerProperty;
 
 // Gateway tools (e.g. MCP Client, A2A) load their description and input schema
 // from the external source, so the marker's presence alone identifies them.
-const GATEWAY_TOOL_TYPE_PROPERTY = 'io.camunda.agenticai.gateway.type';
+const AGENTIC_GATEWAY_TOOL_TYPE_PROPERTY = 'io.camunda.agenticai.gateway.type';
 
-function hasGatewayToolProperty(node) {
+function hasAgenticGatewayToolProperty(node) {
   const properties = findExtensionElement(node, 'zeebe:Properties');
 
   if (!properties) {
@@ -625,11 +625,11 @@ function hasGatewayToolProperty(node) {
   }
 
   return (properties.get('properties') || []).some(
-    property => property.get('name') === GATEWAY_TOOL_TYPE_PROPERTY
+    property => property.get('name') === AGENTIC_GATEWAY_TOOL_TYPE_PROPERTY
   );
 }
 
-module.exports.hasGatewayToolProperty = hasGatewayToolProperty;
+module.exports.hasAgenticGatewayToolProperty = hasAgenticGatewayToolProperty;
 
 // Whether an ad-hoc sub-process should have agent tool contracts linted.
 //
@@ -694,8 +694,9 @@ function isAgenticToolElement(node, version) {
 
 module.exports.isAgenticToolElement = isAgenticToolElement;
 
-// The documentation rule also covers intermediate events, which can be
-// resolved as tools without changing the activity-only contracts of other rules.
+// The agent also resolves root intermediate events as tools, and every tool
+// needs a description. This is kept separate from `isAgenticToolElement` so
+// activity-only contracts (e.g. `agent-tool-output-key`) keep their scope.
 function isAgenticToolDocumentationElement(node, version) {
   if (isAgenticToolElement(node, version)) {
     return true;

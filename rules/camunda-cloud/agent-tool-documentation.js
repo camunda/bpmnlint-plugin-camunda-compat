@@ -1,4 +1,4 @@
-const { hasGatewayToolProperty, isAgenticToolDocumentationElement } = require('../utils/element');
+const { hasAgenticGatewayToolProperty, isAgenticToolDocumentationElement } = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -21,7 +21,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       return;
     }
 
-    if (hasGatewayToolProperty(node)) {
+    if (hasAgenticGatewayToolProperty(node)) {
       return;
     }
 

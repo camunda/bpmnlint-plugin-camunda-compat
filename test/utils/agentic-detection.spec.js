@@ -6,7 +6,7 @@ const { createProcess, createModdle } = require('../helper');
 
 const {
   hasAiAgentJobWorkerType,
-  hasGatewayToolProperty,
+  hasAgenticGatewayToolProperty,
   hasToolContainerProperty,
   isAgenticAdHocSubProcess
 } = require('../../rules/utils/element');
@@ -77,7 +77,7 @@ describe('utils/element - agentic detection', function() {
   });
 
 
-  describe('#hasGatewayToolProperty', function() {
+  describe('#hasAgenticGatewayToolProperty', function() {
 
     it('detects the marker regardless of value', async function() {
       const element = await getAHSP(`
@@ -86,12 +86,12 @@ describe('utils/element - agentic detection', function() {
         </zeebe:properties>
       `);
 
-      expect(hasGatewayToolProperty(element)).to.be.true;
+      expect(hasAgenticGatewayToolProperty(element)).to.be.true;
     });
 
 
     it('ignores an unrelated property name', async function() {
-      expect(hasGatewayToolProperty(await getAHSP(TOOL_CONTAINER_MARKER))).to.be.false;
+      expect(hasAgenticGatewayToolProperty(await getAHSP(TOOL_CONTAINER_MARKER))).to.be.false;
     });
 
   });
