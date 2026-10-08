@@ -682,6 +682,9 @@ function isAgenticToolElement(node, version) {
     // an event sub-process is not a tool
     && !(is(node, 'bpmn:SubProcess') && node.get('triggeredByEvent'))
 
+    // a link catch event continues the flow of its link throw
+    && !isLinkCatchEvent(node)
+
     // tool root: nothing flows into it
     && (node.get('incoming') || []).length === 0
 
@@ -693,6 +696,13 @@ function isAgenticToolElement(node, version) {
 }
 
 module.exports.isAgenticToolElement = isAgenticToolElement;
+
+function isLinkCatchEvent(node) {
+  const eventDefinition = getEventDefinition(node);
+
+  return is(node, 'bpmn:IntermediateCatchEvent')
+    && !!eventDefinition && is(eventDefinition, 'bpmn:LinkEventDefinition');
+}
 
 function findParent(node, type) {
   if (!node) {

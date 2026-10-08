@@ -95,6 +95,15 @@ const valid = [
     `))
   },
   {
+    name: 'link catch event continues its link throw, not an agent tool',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticAHSP(`
+      <bpmn:intermediateCatchEvent id="LinkCatch_1">
+        <bpmn:linkEventDefinition name="back" />
+      </bpmn:intermediateCatchEvent>
+    `))
+  },
+  {
     name: 'boundary event is not an agent tool',
     config: { version: '8.8' },
     moddleElement: createModdle(agenticAHSP(`
