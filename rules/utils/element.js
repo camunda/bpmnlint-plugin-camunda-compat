@@ -617,7 +617,7 @@ module.exports.hasToolContainerProperty = hasToolContainerProperty;
 // from the external source, so the marker's presence alone identifies them.
 const AGENTIC_GATEWAY_TOOL_TYPE_PROPERTY = 'io.camunda.agenticai.gateway.type';
 
-function hasAgenticGatewayToolProperty(node) {
+function isAgenticGatewayTool(node) {
   const properties = findExtensionElement(node, 'zeebe:Properties');
 
   if (!properties) {
@@ -629,7 +629,7 @@ function hasAgenticGatewayToolProperty(node) {
   );
 }
 
-module.exports.hasAgenticGatewayToolProperty = hasAgenticGatewayToolProperty;
+module.exports.isAgenticGatewayTool = isAgenticGatewayTool;
 
 // Whether an ad-hoc sub-process should have agent tool contracts linted.
 //
