@@ -613,6 +613,24 @@ function hasToolContainerProperty(node) {
 
 module.exports.hasToolContainerProperty = hasToolContainerProperty;
 
+// Gateway tools (e.g. MCP Client, A2A) load their description and input schema
+// from the external source, so the marker's presence alone identifies them.
+const AGENTIC_GATEWAY_TOOL_TYPE_PROPERTY = 'io.camunda.agenticai.gateway.type';
+
+function isAgenticGatewayTool(node) {
+  const properties = findExtensionElement(node, 'zeebe:Properties');
+
+  if (!properties) {
+    return false;
+  }
+
+  return (properties.get('properties') || []).some(
+    property => property.get('name') === AGENTIC_GATEWAY_TOOL_TYPE_PROPERTY
+  );
+}
+
+module.exports.isAgenticGatewayTool = isAgenticGatewayTool;
+
 // Whether an ad-hoc sub-process should have agent tool contracts linted.
 //
 // The `io.camunda.agenticai.toolContainer=true` property marker is honored at
@@ -658,11 +676,14 @@ module.exports.isAgenticAdHocSubProcess = isAgenticAdHocSubProcess;
 // element reached by a sequence flow) is PART of a tool, not a tool itself.
 function isAgenticToolElement(node, version) {
 
-  // a tool is an activity (task or sub-process)
-  return is(node, 'bpmn:Activity')
+  // a tool is an activity (task or sub-process) or an intermediate event
+  return isAny(node, [ 'bpmn:Activity', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent' ])
 
     // an event sub-process is not a tool
     && !(is(node, 'bpmn:SubProcess') && node.get('triggeredByEvent'))
+
+    // a link catch event continues the flow of its link throw
+    && !isLinkCatchEvent(node)
 
     // tool root: nothing flows into it
     && (node.get('incoming') || []).length === 0
@@ -675,6 +696,13 @@ function isAgenticToolElement(node, version) {
 }
 
 module.exports.isAgenticToolElement = isAgenticToolElement;
+
+function isLinkCatchEvent(node) {
+  const eventDefinition = getEventDefinition(node);
+
+  return is(node, 'bpmn:IntermediateCatchEvent')
+    && !!eventDefinition && is(eventDefinition, 'bpmn:LinkEventDefinition');
+}
 
 function findParent(node, type) {
   if (!node) {
