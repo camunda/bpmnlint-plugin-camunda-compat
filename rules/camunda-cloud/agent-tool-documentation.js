@@ -1,4 +1,4 @@
-const { hasAgenticGatewayToolProperty, isAgenticToolDocumentationElement } = require('../utils/element');
+const { hasAgenticGatewayToolProperty, isAgenticToolElement } = require('../utils/element');
 const { reportErrors } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -15,9 +15,10 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
   const { version } = config;
   function check(node, reporter) {
 
-    // Only a tool (a root activity directly inside an agentic AHSP) needs
-    // documentation; steps nested inside a tool are not separate tools.
-    if (!isAgenticToolDocumentationElement(node, version)) {
+    // Only a tool (a root activity or intermediate event directly inside an
+    // agentic AHSP) needs documentation; steps nested inside a tool are not
+    // separate tools.
+    if (!isAgenticToolElement(node, version)) {
       return;
     }
 

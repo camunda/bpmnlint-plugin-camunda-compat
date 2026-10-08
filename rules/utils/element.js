@@ -676,8 +676,8 @@ module.exports.isAgenticAdHocSubProcess = isAgenticAdHocSubProcess;
 // element reached by a sequence flow) is PART of a tool, not a tool itself.
 function isAgenticToolElement(node, version) {
 
-  // a tool is an activity (task or sub-process)
-  return is(node, 'bpmn:Activity')
+  // a tool is an activity (task or sub-process) or an intermediate event
+  return isAny(node, [ 'bpmn:Activity', 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent' ])
 
     // an event sub-process is not a tool
     && !(is(node, 'bpmn:SubProcess') && node.get('triggeredByEvent'))
@@ -693,25 +693,6 @@ function isAgenticToolElement(node, version) {
 }
 
 module.exports.isAgenticToolElement = isAgenticToolElement;
-
-// The agent also resolves root intermediate events as tools, and every tool
-// needs a description. This is kept separate from `isAgenticToolElement` so
-// activity-only contracts (e.g. `agent-tool-output-key`) keep their scope.
-function isAgenticToolDocumentationElement(node, version) {
-  if (isAgenticToolElement(node, version)) {
-    return true;
-  }
-
-  if (!isAny(node, [ 'bpmn:IntermediateCatchEvent', 'bpmn:IntermediateThrowEvent' ])) {
-    return false;
-  }
-
-  return (node.get('incoming') || []).length === 0
-    && is(node.$parent, 'bpmn:AdHocSubProcess')
-    && isAgenticAdHocSubProcess(node.$parent, version);
-}
-
-module.exports.isAgenticToolDocumentationElement = isAgenticToolDocumentationElement;
 
 function findParent(node, type) {
   if (!node) {

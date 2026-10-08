@@ -36,7 +36,34 @@ function agenticToolTask(outputXml = '') {
   `);
 }
 
+function agenticToolEvent(outputXml = '') {
+  return createProcess(`
+    <bpmn:adHocSubProcess id="AHSP_1">
+      <bpmn:extensionElements>
+        <zeebe:properties>
+          <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+        </zeebe:properties>
+      </bpmn:extensionElements>
+      <bpmn:intermediateCatchEvent id="Event_1">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            ${outputXml}
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:messageEventDefinition />
+      </bpmn:intermediateCatchEvent>
+    </bpmn:adHocSubProcess>
+  `);
+}
+
 const valid = [
+  {
+    name: 'intermediate event tool maps toolCallResult',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticToolEvent(`
+      <zeebe:output source="=reply" target="toolCallResult" />
+    `))
+  },
   {
     name: 'toolCallResult output present',
     config: { version: '8.8' },
@@ -730,6 +757,17 @@ const invalid = [
     moddleElement: createModdle(agenticToolTask()),
     report: {
       id: 'Task_1',
+      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
+      path: OUTPUTS_ANCHOR_PATH
+    }
+  },
+  {
+    name: 'intermediate event tool with no result channel — returns nothing to the agent',
+    config: { version: '8.8' },
+    moddleElement: createModdle(agenticToolEvent()),
+    report: {
+      id: 'Event_1',
       message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
       data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
       path: OUTPUTS_ANCHOR_PATH
