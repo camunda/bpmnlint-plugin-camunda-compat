@@ -1,6 +1,4 @@
 const RuleTester = require('bpmnlint/lib/testers/rule-tester');
-const { Linter } = require('bpmnlint');
-const { expect } = require('chai');
 
 const rule = require('../../rules/camunda-cloud/agent-tool-output-key');
 
@@ -59,176 +57,7 @@ function agenticToolEvent(outputXml = '') {
   `);
 }
 
-function agenticToolFlow(inner, definitions = '') {
-  return createModdle(createDefinitions(`
-    <bpmn:process id="Process_1" isExecutable="true">
-    <bpmn:adHocSubProcess id="AHSP_1">
-      <bpmn:extensionElements>
-        <zeebe:properties>
-          <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
-        </zeebe:properties>
-      </bpmn:extensionElements>
-      ${ inner }
-    </bpmn:adHocSubProcess>
-    </bpmn:process>
-    ${ definitions }
-  `));
-}
-
-function potentialExitFlow(outputXml = '', eventType = 'endEvent', definition = 'escalation') {
-  return `
-    <bpmn:serviceTask id="Task_1">
-      <bpmn:extensionElements>
-        <zeebe:ioMapping>${ outputXml }</zeebe:ioMapping>
-      </bpmn:extensionElements>
-      <bpmn:outgoing>Flow_1</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:${ eventType } id="Throw_1">
-      <bpmn:incoming>Flow_1</bpmn:incoming>
-      <bpmn:${ definition }EventDefinition />
-    </bpmn:${ eventType }>
-    <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Throw_1" />
-  `;
-}
-
-function sharedExitFlow(outputXml = '', boundary = true, sharedLeaf = false, completesThroughExit = false) {
-  return agenticToolFlow(`
-      <bpmn:serviceTask id="Search" name="Search web">
-        <bpmn:extensionElements>
-          <zeebe:ioMapping>${ outputXml }</zeebe:ioMapping>
-        </bpmn:extensionElements>
-        <bpmn:outgoing>Flow_1</bpmn:outgoing>
-      </bpmn:serviceTask>
-      <bpmn:exclusiveGateway id="Split">
-        <bpmn:incoming>Flow_1</bpmn:incoming>
-        <bpmn:outgoing>Flow_2</bpmn:outgoing>
-        <bpmn:outgoing>Flow_3</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:serviceTask id="Summarize" name="LLM Summarize">
-        <bpmn:incoming>Flow_2</bpmn:incoming>
-        ${ sharedLeaf ? '<bpmn:incoming>Flow_7</bpmn:incoming>' : '' }
-        ${ completesThroughExit ? '<bpmn:outgoing>Flow_8</bpmn:outgoing>' : '' }
-      </bpmn:serviceTask>
-      ${ boundary ? `<bpmn:boundaryEvent id="Timeout" attachedToRef="Summarize">
-        <bpmn:outgoing>Flow_4</bpmn:outgoing>
-        <bpmn:timerEventDefinition />
-      </bpmn:boundaryEvent>` : '' }
-      <bpmn:serviceTask id="Check" name="Check account">
-        <bpmn:outgoing>Flow_5</bpmn:outgoing>
-        ${ sharedLeaf ? '<bpmn:outgoing>Flow_7</bpmn:outgoing>' : '' }
-      </bpmn:serviceTask>
-      <bpmn:exclusiveGateway id="Join">
-        <bpmn:incoming>Flow_3</bpmn:incoming>
-        ${ boundary ? '<bpmn:incoming>Flow_4</bpmn:incoming>' : '' }
-        ${ completesThroughExit ? '<bpmn:incoming>Flow_8</bpmn:incoming>' : '' }
-        <bpmn:incoming>Flow_5</bpmn:incoming>
-        <bpmn:outgoing>Flow_6</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:endEvent id="Stop" name="Stop agent">
-        <bpmn:incoming>Flow_6</bpmn:incoming>
-        <bpmn:escalationEventDefinition />
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_1" sourceRef="Search" targetRef="Split" />
-      <bpmn:sequenceFlow id="Flow_2" sourceRef="Split" targetRef="Summarize" />
-      <bpmn:sequenceFlow id="Flow_3" sourceRef="Split" targetRef="Join" />
-      ${ boundary ? '<bpmn:sequenceFlow id="Flow_4" sourceRef="Timeout" targetRef="Join" />' : '' }
-      <bpmn:sequenceFlow id="Flow_5" sourceRef="Check" targetRef="Join" />
-      <bpmn:sequenceFlow id="Flow_6" sourceRef="Join" targetRef="Stop" />
-      ${ sharedLeaf ? '<bpmn:sequenceFlow id="Flow_7" sourceRef="Check" targetRef="Summarize" />' : '' }
-      ${ completesThroughExit ? '<bpmn:sequenceFlow id="Flow_8" sourceRef="Summarize" targetRef="Join" />' : '' }
-    `);
-}
-
 const valid = [
-  ...[
-    [ 'endEvent', 'error' ],
-    [ 'endEvent', 'escalation' ],
-    [ 'intermediateThrowEvent', 'escalation' ]
-  ].map(([ eventType, definition ]) => ({
-    name: `${ definition } ${ eventType } is a potential exit without a catch`,
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(potentialExitFlow('', eventType, definition))
-  })),
-  {
-    name: 'potential exit suppresses misdirected-output warnings',
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(potentialExitFlow(`
-      <zeebe:output source="=reason" target="reason" />
-    `))
-  },
-  ...[ 'error', 'escalation' ].map(definition => ({
-    name: `${ definition } exit inside a tool sub-process suppresses missing result`,
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(`
-      <bpmn:subProcess id="Tool_1">
-        ${ potentialExitFlow('', 'endEvent', definition) }
-        <bpmn:subProcess id="Handler" triggeredByEvent="true">
-          <bpmn:startEvent id="Catch" isInterrupting="false">
-            <bpmn:escalationEventDefinition />
-          </bpmn:startEvent>
-        </bpmn:subProcess>
-      </bpmn:subProcess>
-    `)
-  })),
-  {
-    name: 'connecting the returning leaf to the shared exit removes its warning',
-    config: { version: '8.8' },
-    moddleElement: sharedExitFlow('', false, false, true)
-  },
-  {
-    name: 'potential exit reached through a same-scope link still expresses intent',
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(`
-      <bpmn:task id="Entry"><bpmn:outgoing>ToLink</bpmn:outgoing></bpmn:task>
-      <bpmn:intermediateThrowEvent id="LinkThrow">
-        <bpmn:incoming>ToLink</bpmn:incoming>
-        <bpmn:linkEventDefinition name="exit" />
-      </bpmn:intermediateThrowEvent>
-      <bpmn:intermediateCatchEvent id="LinkCatch">
-        <bpmn:linkEventDefinition name="exit" />
-        <bpmn:outgoing>ToExit</bpmn:outgoing>
-      </bpmn:intermediateCatchEvent>
-      <bpmn:intermediateThrowEvent id="Exit">
-        <bpmn:incoming>ToExit</bpmn:incoming>
-        <bpmn:escalationEventDefinition />
-      </bpmn:intermediateThrowEvent>
-      <bpmn:sequenceFlow id="ToLink" sourceRef="Entry" targetRef="LinkThrow" />
-      <bpmn:sequenceFlow id="ToExit" sourceRef="LinkCatch" targetRef="Exit" />
-    `)
-  },
-  ...[
-    [ 'unmatched boundary', '<bpmn:escalationEventDefinition escalationRef="OtherEscalation" />', '' ],
-    [ 'non-interrupting catch-all boundary', '<bpmn:escalationEventDefinition />', 'cancelActivity="false"' ]
-  ].map(([ name, definition, attributes ]) => ({
-    name: `potential exit ignores ${ name }`,
-    config: { version: '8.8' },
-    moddleElement: createModdle(createProcess(`
-      <bpmn:adHocSubProcess id="AHSP_1">
-        <bpmn:extensionElements>
-          <zeebe:properties>
-            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
-          </zeebe:properties>
-        </bpmn:extensionElements>
-        ${ potentialExitFlow() }
-      </bpmn:adHocSubProcess>
-      <bpmn:boundaryEvent id="Boundary" attachedToRef="AHSP_1" ${ attributes }>
-        ${ definition }
-      </bpmn:boundaryEvent>
-    `).replace('</bpmn:definitions>', '<bpmn:escalation id="OtherEscalation" escalationCode="OTHER" /></bpmn:definitions>'))
-  })),
-  {
-    name: 'dynamic escalation code still expresses potential exit intent',
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(
-      potentialExitFlow().replace('<bpmn:escalationEventDefinition />', '<bpmn:escalationEventDefinition escalationRef="DynamicEscalation" />'),
-      '<bpmn:escalation id="DynamicEscalation" escalationCode="=code" />'
-    )
-  },
-  {
-    name: 'upstream result suppresses returning leaf warning in a mixed flow',
-    config: { version: '8.8' },
-    moddleElement: sharedExitFlow('<zeebe:output source="=summary" target="toolCallResult" />')
-  },
   {
     name: 'intermediate event tool maps toolCallResult',
     config: { version: '8.8' },
@@ -565,161 +394,228 @@ const valid = [
         </bpmn:serviceTask>
       </bpmn:adHocSubProcess>
     `))
+  },
+  {
+    name: 'escalation end event in tool flow — potential exit, no result required',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:endEvent id="Exit_1">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:escalationEventDefinition />
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Exit_1" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'escalation intermediate throw event in tool flow — potential exit, no result required',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:intermediateThrowEvent id="Exit_1">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:escalationEventDefinition />
+        </bpmn:intermediateThrowEvent>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Exit_1" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'error end event in tool flow — potential exit, no result required',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:endEvent id="Exit_1">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:errorEventDefinition />
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Exit_1" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'escalation with dynamic code — potential exit, no result required',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createDefinitions(`
+      <bpmn:process id="Process_1" isExecutable="true">
+        <bpmn:adHocSubProcess id="AHSP_1">
+          <bpmn:extensionElements>
+            <zeebe:properties>
+              <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+            </zeebe:properties>
+          </bpmn:extensionElements>
+          <bpmn:serviceTask id="Task_1">
+            <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          </bpmn:serviceTask>
+          <bpmn:endEvent id="Exit_1">
+            <bpmn:incoming>Flow_1</bpmn:incoming>
+            <bpmn:escalationEventDefinition escalationRef="Escalation_1" />
+          </bpmn:endEvent>
+          <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Exit_1" />
+        </bpmn:adHocSubProcess>
+      </bpmn:process>
+      <bpmn:escalation id="Escalation_1" name="Escalation_1" escalationCode="=code" />
+    `))
+  },
+  {
+    name: 'misdirected output in tool flow with potential exit — not reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=reason" target="reason" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:endEvent id="Exit_1">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:escalationEventDefinition />
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Exit_1" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'sub-process tool with inner escalation end event — potential exit, no result required',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:subProcess id="Sub_1">
+          <bpmn:serviceTask id="Task_1">
+            <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          </bpmn:serviceTask>
+          <bpmn:endEvent id="Exit_1">
+            <bpmn:incoming>Flow_1</bpmn:incoming>
+            <bpmn:escalationEventDefinition />
+          </bpmn:endEvent>
+          <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Exit_1" />
+        </bpmn:subProcess>
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'potential exit reached through link events — no result required',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:intermediateThrowEvent id="LinkThrow_1">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:linkEventDefinition name="exit" />
+        </bpmn:intermediateThrowEvent>
+        <bpmn:intermediateCatchEvent id="LinkCatch_1">
+          <bpmn:outgoing>Flow_2</bpmn:outgoing>
+          <bpmn:linkEventDefinition name="exit" />
+        </bpmn:intermediateCatchEvent>
+        <bpmn:endEvent id="Exit_1">
+          <bpmn:incoming>Flow_2</bpmn:incoming>
+          <bpmn:escalationEventDefinition />
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="LinkThrow_1" />
+        <bpmn:sequenceFlow id="Flow_2" sourceRef="LinkCatch_1" targetRef="Exit_1" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'two tools sharing one escalation end event — neither reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:outgoing>Flow_2</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:endEvent id="Exit_1">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:incoming>Flow_2</bpmn:incoming>
+          <bpmn:escalationEventDefinition />
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Exit_1" />
+        <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_2" targetRef="Exit_1" />
+      </bpmn:adHocSubProcess>
+    `))
+  },
+  {
+    name: 'returning branch next to a potential exit — not reported (known limitation)',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:outgoing>Flow_2</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:endEvent id="Exit_1">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:escalationEventDefinition />
+        </bpmn:endEvent>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_2</bpmn:incoming>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Exit_1" />
+        <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_1" targetRef="Task_2" />
+      </bpmn:adHocSubProcess>
+    `))
   }
 ];
 
 const invalid = [
-  ...[
-    [ 'task', '' ],
-    [ 'subProcess', '<bpmn:task id="Inner" />' ],
-    [ 'intermediateCatchEvent', '<bpmn:messageEventDefinition />' ],
-    [ 'intermediateThrowEvent', '<bpmn:signalEventDefinition />' ]
-  ].map(([ type, contents ]) => ({
-    name: `returning ${ type } leaf is not excused by a sibling exit`,
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(`
-      ${ potentialExitFlow().replace('<bpmn:outgoing>Flow_1</bpmn:outgoing>', '<bpmn:outgoing>Flow_1</bpmn:outgoing><bpmn:outgoing>Flow_2</bpmn:outgoing>') }
-      <bpmn:${ type } id="Leaf">
-        <bpmn:incoming>Flow_2</bpmn:incoming>
-        ${ contents }
-      </bpmn:${ type }>
-      <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_1" targetRef="Leaf" />
-    `),
-    report: {
-      id: 'Leaf',
-      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
-      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
-      path: null
-    }
-  })),
-  {
-    name: 'catch-only event subprocess does not express throw intent',
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(`
-      <bpmn:task id="Task_1" />
-      <bpmn:subProcess id="Handler" triggeredByEvent="true">
-        <bpmn:startEvent id="Catch">
-          <bpmn:escalationEventDefinition />
-        </bpmn:startEvent>
-      </bpmn:subProcess>
-    `),
-    report: {
-      id: 'Task_1',
-      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
-      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
-      path: null
-    }
-  },
-  {
-    name: 'terminate inside a nested subprocess does not express agent exit intent',
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(`
-      <bpmn:subProcess id="Tool">
-        <bpmn:endEvent id="Terminate"><bpmn:terminateEventDefinition /></bpmn:endEvent>
-      </bpmn:subProcess>
-    `),
-    report: {
-      id: 'Tool',
-      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
-      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
-      path: null
-    }
-  },
-  ...[ [ false, false ], [ true, false ], [ false, true ] ].map(([ boundary, sharedLeaf ]) => ({
-    name: `shared potential exit reports the returning leaf once (boundary=${ boundary }, sharedLeaf=${ sharedLeaf })`,
-    config: { version: '8.8' },
-    moddleElement: sharedExitFlow('', boundary, sharedLeaf),
-    report: {
-      id: 'Summarize',
-      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
-      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
-      path: null,
-      name: 'LLM Summarize'
-    }
-  })),
-  {
-    name: 'potential exit still reports wrong casing',
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(potentialExitFlow(`
-      <zeebe:output source="=reason" target="reason" />
-      <zeebe:output source="=reason" target="toolcallresult" />
-    `)),
-    report: {
-      id: 'Task_1',
-      message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
-      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
-      path: [ 'extensionElements', 'values', 0, 'outputParameters', 1, 'target' ]
-    }
-  },
-  {
-    name: 'potential exit still reports linear overwrites',
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(`
-      <bpmn:serviceTask id="Entry">
-        <bpmn:extensionElements>
-          <zeebe:ioMapping>
-            <zeebe:output source="=first" target="toolCallResult" />
-          </zeebe:ioMapping>
-        </bpmn:extensionElements>
-        <bpmn:outgoing>Flow_0</bpmn:outgoing>
-      </bpmn:serviceTask>
-      <bpmn:serviceTask id="Task_1">
-        <bpmn:extensionElements>
-          <zeebe:ioMapping>
-            <zeebe:output source="=second" target="toolCallResult" />
-          </zeebe:ioMapping>
-        </bpmn:extensionElements>
-        <bpmn:incoming>Flow_0</bpmn:incoming>
-        <bpmn:outgoing>Flow_1</bpmn:outgoing>
-      </bpmn:serviceTask>
-      <bpmn:endEvent id="Throw_1">
-        <bpmn:incoming>Flow_1</bpmn:incoming>
-        <bpmn:escalationEventDefinition />
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0" sourceRef="Entry" targetRef="Task_1" />
-      <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Throw_1" />
-    `),
-    report: {
-      id: 'Task_1',
-      message: 'This overwrites the "toolCallResult" value set on "Entry".',
-      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
-      path: OUTPUT_TARGET_PATH
-    }
-  },
-  {
-    name: 'ordinary returning flow reports missing result on the entry',
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(`
-      <bpmn:task id="Entry"><bpmn:outgoing>Flow_1</bpmn:outgoing></bpmn:task>
-      <bpmn:task id="Leaf">
-        <bpmn:incoming>Flow_1</bpmn:incoming>
-        <bpmn:outgoing>Flow_2</bpmn:outgoing>
-      </bpmn:task>
-      <bpmn:endEvent id="End"><bpmn:incoming>Flow_2</bpmn:incoming></bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_1" sourceRef="Entry" targetRef="Leaf" />
-      <bpmn:sequenceFlow id="Flow_2" sourceRef="Leaf" targetRef="End" />
-    `),
-    report: {
-      id: 'Entry',
-      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
-      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
-      path: null
-    }
-  },
-  {
-    name: 'potential exit in another tool does not exempt a returning tool',
-    config: { version: '8.8' },
-    moddleElement: agenticToolFlow(`
-      ${ potentialExitFlow() }
-      <bpmn:task id="Returning" />
-    `),
-    report: {
-      id: 'Returning',
-      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
-      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
-      path: null
-    }
-  },
   {
     name: 'wrong output target key',
     config: { version: '8.8' },
@@ -1232,30 +1128,161 @@ const invalid = [
         path: OUTPUT_TARGET_PATH
       }
     ]
+  },
+  {
+    name: 'catch-only escalation event sub-process — no potential exit, returns nothing',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1" />
+        <bpmn:subProcess id="EventSub_1" triggeredByEvent="true">
+          <bpmn:startEvent id="Start_1">
+            <bpmn:escalationEventDefinition />
+          </bpmn:startEvent>
+        </bpmn:subProcess>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
+      path: null
+    }
+  },
+  {
+    name: 'terminate end event in sub-process tool — no potential exit, returns nothing',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:subProcess id="Sub_1">
+          <bpmn:endEvent id="End_1">
+            <bpmn:terminateEventDefinition />
+          </bpmn:endEvent>
+        </bpmn:subProcess>
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Sub_1',
+      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
+      path: null
+    }
+  },
+  {
+    name: 'potential exit in another tool — returning tool still reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:endEvent id="Exit_1">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:escalationEventDefinition />
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Exit_1" />
+        <bpmn:serviceTask id="Task_2" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_2',
+      message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
+      path: null
+    }
+  },
+  {
+    name: 'wrong casing in tool flow with potential exit — still reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=reason" target="toolcallresult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:endEvent id="Exit_1">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:escalationEventDefinition />
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Exit_1" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_1',
+      message: 'Wrong casing "toolcallresult": use toolCallResult (case-sensitive).',
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_CASING_INVALID },
+      path: OUTPUT_TARGET_PATH
+    }
+  },
+  {
+    name: 'linear overwrite in tool flow with potential exit — still reported',
+    config: { version: '8.8' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:adHocSubProcess id="AHSP_1">
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:serviceTask id="Task_1">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=first" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Task_2">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:outgoing>Flow_2</bpmn:outgoing>
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=second" target="toolCallResult" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+        </bpmn:serviceTask>
+        <bpmn:endEvent id="Exit_1">
+          <bpmn:incoming>Flow_2</bpmn:incoming>
+          <bpmn:escalationEventDefinition />
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_1" sourceRef="Task_1" targetRef="Task_2" />
+        <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_2" targetRef="Exit_1" />
+      </bpmn:adHocSubProcess>
+    `)),
+    report: {
+      id: 'Task_2',
+      message: 'This overwrites the "toolCallResult" value set on "Task_1".',
+      data: { type: ERROR_TYPES.AGENT_TOOL_OUTPUT_KEY_OVERWRITE },
+      path: OUTPUT_TARGET_PATH
+    }
   }
 ];
 
 RuleTester.verify('agent-tool-output-key', rule, {
   valid,
   invalid
-});
-
-describe('agent-tool-output-key repeated lint', function() {
-  it('reports returning leaves again when linting the same definitions', async function() {
-
-    // given
-    const { root } = await sharedExitFlow();
-    const linter = new Linter({
-      config: { rules: { 'agent-tool-output-key': [ 'warn', { version: '8.8' } ] } },
-      resolver: { resolveRule: () => rule }
-    });
-
-    // when
-    const first = await linter.lint(root);
-    const second = await linter.lint(root);
-
-    // then
-    expect(first['agent-tool-output-key']).to.have.length(1);
-    expect(second).to.deep.equal(first);
-  });
 });

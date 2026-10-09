@@ -25,24 +25,16 @@ const { annotateRule } = require('../helper');
  * an outcome). Results written from arbitrary FEEL expressions are not
  * statically detectable.
  *
- * Any error or escalation throw (end or intermediate) in the tool's flow is
- * treated as a potential exit from the agent, suppressing missing-result and
- * misdirected-output warnings on the entry. When no result is written, direct
- * activity or intermediate-event leaves still warn on their normal completion,
- * even if a boundary path can exit. Sub-process leaves are exempt only when
- * their contents include a potential exit; inner returning ends are not analyzed.
- * Catch events and per-path result coverage are not resolved: a result anywhere
- * in the flow suppresses missing-result warnings, consciously under-reporting
- * mixed flows. Casing checks and linear-flow overwrite checks still apply.
+ * An error or escalation throw (end or intermediate) anywhere in the tool's
+ * flow is treated as a deliberate exit from the agent: missing-result and
+ * misdirected-output warnings are suppressed. The throw's catch is not
+ * resolved. Known blind spot: a tool mixing an exit with a branch that returns
+ * normally without a result is not reported. Casing and overwrite checks still
+ * apply.
  */
 module.exports = skipInNonExecutableProcess(function(config = {}) {
   const { version } = config;
-  let reportedLeaves = new WeakSet();
-
   function check(node, reporter) {
-    if (is(node, 'bpmn:Definitions')) {
-      reportedLeaves = new WeakSet();
-    }
 
     // Only a root activity or intermediate event in an agentic AHSP is a tool
     // entry; the whole tool flow is inspected from here. Elements nested
@@ -51,7 +43,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
       return;
     }
 
-    const { channels, linear, hasPotentialExit, returningLeaves } = collectResultChannels(node);
+    const { channels, linear, hasPotentialExit } = collectResultChannels(node);
 
     if (!channels.length && !hasPotentialExit) {
       reportErrors(node, reporter, {
@@ -63,21 +55,6 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
     }
 
     const hasResult = channels.some(isToolCallResultChannel);
-    if (!hasResult && hasPotentialExit) {
-      for (const leaf of returningLeaves) {
-        if (reportedLeaves.has(leaf)) {
-          continue;
-        }
-        reportedLeaves.add(leaf);
-
-        reportErrors(leaf, reporter, {
-          message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
-          data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
-          path: getOutputsPath(leaf),
-        });
-      }
-    }
-
     if (!hasResult && !hasPotentialExit) {
 
       // Every channel here is a miswrite (none matched toolCallResult), so
@@ -163,24 +140,19 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
  * one outgoing sequence flow), joins (more than one incoming), or has a
  * boundary event attached. Non-linear flows can place two writes on
  * alternative paths, so the caller uses this to avoid false overwrite reports.
- * Records a potential exit whenever an error or escalation throw is found,
- * without resolving its catch or analyzing which branches can return.
+ * Link throw events continue at their same-named link catch events.
  *
  * @param {ModdleElement} entry
  *
- * @returns {Object} { channels, linear, hasPotentialExit, returningLeaves } — channels as
+ * @returns {Object} { channels, linear, hasPotentialExit } — channels as
  * { kind, value, element, node, property } (element being whichever element in
  * the flow actually wrote this channel; node/property the moddle leaf that
- * carries the offending value),
- * linear being true when the flow is a single non-branching chain, and
- * hasPotentialExit being true when the flow contains an error or escalation
- * throw, and returningLeaves containing direct result-capable leaves without
- * a potential exit in their contents
+ * carries the offending value), linear being true when the flow is a single
+ * non-branching chain, and hasPotentialExit being true when the flow contains
+ * an error or escalation throw
  */
 function collectResultChannels(entry) {
   const channels = [],
-        returningLeaves = [],
-        exitScopes = new Set(),
         visited = new Set(),
         queue = [ entry ];
 
@@ -198,43 +170,18 @@ function collectResultChannels(entry) {
 
     collectElementChannels(element, channels);
 
-    if (is(element, 'bpmn:EndEvent') || is(element, 'bpmn:IntermediateThrowEvent')) {
-      const potentialExit = (element.get('eventDefinitions') || []).some(definition => {
-        return is(definition, 'bpmn:ErrorEventDefinition') || is(definition, 'bpmn:EscalationEventDefinition');
-      });
-
-      if (potentialExit) {
-        hasPotentialExit = true;
-        for (let scope = element; scope && scope !== entry.$parent; scope = scope.$parent) {
-          exitScopes.add(scope);
-        }
-      }
+    if (isPotentialExit(element)) {
+      hasPotentialExit = true;
     }
 
     const outgoing = element.get('outgoing') || [];
     const incoming = element.get('incoming') || [];
 
-    const definition = getEventDefinition(element);
-    const linkThrow = is(element, 'bpmn:IntermediateThrowEvent')
-      && definition && is(definition, 'bpmn:LinkEventDefinition');
-
-    if (linkThrow) {
+    // A link continues the flow at its catch; treat it as a branch to stay
+    // conservative about overwrites.
+    if (isLinkEvent(element, 'bpmn:IntermediateThrowEvent')) {
       linear = false;
-      for (const sibling of element.$parent.get('flowElements') || []) {
-        const catchDefinition = getEventDefinition(sibling);
-        if (is(sibling, 'bpmn:IntermediateCatchEvent') && catchDefinition
-            && is(catchDefinition, 'bpmn:LinkEventDefinition')
-            && definition.get('name') && catchDefinition.get('name') === definition.get('name')) {
-          queue.push(sibling);
-        }
-      }
-    }
-
-    // A boundary path does not change the activity's normal completion.
-    if (!outgoing.length && !linkThrow && element.$parent === entry.$parent
-        && (is(element, 'bpmn:Activity') || is(element, 'bpmn:IntermediateCatchEvent')
-          || is(element, 'bpmn:IntermediateThrowEvent'))) {
-      returningLeaves.push(element);
+      queue.push(...getLinkCatches(element));
     }
 
     // A split (>1 outgoing) or a join (>1 incoming) means the flow is not a
@@ -271,10 +218,40 @@ function collectResultChannels(entry) {
     }
   }
 
-  return {
-    channels, linear, hasPotentialExit,
-    returningLeaves: returningLeaves.filter(leaf => !exitScopes.has(leaf))
-  };
+  return { channels, linear, hasPotentialExit };
+}
+
+// An error or escalation throw expresses the intent to leave the agent.
+function isPotentialExit(element) {
+  if (!is(element, 'bpmn:EndEvent') && !is(element, 'bpmn:IntermediateThrowEvent')) {
+    return false;
+  }
+
+  const definition = getEventDefinition(element);
+
+  return !!definition && (
+    is(definition, 'bpmn:ErrorEventDefinition') || is(definition, 'bpmn:EscalationEventDefinition')
+  );
+}
+
+function isLinkEvent(element, type) {
+  const definition = is(element, type) && getEventDefinition(element);
+
+  return !!definition && is(definition, 'bpmn:LinkEventDefinition');
+}
+
+// Link catch events in the same scope with the same name as the link throw.
+function getLinkCatches(linkThrow) {
+  const name = getEventDefinition(linkThrow).get('name');
+
+  if (!name) {
+    return [];
+  }
+
+  return (linkThrow.$parent.get('flowElements') || []).filter(element => {
+    return isLinkEvent(element, 'bpmn:IntermediateCatchEvent')
+      && getEventDefinition(element).get('name') === name;
+  });
 }
 
 function collectElementChannels(element, channels) {
