@@ -2,7 +2,7 @@ const { is } = require('bpmnlint-utils');
 
 const { getPath, pathConcat } = require('@bpmn-io/moddle-utils');
 
-const { isAgenticToolElement } = require('../utils/element');
+const { getEventDefinition, isAgenticToolElement } = require('../utils/element');
 const { reportErrors, getName } = require('../utils/reporter');
 const { ERROR_TYPES } = require('../utils/error-types');
 const { skipInNonExecutableProcess } = require('../utils/rule');
@@ -24,21 +24,28 @@ const { annotateRule } = require('../helper');
  * point to (the agent gets no completion signal and may retry or hallucinate
  * an outcome). Results written from arbitrary FEEL expressions are not
  * statically detectable.
+ *
+ * An error or escalation throw (end or intermediate) anywhere in the tool's
+ * flow is treated as a deliberate exit from the agent: missing-result and
+ * misdirected-output warnings are suppressed. The throw's catch is not
+ * resolved. Known blind spot: a tool mixing an exit with a branch that returns
+ * normally without a result is not reported. Casing and overwrite checks still
+ * apply.
  */
 module.exports = skipInNonExecutableProcess(function(config = {}) {
   const { version } = config;
   function check(node, reporter) {
 
-    // Only a tool entry (a root activity directly inside an agentic AHSP) is a
-    // tool; the whole tool flow is then inspected from here. Elements nested
+    // Only a root activity or intermediate event in an agentic AHSP is a tool
+    // entry; the whole tool flow is inspected from here. Elements nested
     // inside a tool are not separate tools, so they are not entry points.
     if (!isAgenticToolElement(node, version)) {
       return;
     }
 
-    const { channels, linear } = collectResultChannels(node);
+    const { channels, linear, hasPotentialExit } = collectResultChannels(node);
 
-    if (!channels.length) {
+    if (!channels.length && !hasPotentialExit) {
       reportErrors(node, reporter, {
         message: 'Tool returns nothing to the agent. Set a "toolCallResult" (at minimum, note the task completed).',
         data: { type: ERROR_TYPES.AGENT_TOOL_RESULT_MISSING },
@@ -48,7 +55,7 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
     }
 
     const hasResult = channels.some(isToolCallResultChannel);
-    if (!hasResult) {
+    if (!hasResult && !hasPotentialExit) {
 
       // Every channel here is a miswrite (none matched toolCallResult), so
       // each is reported on the element that wrote it. A wrong-casing
@@ -133,20 +140,24 @@ module.exports = skipInNonExecutableProcess(function(config = {}) {
  * one outgoing sequence flow), joins (more than one incoming), or has a
  * boundary event attached. Non-linear flows can place two writes on
  * alternative paths, so the caller uses this to avoid false overwrite reports.
+ * Link throw events continue at their same-named link catch events.
  *
  * @param {ModdleElement} entry
  *
- * @returns {Object} { channels, linear } — channels as { kind, value, element,
- * node, property } (element being whichever element in the flow actually wrote
- * this channel; node/property the moddle leaf that carries the offending value),
- * and linear being true when the flow is a single non-branching chain
+ * @returns {Object} { channels, linear, hasPotentialExit } — channels as
+ * { kind, value, element, node, property } (element being whichever element in
+ * the flow actually wrote this channel; node/property the moddle leaf that
+ * carries the offending value), linear being true when the flow is a single
+ * non-branching chain, and hasPotentialExit being true when the flow contains
+ * an error or escalation throw
  */
 function collectResultChannels(entry) {
   const channels = [],
         visited = new Set(),
         queue = [ entry ];
 
-  let linear = true;
+  let linear = true,
+      hasPotentialExit = false;
 
   while (queue.length) {
     const element = queue.shift();
@@ -159,8 +170,19 @@ function collectResultChannels(entry) {
 
     collectElementChannels(element, channels);
 
+    if (isPotentialExit(element)) {
+      hasPotentialExit = true;
+    }
+
     const outgoing = element.get('outgoing') || [];
     const incoming = element.get('incoming') || [];
+
+    // A link continues the flow at its catch; treat it as a branch to stay
+    // conservative about overwrites.
+    if (isLinkEvent(element, 'bpmn:IntermediateThrowEvent')) {
+      linear = false;
+      queue.push(...getLinkCatches(element));
+    }
 
     // A split (>1 outgoing) or a join (>1 incoming) means the flow is not a
     // single guaranteed-sequential chain, so writes may live on paths that
@@ -196,7 +218,40 @@ function collectResultChannels(entry) {
     }
   }
 
-  return { channels, linear };
+  return { channels, linear, hasPotentialExit };
+}
+
+// An error or escalation throw expresses the intent to leave the agent.
+function isPotentialExit(element) {
+  if (!is(element, 'bpmn:EndEvent') && !is(element, 'bpmn:IntermediateThrowEvent')) {
+    return false;
+  }
+
+  const definition = getEventDefinition(element);
+
+  return !!definition && (
+    is(definition, 'bpmn:ErrorEventDefinition') || is(definition, 'bpmn:EscalationEventDefinition')
+  );
+}
+
+function isLinkEvent(element, type) {
+  const definition = is(element, type) && getEventDefinition(element);
+
+  return !!definition && is(definition, 'bpmn:LinkEventDefinition');
+}
+
+// Link catch events in the same scope with the same name as the link throw.
+function getLinkCatches(linkThrow) {
+  const name = getEventDefinition(linkThrow).get('name');
+
+  if (!name) {
+    return [];
+  }
+
+  return (linkThrow.$parent.get('flowElements') || []).filter(element => {
+    return isLinkEvent(element, 'bpmn:IntermediateCatchEvent')
+      && getEventDefinition(element).get('name') === name;
+  });
 }
 
 function collectElementChannels(element, channels) {

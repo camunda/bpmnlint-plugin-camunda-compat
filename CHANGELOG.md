@@ -9,6 +9,7 @@ ___Note:__ Yet to be released changes appear here._
 * `FIX`: exempt AI agent gateway tools (`io.camunda.agenticai.gateway.type`) from `agent-tool-documentation` ([#276](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/276))
 * `FIX`: require documentation for intermediate event tools in `agent-tool-documentation` ([#276](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/276))
 * `FIX`: require a `toolCallResult` for intermediate event tools in `agent-tool-output-key` ([#276](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/276))
+* `FIX`: do not require a `toolCallResult` in `agent-tool-output-key` when the tool flow throws an error or escalation ([#277](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/277))
 
 ## 2.61.1
 
