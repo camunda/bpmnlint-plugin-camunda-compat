@@ -689,6 +689,56 @@ describe('configs', function() {
     'wait-for-completion': [ 'error', { version: '8.10' } ]
   }));
 
+  it('camunda-cloud-8-11', expectRules(configs, 'camunda-cloud-8-11', {
+    'bpmnlint/start-event-required': [ 'error', { version: '8.11' } ],
+    'ad-hoc-sub-process': [ 'error', { version: '8.11' } ],
+    'agent-tool-documentation': [ 'warn', { version: '8.11' } ],
+    'agent-tool-output-key': [ 'warn', { version: '8.11' } ],
+    'agent-fromai-contract': [ 'error', { version: '8.11' } ],
+    'before-all-execution-listener': [ 'error', { version: '8.11' } ],
+    'cancel-execution-listener': [ 'error', { version: '8.11' } ],
+    'called-element': [ 'error', { version: '8.11' } ],
+    'connector-properties': [ 'warn', { version: '8.11' } ],
+    'duplicate-execution-listener-headers': [ 'error', { version: '8.11' } ],
+    'duplicate-execution-listeners': [ 'error', { version: '8.11' } ],
+    'duplicate-task-headers': [ 'error', { version: '8.11' } ],
+    'element-type': [ 'error', { version: '8.11' } ],
+    'error-reference': [ 'error', { version: '8.11' } ],
+    'escalation-boundary-event-attached-to-ref': [ 'error', { version: '8.11' } ],
+    'escalation-reference': [ 'error', { version: '8.11' } ],
+    'event-based-gateway-target': [ 'error', { version: '8.11' } ],
+    'executable-process': [ 'error', { version: '8.11' } ],
+    'execution-listener': [ 'error', { version: '8.11' } ],
+    'feel': [ 'error', { version: '8.11' } ],
+    'feel-compatibility': [ 'error', { version: '8.11' } ],
+    'implementation': [ 'error', { version: '8.11' } ],
+    'link-event': [ 'error', { version: '8.11' } ],
+    'loop-characteristics': [ 'error', { version: '8.11' } ],
+    'message-reference': [ 'error', { version: '8.11' } ],
+    'io-mapping': [ 'error', { version: '8.11' } ],
+    'no-expression': [ 'error', { version: '8.11' } ],
+    'no-interrupting-event-subprocess': [ 'error', { version: '8.11' } ],
+    'no-loop': [ 'error', { version: '8.11' } ],
+    'no-multiple-none-start-events' : [ 'error', { version: '8.11' } ],
+    'priority-definition': [ 'error', { version: '8.11' } ],
+    'zeebe-user-task': [ 'warn', { version: '8.11' } ],
+    'unresolvable-secret-reference': [ 'error', { version: '8.11' } ],
+    'secrets': [ 'warn', { version: '8.11' } ],
+    'sequence-flow-condition': [ 'error', { version: '8.11' } ],
+    'signal-reference': [ 'error', { version: '8.11' } ],
+    'start-event-form': [ 'error', { version: '8.11' } ],
+    'start-event-form-embedded': [ 'warn', { version: '8.11' } ],
+    'subscription': [ 'error', { version: '8.11' } ],
+    'task-schedule': [ 'error', { version: '8.11' } ],
+    'task-listener': [ 'error', { version: '8.11' } ],
+    'timer': [ 'error', { version: '8.11' } ],
+    'user-task-definition': [ 'warn', { version: '8.11' } ],
+    'user-task-form': [ 'error', { version: '8.11' } ],
+    'variable-name': [ 'error', { version: '8.11' } ],
+    'version-tag': [ 'error', { version: '8.11' } ],
+    'wait-for-completion': [ 'error', { version: '8.11' } ]
+  }));
+
 
   it('camunda-platform-7-19', expectRules(configs, 'camunda-platform-7-19', {
     'history-time-to-live': [ 'info', { platform: 'camunda-platform', version: '7.19' } ]

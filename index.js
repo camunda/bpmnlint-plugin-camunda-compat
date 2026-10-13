@@ -137,6 +137,8 @@ const camundaCloud810Rules = withConfig({
   'unresolvable-secret-reference': 'error'
 }, { version: '8.10' });
 
+const camundaCloud811Rules = withConfig(camundaCloud810Rules, { version: '8.11' });
+
 const camundaPlatform719Rules = withConfig({
   'history-time-to-live': 'info'
 }, {
@@ -291,6 +293,9 @@ const configs = {
   },
   'camunda-cloud-8-10': {
     rules: camundaCloud810Rules
+  },
+  'camunda-cloud-8-11': {
+    rules: camundaCloud811Rules
   },
   'camunda-platform-7-19': {
     rules: camundaPlatform719Rules
