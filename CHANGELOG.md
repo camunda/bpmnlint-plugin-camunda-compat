@@ -6,6 +6,7 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FEAT`: add Camunda 8.11 config ([#278](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/278))
 * `FIX`: exempt AI agent gateway tools (`io.camunda.agenticai.gateway.type`) from `agent-tool-documentation` ([#276](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/276))
 * `FIX`: require documentation for intermediate event tools in `agent-tool-documentation` ([#276](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/276))
 * `FIX`: require a `toolCallResult` for intermediate event tools in `agent-tool-output-key` ([#276](https://github.com/camunda/bpmnlint-plugin-camunda-compat/pull/276))
