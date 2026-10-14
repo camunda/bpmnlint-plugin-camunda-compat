@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+## 2.63.0
+
 * `FEAT`: add `timer-past-date` rule warning about timer start events with a date in the past from Camunda 8.6 ([#279](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/279))
 
 ## 2.62.0
