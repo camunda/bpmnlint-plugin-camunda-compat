@@ -100,6 +100,7 @@ const camundaCloud86Rules = withConfig({
   'execution-listener': 'error',
   'no-before-all-execution-listener': 'error',
   'priority-definition': 'error',
+  'timer-past-date': 'warn',
   'version-tag': 'error',
   'zeebe-user-task': 'warn',
 }, { version: '8.6' });
@@ -236,6 +237,7 @@ const rules = {
   'task-listener': './rules/camunda-cloud/task-listener',
   'task-schedule': './rules/camunda-cloud/task-schedule',
   'timer': './rules/camunda-cloud/timer',
+  'timer-past-date': './rules/camunda-cloud/timer-past-date',
   'unresolvable-secret-reference': './rules/camunda-cloud/unresolvable-secret-reference',
   'user-task-definition': './rules/camunda-cloud/user-task-definition',
   'user-task-form': './rules/camunda-cloud/user-task-form',

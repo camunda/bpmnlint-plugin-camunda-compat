@@ -14,12 +14,50 @@ const ISO_DURATION = 'P(?!$)(\\d+(\\.\\d+)?[Yy])?(\\d+(\\.\\d+)?[Mm])?(\\d+(\\.\
 const ISO_DURATION_REGEX = new RegExp(`^${ISO_DURATION}$`);
 const ISO_CYCLE = `R(-1|\\d+)?/(${ISO_DATE}/)?${ISO_DURATION}`;
 const ISO_CYCLE_REGEX = new RegExp(`^${ISO_CYCLE}$`);
+const ISO_CYCLE_START_REGEX = new RegExp(`^R(-1|\\d+)?/(?<start>${ISO_DATE})/${ISO_DURATION}$`);
 
 module.exports = {
+  getCycleStartDate,
+  parseDate,
   validateCycle,
   validateDate,
   validateDuration
 };
+
+/**
+ * Get the start date of an ISO 8601 repeating interval, e.g.
+ * `2026-01-01T02:00:00Z` for `R/2026-01-01T02:00:00Z/P1M`.
+ *
+ * @param {string} value
+ *
+ * @return {string|null} start date, or `null` if the cycle has none
+ */
+function getCycleStartDate(value) {
+  const result = ISO_CYCLE_START_REGEX.exec(value);
+
+  if (!result || !isDateValid(result)) {
+    return null;
+  }
+
+  return result.groups.start;
+}
+
+/**
+ * Parse an ISO 8601 date (with optional zone ID) into a `Date`.
+ *
+ * The offset determines the instant, the zone ID is ignored.
+ *
+ * @param {string} value
+ *
+ * @return {Date|null} parsed date, or `null` if the date is invalid
+ */
+function parseDate(value) {
+  if (!value || !validateDate(value)) {
+    return null;
+  }
+
+  return new Date(value.replace(new RegExp(`${ZONE_ID}$`), ''));
+}
 
 function validateCycle(value) {
   return ISO_CYCLE_REGEX.test(value);

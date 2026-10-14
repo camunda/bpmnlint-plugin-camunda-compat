@@ -1,6 +1,8 @@
 const { expect } = require('chai');
 
 const {
+  getCycleStartDate,
+  parseDate,
   validateCycle,
   validateDate,
   validateDuration
@@ -156,6 +158,76 @@ describe('utils/iso8601', function() {
 
         // then
         expect(validateDuration(invalid)).to.be.false;
+      });
+    }
+  });
+
+
+  describe('#getCycleStartDate', function() {
+
+    // given
+    const WITH_START_DATE = {
+      'R/2026-01-01T02:00:00Z/P1M': '2026-01-01T02:00:00Z',
+      'R5/2026-01-01T02:00:00+10:00/PT1H': '2026-01-01T02:00:00+10:00',
+      'R/2026-01-01T02:00:00+10:00[Australia/Melbourne]/P1M': '2026-01-01T02:00:00+10:00[Australia/Melbourne]'
+    };
+    for (const [ cycle, startDate ] of Object.entries(WITH_START_DATE)) {
+      it(`should return start date of ISO 8601 cycle: ${cycle}`, function() {
+
+        // then
+        expect(getCycleStartDate(cycle)).to.equal(startDate);
+      });
+    }
+
+    // given
+    const WITHOUT_START_DATE = [
+      'R/P1D',
+      'R5/PT10S',
+      '0 0 9-17 * * MON-FRI',
+      '=foo',
+      'R/2019-02-29T00:00:00Z/P1D',
+      'INVALID'
+    ];
+    for (const cycle of WITHOUT_START_DATE) {
+      it(`should return 'null' for cycle without (valid) start date: ${cycle}`, function() {
+
+        // then
+        expect(getCycleStartDate(cycle)).to.be.null;
+      });
+    }
+  });
+
+
+  describe('#parseDate', function() {
+
+    // given
+    const VALID = {
+      '2025-01-01T09:00:00Z': '2025-01-01T09:00:00.000Z',
+      '2025-01-01T09:00:00+01:00': '2025-01-01T08:00:00.000Z',
+      '2026-01-01T02:00:00+10:00[Australia/Melbourne]': '2025-12-31T16:00:00.000Z'
+    };
+    for (const [ date, expected ] of Object.entries(VALID)) {
+      it(`should parse ISO 8601 date: ${date}`, function() {
+
+        // then
+        expect(parseDate(date).toISOString()).to.equal(expected);
+      });
+    }
+
+    // given
+    const INVALID = [
+      null,
+      '',
+      'INVALID',
+      '=foo',
+      '2019-02-29T00:00:00Z',
+      '2019-01-01T00:00:00'
+    ];
+    for (const invalid of INVALID) {
+      it(`should return 'null' for invalid ISO 8601 date: ${invalid}`, function() {
+
+        // then
+        expect(parseDate(invalid)).to.be.null;
       });
     }
   });
