@@ -23,7 +23,28 @@ describe('utils/iso8601', function() {
       '2019-01-01T00:00:00+00:00[UTC]',
       '2019-01-01T00:00:00+00:00[Zulu]',
       '2019-01-01T00:00:00+00:00[WET]',
-      '1970-01-01T00:00:00Z'
+      '1970-01-01T00:00:00Z',
+
+      // seconds are optional
+      '2019-01-01T00:00Z',
+      '2019-01-01T00:00+01:00[Europe/Berlin]',
+
+      // fractional seconds
+      '2019-01-01T00:00:00.1Z',
+      '2019-01-01T00:00:00.000Z',
+      '2019-01-01T00:00:00.123456789Z',
+      '2019-01-01T00:00:00.000+01:00',
+      '2019-01-01T00:00:00.000-01:00',
+
+      // `Z` with zone ID
+      '2019-01-01T00:00:00Z[UTC]',
+      '2019-01-01T00:00:00Z[Europe/Berlin]',
+
+      // offsets up to +/-18:00
+      '2019-01-01T00:00:00+14:00',
+      '2019-01-01T00:00:00+17:59',
+      '2019-01-01T00:00:00+18:00',
+      '2019-01-01T00:00:00-18:00'
     ];
     for (const valid of VALID) {
       it(`should return 'true' for valid ISO 8601 date: ${valid}`, function() {
@@ -36,7 +57,6 @@ describe('utils/iso8601', function() {
     // given
     const INVALID = [
       'INVALID',
-      '2019-01-01T00:00:00Z[Europe/Berlin]',
       '2019-01-01T00:00:00[Europe/Berlin]',
       '2019-13-01T00:00:00Z',
       '2019-01-01T23:70:00Z',
@@ -50,12 +70,15 @@ describe('utils/iso8601', function() {
 
       // local time is not supported
       '2019-01-01T00:00:00',
-
-      // Zeebe does not accept ms
       '2019-01-01T00:00:00.000',
-      '2019-01-01T00:00:00.000Z',
-      '2019-01-01T00:00:00.000+01:00',
-      '2019-01-01T00:00:00.000-01:00',
+      '2019-01-01T00:00',
+
+      // more than nine fractional digits
+      '2019-01-01T00:00:00.1234567890Z',
+
+      // offset beyond +/-18:00
+      '2019-01-01T00:00:00+18:01',
+      '2019-01-01T00:00:00-19:00',
 
       // unsupported in Zeebe
       '2019-01-01T00:00:00+01:00@Europe/Berlin',
@@ -81,7 +104,11 @@ describe('utils/iso8601', function() {
       'R3/P1W',
       'R3/2024-01-01T12:00:00Z/P1D',
       'R5/2024-01-01T12:00:00Z/P1Y2M10DT2H30M',
-      'R/2024-01-01T12:00:00+02:00[Europe/Berlin]/P1D'
+      'R/2024-01-01T12:00:00+02:00[Europe/Berlin]/P1D',
+      'R/2025-01-01T09:00:00.123Z/P1D',
+      'R/2025-01-01T09:00:00Z[UTC]/P1D',
+      'R/2025-01-01T09:00Z/P1D',
+      'R/2025-01-01T09:00:00+14:00/P1D'
     ];
     for (const valid of VALID) {
       it(`should return 'true' for valid ISO 8601 cycle: ${valid}`, function() {
@@ -95,6 +122,7 @@ describe('utils/iso8601', function() {
     const INVALID = [
       'INVALID',
       'R3/PT1W',
+      'R/2025-01-01T09:00:00/P1D',
 
       // unsupported in Zeebe
       'R-2/P1Y2M10DT2H30M'
