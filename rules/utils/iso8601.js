@@ -5,10 +5,14 @@ const DATE = `(?<date>${YEAR}-${MONTH}-${DAY})`;
 const HOUR = '(0[0-9]|1[0-9]|2[0-3])';
 const MINUTE = '[0-5][0-9]';
 const SECOND = '[0-5][0-9]';
+const FRACTION = '\\.\\d{1,9}';
+const TIME = `${HOUR}:${MINUTE}(:${SECOND}(${FRACTION})?)?`;
 const ZONE_ID = '(\\[[^\\]]+\\])';
-const TIMEZONE = `(Z|([+-](0[0-9]|1[0-3]):[0-5][0-9]${ZONE_ID}?))`;
+const OFFSET = '[+-](((0[0-9]|1[0-7]):[0-5][0-9])|18:00)';
+const TIMEZONE = `(Z|${OFFSET})${ZONE_ID}?`;
 
-const ISO_DATE = `${DATE}T${HOUR}:${MINUTE}:${SECOND}${TIMEZONE}`;
+// mirrors what the engine accepts via java.time.ZonedDateTime#parse
+const ISO_DATE = `${DATE}T${TIME}${TIMEZONE}`;
 const ISO_DATE_REGEX = new RegExp(`^${ISO_DATE}$`);
 const ISO_DURATION = 'P(?!$)(\\d+(\\.\\d+)?[Yy])?(\\d+(\\.\\d+)?[Mm])?(\\d+(\\.\\d+)?[Ww])?(\\d+(\\.\\d+)?[Dd])?(T(?!$)(\\d+(\\.\\d+)?[Hh])?(\\d+(\\.\\d+)?[Mm])?(\\d+(\\.\\d+)?[Ss])?)?$';
 const ISO_DURATION_REGEX = new RegExp(`^${ISO_DURATION}$`);

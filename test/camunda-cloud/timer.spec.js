@@ -84,6 +84,28 @@ const valid = [
       </bpmn:startEvent>
     `))
   },
+  {
+    name: 'start event with time date (ISO-8601, fractional seconds and zone ID)',
+    config: { version: '1.0' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:startEvent id="StartEvent_1">
+        <bpmn:timerEventDefinition id="TimerEventDefinition_1">
+          <bpmn:timeDate xsi:type="bpmn:tFormalExpression">2019-10-01T12:00:00.123Z[UTC]</bpmn:timeDate>
+        </bpmn:timerEventDefinition>
+      </bpmn:startEvent>
+    `))
+  },
+  {
+    name: 'start event with time cycle (ISO-8601, start date with fractional seconds)',
+    config: { version: '1.0' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:startEvent id="StartEvent_1">
+        <bpmn:timerEventDefinition id="TimerEventDefinition_1">
+          <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/2019-10-01T12:00:00.123Z/P1D</bpmn:timeCycle>
+        </bpmn:timerEventDefinition>
+      </bpmn:startEvent>
+    `))
+  },
 
   /**
    * Intermediate Catch Event
