@@ -29,6 +29,26 @@ const valid = [
         </bpmn:extensionElements>
       </bpmn:userTask>
     `))
+  },
+  {
+    name: 'user task (due date, fractional seconds)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:TaskSchedule dueDate="2022-09-21T00:00:00.123Z" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `))
+  },
+  {
+    name: 'user task (follow-up date, no seconds)',
+    moddleElement: createModdle(createProcess(`
+      <bpmn:userTask id="UserTask_1">
+        <bpmn:extensionElements>
+          <zeebe:TaskSchedule followUpDate="2022-09-21T00:00+14:00" />
+        </bpmn:extensionElements>
+      </bpmn:userTask>
+    `))
   }
 ];
 
