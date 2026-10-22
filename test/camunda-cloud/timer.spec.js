@@ -24,7 +24,65 @@ const EXPRESSION_VALUES = {
 
 const FEEL_EXPRESSION_VALUE = '=foo';
 
+const ENGINE_ACCEPTED_DATES = [
+  '2025-01-01T09:00:00.123Z',
+  '2025-01-01T09:00:00Z[UTC]',
+  '2025-01-01T09:00:00+14:00',
+  '2025-01-01T09:00Z'
+];
+
 const valid = [
+
+  /**
+   * Dates Accepted by the Engine
+   */
+  ...ENGINE_ACCEPTED_DATES.flatMap(date => [
+    {
+      name: `start event with time date (${ date })`,
+      config: { version: '8.3' },
+      moddleElement: createModdle(createProcess(`
+        <bpmn:startEvent id="StartEvent_1">
+          <bpmn:timerEventDefinition id="TimerEventDefinition_1">
+            <bpmn:timeDate xsi:type="bpmn:tFormalExpression">${ date }</bpmn:timeDate>
+          </bpmn:timerEventDefinition>
+        </bpmn:startEvent>
+      `))
+    },
+    {
+      name: `start event with time cycle start date (${ date })`,
+      config: { version: '8.3' },
+      moddleElement: createModdle(createProcess(`
+        <bpmn:startEvent id="StartEvent_1">
+          <bpmn:timerEventDefinition id="TimerEventDefinition_1">
+            <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/${ date }/P1D</bpmn:timeCycle>
+          </bpmn:timerEventDefinition>
+        </bpmn:startEvent>
+      `))
+    },
+    {
+      name: `intermediate catch event with time date (${ date })`,
+      config: { version: '8.3' },
+      moddleElement: createModdle(createProcess(`
+        <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1">
+          <bpmn:timerEventDefinition id="TimerEventDefinition_1">
+            <bpmn:timeDate xsi:type="bpmn:tFormalExpression">${ date }</bpmn:timeDate>
+          </bpmn:timerEventDefinition>
+        </bpmn:intermediateCatchEvent>
+      `))
+    },
+    {
+      name: `boundary event with time date (${ date })`,
+      config: { version: '8.3' },
+      moddleElement: createModdle(createProcess(`
+        <bpmn:task id="Task_1" />
+        <bpmn:boundaryEvent id="Event" attachedToRef="Task_1">
+          <bpmn:timerEventDefinition id="TimerEventDefinition_1">
+            <bpmn:timeDate xsi:type="bpmn:tFormalExpression">${ date }</bpmn:timeDate>
+          </bpmn:timerEventDefinition>
+        </bpmn:boundaryEvent>
+      `))
+    }
+  ]),
 
   /**
    * Start Event, Interrupting
@@ -450,6 +508,32 @@ const invalid = [
     report: {
       id: 'StartEvent_1',
       message: 'Expression value of <foo> not allowed',
+      path: [
+        'eventDefinitions',
+        0,
+        'timeDate'
+      ],
+      data: {
+        type: ERROR_TYPES.EXPRESSION_VALUE_NOT_ALLOWED,
+        node: 'bpmn:FormalExpression',
+        parentNode: 'StartEvent_1',
+        property: 'timeDate'
+      }
+    }
+  },
+  {
+    name: 'timer start event with time date (no offset)',
+    config: { version: '1.0' },
+    moddleElement: createModdle(createProcess(`
+      <bpmn:startEvent id="StartEvent_1">
+        <bpmn:timerEventDefinition id="TimerEventDefinition_1">
+          <bpmn:timeDate xsi:type="bpmn:tFormalExpression">2025-01-01T09:00:00</bpmn:timeDate>
+        </bpmn:timerEventDefinition>
+      </bpmn:startEvent>
+    `)),
+    report: {
+      id: 'StartEvent_1',
+      message: 'Expression value of <2025-01-01T09:00:00> not allowed',
       path: [
         'eventDefinitions',
         0,

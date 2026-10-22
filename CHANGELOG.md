@@ -6,6 +6,8 @@ All notable changes to [bpmnlint-plugin-camunda-compat](https://github.com/camun
 
 ___Note:__ Yet to be released changes appear here._
 
+* `FIX`: accept more ISO 8601 date forms the engine accepts in `timer`, `timer-past-date` and `task-schedule`: fractional seconds, omitted seconds, `Z` with a zone ID, and offsets up to `±18:00` ([#281](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/281))
+
 ## 2.63.0
 
 * `FEAT`: add `timer-past-date` rule warning about timer start events with a date in the past from Camunda 8.6 ([#279](https://github.com/camunda/bpmnlint-plugin-camunda-compat/issues/279))

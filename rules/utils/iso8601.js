@@ -5,10 +5,14 @@ const DATE = `(?<date>${YEAR}-${MONTH}-${DAY})`;
 const HOUR = '(0[0-9]|1[0-9]|2[0-3])';
 const MINUTE = '[0-5][0-9]';
 const SECOND = '[0-5][0-9]';
+const FRACTION = '\\.\\d{1,9}';
+const TIME = `${HOUR}:${MINUTE}(:${SECOND}(${FRACTION})?)?`;
 const ZONE_ID = '(\\[[^\\]]+\\])';
-const TIMEZONE = `(Z|([+-](0[0-9]|1[0-3]):[0-5][0-9]${ZONE_ID}?))`;
+const OFFSET = '[+-]((0[0-9]|1[0-7]):[0-5][0-9]|18:00)';
+const TIMEZONE = `(Z|${OFFSET})${ZONE_ID}?`;
 
-const ISO_DATE = `${DATE}T${HOUR}:${MINUTE}:${SECOND}${TIMEZONE}`;
+// mirrors what the engine accepts, i.e. Java's `ZonedDateTime.parse`
+const ISO_DATE = `${DATE}T${TIME}${TIMEZONE}`;
 const ISO_DATE_REGEX = new RegExp(`^${ISO_DATE}$`);
 const ISO_DURATION = 'P(?!$)(\\d+(\\.\\d+)?[Yy])?(\\d+(\\.\\d+)?[Mm])?(\\d+(\\.\\d+)?[Ww])?(\\d+(\\.\\d+)?[Dd])?(T(?!$)(\\d+(\\.\\d+)?[Hh])?(\\d+(\\.\\d+)?[Mm])?(\\d+(\\.\\d+)?[Ss])?)?$';
 const ISO_DURATION_REGEX = new RegExp(`^${ISO_DURATION}$`);
@@ -45,7 +49,9 @@ function getCycleStartDate(value) {
 /**
  * Parse an ISO 8601 date (with optional zone ID) into a `Date`.
  *
- * The offset determines the instant, the zone ID is ignored.
+ * The offset determines the instant, the zone ID is ignored. Fractional
+ * seconds are normalized to milliseconds, as other precision is not
+ * guaranteed to be supported by `Date`.
  *
  * @param {string} value
  *
@@ -56,7 +62,13 @@ function parseDate(value) {
     return null;
   }
 
-  return new Date(value.replace(new RegExp(`${ZONE_ID}$`), ''));
+  const date = new Date(
+    value
+      .replace(new RegExp(`${ZONE_ID}$`), '')
+      .replace(/\.(\d+)/, (_, fraction) => `.${fraction.padEnd(3, '0').slice(0, 3)}`)
+  );
+
+  return isNaN(date.getTime()) ? null : date;
 }
 
 function validateCycle(value) {
